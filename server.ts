@@ -6,6 +6,7 @@ import * as express from 'express';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { AppServerModule } from './src/main.server';
+import 'localstorage-polyfill';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -13,9 +14,33 @@ export function app(): express.Express {
   const distFolder = join(process.cwd(), 'dist/freedom-ssr/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
+  const domino = require('domino');
+  const fs = require('fs');
+  const path = require('path');
+  const template = fs
+    .readFileSync(
+      path.join(join(process.cwd(), 'dist/freedom-ssr/browser'), 'index.html')
+    )
+    .toString();
+  // Shim for the global window and document objects.
+  const window = domino.createWindow(template);
+
+  global['localStorage'] = localStorage;
+  global['window'] = window;
+  global['document'] = window.document;
+  global['self'] = window;
+  global['sessionStorage'] = window.sessionStorage;
+  global['IDBIndex'] = window.IDBIndex;
+  global['navigator'] = window.navigator;
+  global['Event'] = window.Event;
+  global['Event']['prototype'] = window.Event.prototype;
+  // global.google = google;
+  global['getComputedStyle'] = window.getComputedStyle;
+
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
   server.engine('html', ngExpressEngine({
-    bootstrap: AppServerModule
+    bootstrap: AppServerModule,
+    inlineCriticalCss: false
   }));
 
   server.set('view engine', 'html');
