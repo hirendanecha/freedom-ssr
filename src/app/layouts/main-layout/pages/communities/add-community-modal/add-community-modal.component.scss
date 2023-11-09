@@ -1,0 +1,13 @@
+.form-dark {
+  label {
+    color: var(--heading-1st-color) !important;
+  }
+  .login-button {
+    padding: 0.8rem 2.6rem;
+  }
+}
+.custom-textarea{
+  textarea{
+    color: var(--heading-1st-color);
+  }
+}

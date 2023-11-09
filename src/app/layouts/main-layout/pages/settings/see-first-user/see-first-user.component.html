@@ -1,0 +1,23 @@
+<div class="single-box p-sm-5 p-3">
+  <h6 class="head-area text-start m-0 pt-0 pb-5">See First Users</h6>
+
+  <ng-container *ngIf="profiles.length > 0">
+    <ul class="list-group list-group-flush">
+      <ng-container *ngFor="let profile of profiles">
+        <li class="d-flex justify-content-between">
+          <div>{{ profile?.Username }}</div>
+          <button
+            class="btn btn-primary btn-sm"
+            (click)="removeSeeFirstUser(profile?.Id)"
+          >
+            Remove
+          </button>
+        </li>
+      </ng-container>
+    </ul>
+  </ng-container>
+
+  <ng-container *ngIf="profiles.length === 0">
+    <span> No any users set to see first yet!</span>
+  </ng-container>
+</div>

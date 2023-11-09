@@ -1,0 +1,32 @@
+:host {
+  .left-sidebar.cus-scrollbar {
+    position: sticky;
+    top: 92px;
+    width: 100%;
+    max-height: calc(100vh - 112px);
+    overflow-x: auto;
+    cursor: pointer;
+
+    li {
+      margin-top: 15px;
+    }
+
+    .profile-pic {
+      .avatar-img {
+        border-radius: 15px;
+        min-width: 48px;
+        max-width: 48px;
+        min-height: 48px;
+        max-height: 48px;
+      }
+    }
+  }
+
+  .profile-link {
+    a.active, li.active > .toggle-dropdown {
+      i, span {
+        color: var(--primary-color) !important;
+      }
+    }
+  }
+}
