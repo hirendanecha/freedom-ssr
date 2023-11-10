@@ -40,6 +40,7 @@ export class LeftSidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserDetails();
+    this.sharedService.getUserDetails();
   }
 
   openWalletPopUp() {

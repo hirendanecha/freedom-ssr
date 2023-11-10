@@ -52,7 +52,7 @@ export class PostDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
   getPostsByPostId(): void {
@@ -66,23 +66,15 @@ export class PostDetailComponent implements OnInit {
             this.post = res?.[0];
             const html = document.createElement('div');
             html.innerHTML = this.post?.postdescription || this.post?.metadescription;
-            this.addTag();
-            // const data = {
-            //   title: this.post?.title,
-            //   url: `${environment.webUrl}post/${this.postId}`,
-            //   description: html.textContent,
-            //   image: this.post?.imageUrl,
-            //   video: this.post?.streamname
-            // }
-            // this.seoService.updateSeoMetaData(data, true);
-            // this.metaFrenzyService.setOpenGraph({
-            //   title: this.post?.title,
-            //   description: html.innerHTML,
-            //   type: 'website',
-            //   url: `${environment.webUrl}post/${this.postId}`,
-            //   image: this.post?.imageUrl,
-            //   site_name: 'Freedom buzz'
-            // });
+            // this.addTag();
+            const data = {
+              title: this.post?.title,
+              url: `${environment.webUrl}post/${this.postId}`,
+              description: html.textContent,
+              image: this.post?.imageUrl,
+              video: this.post?.streamname
+            }
+            this.seoService.updateSeoMetaData(data, true);
           }
         },
         error:

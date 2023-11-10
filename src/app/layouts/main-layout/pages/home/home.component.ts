@@ -153,7 +153,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               title: details?.CommunityName,
               url: `${environment.webUrl}${details?.pageType}/${details?.slug}`,
               description: details.CommunityDescription,
-              image: details?.coverImg
+              image: details?.logoImg || details?.coverImg
             }
             this.seoService.updateSeoMetaData(data);
 

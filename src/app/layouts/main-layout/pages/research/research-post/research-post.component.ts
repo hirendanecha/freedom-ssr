@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-research-post',
@@ -43,14 +44,14 @@ export class ResearchPostComponent {
             this.post = res?.[0];
             const html = document.createElement('div');
             html.innerHTML = this.post?.postdescription || this.post?.metadescription;
-            // const data = {
-            //   title: this.post?.title,
-            //   url: `${environment.webUrl}post/${this.postId}`,
-            //   description: html.textContent,
-            //   image: this.post?.imageUrl,
-            //   video: this.post?.streamname
-            // }
-            // this.seoService.updateSeoMetaData(data, true);
+            const data = {
+              title: this.post?.title,
+              url: `${environment.webUrl}post/${this.postId}`,
+              description: html.textContent,
+              image: this.post?.imageUrl,
+              video: this.post?.streamname
+            }
+            this.seoService.updateSeoMetaData(data, true);
             // this.metaFrenzyService.setOpenGraph({
             //   title: this.post?.title,
             //   description: html.innerHTML,
