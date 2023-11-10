@@ -72,9 +72,9 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
             title: this.customer?.FirstName + ' ' + this.customer?.LastName,
             url: `${environment.webUrl}settings/view-profile/${this.customer?.Id}`,
             description: '',
-            image: this.customer?.ProfilePicName
-          }
-          this.seoService.updateSeoMetaData(data);
+            image: this.customer?.ProfilePicName,
+          };
+          // this.seoService.updateSeoMetaData(data);
         }
       },
       error: (error) => {

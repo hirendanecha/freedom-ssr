@@ -69,9 +69,9 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       title: 'Freeedom buzz Registration',
       url: `${environment.webUrl}sign-up`,
       description: 'Registration page',
-      image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`
-    }
-    this.seoService.updateSeoMetaData(data);
+      image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`,
+    };
+    // this.seoService.updateSeoMetaData(data);
   }
 
   ngOnInit(): void {

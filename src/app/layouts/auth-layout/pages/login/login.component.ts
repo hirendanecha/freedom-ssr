@@ -51,16 +51,16 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.type = 'success';
       // this.toastService.success(this.msg);
     } else if (isVerify === 'true') {
-      this.msg = 'Account activated'
+      this.msg = 'Account activated';
       this.type = 'success';
     }
     const data = {
       title: 'Freeedom buzz login',
       url: `${environment.webUrl}login`,
       description: 'login page',
-      image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`
-    }
-    this.seoService.updateSeoMetaData(data);
+      image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`,
+    };
+    // this.seoService.updateSeoMetaData(data);
   }
 
   ngOnInit(): void {

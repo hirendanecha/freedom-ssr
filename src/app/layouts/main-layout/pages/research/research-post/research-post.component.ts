@@ -43,15 +43,16 @@ export class ResearchPostComponent {
           if (res?.[0]) {
             this.post = res?.[0];
             const html = document.createElement('div');
-            html.innerHTML = this.post?.postdescription || this.post?.metadescription;
+            html.innerHTML =
+              this.post?.postdescription || this.post?.metadescription;
             const data = {
               title: this.post?.title,
               url: `${environment.webUrl}post/${this.postId}`,
               description: html.textContent,
               image: this.post?.imageUrl,
-              video: this.post?.streamname
-            }
-            this.seoService.updateSeoMetaData(data, true);
+              video: this.post?.streamname,
+            };
+            // this.seoService.updateSeoMetaData(data, true);
             // this.metaFrenzyService.setOpenGraph({
             //   title: this.post?.title,
             //   description: html.innerHTML,

@@ -28,7 +28,7 @@ export class PostDetailComponent implements OnInit {
     private seoService: SeoService
   ) {
     this.postId = this.route.snapshot.paramMap.get('id');
-    console.log('route', this.route);
+    // console.log('route', this.route);
     if (this.postId) {
       this.getPostsByPostId();
     }
@@ -48,15 +48,16 @@ export class PostDetailComponent implements OnInit {
           if (res?.[0]) {
             this.post = res?.[0];
             const html = document.createElement('div');
-            html.innerHTML = this.post?.postdescription || this.post?.metadescription;
+            html.innerHTML =
+              this.post?.postdescription || this.post?.metadescription;
             const data = {
               title: this.post?.title,
               url: `${environment.webUrl}post/${this.postId}`,
               description: html.textContent,
               image: this.post?.imageUrl,
-              video: this.post?.streamname
-            }
-            this.seoService.updateSeoMetaData(data, true);
+              video: this.post?.streamname,
+            };
+            // this.seoService.updateSeoMetaData(data, true);
           }
         },
         error:

@@ -164,9 +164,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               title: details?.CommunityName,
               url: `${environment.webUrl}${details?.pageType}/${details?.slug}`,
               description: details.CommunityDescription,
-              image: details?.logoImg || details?.coverImg
-            }
-            this.seoService.updateSeoMetaData(data);
+              image: details?.logoImg || details?.coverImg,
+            };
+            // this.seoService.updateSeoMetaData(data);
             if (details?.memberList?.length > 0) {
               details['memberIds'] = details?.memberList?.map(
                 (member: any) => member?.profileId
