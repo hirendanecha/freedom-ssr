@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthenticationGuard } from './@shared/guards/authentication.guard';
 import { SharedModule } from './@shared/shared.module';
+import { SeoService } from './@shared/services/seo.service';
 
 @NgModule({
   declarations: [AppComponent, ToastsContainerComponent, LandingPageComponent],
@@ -28,8 +29,9 @@ import { SharedModule } from './@shared/shared.module';
     AuthenticationGuard,
     CookieService,
     Meta,
+    SeoService,
     provideClientHydration(),
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

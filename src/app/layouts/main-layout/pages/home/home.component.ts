@@ -22,6 +22,7 @@ import { TokenStorageService } from 'src/app/@shared/services/token-storage.serv
 import { environment } from 'src/environments/environment';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { AddCommunityModalComponent } from '../communities/add-community-modal/add-community-modal.component';
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -72,6 +73,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.profileId = localStorage.getItem('profileId');
     this.postData.profileid = +this.profileId;
 
+    // this.route.paramMap.subscribe((paramMap) => {
+    //   const name = paramMap.get('name');
+
+    //   if (name) {
+    //     this.communitySlug = name;
+    //     this.getCommunityDetailsBySlug();
+    //   }
+
+    //   this.isNavigationEnd = true;
+    // });
+  }
+
+  ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap) => {
       const name = paramMap.get('name');
 
@@ -82,9 +96,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.isNavigationEnd = true;
     });
-  }
-
-  ngOnInit(): void {
 
   }
 
@@ -156,7 +167,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               image: details?.logoImg || details?.coverImg
             }
             this.seoService.updateSeoMetaData(data);
-
             if (details?.memberList?.length > 0) {
               details['memberIds'] = details?.memberList?.map(
                 (member: any) => member?.profileId

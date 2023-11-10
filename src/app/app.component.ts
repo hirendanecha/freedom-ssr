@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, Inject } from '@angular/core';
+import { SharedService } from './@shared/services/shared.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { DOCUMENT } from '@angular/common';
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -7,12 +11,36 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'freedom-ssr';
+  showButton = false;
 
-  openLoginPage() {
-    console.log('Login Button Clicked!!');
+  constructor(
+    private sharedService: SharedService,
+    private spinner: NgxSpinnerService
+  ) {
   }
 
-  openSignPage() {
-    console.log('Sign Up Button Clicked!!');
+  ngOnInit(): void {
+    this.sharedService.getUserDetails();
+  }
+
+  ngAfterViewInit(): void {
+    this.spinner.hide();
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    if (window.scrollY > 300) {
+      this.showButton = true;
+    } else {
+      this.showButton = false;
+    }
+  }
+
+  scrollToTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
   }
 }
