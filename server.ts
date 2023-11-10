@@ -14,7 +14,7 @@ export function app(): express.Express {
   const distFolder = join(process.cwd(), 'dist/freedom-ssr/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
-  const domino = require('domino');
+  const domino = require('domino-ext');
   const fs = require('fs');
   const path = require('path');
   const template = fs
@@ -34,6 +34,7 @@ export function app(): express.Express {
   global['navigator'] = window.navigator;
   global['Event'] = window.Event;
   global['Event']['prototype'] = window.Event.prototype;
+  global['HTMLElement'] = window.HTMLElement;
   // global.google = google;
   global['getComputedStyle'] = window.getComputedStyle;
 
