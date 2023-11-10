@@ -73,19 +73,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.profileId = localStorage.getItem('profileId');
     this.postData.profileid = +this.profileId;
 
-    // this.route.paramMap.subscribe((paramMap) => {
-    //   const name = paramMap.get('name');
-
-    //   if (name) {
-    //     this.communitySlug = name;
-    //     this.getCommunityDetailsBySlug();
-    //   }
-
-    //   this.isNavigationEnd = true;
-    // });
-  }
-
-  ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap) => {
       const name = paramMap.get('name');
 
@@ -96,6 +83,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.isNavigationEnd = true;
     });
+  }
+
+  ngOnInit(): void {
+    // this.route.paramMap.subscribe((paramMap) => {
+    //   const name = paramMap.get('name');
+
+    //   if (name) {
+    //     this.communitySlug = name;
+    //     this.getCommunityDetailsBySlug();
+    //   }
+
+    //   this.isNavigationEnd = true;
+    // });
 
   }
 

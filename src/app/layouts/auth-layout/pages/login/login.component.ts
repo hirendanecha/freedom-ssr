@@ -11,6 +11,7 @@ import { SharedService } from 'src/app/@shared/services/shared.service';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
+import { SeoService } from 'src/app/@shared/services/seo.service';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +41,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private toastService: ToastService,
     private sharedService: SharedService,
     private customerService: CustomerService,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private seoService: SeoService
   ) {
     const isVerify = this.route.snapshot.queryParams.isVerify;
     if (isVerify === 'false') {
@@ -52,6 +54,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.msg = 'Account activated'
       this.type = 'success';
     }
+    const data = {
+      title: 'Freeedom buzz login',
+      url: `${environment.webUrl}login`,
+      description: 'login page',
+      image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`
+    }
+    this.seoService.updateSeoMetaData(data);
   }
 
   ngOnInit(): void {

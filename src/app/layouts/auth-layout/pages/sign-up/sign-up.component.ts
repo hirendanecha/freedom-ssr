@@ -11,8 +11,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { debounceTime, fromEvent } from 'rxjs';
 import { Customer } from 'src/app/@shared/constant/customer';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
+import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -60,8 +62,17 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     private customerService: CustomerService,
     private router: Router,
     private uploadService: UploadFilesService,
-    private toastService: ToastService
-  ) {}
+    private toastService: ToastService,
+    private seoService: SeoService
+  ) {
+    const data = {
+      title: 'Freeedom buzz Registration',
+      url: `${environment.webUrl}sign-up`,
+      description: 'Registration page',
+      image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`
+    }
+    this.seoService.updateSeoMetaData(data);
+  }
 
   ngOnInit(): void {
     this.getAllCountries();
