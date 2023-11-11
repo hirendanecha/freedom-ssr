@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { MetafrenzyService } from 'ngx-metafrenzy';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
@@ -14,6 +15,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',
   styleUrls: ['./post-detail.component.scss'],
+  providers: [MetafrenzyService]
 })
 export class PostDetailComponent implements OnInit {
 
@@ -25,7 +27,8 @@ export class PostDetailComponent implements OnInit {
     private postService: PostService,
     public sharedService: SharedService,
     private route: ActivatedRoute,
-    private seoService: SeoService
+    private seoService: SeoService,
+    private metafrenzyService: MetafrenzyService
   ) {
     this.postId = this.route.snapshot.paramMap.get('id');
     // console.log('route', this.route);
@@ -57,6 +60,15 @@ export class PostDetailComponent implements OnInit {
               image: this.post?.imageUrl,
               video: this.post?.streamname,
             };
+            this.metafrenzyService.setTitle(data.title);
+            this.metafrenzyService.setOpenGraph({
+              title: data.title,
+              //description: post.postToProfileIdName === '' ? post.profileName: post.postToProfileIdName,
+              description: html.textContent,
+              url: data.url,
+              image: data.image,
+              site_name: 'Freedom.Buzz'
+            });
             // this.seoService.updateSeoMetaData(data, true);
           }
         },
