@@ -30,7 +30,7 @@ const routes: Routes = [
             content: window.location.href
           }, {
             name: 'og:image',
-            content: 'https://dev.freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg'
+            content: 'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg'
           }
         ],
         links: [
