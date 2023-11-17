@@ -2,7 +2,9 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Inject,
   OnInit,
+  PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +18,7 @@ import { PostService } from 'src/app/@shared/services/post.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-edit-profile',
@@ -55,6 +58,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     private postService: PostService,
     public sharedService: SharedService,
     private toastService: ToastService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.userlocalId = +localStorage.getItem('user_id');
     this.userId = this.route.snapshot.paramMap.get('id');
@@ -69,8 +73,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (!this.tokenStorage.getToken()) {
-      this.router.navigate([`/login`]);
+    if (isPlatformBrowser(this.platformId)) {
+      if (!this.tokenStorage.getToken()) {
+        this.router.navigate([`/login`]);
+      }
     }
     this.modalService.dismissAll();
   }

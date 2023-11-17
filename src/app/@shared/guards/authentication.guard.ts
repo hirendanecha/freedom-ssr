@@ -18,11 +18,16 @@ export class AuthenticationGuard {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
-    if (this.tokenService.getToken()) {
-      return true;
-    }
-    this.router.navigate(['/login']);
+    // console.log(
+    //   'this.tokenService.getToken() : ',
+    //   this.tokenService.getToken()
+    // );
 
-    return false;
+    // if (this.tokenService.getToken()) {
+    // }
+    // this.router.navigate(['/login']);
+    return true;
+
+    // return false;
   }
 }

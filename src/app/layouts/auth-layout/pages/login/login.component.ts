@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +18,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +49,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private sharedService: SharedService,
     private customerService: CustomerService,
     private tokenStorageService: TokenStorageService,
-    private seoService: SeoService
+    private seoService: SeoService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     const isVerify = this.route.snapshot.queryParams.isVerify;
     if (isVerify === 'false') {
@@ -64,9 +72,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (this.tokenStorage.getToken()) {
-      this.isLoggedIn = true;
-      this.router.navigate([`/home`]);
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.tokenStorage.getToken()) {
+        this.isLoggedIn = true;
+        this.router.navigate([`/home`]);
+      }
     }
 
     this.loginForm = this.fb.group({
@@ -75,8 +85,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   onSubmit(): void {
     this.spinner.show();
@@ -116,27 +125,25 @@ export class LoginComponent implements OnInit, AfterViewInit {
         // this.toastService.danger(this.errorMessage);
         this.isLoginFailed = true;
         this.errorCode = err.error.errorCode;
-      }
+      },
     });
   }
 
   resend() {
     this.authService
       .userVerificationResend({ username: this.loginForm.value.login_email })
-      .subscribe(
-        {
-          next: (result: any) => {
-            this.msg = result.message;
-            // this.toastService.success(this.msg);
-            this.type = 'success';
-          },
-          error:
-            (error) => {
-              this.msg = error.message;
-              // this.toastService.danger(this.msg);
-              this.type = 'danger';
-            }
-        });
+      .subscribe({
+        next: (result: any) => {
+          this.msg = result.message;
+          // this.toastService.success(this.msg);
+          this.type = 'success';
+        },
+        error: (error) => {
+          this.msg = error.message;
+          // this.toastService.danger(this.msg);
+          this.type = 'danger';
+        },
+      });
   }
 
   forgotPasswordOpen() {
@@ -148,10 +155,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.confirmButtonLabel = 'Submit';
     modalRef.componentInstance.closeIcon = true;
-    modalRef.result.then(res => {
+    modalRef.result.then((res) => {
       if (res === 'success') {
-        this.msg = 'If the entered email exists you will receive a email to change your password.'
-        this.type = 'success'
+        this.msg =
+          'If the entered email exists you will receive a email to change your password.';
+        this.type = 'success';
       }
     });
   }

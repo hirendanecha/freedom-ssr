@@ -3,9 +3,11 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnInit,
   Output,
+  PLATFORM_ID,
   Renderer2,
   ViewChild,
 } from '@angular/core';
@@ -26,6 +28,7 @@ import { TokenStorageService } from '../../services/token-storage.service';
 import { SeoService } from '../../services/seo.service';
 import { BreakpointService } from '../../services/breakpoint.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { isPlatformBrowser } from '@angular/common';
 
 declare var jwplayer: any;
 @Component({
@@ -82,7 +85,8 @@ export class PostCardComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     public tokenService: TokenStorageService,
     private seoService: SeoService,
-    public breakpointService: BreakpointService
+    public breakpointService: BreakpointService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.profileId = localStorage.getItem('profileId');
   }
@@ -486,12 +490,14 @@ export class PostCardComponent implements OnInit, AfterViewInit {
       controls: true,
     };
     if (id) {
-      const jwPlayer = jwplayer('jwVideo-' + id);
-      if (jwPlayer) {
-        this.player = jwPlayer?.setup({
-          ...config,
-        });
-        this.player?.load();
+      if (isPlatformBrowser(this.platformId)) {
+        const jwPlayer = jwplayer('jwVideo-' + id);
+        if (jwPlayer) {
+          this.player = jwPlayer?.setup({
+            ...config,
+          });
+          this.player?.load();
+        }
       }
     }
   }

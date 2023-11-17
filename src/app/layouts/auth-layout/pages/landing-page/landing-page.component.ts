@@ -1,4 +1,11 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  PLATFORM_ID,
+  Renderer2,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
@@ -19,20 +26,23 @@ export class LandingPageComponent {
     private el: ElementRef,
     private customerService: CustomerService,
     private tokenStorageService: TokenStorageService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    const path = this.route.snapshot.routeConfig.path;
-    if (path === 'logout') {
-      this.logout();
-    } else if (this.tokenStorageService.getToken()) {
-      this.router.navigate(['/home']);
+    if (isPlatformBrowser(this.platformId)) {
+      const path = this.route.snapshot.routeConfig.path;
+      if (path === 'logout') {
+        this.logout();
+      } else if (this.tokenStorageService.getToken()) {
+        this.router.navigate(['/home']);
+      }
     }
     console.log('Constructor');
   }
 
   openLoginPage(): void {
     console.log('Login Clicked!');
-    
+
     this.closeMenu();
     this.router.navigate(['/login']);
   }

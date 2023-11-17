@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MetafrenzyService } from 'ngx-metafrenzy';
@@ -17,7 +25,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-view-profile',
   templateUrl: './view-profile.component.html',
   styleUrls: ['./view-profile.component.scss'],
-  providers: [MetafrenzyService]
+  providers: [MetafrenzyService],
 })
 export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   customer: any = {};
@@ -43,11 +51,12 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     public breakpointService: BreakpointService,
     private postService: PostService,
     private seoService: SeoService,
-    private metafrenzyService: MetafrenzyService
+    private metafrenzyService: MetafrenzyService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.router.events.subscribe((event: any) => {
       const id = event?.routerEvent?.url.split('/')[3];
-      this.profileId = id
+      this.profileId = id;
       if (id) {
         this.getProfile(id);
       }
@@ -55,13 +64,15 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   ngOnInit(): void {
-    if (!this.tokenStorage.getToken()) {
-      this.router.navigate([`/login`]);
+    if (isPlatformBrowser(this.platformId)) {
+      if (!this.tokenStorage.getToken()) {
+        this.router.navigate([`/login`]);
+      }
     }
     this.modalService.close();
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   getProfile(id): void {
     this.spinner.show();
@@ -82,14 +93,14 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
           this.metafrenzyService.setMetaTag('og:description', data.description);
           this.metafrenzyService.setMetaTag('og:url', data.url);
           this.metafrenzyService.setMetaTag('og:image', data.image);
-          this.metafrenzyService.setMetaTag("og:site_name", 'Freedom.Buzz');
+          this.metafrenzyService.setMetaTag('og:site_name', 'Freedom.Buzz');
           this.metafrenzyService.setOpenGraph({
             title: data.title,
             //description: post.postToProfileIdName === '' ? post.profileName: post.postToProfileIdName,
             description: data.description,
             url: data.url,
             image: data.image,
-            site_name: 'Freedom.Buzz'
+            site_name: 'Freedom.Buzz',
           });
           // this.seoService.updateSeoMetaData(data);
         }
@@ -146,21 +157,19 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getPdfs(): void {
-    this.postService.getPdfsFile(this.customer.Id).subscribe(
-      {
-        next: (res: any) => {
-          this.spinner.hide();
-          if (res) {
-            this.pdfList = res;
-            console.log(this.pdfList);
-          }
-        },
-        error:
-          (error) => {
-            this.spinner.hide();
-            console.log(error);
-          }
-      });
+    this.postService.getPdfsFile(this.customer.Id).subscribe({
+      next: (res: any) => {
+        this.spinner.hide();
+        if (res) {
+          this.pdfList = res;
+          console.log(this.pdfList);
+        }
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
+    });
   }
 
   viewUserPost(id) {
@@ -172,7 +181,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     const pdfLink = document.createElement('a');
     pdfLink.href = pdf;
     window.open(pdf);
-    pdfLink.download = "TestFile.pdf";
+    pdfLink.download = 'TestFile.pdf';
     pdfLink.click();
   }
 }
