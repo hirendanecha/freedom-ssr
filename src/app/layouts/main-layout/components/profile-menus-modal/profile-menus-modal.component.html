@@ -17,6 +17,7 @@
   </div>
   <div class="view-profile my-2">
     <a
+      [routerLink]="'settings/view-profile/' + profileId"
       class="mdtxt w-100 text-center py-2"
       (click)="closeMenu($event, 'profile')"
       >View Profile</a
@@ -24,7 +25,9 @@
   </div>
   <ul class="ps-0">
     <li>
-      <a class="mdtxt" (click)="closeMenu($event, 'setting')">
+      <a 
+        [routerLink]="'settings/edit-profile/' + userId"
+        class="mdtxt" (click)="closeMenu($event, 'setting')">
         <fa-icon [icon]="['fas', 'gear']" class="font-20-px" />
         Setting & Privacy
       </a>

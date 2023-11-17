@@ -231,12 +231,14 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
           if (!res.error) {
             this.toastService.success(res.message);
             this.sharedService.getUserDetails();
+          } else {
+            this.toastService.danger(res?.message);
           }
         },
         error: (error) => {
+          console.log(error.error.message);
           this.spinner.hide();
-          this.toastService.danger('Please try again');
-          console.log(error);
+          this.toastService.danger(error.error.message);
         }
       });
     }

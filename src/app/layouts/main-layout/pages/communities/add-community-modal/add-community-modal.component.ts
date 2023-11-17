@@ -50,9 +50,9 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     isApprove: new FormControl('N', [Validators.required]),
     Country: new FormControl('US', [Validators.required]),
     Zip: new FormControl('', Validators.required),
-    State: new FormControl('', Validators.required),
-    City: new FormControl('', Validators.required),
-    County: new FormControl('', Validators.required),
+    State: new FormControl({value:'',disabled: true}, Validators.required),
+    City: new FormControl({value:'',disabled: true}, Validators.required),
+    County: new FormControl({value:'',disabled: true}, Validators.required),
     logoImg: new FormControl('', Validators.required),
     coverImg: new FormControl('', Validators.required),
   });

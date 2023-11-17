@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ConfirmationModalComponent } from 'src/app/@shared/modals/confirmation-modal/confirmation-modal.component';
 import { CommunityService } from 'src/app/@shared/services/community.service';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     file: {},
     imageUrl: '',
     posttype: 'S',
-    pdfUrl: ''
+    pdfUrl: '',
   };
 
   communitySlug: string;
@@ -58,6 +58,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   userList: any = [];
   memberIds: any = [];
   pdfName: string = '';
+  notificationId: number;
+  buttonClicked = false;
+
   constructor(
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
@@ -89,17 +92,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // this.route.paramMap.subscribe((paramMap) => {
-    //   const name = paramMap.get('name');
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        window.scrollTo(0, 0);
+      }
+    });
+  }
 
-    //   if (name) {
-    //     this.communitySlug = name;
-    //     this.getCommunityDetailsBySlug();
-    //   }
-
-    //   this.isNavigationEnd = true;
-    // });
-
+  ngAfterViewInit(): void {
     if (!this.socketService.socket.connected) {
       this.socketService.socket.connect();
     }
@@ -108,9 +108,25 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketService.socket.on('notification', (data: any) => {
       console.log(data);
       if (data) {
+        this.notificationId = data.id;
         this.sharedService.isNotify = true;
+        if (this.notificationId) {
+          this.customerService.getNotification(this.notificationId).subscribe({
+            next: (res) => {
+              console.log(res);
+              localStorage.setItem('isRead', res.data[0]?.isRead);
+            },
+            error: (error) => {
+              console.log(error);
+            },
+          });
+        }
       }
     });
+    const isRead = localStorage.getItem('isRead');
+    if (isRead === 'N') {
+      this.sharedService.isNotify = true;
+    }
     this.socketService.socket.on(
       'new-post-added',
       (res: any) => {
@@ -122,21 +138,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log(error);
       }
     );
-
   }
 
-  ngAfterViewInit(): void {
-
-  }
-
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
     // console.log(file)
-    if (file.type.includes("application/pdf")) {
+    if (file.type.includes('application/pdf')) {
       this.postData['file'] = file;
-      this.pdfName = file?.name
+      this.pdfName = file?.name;
       this.postData['imageUrl'] = null;
       this.postData['streamname'] = null;
     } else {
@@ -169,7 +180,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               title: details?.CommunityName,
               url: `${environment.webUrl}${details?.pageType}/${details?.slug}`,
               description: details.CommunityDescription,
-              image: details?.logoImg || details?.coverImg,
+              image: details?.coverImg,
             };
             this.metafrenzyService.setTitle(data.title);
             this.metafrenzyService.setMetaTag('og:title', data.title);
@@ -186,6 +197,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               site_name: 'Freedom.Buzz'
             });
             // this.seoService.updateSeoMetaData(data);
+
             if (details?.memberList?.length > 0) {
               details['memberIds'] = details?.memberList?.map(
                 (member: any) => member?.profileId
@@ -247,7 +259,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (res: any) => {
             // this.spinner.hide();
             if (res?.body?.url) {
-              if (this.postData?.file.type.includes("application/pdf")) {
+              if (this.postData?.file.type.includes('application/pdf')) {
                 this.postData['pdfUrl'] = res?.body?.url;
                 console.log('pdfUrl', res?.body?.url);
                 this.postData['imageUrl'] = null;
@@ -269,7 +281,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         });
       } else {
-        this.spinner.hide()
+        this.spinner.hide();
         this.createOrEditPost();
       }
     }
@@ -277,9 +289,26 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   createOrEditPost(): void {
     this.postData.tags = getTagUsersFromAnchorTags(this.postMessageTags);
-    if (this.postData?.postdescription || this.postData?.imageUrl || this.postData?.pdfUrl) {
+    if (
+      this.postData?.postdescription ||
+      this.postData?.imageUrl ||
+      this.postData?.pdfUrl
+    ) {
+      if (!this.postData.meta.metalink) {
+        this.postData.metalink = null
+        this.postData.title = null
+        this.postData.metaimage = null
+        this.postData.metadescription = null
+        console.log(this.postData);
+        
+      }
+      
       // this.spinner.show();
-      console.log('postData', this.postData, this.socketService.socket?.connected);
+      console.log(
+        'postData',
+        this.postData,
+        this.socketService.socket?.connected
+      );
       this.toastService.success('Post created successfully.');
       this.socketService?.createOrEditPost(this.postData);
       // , (data) => {
@@ -317,12 +346,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (post.posttype === 'V') {
       this.openUploadVideoModal(post);
     } else if (post.pdfUrl) {
-      this.pdfName = post.pdfUrl.split('/')[3]
-      console.log(this.pdfName)
+      this.pdfName = post.pdfUrl.split('/')[3];
+      console.log(this.pdfName);
       this.postData = { ...post };
       this.postMessageInputValue = this.postData?.postdescription;
-    }
-    else {
+    } else {
       this.postData = { ...post };
       this.postMessageInputValue = this.postData?.postdescription;
     }
@@ -331,7 +359,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       left: 0,
       behavior: 'smooth',
     });
-
   }
 
   editCommunity(data): void {
@@ -339,14 +366,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       centered: true,
       backdrop: 'static',
       keyboard: false,
-      size: 'lg'
+      size: 'lg',
     });
     modalRef.componentInstance.title = 'Edit Community Details';
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.confirmButtonLabel = 'Save';
     modalRef.componentInstance.closeIcon = true;
     modalRef.componentInstance.data = data;
-    modalRef.result.then(res => {
+    modalRef.result.then((res) => {
       if (res === 'success') {
         this.router.navigate(['communities']);
       }
@@ -354,25 +381,28 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   joinCommunity(id?): void {
-    const profileId = id || localStorage.getItem('profileId');
-    const data = {
-      profileId: profileId,
-      communityId: this.communityDetails?.Id,
-      IsActive: 'Y',
-      isAdmin: 'Y'
-    };
-    this.searchText = '';
-    console.log(data);
-    this.communityService.joinCommunity(data).subscribe(
-      (res: any) => {
-        if (res) {
-          this.getCommunityDetailsBySlug();
+    if (!this.buttonClicked) {
+      const profileId = id || localStorage.getItem('profileId');
+      const data = {
+        profileId: profileId,
+        communityId: this.communityDetails?.Id,
+        IsActive: 'Y',
+        isAdmin: 'Y',
+      };
+      this.searchText = '';
+      console.log(data);
+      this.communityService.joinCommunity(data).subscribe(
+        (res: any) => {
+          if (res) {
+            this.getCommunityDetailsBySlug();
+          }
+        },
+        (error) => {
+          console.log(error);
         }
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+      );
+      this.buttonClicked = true;
+    }
   }
 
   removeFromCommunity(id?): void {
@@ -426,9 +456,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.toastService.success(res.message);
                 // this.getCommunityDetailsBySlug();
                 this.router.navigate([
-                  `${this.communityDetails.pageType === 'community'
-                    ? 'communities'
-                    : 'pages'
+                  `${
+                    this.communityDetails.pageType === 'community'
+                      ? 'communities'
+                      : 'pages'
                   }`,
                 ]);
               }
@@ -463,20 +494,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   openUploadVideoModal(post: any = {}): void {
     const modalRef = this.modalService.open(VideoPostModalComponent, {
       centered: true,
-      size: 'lg'
-    })
+      size: 'lg',
+    });
     modalRef.componentInstance.title = post.id ? `Edit Video` : `Upload Video`;
-    modalRef.componentInstance.confirmButtonLabel = post.id ? `Edit Post` : 'Create Post';
+    modalRef.componentInstance.confirmButtonLabel = post.id
+      ? `Save`
+      : 'Create Post';
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.communityId = this.communityDetails?.Id;
-    modalRef.componentInstance.post = post.id ? post : null
-    modalRef.result.then(res => {
+    modalRef.componentInstance.post = post.id ? post : null;
+    modalRef.result.then((res) => {
       if (res === 'success') {
-        this.socketService.socket.on(
-          'new-post'
-        );
+        this.socketService.socket.on('new-post');
       }
-    })
+    });
   }
 
   openAlertMessage(): void {
@@ -494,5 +525,4 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
-
 }

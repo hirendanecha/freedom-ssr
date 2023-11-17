@@ -19,7 +19,7 @@
         display: -webkit-box;
         flex-wrap: wrap;
         width: 100%;
-        max-width: 200px;
+        // max-width: 200px;
         height: 74px;
         overflow: hidden;
         -webkit-line-clamp: 4;
@@ -38,6 +38,11 @@
     .card-body {
       .card-text * {
         font-size: 12px !important;
+      }
+      span{
+        a{
+          color: rgba(var(--bs-danger-rgb));
+        }
       }
     }
   }

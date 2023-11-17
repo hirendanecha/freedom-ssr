@@ -62,7 +62,12 @@ export class CustomerService {
   }
 
   updateProfile(id, customer: Customer): Observable<Object> {
-    return this.http.put(`${this.baseUrl}/profile/${id}`, customer);
+    const token = localStorage.getItem("auth-token");
+    return this.http.put(`${this.baseUrl}/profile/${id}`, customer, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    });
   }
 
   getProfileList(searchText): Observable<object> {
@@ -90,6 +95,12 @@ export class CustomerService {
   logout(): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/logout`
+    );
+  }
+
+  getNotification(id): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/notification/${id}`
     );
   }
 }

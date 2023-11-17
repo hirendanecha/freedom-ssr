@@ -52,7 +52,7 @@ export class ReplyCommentModalComponent implements AfterViewInit {
     if (file.type.includes('image/')) {
       this.commentData['file'] = file;
       this.commentData['imageUrl'] = URL.createObjectURL(file);
-    } 
+    }
     else {
       this.toastService.danger(`sorry ${file.type} are not allowed!`)
     }
@@ -69,6 +69,7 @@ export class ReplyCommentModalComponent implements AfterViewInit {
 
   onChangeComment(): void {
     this.commentData.tags = getTagUsersFromAnchorTags(this.commentMessageTags);
+    console.log(this.commentData.tags)
     this.activeModal.close(this.commentData);
   }
 

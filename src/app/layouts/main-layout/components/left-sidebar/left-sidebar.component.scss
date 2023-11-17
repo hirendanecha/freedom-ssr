@@ -20,6 +20,24 @@
         max-height: 48px;
       }
     }
+    span{
+      font-size: 18px;
+    }
+  }
+
+  .abs-area{
+    right: initial;
+    top: 255px;
+    // top: 153px;
+    left: 40px;
+    width: 15px;
+    height: 15px;
+    background: var(--highlight-color);
+    border-radius: 50%;
+
+    @media (max-width:991px) {
+    top: 119px;
+    }
   }
 
   .profile-link {

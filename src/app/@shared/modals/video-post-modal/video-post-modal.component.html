@@ -152,21 +152,20 @@
 </ng-container>
 
 <ng-container *ngIf="isProgress">
-  <div class="modal-header justify-content-end">
+  <!-- <div class="modal-header justify-content-end">
     <fa-icon
       [icon]="['fas', 'xmark']"
       class="font-20-px"
       role="button"
       (click)="activeModal.close()"
     />
-  </div>
+  </div> -->
   <div class="modal-body text-center">
     <div class="progress-bar-body">
       <h5>
-        Your video is being uploaded, we will notify you when it is ready.
-        Upload process may take several minutes depending on traffic on server.
-        Don't close browser or redirect to another page when uploading is in
-        progress else uploading will stop!
+        It will take a while to upload long videos or if your internet connection is bad.
+        You MUST keep your browser tab open to avoid interruptions. 
+        If you close this browser tab, you video will stop uploading. 
       </h5>
     </div>
     <div class="osahan-progress">
@@ -189,13 +188,14 @@
       </div>
     </div>
   </div>
-  <!-- <div class="modal-footer justify-content-end gap-2">
+  <div class="modal-footer justify-content-end gap-2">
     <button
       type="button"
       class="btn btn-sm btn-danger"
-      (click)="activeModal.close()"
-    >
-      Okay
+      (click)="stopUploadVideo()"
+      >
+      <!-- (click)="activeModal.close()" -->
+    Stop Upload
     </button>
-  </div> -->
+  </div>
 </ng-container>

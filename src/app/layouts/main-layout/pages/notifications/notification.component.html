@@ -7,6 +7,7 @@
       <div
         class="notification-single d-center p-5 gap-5 justify-content-between"
       >
+      <a [routerLink]="'/post/' + notification.postId">
         <div class="d-flex top-review-wrapper gap-3 align-items-center">
           <div class="avatar-item">
             <img
@@ -33,6 +34,7 @@
             <span class="mdtxt time-schedule">{{ notification.createDate | dateDay }}</span>
           </div>
         </div>
+      </a>
         <div class="btn-group cus-dropdown d-flex gap-3">
           <div ngbDropdown class="d-inline-block">
             <button class="dropdown-btn" ngbDropdownToggle>
@@ -74,6 +76,6 @@
   </ng-container>
 
   <ng-container *ngIf="notificationList.length === 0">
-    <span> No any notifications to see yet!</span>
+    <span> No notifications!</span>
   </ng-container>
 </div>

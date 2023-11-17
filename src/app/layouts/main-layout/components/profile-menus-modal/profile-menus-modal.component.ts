@@ -14,6 +14,8 @@ import { ForgotPasswordComponent } from 'src/app/layouts/auth-layout/pages/forgo
   styleUrls: ['./profile-menus-modal.component.scss']
 })
 export class ProfileMenusModalComponent {
+  profileId: number;
+  userId: number
 
   constructor(
     public sharedService: SharedService,
@@ -25,7 +27,10 @@ export class ProfileMenusModalComponent {
     private router: Router,
     private customerService: CustomerService,
     private cookieService: CookieService,
-  ) { }
+  ) {
+    this.userId = +localStorage.getItem('user_id');
+    this.profileId = +localStorage.getItem('profileId');
+   }
 
   closeMenu(e: MouseEvent, type: string) {
     if (e && type) {
@@ -67,13 +72,13 @@ export class ProfileMenusModalComponent {
   }
 
   goToSetting() {
-    const userId = localStorage.getItem('user_id');
-    this.router.navigate([`settings/edit-profile/${userId}`]);
+    this.router.navigate([`settings/edit-profile/${this.userId}`]);
+    // window.open(`settings/edit-profile/${userId}`, '_blank')
   }
-
+  
   goToViewProfile() {
-    const profileId = localStorage.getItem('profileId');
-    this.router.navigate([`settings/view-profile/${profileId}`]);
+    // window.open(`settings/view-profile/${profileId}`, '_blank')
+    this.router.navigate([`settings/view-profile/${this.profileId}`]);
   }
 
   forgotPasswordOpen() {

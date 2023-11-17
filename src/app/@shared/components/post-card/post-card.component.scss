@@ -337,12 +337,18 @@
       max-width: 206px;
     }
   }
-}
-
-::ng-deep {
-  p {
-    h1 {
-      font-size: 16px !important;
+  ::ng-deep {
+    p {
+      h1 {
+        font-size: 16px !important;
+      }
+      img,
+      svg {
+        max-width: 16px;
+        max-height: 16px;
+        vertical-align: middle;
+        margin-right: 5px;
+      }
     }
   }
 }

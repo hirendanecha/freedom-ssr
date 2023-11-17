@@ -45,14 +45,13 @@
         </div>
         <div class="row">
           <div class="col-12 col-md-6 mb-3">
-            <label class="d-flex form-label align-items-center">User Name<span class="font-12-px ms-2">(not editable)</span></label>
+            <label class="d-flex form-label align-items-center">User Name</label>
             <input
               type="text"
               name="uname"
               class="input-area"
               placeholder="Enter your Username"
               [(ngModel)]="customer.Username"
-              disabled
             />
           </div>
           <div class="col-12 col-md-6 mb-3">
@@ -114,27 +113,44 @@
           </div>
           <div class="col-12 col-md-6 mb-3">
             <label class="d-flex form-label">City</label>
-            <input
+            <!-- <input
               type="text"
               class="input-area"
               name="city"
               placeholder="Enter your city"
               disabled
               [(ngModel)]="customer.City"
-            />
+            /> -->
+
+            <input
+            type="text"
+            class="input-area"
+            name="County"
+            placeholder="Enter your city"
+            disabled
+            [(ngModel)]="customer.County"
+          />
           </div>
         </div>
         <div class="row">
           <div class="col-6 col-md-6 mb-3">
             <label class="d-flex form-label">County</label>
-            <input
+            <!-- <input
               type="text"
               class="input-area"
               name="County"
               placeholder="Enter your county"
               disabled
               [(ngModel)]="customer.County"
-            />
+            /> -->
+            <input
+            type="text"
+            class="input-area"
+            name="city"
+            placeholder="Enter your county"
+            disabled
+            [(ngModel)]="customer.City"
+          />
           </div>
           <div class="col-6 col-md-6 mb-3">
             <label class="d-flex form-label">Mobile</label>

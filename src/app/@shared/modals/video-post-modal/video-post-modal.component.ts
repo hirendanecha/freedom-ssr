@@ -135,7 +135,7 @@ export class VideoPostModalComponent implements AfterViewInit {
     const interval = setInterval(() => {
       if (this.progressValue < 92) {
         this.progressValue =
-          this.progressValue > 92
+          this.progressValue > 95
             ? this.progressValue
             : this.progressValue + Math.floor(Math.random() * 10);
       }
@@ -227,5 +227,11 @@ export class VideoPostModalComponent implements AfterViewInit {
 
   onChangeTag(event) {
     this.postData.keywords = event.target.value.replaceAll(' ', ',');
+  }
+
+  stopUploadVideo(){
+    // this.postData = null
+    this.activeModal.close()
+    location.reload();
   }
 }

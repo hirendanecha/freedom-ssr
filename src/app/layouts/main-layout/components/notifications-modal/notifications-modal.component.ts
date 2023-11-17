@@ -25,6 +25,7 @@ export class NotificationsModalComponent {
     this.customerService.readUnreadNotification(notificationId, 'Y').subscribe({
       next: (res) => {
         this.router.navigate([`post/${postId}`]);
+        // window.open(`post/${postId}`.toString(), '_blank')
         this.closeModal();
       },
     });

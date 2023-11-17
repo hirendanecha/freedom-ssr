@@ -22,6 +22,17 @@
       </div>
     </div>
     <ul class="profile-link m-0 mt-5 p-0 border-bottom-0">
+      <li class="ms-2">
+        <a
+          class="d-flex gap-4"
+          routerLink="/home"
+          routerLinkActive="active"
+          (click)="reloadPage()"
+        >
+          <fa-icon [icon]="['fas', 'home']" class="font-24-px" />
+          <span>Home</span>
+        </a>
+      </li>
       <li>
         <a
           class="d-flex gap-4"
@@ -44,10 +55,35 @@
           <span>Freedom Pages</span>
         </a>
       </li>
+      <li class="ms-2">
+        <a
+          class="d-flex gap-4"
+          routerLink="/notifications"
+          routerLinkActive="active"
+          (click)="notificationNavigation()"
+        >
+          <!-- (click)="closeSidebar()" -->
+          <span
+            *ngIf="sharedService.isNotify"
+            class="abs-area position-absolute d-center smtxt"
+          ></span>
+          <fa-icon [icon]="['fas', 'bell']" class="font-24-px" />
+          <span>Notifications</span>
+        </a>
+      </li>
+      <li class="ms-2">
+        <a
+          class="d-flex gap-4"
+          [routerLink]="'settings/view-profile/' + profileId"
+          routerLinkActive="active"
+        >
+          <fa-icon [icon]="['fas', 'gear']" class="font-20-px" />
+          <span>View Profile</span>
+        </a>
+      </li>
       <li>
         <a
           href="https://1776token.com/"
-          target="_blank"
           class="d-flex gap-4"
           (click)="closeSidebar()"
         >
@@ -58,7 +94,6 @@
       <li>
         <a
           href="https://localfoods.market/"
-          target="_blank"
           class="d-flex gap-4"
           (click)="closeSidebar()"
         >
@@ -69,7 +104,6 @@
       <li>
         <a
           href="https://lamarslist.com/"
-          target="_blank"
           class="d-flex gap-4"
           (click)="closeSidebar()"
         >

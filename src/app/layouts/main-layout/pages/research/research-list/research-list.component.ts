@@ -24,6 +24,7 @@ export class ResearchListComponent {
   btnGroupViewTypeCtrl: FormControl;
 
   selectedImgFile: any;
+  selectedpdfFile: any;
 
   groupPosts: any = [];
   pagination: any = {
@@ -47,6 +48,9 @@ export class ResearchListComponent {
 
   postImageUrl: string;
   postImage: any;
+
+  postFileUrl: string;
+  postFile: any;
 
   constructor(
     private profileService: ProfileService,
@@ -107,8 +111,8 @@ export class ResearchListComponent {
   }
   onTagUserInputDescription(data: any, ctrlName: string): void {
     this.researchForm.get(ctrlName).setValue(data?.html);
-    this.researchForm.get('postdescription').setValue(data?.html);
-    console.log('data : ', data);
+    // this.researchForm.get('meta').setValue(data?.meta || {});
+    // console.log('data : ', data);
 
     // this.postData.postdescription = data?.html;
     // this.postMessageTags = data?.tags;
@@ -184,6 +188,7 @@ export class ResearchListComponent {
       reqObj['metaimage'] = meta?.metaimage;
       reqObj['metalink'] = meta?.metalink;
       reqObj['imageUrl'] = this.postImage;
+      reqObj['pdfUrl'] = this.postFile;
       this.postService
         .createPost(reqObj)
         .subscribe({
@@ -240,6 +245,17 @@ export class ResearchListComponent {
             }
           },
         });
+    } else if (this.selectedpdfFile) {
+      this.postService
+      .upload(this.selectedpdfFile, profileId, 'post')
+      .subscribe({
+        next: (res: any) => {
+          if (res?.body?.url) {
+            this.postFile = res?.body?.url;
+            this.createResearch();
+          }
+        },
+    });
     } else {
       this.createResearch();
     }
@@ -261,10 +277,39 @@ export class ResearchListComponent {
     this.selectedImgFile = null;
   }
 
+  onPostFileSelect(event: any): void {
+    const file = event.target?.files?.[0] || {};
+    console.log(file)
+    if (file) {
+      this.postFileUrl = URL.createObjectURL(event.target.files[0]);
+      this.selectedpdfFile = file;
+    }
+    // if (file.type.includes("application/pdf")) {
+    //   this.postData['file'] = file;
+    //   this.pdfName = file?.name
+    //   this.postData['imageUrl'] = null;
+    //   this.postData['streamname'] = null;
+    // } else {
+    //   this.postData['file'] = file;
+    //   this.postData['imageUrl'] = URL.createObjectURL(file);
+    //   this.pdfName = null;
+    //   this.postData['pdfUrl'] = null;
+    // }
+    // if (file?.size < 5120000) {
+    // } else {
+    //   this.toastService.warring('Image is too large!');
+    // }
+  }
+
+  removePostSelectedFile(): void {
+    this.selectedpdfFile = null;
+  }
+
   resetPost(): void {
     this.researchForm.reset();
     this.tagInputDefaultData = null;
     this.selectedImgFile = null;
+    this.selectedpdfFile = null;
     setTimeout(() => {
       this.tagInputDefaultData = null;
     }, 100);

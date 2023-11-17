@@ -151,6 +151,9 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (res: any) => {
           this.spinner.hide();
           if (res) {
+            res.map((e: any) => {
+              e.pdfName = e.pdfUrl.split('/')[3]
+            })
             this.pdfList = res;
             console.log(this.pdfList);
           }
@@ -171,8 +174,8 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   downloadPdf(pdf): void {
     const pdfLink = document.createElement('a');
     pdfLink.href = pdf;
-    window.open(pdf);
-    pdfLink.download = "TestFile.pdf";
+    // window.open(pdf);
+    // pdfLink.download = "TestFile.pdf";
     pdfLink.click();
   }
 }

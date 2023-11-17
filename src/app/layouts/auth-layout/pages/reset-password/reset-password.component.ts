@@ -54,6 +54,23 @@ export class ResetPasswordComponent {
     }
   }
 
+  validatepassword(): boolean {
+    const pattern =
+      '[a-zA-Z0-9]{5,}';
+    // const pattern =
+    //   '(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[a-z])(?=.*[0-9].*[0-9]).{8}';
+
+    if (!this.changePassword.form.controls['newPassword'].value.match(pattern)) {
+      this.msg =
+        'Password must be a minimum of 5 characters';
+        this.type = 'danger'
+      // this.msg =
+      //   'Password must be a minimum of 8 characters and include one uppercase letter, one lowercase letter, and one special character';
+      return false;
+    }
+   return true;
+  }
+
   forgotPasswordSubmit(form: NgForm) {
     this.submitted = true;
     if (form.form.invalid) {

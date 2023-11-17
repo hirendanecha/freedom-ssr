@@ -51,7 +51,7 @@
 
         <div
           class="col form-group"
-          *ngIf="!this.researchForm.get('meta').value?.metaimage"
+          *ngIf="!this.researchForm.get('meta').value?.metaimage && !selectedpdfFile"
         >
           <label for="textpostdesc" class="form-label">Upload Image</label>
           <div class="d-flex custom-input-area" *ngIf="!selectedImgFile">
@@ -87,12 +87,51 @@
             </div>
           </ng-container>
         </div>
+        <div
+        class="col form-group"
+        *ngIf="!selectedImgFile"
+        >
+        <label for="textpostdesc" class="form-label">Upload File</label>
+        <div class="d-flex custom-input-area" *ngIf="!selectedpdfFile">
+          <fa-icon
+            [icon]="['fas', 'file']"
+            class="text-primary cursor font-24-px"
+            (click)="pdfFile.click()"
+          />
+          <input
+              type="file"
+              #pdfFile
+              hidden
+              class="d-none"
+              accept="application/pdf"
+              (change)="onPostFileSelect($event)"
+            />
+        </div>
+        <ng-container *ngIf="selectedpdfFile">
+          <div class="position-relative w-250-px h-100-px mt-5">
+            <div class="d-flex align-items-center">
+              <fa-icon
+                [icon]="['fas', 'file-pdf']"
+                class="c-pointer close-icon font-40-px"
+                />
+                <fa-icon
+                  [icon]="['fas', 'xmark']"
+                  class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon"
+                  role="button"
+                  (click)="removePostSelectedFile()"
+                />
+              <span class="c-pdf-show">{{ selectedpdfFile.name }}</span>
+            </div>
+          </div>
+        </ng-container>
+        </div>
 
         <div class="col form-group">
           <label for="postdescription" class="form-label"
-            >Type or paste the Title or Description (no links)
-            <span class="text-danger">*</span></label
-          >
+            >Type or paste the Title or Description
+            </label>
+            <!-- (no links) -->
+            <!-- <span class="text-danger">*</span> -->
 
           <app-tag-user-input
           id="postdescription"
@@ -293,8 +332,8 @@
     <ng-container *ngFor="let group of groupPosts">
       <ng-container *ngIf="group?.name && group?.posts?.length > 0">
         <div class="single-box d-flex flex-column p-5 mb-3">
-          <div class="d-flex justify-content-between align-items-center mb-5">
-            <h6 class="text-start mb-0">{{ group?.name }}</h6>
+          <div class="d-flex justify-content-between align-items-center mb-5 mobile-research-card">
+            <h6 class="text-start mb-0 me-1">{{ group?.name }}</h6>
 
             <a
               href="/research/detail/grpm/{{ group?.groupUniqueLink }}"

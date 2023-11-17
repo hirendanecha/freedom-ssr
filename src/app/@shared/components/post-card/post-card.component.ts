@@ -16,6 +16,7 @@ import { SocketService } from 'src/app/@shared/services/socket.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { UnsubscribeProfileService } from 'src/app/@shared/services/unsubscribe-profile.service';
 import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { slideUp } from '../../animations/slideUp';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -25,7 +26,6 @@ import { getTagUsersFromAnchorTags } from '../../utils/utils';
 import { TokenStorageService } from '../../services/token-storage.service';
 import { SeoService } from '../../services/seo.service';
 import { BreakpointService } from '../../services/breakpoint.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 declare var jwplayer: any;
 @Component({
@@ -101,21 +101,36 @@ export class PostCardComponent implements OnInit, AfterViewInit {
   removeSeeFirstUser(id: number): void {
     this.seeFirstUserService.remove(Number(this.profileId), id).subscribe({
       next: (res) => {
-        this.toastService.warring('See first stop');
+        this.seeFirstList.pop(id);
+        console.log(this.seeFirstList)
+        this.toastService.warring('See First Stopped');
         this.getPostList?.emit();
       },
     });
   }
 
   seeFirst(postProfileId: number): void {
-    this.seeFirstUserService
-      .create({ profileId: this.profileId, seeFirstProfileId: postProfileId })
-      .subscribe({
-        next: (res) => {
-          this.toastService.success('See first set');
-          this.getPostList?.emit();
-        },
-      });
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.title = 'See First User';
+    modalRef.componentInstance.confirmButtonLabel = 'Yes';
+    modalRef.componentInstance.cancelButtonLabel = 'No';
+    modalRef.componentInstance.message =
+      'Would you like to go to their profile?';
+    modalRef.result.then((res) => {
+      if (res === 'success') {
+        this.seeFirstUserService
+          .create({ profileId: this.profileId, seeFirstProfileId: postProfileId })
+          .subscribe({
+            next: (res) => {
+              this.router.navigate([`settings/view-profile/${postProfileId}`]);
+              this.toastService.success('See first set');
+              this.getPostList?.emit();
+            },
+          });
+      }
+    })
   }
 
   unsubscribe(post: any): void {
@@ -195,6 +210,11 @@ export class PostCardComponent implements OnInit, AfterViewInit {
       'Are you sure want to delete this post?';
     modalRef.result.then((res) => {
       if (res === 'success') {
+        // this.socketService.deletePost({ id: post?.id }, data => {
+        //   console.log('post-data', data)
+        // });
+        // this.getPostList.emit();
+        // this.toastService.success('Post deleted successfully');
         // post['hide'] = true;
         this.postService.deletePost(post.id).subscribe({
           next: (res: any) => {
@@ -421,13 +441,13 @@ export class PostCardComponent implements OnInit, AfterViewInit {
         this.commentMessageTags = [];
         // childPostCommentElement.innerText = '';
       });
+      this.viewComments(this.post?.id);
       this.commentMessageInputValue = '';
       setTimeout(() => {
         this.commentMessageInputValue = '';
       }, 100);
       this.commentData = {};
       this.isReply = false;
-      this.viewComments(this.post?.id);
     }
     //  else {
     //   this.socketService.commentOnPost(this.commentData, (data) => {
@@ -501,7 +521,7 @@ export class PostCardComponent implements OnInit, AfterViewInit {
     this.commentData.comment = data?.html;
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
-    console.log(this.commentData);
+    console.log(this.commentData)
   }
 
   socketListner(): void {
@@ -538,9 +558,7 @@ export class PostCardComponent implements OnInit, AfterViewInit {
             })
           );
         } else {
-          let index = this.commentList.findIndex(
-            (obj) => obj?.id === res[0]?.id
-          );
+          let index = this.commentList.findIndex((obj) => obj?.id === res[0]?.id);
           if (index !== -1) {
             this.commentList[index].likeCount = res[0]?.likeCount;
           }
@@ -575,14 +593,20 @@ export class PostCardComponent implements OnInit, AfterViewInit {
           })
         );
       } else {
-        let index = this.commentList.findIndex(
-          (obj) => obj?.id === data[0]?.id
-        );
+        let index = this.commentList.findIndex((obj) => obj?.id === data[0]?.id);
         if (!this.commentList[index]) {
           this.commentList.push(data[0]);
         }
         this.viewComments(data[0]?.postId);
       }
     });
+  }
+
+  downloadPdf(pdf): void {
+    const pdfLink = document.createElement('a');
+    pdfLink.href = pdf;
+    // window.open(pdf);
+    // pdfLink.download = "TestFile.pdf";
+    pdfLink.click();
   }
 }
