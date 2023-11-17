@@ -4,6 +4,7 @@ import {
   Meta,
   provideClientHydration,
 } from '@angular/platform-browser';
+import { TransferHttpCacheModule } from '@nguniversal/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,7 +25,8 @@ import { MetafrenzyModule, MetafrenzyService } from 'ngx-metafrenzy';
     SharedModule,
     BrowserModule,
     BrowserAnimationsModule,
-    MetafrenzyModule.forRoot()
+    MetafrenzyModule.forRoot(),
+    TransferHttpCacheModule,
   ],
   providers: [
     AuthenticationGuard,
@@ -34,4 +36,4 @@ import { MetafrenzyModule, MetafrenzyService } from 'ngx-metafrenzy';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

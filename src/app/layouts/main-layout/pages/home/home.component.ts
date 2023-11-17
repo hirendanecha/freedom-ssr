@@ -100,16 +100,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     //   this.isNavigationEnd = true;
     // });
 
-  }
-
-  ngAfterViewInit(): void {
     if (!this.socketService.socket.connected) {
       this.socketService.socket.connect();
     }
 
     this.socketService.socket.emit('join', { room: this.profileId });
     this.socketService.socket.on('notification', (data: any) => {
-      console.log(data)
+      console.log(data);
       if (data) {
         this.sharedService.isNotify = true;
       }
@@ -125,6 +122,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log(error);
       }
     );
+
+  }
+
+  ngAfterViewInit(): void {
+
   }
 
   ngOnDestroy(): void { }

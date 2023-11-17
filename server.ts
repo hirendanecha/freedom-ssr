@@ -44,6 +44,7 @@ export function app(): express.Express {
   global['Event'] = window.Event;
   global['Event']['prototype'] = window.Event.prototype;
   global['HTMLElement'] = window.HTMLElement;
+  global['jwplayer'] = window.jwplayer;
   // global.google = google;
   global['getComputedStyle'] = window.getComputedStyle;
 
@@ -70,106 +71,114 @@ export function app(): express.Express {
   );
 
   // All regular routes use the Universal engine
-  // server.get('*', (req, res) => {
-  //   res.render(
-  //     indexHtml,
-  //     { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] },
-  //     async (err, html) => {
-  //       const params = req.params[0];
-  //       var seo: any = {
-  //         title: 'Freedom Buzz',
-  //         description:
-  //           'The Umbrella platform for All freedom based projects worldwide',
-  //         image:
-  //           'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
-  //         site: 'https://freedom.buzz/',
-  //         url: 'https://freedom.buzz' + params,
-  //         keywords: 'FreedomBuzz, Freedom',
-  //       };
-  //       console.log(params, params.indexOf('communities/') > -1);
 
-  //       if (params.indexOf('communities/') > -1 || params.indexOf('pages/') > -1) {
-  //         let id = params.split('/');
-  //         id = id[id.length - 1];
-  //         // id = params[params.length - 1];
-  //         // id = Number(id);
-  //         // let id = 'local-organic-food-sources';
-  //         console.log({ id });
-
-  //         // if (!isNaN(id) || Math.sign(id) > 0) {
-  //         const community: any = await getCommunity(id);
-
-  //         console.log({ params }, { id }, { community });
-
-  //         const talent = {
-  //           name: community?.CommunityName,
-  //           description: community?.CommunityDescription,
-  //           image: community?.coverImg,
-  //         };
-  //         seo.title = talent.name;
-  //         seo.description = strip_html_tags(talent.description);
-  //         seo.image = `${talent.image}`;
-  //         // }
-  //       } else if (params.indexOf('post/') > -1) {
-  //         let id = params.split('/');
-  //         id = id[id.length - 1];
-  //         // id = params[params.length - 1];
-  //         // id = Number(id);
-  //         // let id = 'local-organic-food-sources';
-  //         console.log({ id });
-
-  //         // if (!isNaN(id) || Math.sign(id) > 0) {
-  //         const post: any = await getPost(id);
-
-  //         console.log({ params }, { id }, { post });
-  //         const html = document.createElement('div');
-  //         html.innerHTML =
-  //           post?.postdescription || post?.metadescription;
-  //         const talent = {
-  //           name: post?.title || 'Post 007',
-  //           description: html?.textContent || 'post content',
-  //           image: post?.imageUrl || post?.metaimage || post?.thumbfilename,
-  //         };
-  //         seo.title = talent.name;
-  //         seo.description = strip_html_tags(talent.description);
-  //         seo.image = `${talent.image}`;
-  //         // }
-  //       } else if (params.indexOf('settings/view-profile/') > -1) {
-  //         let id = params.split('/');
-  //         id = +id[id.length - 1];
-  //         // id = params[params.length - 1];
-  //         // id = Number(id);
-  //         // let id = 'local-organic-food-sources';
-  //         // console.log({ id });
-
-  //         // if (!isNaN(id) || Math.sign(id) > 0) {
-  //         const {data: profile}: any = await getProfile(id);
-
-  //         console.log({ params }, { id }, { profile: JSON.stringify(profile) })
-  //         const talent = {
-  //           name: profile[0]?.Username,
-  //           description: profile[0].FirstName + profile[0].LastName,
-  //           image: profile[0].ProfilePicName,
-  //         };
-  //         seo.title = talent.name;
-  //         seo.description = strip_html_tags(talent.description);
-  //         seo.image = `${talent.image}`;
-  //       }
-  //       html = html.replace(/\$TITLE/g, seo.title);
-  //       html = html.replace(/\$DESCRIPTION/g, strip_html_tags(seo.description));
-  //       html = html.replace(/\$OG_DESCRIPTION/g, seo.description);
-  //       html = html.replace(/\$OG_META_DESCRIPTION/g, seo.description);
-  //       html = html.replace(/\$OG_TITLE/g, seo.title);
-  //       html = html.replace(/\$OG_IMAGE/g, seo.image);
-  //       html = html.replace(/\$OG_SITE/g, seo.site);
-  //       html = html.replace(/\$OG_URL/g, seo.url);
-  //       html = html.replace(/\$OG_META_KEYWORDS/g, seo.keywords);
-  //       res.send(html);
-  //     }
-  //   );
-  // });
   server.get('*', (req, res) => {
-    res.render('index', { req });
+    res.render(
+      indexHtml,
+      { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] },
+      async (err, html) => {
+        if (err) {
+          console.log('Error', err);
+        }
+        const params = req.params[0];
+        var seo: any = {
+          title: 'Freedom Buzz',
+          description:
+            'The Umbrella platform for All freedom based projects worldwide',
+          image:
+            'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
+          site: 'https://freedom.buzz/',
+          url: 'https://freedom.buzz' + params,
+          keywords: 'FreedomBuzz, Freedom',
+        };
+        if (
+          params.indexOf('communities/') > -1 ||
+          params.indexOf('pages/') > -1
+        ) {
+          let id = params.split('/');
+          id = id[id.length - 1];
+          // id = params[params.length - 1];
+          // id = Number(id);
+          // let id = 'local-organic-food-sources';
+          console.log({ id });
+
+          // if (!isNaN(id) || Math.sign(id) > 0) {
+          const community: any = await getCommunity(id);
+
+          console.log({ params }, { id }, { community });
+
+          const talent = {
+            name: community?.CommunityName,
+            description: community?.CommunityDescription,
+            image: community?.coverImg,
+          };
+          seo.title = talent.name;
+          seo.description = strip_html_tags(talent.description);
+          seo.image = `${talent.image}`;
+          // }
+        } else if (params.indexOf('settings/view-profile/') > -1) {
+          let id = params.split('/');
+          id = +id[id.length - 1];
+          // id = params[params.length - 1];
+          // id = Number(id);
+          // let id = 'local-organic-food-sources';
+          // console.log({ id });
+
+          // if (!isNaN(id) || Math.sign(id) > 0) {
+          const { data: profile }: any = await getProfile(id);
+
+          console.log({ params }, { id }, { profile: JSON.stringify(profile) });
+          const talent = {
+            name: profile[0]?.Username,
+            description: profile[0].FirstName + ' ' + profile[0].LastName,
+            image: profile[0].ProfilePicName,
+          };
+          seo.title = talent.name;
+          seo.description = strip_html_tags(talent.description);
+          seo.image = `${talent.image}`;
+        } else if (params.indexOf('post/') > -1) {
+          let id = params.split('/');
+          id = id[id.length - 1];
+          // id = params[params.length - 1];
+          // id = Number(id);
+          // let id = 'local-organic-food-sources';
+          console.log({ id });
+
+          // if (!isNaN(id) || Math.sign(id) > 0) {
+          const post: any = await getPost(id);
+
+          console.log({ params }, { id });
+          const pdhtml = document.createElement('div');
+          pdhtml.innerHTML = post?.postdescription || post?.metadescription;
+          const talent = {
+            name: post?.title || 'Post',
+            description: pdhtml?.textContent || 'post content',
+            image: post?.imageUrl || post?.metaimage || post?.thumbfilename,
+          };
+          seo.title = talent.name;
+          seo.description = strip_html_tags(talent.description);
+          seo.image = `${talent.image}`;
+          // }
+        }
+
+        html = html.replace(/\$TITLE/g, seo.title);
+        html = html.replace(/\$DESCRIPTION/g, strip_html_tags(seo.description));
+        html = html.replace(
+          /\$OG_DESCRIPTION/g,
+          strip_html_tags(seo.description)
+        );
+        html = html.replace(
+          /\$OG_META_DESCRIPTION/g,
+          strip_html_tags(seo.description)
+        );
+        html = html.replace(/\$OG_TITLE/g, seo.title);
+        html = html.replace(/\$OG_IMAGE/g, seo.image);
+        html = html.replace(/\$OG_SITE/g, seo.site);
+        html = html.replace(/\$OG_URL/g, seo.url);
+        html = html.replace(/\$OG_META_KEYWORDS/g, seo.keywords);
+        res.send(html);
+      }
+    );
   });
   return server;
 }
@@ -181,9 +190,7 @@ async function getCommunity(id: any) {
 }
 
 async function getPost(id: any) {
-  return fetch(api_url + '/v1/posts/get/' + id).then((resp) =>
-    resp.json()
-  );
+  return fetch(api_url + '/v1/posts/get/' + id).then((resp) => resp.json());
 }
 async function getProfile(id: any) {
   return fetch(api_url + '/v1/customers/profile/' + id).then((resp: any) =>
@@ -191,7 +198,7 @@ async function getProfile(id: any) {
   );
 }
 
-function strip_html_tags(str) {
+function strip_html_tags(str: any) {
   if (str === null || str === '') {
     return false;
   } else {

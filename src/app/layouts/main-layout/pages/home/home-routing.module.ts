@@ -9,132 +9,146 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'home',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'home',
     component: HomeComponent,
     canActivate: mapToCanActivate([MetafrenzyGuard]),
     data: {
-      metafrenzy: {
+      metafrenzzy: {
         title: 'Home',
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Home Page'
-          }, {
+            content: 'Freedom Home Page',
+          },
+          {
             name: 'og:description',
-            content: 'Welcome to freedom buzz home page'
-          }, {
+            content: 'Welcome to freedom buzz home page',
+          },
+          {
             name: 'og:url',
-            content: window.location.href
-          }, {
+            content: window.location.href,
+          },
+          {
             name: 'og:image',
-            content: 'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg'
-          }
+            content:
+              'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
+          },
         ],
         links: [
           {
             rel: 'canonical',
-            href: window.location.href
-          }
-        ]
-      }
-    }
+            href: window.location.href,
+          },
+        ],
+      },
+    },
   },
   {
     path: 'communities/:name',
     component: HomeComponent,
-    canActivate: mapToCanActivate([AuthenticationGuard, MetafrenzyGuard]),
+    canActivate: mapToCanActivate([MetafrenzyGuard, AuthenticationGuard]),
     data: {
-      metafrenzy: {
+      metafrenzzy: {
         title: 'Community',
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Community'
-          }, {
+            content: 'Freedom Community',
+          },
+          {
             name: 'og:description',
-            content: 'Freedom local community'
-          }, {
+            content: 'Freedom local community',
+          },
+          {
             name: 'og:url',
-            content: window.location.href
-          }, {
+            content: window.location.href,
+          },
+          {
             name: 'og:image',
-            content: 'https://dev.freedom.buzz/assets/images/freedom-community.jpg'
-          }
+            content:
+              'https://dev.freedom.buzz/assets/images/freedom-community.jpg',
+          },
         ],
         links: [
           {
             rel: 'canonical',
-            href: window.location.href
-          }
-        ]
-      }
-    }
+            href: window.location.href,
+          },
+        ],
+      },
+    },
   },
   {
     path: 'pages/:name',
     component: HomeComponent,
     canActivate: mapToCanActivate([AuthenticationGuard, MetafrenzyGuard]),
     data: {
-      metafrenzy: {
+      metafrenzzy: {
         title: 'Pages',
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Pages'
-          }, {
+            content: 'Freedom Pages',
+          },
+          {
             name: 'og:description',
-            content: 'Freedom Groups and pages'
-          }, {
+            content: 'Freedom Groups and pages',
+          },
+          {
             name: 'og:url',
-            content: window.location.href
-          }, {
+            content: window.location.href,
+          },
+          {
             name: 'og:image',
-            content: 'https://dev.freedom.buzz/assets/images/freedom-pages.jpg'
-          }
+            content: 'https://dev.freedom.buzz/assets/images/freedom-pages.jpg',
+          },
         ],
         links: [
           {
             rel: 'canonical',
-            href: window.location.href
-          }
-        ]
-      }
-    }
+            href: window.location.href,
+          },
+        ],
+      },
+    },
   },
   {
     path: 'post/:id',
     component: PostDetailComponent,
     canActivate: mapToCanActivate([MetafrenzyGuard]),
     data: {
-      metafrenzy: {
+      metafrenzzy: {
         title: 'Posts',
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Feed Posts'
-          }, {
+            content: 'Freedom Feed Posts',
+          },
+          {
             name: 'og:description',
-            content: 'Freedom Buzz local News Feed Posts'
-          }, {
+            content: 'Freedom Buzz local News Feed Posts',
+          },
+          {
             name: 'og:url',
-            content: window.location.href
-          }, {
+            content: window.location.href,
+          },
+          {
             name: 'og:image',
-            content: 'https://dev.freedom.buzz/assets/images/freedom-post.jpg'
-          }
+            content: 'https://dev.freedom.buzz/assets/images/freedom-post.jpg',
+          },
         ],
         links: [
           {
             rel: 'canonical',
-            href: window.location.href
-          }
-        ]
-      }
-    }
-  }
+            href: window.location.href,
+          },
+        ],
+      },
+    },
+  },
 ];
 
 @NgModule({
