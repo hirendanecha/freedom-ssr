@@ -145,19 +145,19 @@ export function app(): express.Express {
           console.log({ id });
 
           // if (!isNaN(id) || Math.sign(id) > 0) {
-          const post: any = await getPost(id);
+          const [post]: any = await getPost(id);
 
           console.log({ params }, { id });
           const pdhtml = document.createElement('div');
           pdhtml.innerHTML = post?.postdescription || post?.metadescription;
           const talent = {
-            name: post?.title || 'Post',
+            name: post?.title || post?.albumname,
             description: pdhtml?.textContent || 'post content',
             image: post?.imageUrl || post?.metaimage || post?.thumbfilename,
           };
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
-          seo.image = `${talent.image}`;
+          seo.image = talent.image;
           // }
         }
 
