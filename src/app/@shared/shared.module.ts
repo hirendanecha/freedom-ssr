@@ -90,6 +90,7 @@ import {
   NgbModule,
   NgbNavModule,
 } from '@ng-bootstrap/ng-bootstrap';
+import { PostDetailComponent } from '../layouts/main-layout/pages/home/post-detail/post-detail.component';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -109,6 +110,7 @@ const sharedComponents = [
   VideoPostModalComponent,
   ForgotPasswordComponent,
   PdfPreviewComponent,
+  PostDetailComponent
 ];
 
 const sharedModules = [
@@ -129,7 +131,7 @@ const sharedModules = [
 ];
 
 @NgModule({
-  declarations: sharedComponents,
+  declarations: [sharedComponents],
   imports: [sharedModules],
   exports: [...sharedModules, ...sharedComponents],
   providers: [

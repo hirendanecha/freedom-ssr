@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 
@@ -6,10 +7,21 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class SocketService {
-  public socket: any = io(environment.socketUrl, { transports: ["websocket"] });
+  public socket: any;
 
-  constructor() {
-    this.socket = io(environment.socketUrl,  { transports: ["websocket"] });
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.socket = io(environment.socketUrl, {
+        reconnectionDelay: 100,
+        reconnectionDelayMax: 300,
+        // reconnection: true,
+        randomizationFactor: 0.2,
+        // timeout: 120000,
+        reconnectionAttempts: 50000, transports: ["websocket"]
+      });
+    }
   }
 
   // socket for posts //
@@ -17,15 +29,15 @@ export class SocketService {
     this.socket.emit('get-new-post', params, callback);
   }
 
-  createOrEditPost({file, ...params}) {
+  createOrEditPost({ file, ...params }) {
     console.log(this.socket.connected, params);
-    if (this.socket.connected){
+    if (this.socket.connected) {
       this.socket.emit('create-new-post', params);
-    } else{
+    } else {
       this.socket.connect();
       this.socket.emit('create-new-post', params);
     }
-    
+
   }
 
   editPost(params, callback: (post: any) => void) {

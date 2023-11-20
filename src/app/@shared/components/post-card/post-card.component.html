@@ -273,7 +273,7 @@
     </ng-container>
     <p
       class="post-description mdtxt m-0 mt-4 pb-3"
-      [innerHTML]="post.postdescription"
+      [innerHTML]="post.postdescription | noSanitize"
     ></p>
 
     <ng-container *ngIf="post?.pdfUrl">
@@ -412,7 +412,7 @@
       </div>
     </form>
 
-    <ng-container *ngIf="isOpenCommentsPostId === post.id">
+    <ng-container *ngIf="isOpenCommentsPostId === +post?.id">
       <ng-container *ngIf="commentList.length > 0; else elseNoCommentsFound">
         <div class="comments-area mt-5">
           <div
@@ -486,7 +486,10 @@
                   </div>
 
                   <ng-container *ngIf="comment?.comment">
-                    <p class="mdtxt mb-0" [innerHTML]="comment.comment"></p>
+                    <p
+                      class="mdtxt mb-0"
+                      [innerHTML]="comment.comment | noSanitize"
+                    ></p>
                   </ng-container>
                   <app-post-meta-data-card [post]="comment" />
 
@@ -679,7 +682,7 @@
                           <ng-container *ngIf="reply?.comment">
                             <p
                               class="mdtxt mb-0"
-                              [innerHTML]="reply?.comment"
+                              [innerHTML]="reply?.comment | noSanitize"
                             ></p>
                           </ng-container>
                           <app-post-meta-data-card [post]="reply" />

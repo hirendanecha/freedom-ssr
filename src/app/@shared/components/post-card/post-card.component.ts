@@ -8,6 +8,7 @@ import {
   Output,
   Renderer2,
   ViewChild,
+  afterNextRender,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { PostService } from 'src/app/@shared/services/post.service';
@@ -34,14 +35,12 @@ declare var jwplayer: any;
   styleUrls: ['./post-card.component.scss'],
   animations: [slideUp],
 })
-export class PostCardComponent implements OnInit, AfterViewInit {
+export class PostCardComponent implements OnInit {
   @Input('post') post: any = {};
   @Input('seeFirstList') seeFirstList: any = [];
   @Output('getPostList') getPostList: EventEmitter<void> =
     new EventEmitter<void>();
   @Output('onEditPost') onEditPost: EventEmitter<any> = new EventEmitter<any>();
-  @ViewChild('parentPostCommentElement', { static: false })
-  parentPostCommentElement: ElementRef;
 
   profileId = '';
   isOpenCommentsPostId: number = null;
@@ -79,23 +78,23 @@ export class PostCardComponent implements OnInit, AfterViewInit {
     private spinner: NgxSpinnerService,
     public sharedService: SharedService,
     private router: Router,
-    private renderer: Renderer2,
     public tokenService: TokenStorageService,
-    private seoService: SeoService,
-    public breakpointService: BreakpointService
+    public breakpointService: BreakpointService,
   ) {
+
+    console.log('constructor in!!!!!');
     this.profileId = localStorage.getItem('profileId');
+    afterNextRender(() => {
+      if (this.post?.id && this.post?.posttype === 'V') {
+        this.playVideo(this.post?.id);
+      }
+      this.socketListner();
+      this.viewComments(this.post?.id);
+    });
   }
+  
 
   ngOnInit(): void {
-    this.socketListner();
-    this.viewComments(this.post?.id);
-  }
-
-  ngAfterViewInit(): void {
-    if (this.post?.posttype === 'V') {
-      this.playVideo(this.post?.id);
-    }
   }
 
   removeSeeFirstUser(id: number): void {

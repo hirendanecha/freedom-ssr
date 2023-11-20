@@ -23,7 +23,7 @@ import { MetafrenzyModule, MetafrenzyService } from 'ngx-metafrenzy';
     AppRoutingModule,
     HttpClientModule,
     SharedModule,
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'Freedom-buzz' }),
     BrowserAnimationsModule,
     MetafrenzyModule.forRoot(),
     TransferHttpCacheModule,
@@ -36,4 +36,4 @@ import { MetafrenzyModule, MetafrenzyService } from 'ngx-metafrenzy';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

@@ -19,7 +19,8 @@
           "options": {
             "allowedCommonJsDependencies": [
               "bufferutil",
-              "utf-8-validate"
+              "utf-8-validate",
+              "socket.io-client"
             ],
             "outputPath": "dist/freedom-ssr/browser",
             "index": "src/index.html",
