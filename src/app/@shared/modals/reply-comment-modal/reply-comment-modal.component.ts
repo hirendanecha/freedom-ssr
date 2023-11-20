@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../services/toast.service';
 import { getTagUsersFromAnchorTags } from '../../utils/utils';
@@ -27,7 +27,9 @@ export class ReplyCommentModalComponent implements AfterViewInit {
 
   constructor(public activeModal: NgbActiveModal,
     private toastService: ToastService,
-    private renderer: Renderer2) {
+    private renderer: Renderer2,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
   }
 
   ngAfterViewInit(): void {
@@ -44,6 +46,7 @@ export class ReplyCommentModalComponent implements AfterViewInit {
       this.commentData.postId = this.data.postId
       this.commentData.profileId = this.data.profileId
       this.commentData['imageUrl'] = this.data?.imageUrl
+      this.changeDetectorRef.detectChanges();
     }
   }
 

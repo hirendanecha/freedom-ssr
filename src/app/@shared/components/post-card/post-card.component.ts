@@ -67,6 +67,7 @@ export class PostCardComponent implements OnInit {
   commentMessageInputValue: string = '';
   commentMessageTags: any[];
   showHoverBox = false;
+  editCommentsLoader: boolean = false;
 
   constructor(
     private seeFirstUserService: SeeFirstUserService,
@@ -92,7 +93,7 @@ export class PostCardComponent implements OnInit {
       this.viewComments(this.post?.id);
     });
   }
-  
+
 
   ngOnInit(): void {
   }
@@ -276,7 +277,7 @@ export class PostCardComponent implements OnInit {
     // } else {
     //   this.isOpenCommentsPostId = id;
     // }
-
+    this.editCommentsLoader = true
     this.isOpenCommentsPostId = id;
     this.isCommentsLoader = true;
     const data = {
@@ -304,24 +305,30 @@ export class PostCardComponent implements OnInit {
             return ele1.parentCommentId;
           });
           this.commentCount = this.commentList.length + replyCount.length;
+          this.editCommentsLoader = false
         }
       },
       error: (error) => {
         console.log(error);
+        this.editCommentsLoader = false
       },
       complete: () => {
         this.isCommentsLoader = false;
+        this.editCommentsLoader = false
       },
     });
   }
 
   deleteComments(comment): void {
+    this.spinner.show();
     this.postService.deleteComments(comment.id).subscribe({
       next: (res: any) => {
+        this.spinner.hide();
         this.toastService.success(res.message);
         this.viewComments(comment?.postId);
       },
       error: (error) => {
+        this.spinner.hide();
         console.log(error);
         this.toastService.danger(error.message);
       },
@@ -596,7 +603,7 @@ export class PostCardComponent implements OnInit {
         if (!this.commentList[index]) {
           this.commentList.push(data[0]);
         }
-        this.viewComments(data[0]?.postId);
+        // this.viewComments(data[0]?.postId);
       }
     });
   }
