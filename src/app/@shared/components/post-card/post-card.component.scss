@@ -44,6 +44,7 @@
       }
       ::ng-deep svg path {
         fill: var(--para-2nd-color);
+        font-size: 14px;
       }
     }
     .hover-box-container.show {
@@ -345,10 +346,14 @@
       h4,
       h5,
       h6,
-      a {
+      a,
+      span,
+      p,
+      li {
         font-size: 16px !important;
         line-height: normal;
         margin: unset;
+        background-color: unset !important;
       }
       img,
       svg {
@@ -378,10 +383,15 @@
       h4,
       h5,
       h6,
-      a {
+      a,
+      span,
+      p,
+      li {
         font-size: 16px !important;
         line-height: normal;
         margin: unset;
+        background-color: unset !important;
+        color: var(--para-2nd-color) !important;
       }
     }
   }
