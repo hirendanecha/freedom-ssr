@@ -338,8 +338,7 @@
     }
   }
   ::ng-deep {
-    .post-description,
-    .comments-area {
+    .post-description {
       h1,
       h2,
       h3,
@@ -372,18 +371,18 @@
         }
       }
     }
-  }
-  .comments-area {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    a {
-      font-size: 16px !important;
-      line-height: normal;
-      margin: unset;
+    .comments-area {
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      a {
+        font-size: 16px !important;
+        line-height: normal;
+        margin: unset;
+      }
     }
   }
 }
