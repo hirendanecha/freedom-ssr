@@ -1,4 +1,4 @@
-const url = 'https://freedom-api.opash.in';
+const url = 'https://dev-api.freedom.buzz';
 const webUrl = 'https://dev.freedom.buzz/';
 const tubeUrl = 'https://tube.freedom.buzz/'
 // const url = 'http://localhost:8080';
