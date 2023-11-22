@@ -2,9 +2,9 @@
   <h6 class="head-area text-start m-0 pt-0 pb-5">See First Users</h6>
 
   <ng-container *ngIf="profiles.length > 0">
-    <ul class="list-group list-group-flush">
-      <ng-container *ngFor="let profile of profiles">
-        <li class="d-flex justify-content-between">
+    <ng-container *ngFor="let profile of profiles">
+      <!-- <ul class="list-group list-group-flush">
+        <li class="notification-single d-flex justify-content-between p-3">
           <div>{{ profile?.Username }}</div>
           <button
             class="btn btn-primary btn-sm"
@@ -13,11 +13,40 @@
             Remove
           </button>
         </li>
-      </ng-container>
-    </ul>
+      </ul> -->
+      <div
+        class="notification-single d-center p-3 gap-5 justify-content-between"
+      >
+        <div class="d-flex top-review-wrapper gap-3 align-items-center">
+          <div class="avatar-item">
+            <img
+              class="avatar-img w-48-px h-48-px rounded-3"
+              loading="lazy"
+              data-src="{{
+                profile?.ProfilePicName ||
+                  '/assets/images/avtar/placeholder-user.png'
+              }}"
+              onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+              alt="avatar"
+            />
+          </div>
+          <div class="single-item notification-area text-area text-start">
+            <h6 class="m-0 mb-1">
+              {{ profile?.Username }}
+            </h6>
+          </div>
+        </div>
+        <button
+          class="btn btn-primary btn-sm"
+          (click)="removeSeeFirstUser(profile?.Id)"
+        >
+          Remove
+        </button>
+      </div>
+    </ng-container>
   </ng-container>
 
   <ng-container *ngIf="profiles.length === 0">
-    <span> No any users set to see first yet!</span>
+    <span> No user set to see first yet!</span>
   </ng-container>
 </div>

@@ -17,7 +17,11 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./add-page-modal.component.scss'],
 })
 export class AddFreedomPageComponent implements OnInit, AfterViewInit {
+  @Input() title: string | undefined = 'Create Community';
+  @Input() cancelButtonLabel: string | undefined = 'Cancel';
+  @Input() confirmButtonLabel: string | undefined = 'Create';
   @Input() closeIcon: boolean | undefined;
+  @Input() data: any = [];
 
   pageDetails = new Community();
   submitted = false;
@@ -61,6 +65,28 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getAllCountries()
+
+    if (this.data.Id) {
+      this.pageForm.patchValue({
+        profileId: this.data?.profileId,
+        CommunityName: this.data?.CommunityName,
+        CommunityDescription: this.data?.CommunityDescription,
+        slug: this.data?.slug,
+        pageType: this.data?.pageType,
+        isApprove: this.data?.isApprove,
+        Country: this.data?.Country,
+        Zip: this.data?.Zip,
+        State: this.data?.State,
+        City: this.data?.City,
+        County: this.data?.County,
+        logoImg: this.data?.logoImg,
+        coverImg: this.data?.coverImg,
+      });
+      this.pageForm.get('State').enable();
+      this.pageForm.get('City').enable();
+      this.pageForm.get('County').enable();
+      console.log(this.data);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -151,29 +177,51 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    this.spinner.show();
-    if (this.pageForm.valid) {
-      this.communityService.createCommunity(this.pageForm.value).subscribe(
-        {
-          next: (res: any) => {
-            this.spinner.hide();
-            if (!res.error) {
-              this.submitted = true;
-              this.createCommunityAdmin(res.data);
-              this.activeModal.close('success');
-              this.toastService.success('Freedom page created successfully');
-              // this.router.navigateByUrl('/home');
-            }
-          },
-          error:
-            (err) => {
-              this.toastService.danger('Please change page name. this page name already in use.');
+    if (!this.data.Id) {
+      this.spinner.show();
+      if (this.pageForm.valid) {
+        this.communityService.createCommunity(this.pageForm.value).subscribe(
+          {
+            next: (res: any) => {
               this.spinner.hide();
-            }
-        });
+              if (!res.error) {
+                this.submitted = true;
+                this.createCommunityAdmin(res.data);
+                this.activeModal.close('success');
+                this.toastService.success('Freedom page created successfully');
+                // this.router.navigateByUrl('/home');
+              }
+            },
+            error:
+              (err) => {
+                this.toastService.danger('Please change page name. this page name already in use.');
+                this.spinner.hide();
+              }
+          });
+      } else {
+        this.spinner.hide();
+        this.toastService.danger('Please enter mandatory fields(*) data.');
+      }
     } else {
-      this.spinner.hide();
-      this.toastService.danger('Please enter mandatory fields(*) data.');
+      if (this.pageForm.valid && this.data.Id) {
+        this.communityService.editCommunity(this.pageForm.value, this.data.Id).subscribe(
+          {
+            next: (res: any) => {
+              this.spinner.hide();
+              if (!res.error) {
+                this.submitted = true;
+                // this.createCommunityAdmin(res.data);
+                this.toastService.success('Your Freedom page edit successfully!');
+                this.activeModal.close('success');
+              }
+            },
+            error:
+              (err) => {
+                this.toastService.danger('Please change page name. this page name already in use.');
+                this.spinner.hide();
+              }
+          });
+      }
     }
   }
 

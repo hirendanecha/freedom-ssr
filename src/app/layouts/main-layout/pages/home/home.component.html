@@ -29,21 +29,23 @@
         </div>
 
         <div>
-          <ng-container *ngIf="communityDetails.profileId == profileId && communityDetails.pageType === 'community'"
+          <ng-container *ngIf="communityDetails.profileId == profileId">
+            <button
+              class="btn btn-sm btn-primary me-2"
+              (click)="editCommunity(communityDetails)"
+            >
+              Edit {{ communityDetails?.pageType }}
+            </button>
+          </ng-container>
+          <!-- {{ communityDetails?.pageType }} -->
+
+          <ng-container
+            *ngIf="
+              communityDetails?.memberIds?.includes(+profileId);
+              else elseJoinCommunity
+            "
           >
-          <button class="btn btn-sm btn-primary me-2" (click)="editCommunity(communityDetails)">
-            Edit Community
-          </button>
-        </ng-container>
-        <!-- {{ communityDetails?.pageType }} -->
-        
-        <ng-container
-          *ngIf="
-            communityDetails?.memberIds?.includes(+profileId);
-            else elseJoinCommunity
-          "
-          >
-          <!-- <ng-container
+            <!-- <ng-container
             *ngIf="
               communityDetails?.profileId === +profileId;
               else elseLeaveCommunity
@@ -54,22 +56,26 @@
             </button>
           </ng-container> -->
 
-          <ng-template #elseLeaveCommunity>
+            <ng-template #elseLeaveCommunity>
+              <button
+                class="btn btn-sm btn-danger"
+                (click)="removeFromCommunity()"
+              >
+                Leave {{ communityDetails?.pageType }}
+              </button>
+            </ng-template>
+          </ng-container>
+
+          <ng-template #elseJoinCommunity>
             <button
-              class="btn btn-sm btn-danger"
-              (click)="removeFromCommunity()"
+              class="btn btn-sm btn-success"
+              (click)="joinCommunity()"
+              [disabled]="buttonClicked"
             >
-              Leave {{ communityDetails?.pageType }}
+              Join {{ communityDetails?.pageType }}
             </button>
           </ng-template>
-        </ng-container>
-
-        <ng-template #elseJoinCommunity>
-          <button class="btn btn-sm btn-success" (click)="joinCommunity()">
-            Join {{ communityDetails?.pageType }}
-          </button>
-        </ng-template>
-      </div>
+        </div>
       </div>
     </div>
 
@@ -127,6 +133,7 @@
         <app-tag-user-input
           placeholder="Post a link or image or file or let's just talk!"
           [value]="postMessageInputValue"
+          [isShowMetaLoader]="false"
           (onDataChange)="onTagUserInputChangeEvent($event)"
         />
 
@@ -246,7 +253,10 @@
 
             <button
               class="btn btn-sm btn-primary px-3 py-1 d-flex justify-content-center align-items-center gap-2 float-end"
-              [disabled]="!(postData?.postdescription || postData?.file?.name)"
+              [disabled]="
+                !(postData?.postdescription || postData?.file?.name) ||
+                buttonClicked
+              "
               (click)="uploadPostFileAndCreatePost()"
             >
               {{ postData?.id ? "Update Post" : "Post" }}

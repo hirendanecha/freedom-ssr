@@ -27,6 +27,7 @@
       <ng-container *ngIf="post?.title">
         <span class="text-danger" [innerHTML]="post?.title"></span>
       </ng-container>
+
       <ng-container *ngIf="post?.textpostdesc || post?.postdescription">
         <!-- class="text-danger" -->
         <span [innerHTML]="post?.textpostdesc || post?.postdescription"> </span>

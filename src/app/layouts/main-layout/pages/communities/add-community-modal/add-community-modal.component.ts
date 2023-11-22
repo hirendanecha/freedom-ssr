@@ -50,9 +50,9 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     isApprove: new FormControl('N', [Validators.required]),
     Country: new FormControl('US', [Validators.required]),
     Zip: new FormControl('', Validators.required),
-    State: new FormControl({value:'',disabled: true}, Validators.required),
-    City: new FormControl({value:'',disabled: true}, Validators.required),
-    County: new FormControl({value:'',disabled: true}, Validators.required),
+    State: new FormControl({ value: '', disabled: true }, Validators.required),
+    City: new FormControl({ value: '', disabled: true }, Validators.required),
+    County: new FormControl({ value: '', disabled: true }, Validators.required),
     logoImg: new FormControl('', Validators.required),
     coverImg: new FormControl('', Validators.required),
   });
@@ -68,11 +68,11 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     this.userId = window.sessionStorage.user_id;
     this.profileId = localStorage.getItem('profileId');
   }
-  
+
   ngOnInit(): void {
     this.getAllCountries()
-    
-    if (this.data.Id) {     
+
+    if (this.data.Id) {
       this.communityForm.patchValue({
         profileId: this.data?.profileId,
         CommunityName: this.data?.CommunityName,
@@ -88,6 +88,9 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
         logoImg: this.data?.logoImg,
         coverImg: this.data?.coverImg,
       });
+      this.communityForm.get('State').enable();
+      this.communityForm.get('City').enable();
+      this.communityForm.get('County').enable();
       console.log(this.data);
     }
   }

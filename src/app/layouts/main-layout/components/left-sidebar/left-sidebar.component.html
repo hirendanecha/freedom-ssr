@@ -55,7 +55,23 @@
           <span>Freedom Pages</span>
         </a>
       </li>
-      <li class="ms-2">
+
+      <li class="ms-1">
+        <a
+          routerLink="/research"
+          target="_blank"
+          routerLinkActive="active"
+          class="d-flex gap-4"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Research"
+        >
+          <fa-icon [icon]="['fas', 'book-open']" class="font-24-px" />
+          <span>Research</span>
+        </a>
+      </li>
+
+      <li class="ms-1">
         <a
           class="d-flex gap-4"
           routerLink="/notifications"
@@ -71,7 +87,7 @@
           <span>Notifications</span>
         </a>
       </li>
-      <li class="ms-2">
+      <li class="ms-1">
         <a
           class="d-flex gap-4"
           [routerLink]="'settings/view-profile/' + profileId"

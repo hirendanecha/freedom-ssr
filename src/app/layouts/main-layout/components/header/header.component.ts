@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import {
   NgbDropdown,
   NgbModal,
@@ -15,6 +15,7 @@ import { ResearchSidebarComponent } from '../../components/research-sidebar/rese
 import { LeftSidebarComponent } from '../../components/left-sidebar/left-sidebar.component';
 import { environment } from 'src/environments/environment';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
+import { SocketService } from 'src/app/@shared/services/socket.service';
 
 @Component({
   selector: 'app-header',
@@ -48,12 +49,17 @@ export class HeaderComponent {
     private customerService: CustomerService,
     public breakpointService: BreakpointService,
     private offcanvasService: NgbOffcanvas,
-    public tokenService: TokenStorageService
+    public tokenService: TokenStorageService,
+    private socketService: SocketService
 
   ) {
-    this.sharedService.getNotificationList();
-    this.sharedService.getUserDetails();
+    const isRead = localStorage.getItem('isRead');
+    if (isRead === 'N') {
+      this.sharedService.isNotify = true;
+    }
   }
+
+
 
   openProfileMenuModal(): void {
     this.userMenusOverlayDialog = this.modalService.open(ProfileMenusModalComponent, {

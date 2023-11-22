@@ -91,6 +91,7 @@ import {
   NgbNavModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { PostDetailComponent } from '../layouts/main-layout/pages/home/post-detail/post-detail.component';
+import { EditResearchModalComponent } from './modals/edit-research-modal/edit-research-modal.component';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -110,7 +111,8 @@ const sharedComponents = [
   VideoPostModalComponent,
   ForgotPasswordComponent,
   PdfPreviewComponent,
-  PostDetailComponent
+  PostDetailComponent,
+  EditResearchModalComponent
 ];
 
 const sharedModules = [

@@ -37,13 +37,15 @@
         <div class="col form-group">
           <label for="postdescription" class="form-label"
             >Type or paste the Title or Description (no links)
-          </label>
+            <span class="text-danger">*</span></label
+          >
           <app-tag-user-input
             id="postdescription"
             placeholder="What's going on?"
-            [isShowMetaPreview]="true"
-            [isAllowTagUser]="false"
+            [isShowMetaPreview]="false"
+            [isAllowTagUser]="true"
             [value]="tagInputDefaultData"
+            [isShowMetaLoader]="false"
             (onDataChange)="
               onTagUserInputDescription($event, 'postdescription')
             "
@@ -69,6 +71,7 @@
             [isShowMetaPreview]="true"
             [isAllowTagUser]="false"
             [value]="tagInputDefaultData"
+            [isShowMetaLoader]="true"
             (onDataChange)="onTagUserInputChangeEvent($event, 'textpostdesc')"
           />
         </div>
@@ -152,22 +155,20 @@
         <!-- <div class="col form-group">
           <label for="postdescription" class="form-label"
             >Type or paste the Title or Description
-          </label> -->
-          <!-- (no links) -->
-          <!-- <span class="text-danger">*</span> -->
+            </label> -->
+        <!-- (no links) -->
+        <!-- <span class="text-danger">*</span> -->
 
-          <!-- <app-tag-user-input
-            id="postdescription"
-            placeholder="What's going on?"
-            [isShowMetaPreview]="true"
-            [isAllowTagUser]="false"
-            [value]="tagInputDefaultData"
-            (onDataChange)="
-              onTagUserInputDescription($event, 'postdescription')
-            "
-          /> -->
+        <!-- <app-tag-user-input
+          id="postdescription"
+          placeholder="What's going on?"
+          [isShowMetaPreview]="true"
+          [isAllowTagUser]="false"
+          [value]="tagInputDefaultData"
+          (onDataChange)="onTagUserInputDescription($event, 'postdescription')"
+        /> -->
 
-          <!-- <textarea
+        <!-- <textarea
             class="input-area"
             id="postdescription"
             formControlName="postdescription"
@@ -175,15 +176,15 @@
             trim="blur"
           ></textarea> -->
 
-          <!-- <div
+        <!-- <div
             *ngIf="isFormSubmittedAndError('postdescription')"
             class="invalid-feedback"
           >
             <div *ngIf="isFormSubmittedAndError('postdescription', 'required')">
               This field is required.
             </div>
-          </div> -->
-        <!-- </div> -->
+          </div>
+        </div> -->
 
         <div class="col form-group">
           <label for="keywords" class="form-label"
@@ -196,6 +197,7 @@
             formControlName="keywords"
             placeholder="Enter Keywords"
             trim="blur"
+            (input)="onChangeTag($event)"
           />
         </div>
 
@@ -216,6 +218,7 @@
           <button
             class="btn btn-sm btn-primary px-3 py-1 d-flex justify-content-center align-items-center gap-2"
             (click)="createImagePost()"
+            [ngClass]="isGroupPostsLoader ? 'disabled' : ''"
           >
             Post
             <fa-icon

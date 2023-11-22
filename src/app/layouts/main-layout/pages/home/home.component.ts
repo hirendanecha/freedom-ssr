@@ -22,9 +22,9 @@ import { TokenStorageService } from 'src/app/@shared/services/token-storage.serv
 import { environment } from 'src/environments/environment';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { AddCommunityModalComponent } from '../communities/add-community-modal/add-community-modal.component';
+import { AddFreedomPageComponent } from '../freedom-page/add-page-modal/add-page-modal.component';
 import { Meta } from '@angular/platform-browser';
 import { MetafrenzyService } from 'ngx-metafrenzy';
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -140,7 +140,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
@@ -252,6 +252,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   uploadPostFileAndCreatePost(): void {
+    this.buttonClicked = true;
     if (this.postData?.postdescription || this.postData?.file?.name) {
       if (this.postData?.file?.name) {
         this.spinner.show();
@@ -300,9 +301,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.postData.metaimage = null
         this.postData.metadescription = null
         console.log(this.postData);
-        
+
       }
-      
       // this.spinner.show();
       console.log(
         'postData',
@@ -311,6 +311,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       this.toastService.success('Post created successfully.');
       this.socketService?.createOrEditPost(this.postData);
+      this.buttonClicked = false;
+      this.resetPost();
       // , (data) => {
       //   this.spinner.hide();
       //   console.log(data)
@@ -362,20 +364,34 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   editCommunity(data): void {
-    const modalRef = this.modalService.open(AddCommunityModalComponent, {
-      centered: true,
-      backdrop: 'static',
-      keyboard: false,
-      size: 'lg',
-    });
-    modalRef.componentInstance.title = 'Edit Community Details';
+    let modalRef: any
+    if (data.pageType === 'community') {
+      modalRef = this.modalService.open(AddCommunityModalComponent, {
+        centered: true,
+        backdrop: 'static',
+        keyboard: false,
+        size: 'lg',
+      });
+    } else {
+      modalRef = this.modalService.open(AddFreedomPageComponent, {
+        centered: true,
+        backdrop: 'static',
+        keyboard: false,
+        size: 'lg',
+      });
+    }
+    modalRef.componentInstance.title = `Edit ${data.pageType} Details`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.confirmButtonLabel = 'Save';
     modalRef.componentInstance.closeIcon = true;
     modalRef.componentInstance.data = data;
     modalRef.result.then((res) => {
       if (res === 'success') {
-        this.router.navigate(['communities']);
+        if (data.pageType === 'community') {
+          this.router.navigate(['communities']);
+        } else {
+          this.router.navigate(['pages']);
+        }
       }
     });
   }
@@ -456,10 +472,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.toastService.success(res.message);
                 // this.getCommunityDetailsBySlug();
                 this.router.navigate([
-                  `${
-                    this.communityDetails.pageType === 'community'
-                      ? 'communities'
-                      : 'pages'
+                  `${this.communityDetails.pageType === 'community'
+                    ? 'communities'
+                    : 'pages'
                   }`,
                 ]);
               }

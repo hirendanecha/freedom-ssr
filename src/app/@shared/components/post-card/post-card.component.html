@@ -3,7 +3,10 @@
   class="post-single-box d-flex gap-3 gap-sm-5 p-3 p-sm-5"
   *ngIf="
     !post?.hide &&
-    (post?.postdescription || post?.metadescription || post?.imageUrl)
+    (post?.postdescription ||
+      post?.metadescription ||
+      post?.imageUrl ||
+      post?.pdfUrl)
   "
 >
   <img
@@ -34,19 +37,42 @@
           <div
             class="d-flex flex-column h6 m-0"
             *ngIf="post?.Username || post?.FirstName"
-            (mouseover)="showHoverBox = true"
           >
-            <div class="d-flex align-items-center cursor c-padding">
-              {{ post?.Username || post?.FirstName }}
-              <!-- [ngbTooltip]="post.postcreationdate | date : ' h:mm a MMM d, y'" -->
-              <div>
-                <fa-icon
-                  class="ms-2 me-1 font-12-px cursor"
-                  [icon]="['fas', 'clock']"
-                  placement="bottom"
-                />
-                {{ post?.postcreationdate | dateDay }}
+            <div
+              class="d-flex align-items-center cursor c-padding posted-wrap-text"
+            >
+              <div
+                class="d-flex align-items-center"
+                (mouseover)="showHoverBox = true"
+              >
+                {{ post?.Username || post?.FirstName }}
+                <!-- [ngbTooltip]="post.postcreationdate | date : ' h:mm a MMM d, y'" -->
+                <div>
+                  <fa-icon
+                    class="ms-2 me-1 font-12-px cursor"
+                    [icon]="['fas', 'clock']"
+                    placement="bottom"
+                  />
+                  {{ post?.postcreationdate | dateDay }}
+                </div>
               </div>
+              <ng-container *ngIf="post?.groupName">
+                <div class="d-none d-sm-flex ms-2 mt-1">
+                  <span>posted on</span>&nbsp;
+                  <a
+                    [href]="'/research/detail/grpm/' + post?.groupLink"
+                    target="_blank"
+                    class="m-0"
+                  >
+                    <span
+                      class="fw-bold m-0 posted-group-text align-items-center"
+                      [title]="post?.groupName"
+                      >{{ post?.groupName }}</span
+                    >
+                  </a>
+                  &nbsp;<span>Group</span>
+                </div>
+              </ng-container>
             </div>
           </div>
           <!-- hoverbox -->
@@ -255,7 +281,7 @@
       </button>
     </div>
     <ng-container *ngIf="post?.groupName">
-      <div class="d-flex mt-4">
+      <div class="d-flex d-sm-none mt-4">
         <span>posted on</span>&nbsp;
         <a
           [href]="'/research/detail/grpm/' + post?.groupLink"
@@ -263,7 +289,7 @@
           class="m-0"
         >
           <span
-            class="fw-bold m-0 posted-group-text align-items-center posted-wrap-text"
+            class="fw-bold m-0 posted-group-text align-items-center posted-wrap-mobile"
             [title]="post?.groupName"
             >{{ post?.groupName }}</span
           >
@@ -287,6 +313,9 @@
       <app-img-preview [src]="post?.imageUrl" classes="w-100" />
     </ng-container>
     <ng-container *ngIf="post?.streamname">
+      <div class="video-albumname mb-3">
+        {{ post.albumname }}
+      </div>
       <!-- <app-img-preview [src]="post?.thumbfilename" classes="w-100" /> -->
       <div
         [id]="'jwVideo-' + post?.id"
@@ -412,8 +441,8 @@
       </div>
     </form>
 
-    <ng-container *ngIf="isOpenCommentsPostId === +post?.id">
-      <ng-container *ngIf="commentList.length > 0; else elseNoCommentsFound">
+    <ng-container *ngIf="isOpenCommentsPostId === post.id">
+      <ng-container *ngIf="commentList.length; else elseNoCommentsFound">
         <div class="comments-area mt-5">
           <div
             class="single-comment-area ms-xxl-15"

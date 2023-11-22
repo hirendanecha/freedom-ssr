@@ -1,5 +1,5 @@
 <div class="modal-header border-0">
-  <h5 class="text-start">Create Freedom Page</h5>
+  <h5 class="text-start">{{ title }}</h5>
   <fa-icon
     [icon]="['fas', 'xmark']"
     class="xxltxt"
@@ -42,8 +42,8 @@
         >
           <option [value]="defaultCountry">United states</option>
           <option
+            *ngFor="let item of allCountryData; let i = index"
             [value]="item.country_code"
-            *ngFor="let item of allCountryData"
           >
             {{ item.country }}
           </option>
@@ -125,6 +125,7 @@
       <app-img-picker
         classes="w-160-px h-160-px p-0"
         (onFileChange)="onLogoImgChange($event)"
+        [url]="data?.logoImg"
       />
     </div>
 
@@ -135,6 +136,7 @@
       <app-img-picker
         classes="w-160-px h-160-px p-0"
         (onFileChange)="onCoverImgChange($event)"
+        [url]="data?.coverImg"
       />
     </div>
 
@@ -167,7 +169,7 @@
     class="cmn-btn alt p-2"
     (click)="activeModal.close('Cancel')"
   >
-    Cancel
+    {{ cancelButtonLabel }}
   </button>
   <button
     id="common-filter-confirm"
@@ -176,6 +178,6 @@
     [disabled]="!pageDetails"
     (click)="uploadImgAndSubmit()"
   >
-    Create
+    {{ confirmButtonLabel }}
   </button>
 </div>
