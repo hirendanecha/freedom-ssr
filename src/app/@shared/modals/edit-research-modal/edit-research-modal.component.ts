@@ -18,13 +18,13 @@ import { SocketService } from '../../services/socket.service';
   templateUrl: './edit-research-modal.component.html',
   styleUrls: ['./edit-research-modal.component.scss']
 })
-export class EditResearchModalComponent implements OnInit, AfterViewInit{
+export class EditResearchModalComponent implements OnInit, AfterViewInit {
   @Input() cancelButtonLabel: string | undefined = 'Cancel';
   @Input() confirmButtonLabel: string | undefined = 'Save';
   @Input() title: string | undefined = 'Edit Details';
   @Input() message: string | undefined;
   @Input() data: any = [];
-  
+
   constructor(
     public activeModal: NgbActiveModal,
     private profileService: ProfileService,
@@ -34,9 +34,9 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
     private toastService: ToastService,
     private cdr: ChangeDetectorRef,
     private socketService: SocketService,
-    ) {
-      this.getGroups()
-    }
+  ) {
+    this.getGroups()
+  }
   researches: any = [];
   btnGroupFeedTypeCtrl: FormControl;
   btnGroupViewTypeCtrl: FormControl;
@@ -72,7 +72,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
   postFileUrl: string;
   postFile: any;
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     if (this.data) {
       this.researchForm.patchValue({
         posttoprofileid: this.data?.posttoprofileid,
@@ -83,9 +83,9 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
         meta: this.data?.meta,
       });
       this.postImageUrl = this.data?.imageUrl
-      this.selectedImgFile = this.data?.imageUrl
+      // this.selectedImgFile = this.data?.imageUrl
       this.postFileUrl = this.data?.pdfUrl
-      this.selectedpdfFile = this.data?.pdfUrl 
+      // this.selectedpdfFile = this.data?.pdfUrl
     }
   }
 
@@ -108,7 +108,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
   }
 
   onTagUserInputDescription(data: any, ctrlName: string): void {
-    this.researchForm.get(ctrlName).setValue(data?.html); 
+    this.researchForm.get(ctrlName).setValue(data?.html);
   }
 
   onTagUserInputChangeEvent(data: any, ctrlName: string): void {
@@ -119,7 +119,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
     this.researchForm.get(ctrlName).setValue(data?.html);
     this.researchForm.get('meta').setValue(data?.meta || {});
     // console.log('data : ', data);
-    
+
     // this.postData.postdescription = data?.html;
     // this.postMessageTags = data?.tags;
   }
@@ -143,7 +143,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
       },
     });
   }
-  
+
   createResearch(): void {
     this.formIsClicked.setValue(true);
     if (this.researchForm.invalid && this.formIsSubmitted.value === false) {
@@ -181,17 +181,17 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
       //       this.toastService.danger(error.message);
       //     },
       //   })
-        // .add(() => {
-        //   this.researchForm.reset();
-        //   this.tagInputDefaultData = 'reset';
-        //   this.postImage = null;
-        //   this.postFile = null;
-        //   setTimeout(() => {
-        //     this.tagInputDefaultData = '';
-        //   }, 100);
-        //   this.formIsClicked.setValue(false);
-        //   this.formIsSubmitted.setValue(false);
-        // });
+      // .add(() => {
+      //   this.researchForm.reset();
+      //   this.tagInputDefaultData = 'reset';
+      //   this.postImage = null;
+      //   this.postFile = null;
+      //   setTimeout(() => {
+      //     this.tagInputDefaultData = '';
+      //   }, 100);
+      //   this.formIsClicked.setValue(false);
+      //   this.formIsSubmitted.setValue(false);
+      // });
     }
     this.removeImgFile()
   }
@@ -209,7 +209,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
       notError
     );
   }
-  formdata(){
+  formdata() {
     console.log(this.researchForm.value);
   }
   createImagePost(): void {
@@ -255,6 +255,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
 
   removeImgFile(): void {
     this.selectedImgFile = null;
+    this.postImageUrl = null;
   }
 
   onPostFileSelect(event: any): void {
@@ -283,6 +284,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit{
 
   removePostSelectedFile(): void {
     this.selectedpdfFile = null;
+    this.postFileUrl = null;
   }
 
   resetPost(): void {

@@ -103,7 +103,7 @@
             accept="image/*"
           />
         </div>
-        <ng-container *ngIf="selectedImgFile">
+        <ng-container *ngIf="postImageUrl">
           <div class="position-relative w-100-px h-100-px">
             <img
               loading="lazy"
@@ -121,7 +121,7 @@
           </div>
         </ng-container>
       </div>
-      <div class="col form-group" *ngIf="!selectedImgFile">
+      <div class="col form-group" *ngIf="!postImageUrl">
         <label for="textpostdesc" class="form-label">Upload File</label>
         <div class="d-flex custom-input-area" *ngIf="!selectedpdfFile">
           <fa-icon
