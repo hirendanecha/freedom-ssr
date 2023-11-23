@@ -1,8 +1,10 @@
 import {
   AfterViewInit,
   Component,
+  Inject,
   OnDestroy,
   OnInit,
+  PLATFORM_ID,
   Renderer2,
   ViewChild,
 } from '@angular/core';
@@ -25,6 +27,7 @@ import { AddCommunityModalComponent } from '../communities/add-community-modal/a
 import { AddFreedomPageComponent } from '../freedom-page/add-page-modal/add-page-modal.component';
 import { Meta } from '@angular/platform-browser';
 import { MetafrenzyService } from 'ngx-metafrenzy';
+import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -74,21 +77,24 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public tokenService: TokenStorageService,
     private seoService: SeoService,
-    private metafrenzyService: MetafrenzyService
+    private metafrenzyService: MetafrenzyService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.profileId = localStorage.getItem('profileId');
-    this.postData.profileid = +this.profileId;
+    if (isPlatformBrowser(this.platformId)) {
+      this.profileId = localStorage.getItem('profileId');
+      this.postData.profileid = +this.profileId;
 
-    this.route.paramMap.subscribe((paramMap) => {
-      const name = paramMap.get('name');
+      this.route.paramMap.subscribe((paramMap) => {
+        const name = paramMap.get('name');
 
-      if (name) {
-        this.communitySlug = name;
-        this.getCommunityDetailsBySlug();
-      }
+        if (name) {
+          this.communitySlug = name;
+          this.getCommunityDetailsBySlug();
+        }
 
-      this.isNavigationEnd = true;
-    });
+        this.isNavigationEnd = true;
+      });
+    }
   }
 
   ngOnInit(): void {
@@ -100,12 +106,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (!this.socketService.socket.connected) {
-      this.socketService.socket.connect();
+    if (!this.socketService.socket?.connected) {
+      this.socketService.socket?.connect();
     }
 
-    this.socketService.socket.emit('join', { room: this.profileId });
-    this.socketService.socket.on('notification', (data: any) => {
+    this.socketService.socket?.emit('join', { room: this.profileId });
+    this.socketService.socket?.on('notification', (data: any) => {
       console.log(data);
       if (data) {
         this.notificationId = data.id;
@@ -127,7 +133,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isRead === 'N') {
       this.sharedService.isNotify = true;
     }
-    this.socketService.socket.on(
+    this.socketService.socket?.on(
       'new-post-added',
       (res: any) => {
         this.spinner.hide();
@@ -520,7 +526,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     modalRef.componentInstance.post = post.id ? post : null;
     modalRef.result.then((res) => {
       if (res === 'success') {
-        this.socketService.socket.on('new-post');
+        this.socketService.socket?.on('new-post');
       }
     });
   }

@@ -32,7 +32,7 @@ export class ImgPickerComponent {
       this.fileData['file'] = file;
       this.fileData['url'] = URL.createObjectURL(file);
 
-      this.onFileChange.emit(this.fileData);
+      this.onFileChange?.emit(this.fileData);
     }
   //   if (file?.size < 5120000) {
   // }
@@ -50,6 +50,6 @@ export class ImgPickerComponent {
       url: ''
     };
 
-    this.onFileChange.emit(this.fileData);
+    this.onFileChange?.emit(this.fileData);
   }
 }

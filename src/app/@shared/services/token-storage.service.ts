@@ -18,7 +18,7 @@ export class TokenStorageService {
   constructor(private cookieService: CookieService,
     private router: Router,
     private toastService: ToastService,
-    ) { }
+  ) { }
 
   signOut(): void {
     sessionStorage.clear();
@@ -56,7 +56,7 @@ export class TokenStorageService {
     return JSON.parse(localStorage.getItem(USER_KEY));
   }
 
-  public getCredentials(): any {
+  getCredentials(): any {
     this._credentials = this.getUser();
     const isAuthenticate = Object.keys(this._credentials || {}).length > 0;
     this.changeIsUserAuthenticated(isAuthenticate);
