@@ -25,6 +25,12 @@ export class AppComponent {
 
   ngAfterViewInit(): void {
     this.spinner.hide();
+    setTimeout(() => {
+      const splashScreenLoader = document.getElementById('splashScreenLoader');
+      if (splashScreenLoader) {
+        splashScreenLoader.style.display = 'none';
+      }
+    }, 2000);
   }
 
   @HostListener('window:scroll', [])
