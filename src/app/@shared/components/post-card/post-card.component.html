@@ -297,6 +297,11 @@
         &nbsp;<span>Group</span>
       </div>
     </ng-container>
+    <ng-container *ngIf="post.albumname">
+      <div class="video-albumname">
+        {{post.albumname}}
+      </div>
+    </ng-container>
     <p
       class="post-description mdtxt m-0 mt-4 pb-3"
       [innerHTML]="post.postdescription | noSanitize"
@@ -313,9 +318,9 @@
       <app-img-preview [src]="post?.imageUrl" classes="w-100" />
     </ng-container>
     <ng-container *ngIf="post?.streamname">
-      <div class="video-albumname mb-3">
+      <!-- <div class="video-albumname mb-3">
         {{ post.albumname }}
-      </div>
+      </div> -->
       <!-- <app-img-preview [src]="post?.thumbfilename" classes="w-100" /> -->
       <div
         [id]="'jwVideo-' + post?.id"
