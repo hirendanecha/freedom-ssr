@@ -16,6 +16,7 @@ import { PostService } from 'src/app/@shared/services/post.service';
 import { SeeFirstUserService } from 'src/app/@shared/services/see-first-user.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
+import { UnsubscribeProfileService } from '../../services/unsubscribe-profile.service';
 
 @Component({
   selector: 'app-post-list',
@@ -38,6 +39,8 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
   isLoading = false;
   hasMoreData = false;
   userId: number = null
+  unSubscribeProfileIds: any = [];
+
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -45,11 +48,15 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
     public sharedService: SharedService,
     private socketService: SocketService,
     private seeFirstUserService: SeeFirstUserService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private unsubscribeProfileService: UnsubscribeProfileService,
+
   ) {
     // console.log(this.route.snapshot.params.id)
     this.userId = this.route.snapshot.params.id;
     this.profileId = localStorage.getItem('profileId');
+    this.getUnsubscribeProfiles();
+
   }
 
   ngAfterViewInit(): void {
@@ -61,13 +68,15 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
       'new-post-added',
       (res: any) => {
         if (res[0]) {
-          console.log('new-post-data', res)
-          if (this.editPostIndex >= 0 && this.editPostIndex != null) {
-            this.postList[this.editPostIndex] = res[0];
-            this.editPostIndex = null;
-          } else {
-            this.postList.unshift(res[0]);
-            // this.getPostList();
+          if (!this.unSubscribeProfileIds.includes(res[0]?.profileid)) {
+            console.log('new-post-data', res)
+            if (this.editPostIndex >= 0 && this.editPostIndex != null) {
+              this.postList[this.editPostIndex] = res[0];
+              this.editPostIndex = null;
+            } else {
+              this.postList.unshift(res[0]);
+              // this.getPostList();
+            }
           }
         }
       },
@@ -245,5 +254,21 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
     console.log(index);
     this.editPostIndex = index;
     this.onEditPost?.emit(post);
+  }
+
+  getUnsubscribeProfiles(): void {
+    const profileId = +localStorage.getItem('profileId');
+
+    if (profileId > 0) {
+      this.unsubscribeProfileService.getByProfileId(profileId).subscribe({
+        next: (res: any) => {
+          res.map(ele => {
+            this.unSubscribeProfileIds.push(ele.profileId);
+          })
+          console.log(this.unSubscribeProfileIds);
+          // this.unSubscribeProfileIds = res?.length > 0 ? res : [];
+        },
+      });
+    }
   }
 }

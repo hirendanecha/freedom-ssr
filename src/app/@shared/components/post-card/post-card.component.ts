@@ -71,6 +71,7 @@ export class PostCardComponent implements OnInit {
   commentMessageInputValue: string = '';
   commentMessageTags: any[];
   showHoverBox = false;
+  unSubscribeProfileIds: any = [];
 
   constructor(
     private seeFirstUserService: SeeFirstUserService,
