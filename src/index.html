@@ -34,7 +34,79 @@
     <base href="/" />
   </head>
 
+  <style>
+    .splash-screen {
+      background: var(--body-color);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      opacity: 1;
+    }
+
+    .logo {
+      background-image: url(/assets/images/default-profile.jpg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      border-radius: 50%;
+      height: 75px;
+      width: 75px;
+      border: 2px solid#000428;
+
+      -webkit-animation-name: spinner;
+      -webkit-animation-timing-function: linear;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-duration: 2s;
+      animation-name: spinner;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-duration: 2s;
+      -webkit-transform-style: preserve-3d;
+      -moz-transform-style: preserve-3d;
+      -ms-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+    }
+
+    @-webkit-keyframes spinner {
+      from {
+        -webkit-transform: rotateY(0deg);
+      }
+
+      to {
+        -webkit-transform: rotateY(-360deg);
+      }
+    }
+
+    @keyframes spinner {
+      from {
+        -moz-transform: rotateY(0deg);
+        -ms-transform: rotateY(0deg);
+        transform: rotateY(0deg);
+      }
+
+      to {
+        -moz-transform: rotateY(-360deg);
+        -ms-transform: rotateY(-360deg);
+        transform: rotateY(-360deg);
+      }
+    }
+  </style>
+
   <body>
+    <div id="splashScreenLoader" class="splash-screen">
+      <div class="splash-inner">
+        <div class="logo"></div>
+      </div>
+    </div>
+
     <app-root></app-root>
   </body>
 </html>
