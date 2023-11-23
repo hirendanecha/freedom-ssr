@@ -386,9 +386,10 @@
       a,
       li {
         font-size: 16px !important;
-        line-height: normal;
-        margin: unset;
+        line-height: 22px !important;
+        margin: unset !important;
         background-color: unset !important;
+        font-weight: 500 !important;
       }
       svg {
         // max-width: 16px;
