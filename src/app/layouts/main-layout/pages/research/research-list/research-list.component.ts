@@ -217,7 +217,8 @@ export class ResearchListComponent {
           this.formIsSubmitted.setValue(false);
         });
     }
-    this.removeImgFile()
+    this.removeImgFile();
+    this.removePostSelectedFile();
   }
 
   isFormSubmittedAndError(
