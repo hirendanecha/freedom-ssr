@@ -94,8 +94,8 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit {
     this.tagInputDefaultPostData = this.data?.textpostdesc;
     this.cdr.detectChanges();
 
-    if (!this.socketService.socket.connected) {
-      this.socketService.socket.connect();
+    if (!this.socketService.socket?.connected) {
+      this.socketService.socket?.connect();
     }
   }
 

@@ -156,7 +156,7 @@ export class PostCardComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.toastService.danger('Unsubscribe successfully');
-          this.getPostList.emit();
+          this.getPostList?.emit();
           return true;
         },
       });
@@ -168,10 +168,10 @@ export class PostCardComponent implements OnInit {
 
   editPost(post): void {
     if (this.onEditPost && !post.groupName) {
-      this.onEditPost.emit(post);
+      this.onEditPost?.emit(post);
     }
     if (post.groupName) {
-      this.onEditPost.emit(post);
+      this.onEditPost?.emit(post);
       const modalRef = this.modalService.open(EditResearchModalComponent, {
         centered: true,
         size: 'lg',
@@ -248,7 +248,7 @@ export class PostCardComponent implements OnInit {
           next: (res: any) => {
             if (res) {
               this.toastService.success(res.message);
-              this.getPostList.emit();
+              this.getPostList?.emit();
             }
           },
           error: (error) => {
@@ -561,7 +561,7 @@ export class PostCardComponent implements OnInit {
   }
 
   socketListner(): void {
-    this.socketService.socket.on('likeOrDislike', (res) => {
+    this.socketService.socket?.on('likeOrDislike', (res) => {
       if (res[0]) {
         if (this.post.id === res[0]?.id) {
           this.post.likescount = res[0]?.likescount;
@@ -569,7 +569,7 @@ export class PostCardComponent implements OnInit {
       }
     });
 
-    this.socketService.socket.on('likeOrDislikeComments', (res) => {
+    this.socketService.socket?.on('likeOrDislikeComments', (res) => {
       // console.log('likeOrDislikeComments', res);
       if (res[0]) {
         if (res[0].parentCommentId) {
@@ -605,7 +605,7 @@ export class PostCardComponent implements OnInit {
       }
     });
 
-    this.socketService.socket.on('comments-on-post', (data: any) => {
+    this.socketService.socket?.on('comments-on-post', (data: any) => {
       this.isPostComment = false;
       console.log('comments-on-post', data);
       if (data[0]?.parentCommentId) {

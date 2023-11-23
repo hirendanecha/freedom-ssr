@@ -60,11 +60,11 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (!this.socketService.socket.connected) {
-      this.socketService.socket.connect();
+    if (!this.socketService.socket?.connected) {
+      this.socketService.socket?.connect();
     }
 
-    this.socketService.socket.on(
+    this.socketService.socket?.on(
       'new-post-added',
       (res: any) => {
         if (res[0]) {
@@ -92,20 +92,6 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
         console.log(error);
       }
     );
-
-    // this.socketService.socket.on(
-    //   'new-post',
-    //   (data: any) => {
-    //     this.spinner.hide();
-
-    //     if (data.length > 0) {
-    //       this.postList = data;
-    //     }
-    //   },
-    //   (error: any) => {
-    //     console.log(error);
-    //   }
-    // );
   }
 
   ngOnInit(): void { }

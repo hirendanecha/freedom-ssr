@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { UnsubscribeProfileService } from 'src/app/@shared/services/unsubscribe-profile.service';
 
@@ -12,11 +13,14 @@ export class UnsubscribedUsersComponent implements OnInit {
 
   constructor(
     private unsubscribeProfileService: UnsubscribeProfileService,
-    private toastService: ToastService
-  ) {}
+    private toastService: ToastService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
 
   ngOnInit(): void {
-    this.getUnsubscribeProfiles();
+    if (isPlatformBrowser(this.platformId)) {
+      this.getUnsubscribeProfiles();
+    }
   }
 
   getUnsubscribeProfiles(): void {

@@ -1,7 +1,7 @@
-import { Component, HostListener, Inject } from '@angular/core';
+import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { SharedService } from './@shared/services/shared.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Meta } from '@angular/platform-browser';
 
 @Component({
@@ -15,12 +15,15 @@ export class AppComponent {
 
   constructor(
     private sharedService: SharedService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
   }
 
   ngOnInit(): void {
-    this.sharedService.getUserDetails();
+    if (isPlatformBrowser(this.platformId)) {
+      this.sharedService.getUserDetails();
+    }
   }
 
   ngAfterViewInit(): void {

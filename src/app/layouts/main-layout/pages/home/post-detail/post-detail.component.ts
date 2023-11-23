@@ -1,6 +1,9 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
+  Inject,
   OnInit,
+  PLATFORM_ID,
 } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -28,12 +31,15 @@ export class PostDetailComponent implements OnInit {
     public sharedService: SharedService,
     private route: ActivatedRoute,
     private seoService: SeoService,
-    private metafrenzyService: MetafrenzyService
+    private metafrenzyService: MetafrenzyService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.postId = this.route.snapshot.paramMap.get('id');
-    // console.log('route', this.route);
-    if (this.postId) {
-      this.getPostsByPostId();
+    if (isPlatformBrowser(this.platformId)) {
+      this.postId = this.route.snapshot.paramMap.get('id');
+      // console.log('route', this.route);
+      if (this.postId) {
+        this.getPostsByPostId();
+      }
     }
   }
 
