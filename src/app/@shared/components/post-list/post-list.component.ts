@@ -71,10 +71,17 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
           if (!this.unSubscribeProfileIds.includes(res[0]?.profileid)) {
             console.log('new-post-data', res)
             if (this.editPostIndex >= 0 && this.editPostIndex != null) {
+              console.log(this.editPostIndex, 'index')
               this.postList[this.editPostIndex] = res[0];
               this.editPostIndex = null;
             } else {
-              this.postList.unshift(res[0]);
+              // this.postList.unshift(res[0]);
+              let index = this.postList?.findIndex(
+                (obj) => obj?.id === res[0]?.id
+              );
+              if (this.postList[index]) {
+                this.postList[index] = res[0]
+              }
               // this.getPostList();
             }
           }
