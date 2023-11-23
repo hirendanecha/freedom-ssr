@@ -130,13 +130,26 @@
 
       <!-- placeholder="Write something to post.." -->
       <div class="w-100 position-relative">
-        <app-tag-user-input
-          placeholder="Post a link or image or file or let's just talk!"
-          [value]="postMessageInputValue"
-          [isShowMetaLoader]="false"
-          (onDataChange)="onTagUserInputChangeEvent($event)"
-        />
-
+        <div class="d-flex align-items-center">
+          <app-tag-user-input
+            placeholder="Post a link or image or file or let's just talk!"
+            [value]="postMessageInputValue"
+            [isShowMetaLoader]="false"
+            (onDataChange)="onTagUserInputChangeEvent($event)"
+          />
+          <button
+          class="d-sm-none btn btn-sm btn-primary px-3 py-1 d-flex justify-content-center align-items-center gap-2 float-end ms-1 h-40-px"
+          [disabled]="
+            !(postData?.postdescription || postData?.file?.name) ||
+            buttonClicked
+          "
+          (click)="uploadPostFileAndCreatePost()"
+        >
+          <!-- {{ postData?.id ? "Update Post" : "Post" }} -->
+  
+          <fa-icon class="c-icon-color" [icon]="['fas', 'paper-plane']" />
+        </button>
+        </div>
         <ng-container *ngIf="postData?.imageUrl">
           <div class="position-relative w-100-px h-100-px mt-5">
             <img
@@ -237,7 +250,7 @@
             />
             <span>Fallings/Activity</span>
           </li> -->
-          <div class="btn-area gap-3 w-100 d-flex justify-content-end">
+          <div class="d-none d-sm-flex btn-area gap-3 w-100 d-flex justify-content-end">
             <button
               class="btn btn-sm btn-secondary px-3 py-1 d-flex justify-content-center align-items-center gap-2"
               *ngIf="
