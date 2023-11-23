@@ -171,7 +171,7 @@ export class PostCardComponent implements OnInit {
       this.onEditPost?.emit(post);
     }
     if (post.groupName) {
-      this.onEditPost?.emit(post);
+      // this.onEditPost?.emit(post);
       const modalRef = this.modalService.open(EditResearchModalComponent, {
         centered: true,
         size: 'lg',
