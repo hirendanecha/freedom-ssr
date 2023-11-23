@@ -29,7 +29,7 @@
         </div>
 
         <div>
-          <ng-container *ngIf="communityDetails.profileId == profileId">
+          <ng-container *ngIf="communityDetails?.adminIds.includes(+profileId)">
             <button
               class="btn btn-sm btn-primary me-2"
               (click)="editCommunity(communityDetails)"
