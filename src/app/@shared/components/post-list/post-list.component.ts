@@ -75,12 +75,13 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
               this.postList[this.editPostIndex] = res[0];
               this.editPostIndex = null;
             } else {
-              // this.postList.unshift(res[0]);
               let index = this.postList?.findIndex(
                 (obj) => obj?.id === res[0]?.id
               );
               if (this.postList[index]) {
                 this.postList[index] = res[0]
+              } else {
+                this.postList.unshift(res[0]);
               }
               // this.getPostList();
             }
