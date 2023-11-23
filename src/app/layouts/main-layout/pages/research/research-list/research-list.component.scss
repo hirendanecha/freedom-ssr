@@ -16,67 +16,70 @@
     text-overflow: ellipsis;
     max-width: 170px;
   }
-}
-
-::ng-deep {
-  .mobile-research-card {
-    h6{
-      font-weight: 600;
-    }
-    @media (max-width: 576px) {
-      align-self: center;
-    }
-  }
-  .carousel {
-    .carousel-inner {
-      border-radius: var(--bs-border-radius);
-    }
-
-    .carousel-control-prev,
-    .carousel-control-next {
-      width: 32px;
-      opacity: 1;
-
-      span {
-        background-color: var(--bs-primary);
-        border-radius: 10px;
-        background-size: 18px;
-        width: 32px;
-        height: 32px;
+  ::ng-deep {
+    .mobile-research-card {
+      h6{
+        font-weight: 600;
+      }
+      @media (max-width: 576px) {
+        align-self: center;
       }
     }
-
-    .carousel-control-prev {
-      left: -36px;
-    }
-
-    .carousel-control-next {
-      right: -36px;
-    }
-  }
-
-  .btn-check:checked + .btn,
-  :not(.btn-check) + .btn:active,
-  .btn:first-child:active,
-  .btn.active,
-  .btn.show {
-    color: white !important;
-  }
-
-  @media (max-width: 990px) {
     .carousel {
+      .carousel-inner {
+        border-radius: var(--bs-border-radius);
+      }
+  
       .carousel-control-prev,
       .carousel-control-next {
-        width: 46px;
+        width: 32px;
+        opacity: 1;
+  
+        span {
+          background-color: var(--bs-primary);
+          border-radius: 10px;
+          background-size: 18px;
+          width: 32px;
+          height: 32px;
+        }
+      }
+  
+      .carousel-control-prev {
+        left: -36px;
+      }
+  
+      .carousel-control-next {
+        right: -36px;
       }
     }
-  }
-  .c-icon-color {
-    svg path {
-      fill: var(--secondary-color) !important;
+  
+    .btn-check:checked + .btn,
+    :not(.btn-check) + .btn:active,
+    .btn:first-child:active,
+    .btn.active,
+    .btn.show {
+      color: white !important;
+    }
+  
+    @media (max-width: 990px) {
+      .carousel {
+        .carousel-control-prev,
+        .carousel-control-next {
+          width: 46px;
+        }
+      }
+    }
+    .c-icon-color {
+      svg path {
+        fill: var(--secondary-color) !important;
+      }
+    }
+    .tag-input-div {
+      max-width: 615px !important;
     }
   }
 }
+
 
 .custom-input-area {
   width: 100%;
