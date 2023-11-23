@@ -9,7 +9,7 @@
     "test": "ng test",
     "dev:ssr": "ng run freedom-ssr:serve-ssr",
     "serve:ssr": "node dist/freedom-ssr/server/main.js",
-    "build:ssr": "ng build && ng run freedom-ssr:server",
+    "build:ssr": "ng build --configuration production && ng run freedom-ssr:server",
     "prerender": "ng run freedom-ssr:prerender"
   },
   "private": true,
