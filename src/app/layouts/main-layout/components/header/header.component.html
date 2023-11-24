@@ -103,6 +103,7 @@
           <!-- (click)="scrollToTop()" -->
           <!-- (dblclick)="reloadPage()" -->
           <a
+            routerLink="/home"
             (click)="reloadPage()"
             routerLinkActive="active"
             class="nav-icon home cursor"
@@ -129,7 +130,7 @@
         <li>
           <!-- (click)="redirectToTube()" -->
           <a
-            href="https://tube.freedom.buzz/"
+            [href]="channelId ? 'https://tube.freedom.buzz/?channelId=' + channelId : 'https://tube.freedom.buzz'"
             target="_blank"
             routerLinkActive="active"
             class="nav-icon cursor"

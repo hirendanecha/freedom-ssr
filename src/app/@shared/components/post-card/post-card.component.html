@@ -308,7 +308,18 @@
     ></p>
 
     <ng-container *ngIf="post?.pdfUrl">
-      <app-pdf-preview [src]="post?.pdfUrl" classes="w-100" />
+      <!-- <app-pdf-preview [src]="post?.pdfUrl" classes="w-100" /> -->
+      <div (click)="pdfView(post?.pdfUrl)">
+        <div class="d-flex align-items-center">
+          <fa-icon
+          [icon]="['fas', 'file-pdf']"
+          class="c-pointer close-icon font-60-px"
+        />
+        <span class="pdf-name">
+          {{post.pdfUrl.split('/')[3]}}
+        </span>
+        </div>
+      </div>
       <div class="mb-10"></div>
     </ng-container>
 

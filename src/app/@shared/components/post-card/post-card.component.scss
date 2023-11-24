@@ -373,6 +373,16 @@
     color: var(--para-2nd-color);
     font-weight: 600;
   }
+  
+  .pdf-name{
+    color: var(--para-2nd-color);
+    margin-left: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
 
   ::ng-deep {
     .post-description {
@@ -384,12 +394,14 @@
       h6,
       span,
       a,
+      div,
       li {
         font-size: 16px !important;
         line-height: 22px !important;
         margin: unset !important;
         background-color: unset !important;
         font-weight: 500 !important;
+        color: unset !important;
       }
       svg {
         // max-width: 16px;
