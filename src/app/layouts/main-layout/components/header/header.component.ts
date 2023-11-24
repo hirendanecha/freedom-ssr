@@ -128,10 +128,9 @@ export class HeaderComponent {
   }
 
   reloadPage(): void {
-    // this.router.navigate(['home']).then(() => {
-    //   location.reload();
-    // })
-    window.location.reload()
+    this.router.navigate(['home']).then(() => {
+      location.reload();
+    })
   }
 
   redirectToTube(): void {
