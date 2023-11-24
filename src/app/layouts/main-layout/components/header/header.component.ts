@@ -33,6 +33,7 @@ export class HeaderComponent {
   userList: any = [];
   searchText = '';
 
+  channelId: number
 
   showButton = false;
   sidebar: any = {
@@ -57,6 +58,7 @@ export class HeaderComponent {
     if (isRead === 'N') {
       this.sharedService.isNotify = true;
     }
+    this.channelId = +localStorage.getItem('channelId');
   }
 
 
@@ -126,9 +128,10 @@ export class HeaderComponent {
   }
 
   reloadPage(): void {
-    this.router.navigate(['home']).then(() => {
-      location.reload();
-    })
+    // this.router.navigate(['home']).then(() => {
+    //   location.reload();
+    // })
+    window.location.reload()
   }
 
   redirectToTube(): void {
