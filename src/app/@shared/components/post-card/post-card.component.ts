@@ -73,6 +73,8 @@ export class PostCardComponent implements OnInit {
   showHoverBox = false;
   unSubscribeProfileIds: any = [];
 
+  descriptionimageUrl: string;
+
   constructor(
     private seeFirstUserService: SeeFirstUserService,
     private unsubscribeProfileService: UnsubscribeProfileService,
@@ -96,6 +98,13 @@ export class PostCardComponent implements OnInit {
       }
       this.socketListner();
       this.viewComments(this.post?.id);
+
+      const contentContainer = document.createElement('div');
+      contentContainer.innerHTML = this.post.postdescription;
+      const imgTag = contentContainer.querySelector('img');
+      if (imgTag) {
+        this.descriptionimageUrl = imgTag.getAttribute('src');
+      }
     });
   }
 
@@ -114,7 +123,7 @@ export class PostCardComponent implements OnInit {
     this.seeFirstUserService.remove(Number(this.profileId), id).subscribe({
       next: (res) => {
         this.seeFirstList.pop(id);
-        console.log(this.seeFirstList)
+        console.log(this.seeFirstList);
         this.toastService.warring('See First Stopped');
         this.getPostList?.emit();
       },
@@ -133,7 +142,10 @@ export class PostCardComponent implements OnInit {
     modalRef.result.then((res) => {
       if (res === 'success') {
         this.seeFirstUserService
-          .create({ profileId: this.profileId, seeFirstProfileId: postProfileId })
+          .create({
+            profileId: this.profileId,
+            seeFirstProfileId: postProfileId,
+          })
           .subscribe({
             next: (res) => {
               this.router.navigate([`settings/view-profile/${postProfileId}`]);
@@ -142,7 +154,7 @@ export class PostCardComponent implements OnInit {
             },
           });
       }
-    })
+    });
   }
 
   unsubscribe(post: any): void {
@@ -306,7 +318,7 @@ export class PostCardComponent implements OnInit {
     //   this.isOpenCommentsPostId = id;
     // }
     // this.spinner.show();
-    this.editCommentsLoader = true
+    this.editCommentsLoader = true;
     this.isOpenCommentsPostId = id;
     this.isCommentsLoader = true;
     const data = {
@@ -335,16 +347,16 @@ export class PostCardComponent implements OnInit {
             return ele1.parentCommentId;
           });
           this.commentCount = this.commentList.length + replyCount.length;
-          this.editCommentsLoader = false
+          this.editCommentsLoader = false;
         }
       },
       error: (error) => {
         console.log(error);
-        this.editCommentsLoader = false
+        this.editCommentsLoader = false;
       },
       complete: () => {
         this.isCommentsLoader = false;
-        this.editCommentsLoader = false
+        this.editCommentsLoader = false;
       },
     });
   }
@@ -594,7 +606,9 @@ export class PostCardComponent implements OnInit {
             })
           );
         } else {
-          let index = this.commentList.findIndex((obj) => obj?.id === res[0]?.id);
+          let index = this.commentList.findIndex(
+            (obj) => obj?.id === res[0]?.id
+          );
           if (index !== -1) {
             this.commentList[index].likeCount = res[0]?.likeCount;
           }
@@ -630,9 +644,10 @@ export class PostCardComponent implements OnInit {
           })
         );
         this.viewComments(data[0].postId);
-
       } else {
-        let index = this.commentList.findIndex((obj) => obj?.id === data[0]?.id);
+        let index = this.commentList.findIndex(
+          (obj) => obj?.id === data[0]?.id
+        );
         if (!this.commentList[index]) {
           this.commentList.push(data[0]);
           this.viewComments(data[0].postId);
@@ -644,8 +659,8 @@ export class PostCardComponent implements OnInit {
     });
   }
 
-  pdfView(pdfUrl){
-    window.open(pdfUrl)
+  pdfView(pdfUrl) {
+    window.open(pdfUrl);
   }
 
   downloadPdf(pdf): void {

@@ -306,6 +306,9 @@
       class="post-description mdtxt m-0 mt-4 pb-3"
       [innerHTML]="post.postdescription | noSanitize"
     ></p>
+    <ng-container *ngIf="descriptionimageUrl">
+      <app-img-preview [src]="descriptionimageUrl" classes="w-100" />
+    </ng-container>
 
     <ng-container *ngIf="post?.pdfUrl">
       <!-- <app-pdf-preview [src]="post?.pdfUrl" classes="w-100" /> -->
@@ -315,8 +318,8 @@
           [icon]="['fas', 'file-pdf']"
           class="c-pointer close-icon font-60-px"
         />
-        <span class="pdf-name">
-          {{post.pdfUrl.split('/')[3]}}
+        <span class="pdf-name c-pointer">
+          {{post.pdfUrl.split('/')[3].replaceAll('%', ' ')}}
         </span>
         </div>
       </div>
