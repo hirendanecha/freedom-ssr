@@ -11,7 +11,7 @@ import { CommunityService } from 'src/app/@shared/services/community.service';
   styleUrls: ['./freedom-page.component.scss'],
 })
 export class FreedomPageComponent {
-  activeIdTab: string = 'my';
+  activeIdTab: string = 'joined';
   pageList = []
   profileId: number
   isPageLoader: boolean = false;
