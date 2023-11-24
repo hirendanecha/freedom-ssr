@@ -239,7 +239,7 @@ export class ResearchListComponent {
     const profileId = localStorage.getItem('profileId');
     if (this.selectedImgFile) {
       this.postService
-        .upload(this.selectedImgFile, profileId, 'post')
+        .uploadFile(this.selectedImgFile)
         .subscribe({
           next: (res: any) => {
             if (res?.body?.url) {
@@ -250,7 +250,7 @@ export class ResearchListComponent {
         });
     } else if (this.selectedpdfFile) {
       this.postService
-        .upload(this.selectedpdfFile, profileId, 'post')
+        .uploadFile(this.selectedpdfFile)
         .subscribe({
           next: (res: any) => {
             if (res?.body?.url) {
