@@ -644,6 +644,10 @@ export class PostCardComponent implements OnInit {
     });
   }
 
+  pdfView(pdfUrl){
+    window.open(pdfUrl)
+  }
+
   downloadPdf(pdf): void {
     const pdfLink = document.createElement('a');
     pdfLink.href = pdf;
