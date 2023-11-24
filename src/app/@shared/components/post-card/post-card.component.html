@@ -316,7 +316,7 @@
           class="c-pointer close-icon font-60-px"
         />
         <span class="pdf-name">
-          {{post.pdfUrl.split('/')[3]}}
+          {{post.pdfUrl.split('/')[3].replaceAll('%', ' ')}}
         </span>
         </div>
       </div>
