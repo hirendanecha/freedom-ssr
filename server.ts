@@ -9,11 +9,13 @@ import fetch from 'node-fetch';
 import { AppServerModule } from './src/main.server';
 import 'localstorage-polyfill';
 import 'reflect-metadata';
+import { environment } from 'src/environments/environment';
 
 // SEO
-const url = 'https://freedom-api.opash.in';
+// const url = 'https://freedom-api.opash.in';
+// const url = 'https://freedom-api.opash.in';
 // const url_img = url;
-const api_url = url + '/api';
+const api_url = environment.serverUrl;
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -184,16 +186,16 @@ export function app(): express.Express {
 }
 
 async function getCommunity(id: any) {
-  return fetch(api_url + '/v1/community/bySlug/' + id).then((resp) =>
+  return fetch(api_url + 'community/bySlug/' + id).then((resp) =>
     resp.json()
   );
 }
 
 async function getPost(id: any) {
-  return fetch(api_url + '/v1/posts/get/' + id).then((resp) => resp.json());
+  return fetch(api_url + 'posts/get/' + id).then((resp) => resp.json());
 }
 async function getProfile(id: any) {
-  return fetch(api_url + '/v1/customers/profile/' + id).then((resp: any) =>
+  return fetch(api_url + 'customers/profile/' + id).then((resp: any) =>
     resp.json()
   );
 }
