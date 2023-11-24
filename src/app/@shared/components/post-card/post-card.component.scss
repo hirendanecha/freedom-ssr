@@ -394,6 +394,7 @@
       h6,
       span,
       a,
+      em,
       div,
       strong,
       li {
@@ -430,11 +431,15 @@
       h6,
       span,
       a,
+      em,
       li {
         font-size: 16px !important;
         line-height: normal;
         margin: unset;
         background-color: unset !important;
+      }
+      p, em, span {
+        color: var(--para-2nd-color)!important
       }
     }
   }
