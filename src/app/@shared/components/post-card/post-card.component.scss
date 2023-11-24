@@ -404,9 +404,11 @@
         font-weight: 500 !important;
         color: unset !important;
       }
+      img,
       svg {
         // max-width: 16px;
         // max-height: 16px;
+        display: none !important;
         vertical-align: middle;
         margin-right: 5px;
       }

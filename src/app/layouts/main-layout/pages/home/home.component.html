@@ -173,7 +173,7 @@
               [icon]="['fas', 'file-pdf']"
               class="c-pointer close-icon font-40-px"
             />
-            <span class="c-pdf-show">{{ pdfName }}</span>
+            <span class="c-pdf-show">{{ pdfName.replaceAll('%', ' ') }}</span>
             <fa-icon
               [icon]="['fas', 'xmark']"
               class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"

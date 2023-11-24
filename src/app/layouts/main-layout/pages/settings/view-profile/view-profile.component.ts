@@ -152,7 +152,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
           this.spinner.hide();
           if (res) {
             res.map((e: any) => {
-              e.pdfName = e.pdfUrl.split('/')[3]
+              e.pdfName = e.pdfUrl.split('/')[3].replaceAll('%', ' ')
             })
             this.pdfList = res;
             console.log(this.pdfList);
