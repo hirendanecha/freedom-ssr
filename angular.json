@@ -139,6 +139,16 @@
           },
           "defaultConfiguration": "production"
         },
+        "dev-serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "freedom-ssr:build:development",
+              "serverTarget": "freedom-ssr:server:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
         "serve-ssr": {
           "builder": "@nguniversal/builders:ssr-dev-server",
           "configurations": {
