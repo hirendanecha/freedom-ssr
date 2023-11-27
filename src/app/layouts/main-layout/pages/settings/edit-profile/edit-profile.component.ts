@@ -298,4 +298,8 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  onChangeTag(event) {
+    this.customer.Username = event.target.value.replaceAll(' ', '');
+    console.log(this.customer.Username);
+  }
 }
