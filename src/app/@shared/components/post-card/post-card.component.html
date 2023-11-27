@@ -45,7 +45,7 @@
                 class="d-flex align-items-center"
                 (mouseover)="showHoverBox = true"
               >
-                {{ post?.Username || post?.FirstName }}
+                {{ ((post?.Username || post?.FirstName).split(" ")).join("") }}
                 <!-- [ngbTooltip]="post.postcreationdate | date : ' h:mm a MMM d, y'" -->
                 <div>
                   <fa-icon
@@ -141,7 +141,7 @@
                 <span class="me-2 ms-2">|</span>
                 <button
                   class="droplist d-flex align-items-center gap-2"
-                  (click)="editPost(post)"
+                  (click)="editPost(post)"  
                 >
                   <fa-icon [icon]="['fas', 'pen-to-square']" />
                   <span>Edit</span>
@@ -208,7 +208,7 @@
                 <!-- (click)="readUnreadNotification(notification.id, 'N')" -->
                 <a
                   class="droplist d-flex align-items-center gap-2"
-                  (click)="downloadPdf(post.pdfUrl)"
+                  (click)="downloadPdf(post.pdfUrl)"  
                 >
                   <fa-icon [icon]="['fas', 'download']" />
                   <span>Download</span>
@@ -330,7 +330,7 @@
 
     <ng-container *ngIf="post?.imageUrl">
       <app-img-preview [src]="post?.imageUrl" classes="w-100" />
-    </ng-container>
+    </ng-container> 
     <ng-container *ngIf="post?.streamname">
       <!-- <div class="video-albumname mb-3">
         {{ post.albumname }}
@@ -677,7 +677,7 @@
                             class="d-flex justify-content-between align-items-center w-100"
                           >
                             <h6 class="m-0 align-items-center">
-                              {{ reply.Username || reply.FirstName }}
+                              {{ reply.Username || reply.FirstName }} 
                               <span class="font-12-px">
                                 <fa-icon
                                   class="ms-2"
