@@ -93,12 +93,12 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     this.profileImg = event;
   }
 
-  upload(file, id, defaultType) {
+  upload(file) {
     // if (file.size / (1024 * 1024) > 5) {
     //   return 'Image file size exceeds 5 MB!';
     // }
     this.spinner.show();
-    this.uploadService.upload(file, id, defaultType).subscribe({
+    this.uploadService.uploadFile(file).subscribe({
       next: (res: any) => {
         this.spinner.hide();
         if (res.body) {
@@ -136,7 +136,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
           this.isragister = true;
           const id = data.data;
           if (id) {
-            this.upload(this.profileImg?.file, id, 'profile');
+            this.upload(this.profileImg?.file);
             localStorage.setItem('register', String(this.isragister));
             this.router.navigateByUrl('/login?isVerify=false');
           }

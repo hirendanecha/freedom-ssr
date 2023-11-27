@@ -9,6 +9,7 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 
 @Component({
   selector: 'app-add-community-modal',
@@ -63,7 +64,8 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     private spinner: NgxSpinnerService,
     private communityService: CommunityService,
     private toastService: ToastService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private uploadService: UploadFilesService
   ) {
     this.userId = window.sessionStorage.user_id;
     this.profileId = localStorage.getItem('profileId');
@@ -110,11 +112,11 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     this.communityForm.get('profileId').setValue(this.profileId);
     let uploadObs = {};
     if (this.logoImg?.file?.name) {
-      uploadObs['logoImg'] = this.communityService.upload(this.logoImg?.file, this.profileId, 'community-logo');
+      uploadObs['logoImg'] = this.uploadService.uploadFile(this.logoImg?.file);
     }
 
     if (this.coverImg?.file?.name) {
-      uploadObs['coverImg'] = this.communityService.upload(this.coverImg?.file, this.profileId, 'community-cover');
+      uploadObs['coverImg'] = this.uploadService.uploadFile(this.coverImg?.file);
     }
 
     if (Object.keys(uploadObs)?.length > 0) {

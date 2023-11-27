@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 export class UploadFilesService {
   private baseUrl = environment.serverUrl + 'utils';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   upload(file: File, id: any, defaultType: string): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
@@ -32,5 +32,25 @@ export class UploadFilesService {
 
   getCoverPic(id): Observable<any> {
     return this.http.get(`${this.baseUrl}/files/profile-cover/${id}`);
+  }
+
+  uploadFile(
+    files: File,
+  ): Observable<HttpEvent<any>> {
+    const url = environment.serverUrl
+    const formData: FormData = new FormData();
+    formData.append('file', files);
+    console.log(formData);
+    const req =
+      new HttpRequest(
+        'POST',
+        `${url}utils/image-upload`,
+        formData,
+        {
+          reportProgress: true,
+          responseType: 'json',
+        }
+      );
+    return this.http.request(req);
   }
 }

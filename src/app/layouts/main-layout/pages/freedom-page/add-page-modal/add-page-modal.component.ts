@@ -57,7 +57,8 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
     private spinner: NgxSpinnerService,
     private communityService: CommunityService,
     private toastService: ToastService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private uploadService: UploadFilesService
   ) {
     this.userId = window.sessionStorage.user_id;
     this.profileId = localStorage.getItem('profileId');
@@ -138,11 +139,11 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
     this.pageForm.get('profileId').setValue(this.profileId);
     let uploadObs = {};
     if (this.logoImg?.file?.name) {
-      uploadObs['logoImg'] = this.communityService.upload(this.logoImg?.file, this.profileId, 'page-logo');
+      uploadObs['logoImg'] = this.uploadService.uploadFile(this.logoImg?.file);
     }
 
     if (this.coverImg?.file?.name) {
-      uploadObs['coverImg'] = this.communityService.upload(this.coverImg?.file, this.profileId, 'page-cover');
+      uploadObs['coverImg'] = this.uploadService.uploadFile(this.coverImg?.file);
     }
 
     if (Object.keys(uploadObs)?.length > 0) {
