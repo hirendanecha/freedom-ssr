@@ -409,6 +409,7 @@
             <app-tag-user-input
               placeholder="Comment"
               [value]="commentMessageInputValue"
+              [isShowMetaLoader]="false"
               (onDataChange)="onTagUserInputChangeEvent($event)"
             />
 
@@ -599,6 +600,7 @@
                     <app-tag-user-input
                       placeholder="Reply comment"
                       [value]="commentMessageInputValue"
+                      [isShowMetaLoader]="false"
                       (onDataChange)="onTagUserInputChangeEvent($event)"
                     />
                     <div

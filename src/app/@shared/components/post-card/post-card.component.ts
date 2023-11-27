@@ -103,7 +103,10 @@ export class PostCardComponent implements OnInit {
       contentContainer.innerHTML = this.post.postdescription;
       const imgTag = contentContainer.querySelector('img');
       if (imgTag) {
-        this.descriptionimageUrl = imgTag.getAttribute('src');
+        const imgTitle = imgTag.getAttribute('title');
+        if (!imgTitle) {
+          this.descriptionimageUrl = imgTag.getAttribute('src');
+        }
       }
     });
   }

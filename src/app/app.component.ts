@@ -33,7 +33,7 @@ export class AppComponent {
       if (splashScreenLoader) {
         splashScreenLoader.style.display = 'none';
       }
-    }, 2000);
+    }, 1000);
   }
 
   @HostListener('window:scroll', [])
