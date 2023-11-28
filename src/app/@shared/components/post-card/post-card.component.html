@@ -299,7 +299,7 @@
     </ng-container>
     <ng-container *ngIf="post.albumname">
       <div class="video-albumname">
-        {{post.albumname}}
+        {{ post.albumname }}
       </div>
     </ng-container>
     <p
@@ -315,12 +315,12 @@
       <div (click)="pdfView(post?.pdfUrl)">
         <div class="d-flex align-items-center">
           <fa-icon
-          [icon]="['fas', 'file-pdf']"
-          class="c-pointer close-icon font-60-px"
-        />
-        <span class="pdf-name c-pointer">
-          {{post.pdfUrl.split('/')[3].replaceAll('%', ' ')}}
-        </span>
+            [icon]="['fas', 'file-pdf']"
+            class="c-pointer close-icon font-60-px"
+          />
+          <span class="pdf-name c-pointer">
+            {{ post.pdfUrl.split("/")[3].replaceAll("%", " ") }}
+          </span>
         </div>
       </div>
       <div class="mb-10"></div>
@@ -536,9 +536,15 @@
 
                   <ng-container *ngIf="comment?.comment">
                     <p
-                      class="mdtxt mb-0"
+                      class="mdtxt mb-0 comment-description"
                       [innerHTML]="comment.comment | noSanitize"
                     ></p>
+                    <ng-container *ngIf="comment.descImg">
+                      <app-img-preview
+                        [src]="comment.descImg"
+                        classes="w-100"
+                      />
+                    </ng-container>
                   </ng-container>
                   <app-post-meta-data-card [post]="comment" />
 
@@ -731,9 +737,15 @@
 
                           <ng-container *ngIf="reply?.comment">
                             <p
-                              class="mdtxt mb-0"
+                              class="mdtxt mb-0 comment-description"
                               [innerHTML]="reply?.comment | noSanitize"
                             ></p>
+                            <ng-container *ngIf="reply.descImg">
+                              <app-img-preview
+                                [src]="reply.descImg"
+                                classes="w-100"
+                              />
+                            </ng-container>
                           </ng-container>
                           <app-post-meta-data-card [post]="reply" />
 

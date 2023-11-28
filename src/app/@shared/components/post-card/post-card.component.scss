@@ -442,6 +442,11 @@
       p, em, span {
         color: var(--para-2nd-color)!important
       }
+      .comment-description{
+        img{
+          display: none !important;
+        }
+      }
     }
   }
 }
