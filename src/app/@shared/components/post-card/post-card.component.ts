@@ -74,6 +74,8 @@ export class PostCardComponent implements OnInit {
   unSubscribeProfileIds: any = [];
 
   descriptionimageUrl: string;
+  commentDescriptionimageUrl: string;
+  replayCommentDescriptionimageUrl: string;
 
   constructor(
     private seeFirstUserService: SeeFirstUserService,
@@ -89,7 +91,7 @@ export class PostCardComponent implements OnInit {
     public tokenService: TokenStorageService,
     private seoService: SeoService,
     public breakpointService: BreakpointService,
-    public activeModal: NgbActiveModal,
+    public activeModal: NgbActiveModal
   ) {
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
@@ -99,15 +101,18 @@ export class PostCardComponent implements OnInit {
       this.socketListner();
       this.viewComments(this.post?.id);
 
-      const contentContainer = document.createElement('div');
-      contentContainer.innerHTML = this.post.postdescription;
-      const imgTag = contentContainer.querySelector('img');
-      if (imgTag) {
-        const imgTitle = imgTag.getAttribute('title');
-        if (!imgTitle) {
-          this.descriptionimageUrl = imgTag.getAttribute('src');
-        }
-      }
+      this.descriptionimageUrl = this.extractImageUrlFromContent(
+        this.post.postdescription
+      );
+      // const contentContainer = document.createElement('div');
+      // contentContainer.innerHTML = this.post.postdescription;
+      // const imgTag = contentContainer.querySelector('img');
+      // if (imgTag) {
+      //   const imgTitle = imgTag.getAttribute('title');
+      //   if (!imgTitle) {
+      //     this.descriptionimageUrl = imgTag.getAttribute('src');
+      //   }
+      // }
     });
   }
 
@@ -340,17 +345,37 @@ export class PostCardComponent implements OnInit {
           //     }
           //   });
           // });
+          res.data.commmentsList.filter((ele: any) => {
+            ele.descImg = this.extractImageUrlFromContent(ele.comment);
+          });
+          console.log(res.data.commmentsList);
           this.commentList = res.data.commmentsList.map((ele: any) => ({
             ...ele,
-            replyCommnetsList: res.data.replyCommnetsList.filter((ele1) => {
-              return ele.id === ele1.parentCommentId;
-            }),
+            replyCommnetsList: res.data.replyCommnetsList.filter(
+              (ele1: any) => {
+                ele1.descImg = this.extractImageUrlFromContent(ele1.comment);
+                return ele.id === ele1.parentCommentId;
+              }
+            ),
           }));
           const replyCount = res.data.replyCommnetsList.filter((ele1) => {
             return ele1.parentCommentId;
           });
           this.commentCount = this.commentList.length + replyCount.length;
           this.editCommentsLoader = false;
+
+          this.commentList.forEach((element) => {
+            this.commentDescriptionimageUrl = this.extractImageUrlFromContent(
+              element.comment
+            );
+          });
+
+          this.commentList.forEach((element) => {
+            element.replyCommnetsList.forEach((ele) => {
+              this.replayCommentDescriptionimageUrl =
+                this.extractImageUrlFromContent(ele.comment);
+            });
+          });
         }
       },
       error: (error) => {
@@ -672,5 +697,19 @@ export class PostCardComponent implements OnInit {
     // window.open(pdf);
     // pdfLink.download = "TestFile.pdf";
     pdfLink.click();
+  }
+
+  extractImageUrlFromContent(content: string): string | null {
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = content;
+    const imgTag = contentContainer.querySelector('img');
+
+    if (imgTag) {
+      const imgTitle = imgTag.getAttribute('title');
+      if (!imgTitle) {
+        return imgTag.getAttribute('src');
+      }
+    }
+    return null;
   }
 }
