@@ -65,6 +65,7 @@ export class PostCardComponent implements OnInit {
   editCommentsLoader: boolean = false;
   isPostComment: boolean = false;
   webUrl = environment.webUrl;
+  tubeUrl = environment.tubeUrl;
   player: any;
   isExpand = false;
   commentCount = 0;
@@ -126,6 +127,13 @@ export class PostCardComponent implements OnInit {
   //     this.playVideo(this.post?.id);
   //   }
   // }
+  getPostUrl(post: any): string {
+    if (post.streamname) {
+      return this.tubeUrl + 'video/' + post.id;
+    } else {
+      return this.webUrl + 'post/' + post.id;
+    }
+  }
 
   removeSeeFirstUser(id: number): void {
     this.seeFirstUserService.remove(Number(this.profileId), id).subscribe({
