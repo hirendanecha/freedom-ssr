@@ -151,98 +151,107 @@
           </div>
         </div>
 
-        <div ngbDropdown *ngIf="tokenService.getCredentials()">
-          <fa-icon
-            [icon]="['fas', 'ellipsis']"
-            class="font-24-px m-0"
-            role="button"
-            ngbDropdownToggle
-          />
-
-          <div ngbDropdownMenu class="dropdown-menu">
-            <ng-container *ngIf="profileId != post.profileid">
-              <button
-                ngbDropdownItem
-                *ngIf="seeFirstList.includes(post?.profileid)"
-                class="d-block d-lg-none"
-              >
-                <a
-                  class="droplist d-flex alig n-items-center gap-2"
-                  (click)="removeSeeFirstUser(post?.profileid)"
+        <div class="d-flex">
+          <div
+            class="cursor me-2"
+            [appCopyClipboard]="getPostUrl(post)"
+            >
+            <!-- [appCopyClipboard]="webUrl + 'post/' + post.id" title="Share post link" -->
+            <fa-icon [icon]="['fas', 'share-nodes']" class="font-24-px m-0" />
+          </div>
+          <div ngbDropdown *ngIf="tokenService.getCredentials()">
+            <fa-icon
+              [icon]="['fas', 'ellipsis']"
+              class="font-24-px m-0"
+              role="button"
+              ngbDropdownToggle
+            />
+  
+            <div ngbDropdownMenu class="dropdown-menu">
+              <ng-container *ngIf="profileId != post.profileid">
+                <button
+                  ngbDropdownItem
+                  *ngIf="seeFirstList.includes(post?.profileid)"
+                  class="d-block d-lg-none"
                 >
-                  <fa-icon [icon]="['fas', 'eye']" />
-                  <span>Stop See First</span>
-                </a>
-              </button>
-              <button
-                ngbDropdownItem
-                *ngIf="!seeFirstList.includes(post.profileid)"
-                class="d-block d-lg-none"
-              >
-                <a
-                  class="droplist d-flex align-items-center gap-2"
-                  (click)="seeFirst(post?.profileid)"
+                  <a
+                    class="droplist d-flex alig n-items-center gap-2"
+                    (click)="removeSeeFirstUser(post?.profileid)"
+                  >
+                    <fa-icon [icon]="['fas', 'eye']" />
+                    <span>Stop See First</span>
+                  </a>
+                </button>
+                <button
+                  ngbDropdownItem
+                  *ngIf="!seeFirstList.includes(post.profileid)"
+                  class="d-block d-lg-none"
                 >
-                  <fa-icon [icon]="['fas', 'eye']" />
-                  <span>See First</span>
-                </a>
-              </button>
-              <button ngbDropdownItem class="d-block d-lg-none">
-                <a
-                  class="droplist d-flex align-items-center gap-2"
-                  (click)="unsubscribe(post)"
-                >
-                  <fa-icon [icon]="['fas', 'user-minus']" />
-                  <span>Unsubscribe</span>
-                </a>
-              </button>
-              <button ngbDropdownItem (click)="goToViewProfile(post.profileid)">
-                <a class="droplist d-flex align-items-center gap-2">
-                  <fa-icon [icon]="['fas', 'user']" />
-                  <span>View Profile</span>
-                </a>
-              </button>
-            </ng-container>
-            <ng-container *ngIf="profileId == post.profileid">
-              <button ngbDropdownItem *ngIf="post.pdfUrl">
-                <!-- (click)="readUnreadNotification(notification.id, 'N')" -->
-                <a
-                  class="droplist d-flex align-items-center gap-2"
-                  (click)="downloadPdf(post.pdfUrl)"
-                >
-                  <fa-icon [icon]="['fas', 'download']" />
-                  <span>Download</span>
-                </a>
-              </button>
+                  <a
+                    class="droplist d-flex align-items-center gap-2"
+                    (click)="seeFirst(post?.profileid)"
+                  >
+                    <fa-icon [icon]="['fas', 'eye']" />
+                    <span>See First</span>
+                  </a>
+                </button>
+                <button ngbDropdownItem class="d-block d-lg-none">
+                  <a
+                    class="droplist d-flex align-items-center gap-2"
+                    (click)="unsubscribe(post)"
+                  >
+                    <fa-icon [icon]="['fas', 'user-minus']" />
+                    <span>Unsubscribe</span>
+                  </a>
+                </button>
+                <button ngbDropdownItem (click)="goToViewProfile(post.profileid)">
+                  <a class="droplist d-flex align-items-center gap-2">
+                    <fa-icon [icon]="['fas', 'user']" />
+                    <span>View Profile</span>
+                  </a>
+                </button>
+              </ng-container>
+              <ng-container *ngIf="profileId == post.profileid">
+                <button ngbDropdownItem *ngIf="post.pdfUrl">
+                  <!-- (click)="readUnreadNotification(notification.id, 'N')" -->
+                  <a
+                    class="droplist d-flex align-items-center gap-2"
+                    (click)="downloadPdf(post.pdfUrl)"
+                  >
+                    <fa-icon [icon]="['fas', 'download']" />
+                    <span>Download</span>
+                  </a>
+                </button>
+                <button ngbDropdownItem>
+                  <a
+                    class="droplist d-flex align-items-center gap-2"
+                    (click)="editPost(post)"
+                  >
+                    <fa-icon [icon]="['fas', 'pen-to-square']" />
+                    <span>Edit</span>
+                  </a>
+                </button>
+                <button ngbDropdownItem>
+                  <a
+                    class="droplist d-flex align-items-center gap-2"
+                    (click)="deletePost(post)"
+                  >
+                    <fa-icon [icon]="['fas', 'trash-can']" />
+                    <span>Delete</span>
+                  </a>
+                </button>
+              </ng-container>
+  
               <button ngbDropdownItem>
                 <a
                   class="droplist d-flex align-items-center gap-2"
-                  (click)="editPost(post)"
+                  [appCopyClipboard]="webUrl + 'post/' + post.id"
                 >
-                  <fa-icon [icon]="['fas', 'pen-to-square']" />
-                  <span>Edit</span>
+                  <fa-icon [icon]="['fas', 'link']" />
+                  <span>Copy URL</span>
                 </a>
               </button>
-              <button ngbDropdownItem>
-                <a
-                  class="droplist d-flex align-items-center gap-2"
-                  (click)="deletePost(post)"
-                >
-                  <fa-icon [icon]="['fas', 'trash-can']" />
-                  <span>Delete</span>
-                </a>
-              </button>
-            </ng-container>
-
-            <button ngbDropdownItem>
-              <a
-                class="droplist d-flex align-items-center gap-2"
-                [appCopyClipboard]="webUrl + 'post/' + post.id"
-              >
-                <fa-icon [icon]="['fas', 'link']" />
-                <span>Copy URL</span>
-              </a>
-            </button>
+            </div>
           </div>
         </div>
       </div>
