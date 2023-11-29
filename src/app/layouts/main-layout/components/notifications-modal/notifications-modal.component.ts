@@ -19,6 +19,10 @@ export class NotificationsModalComponent {
     private router: Router,
   ) {
     this.sharedService.getNotificationList();
+    const isRead = localStorage.getItem('isRead');
+    if (isRead === 'N') {
+      localStorage.setItem('isRead', 'Y');
+    }
   }
 
   readUnreadNotification(postId: string, notificationId: number): void {
