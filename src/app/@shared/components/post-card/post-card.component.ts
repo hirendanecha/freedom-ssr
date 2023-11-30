@@ -137,7 +137,7 @@ export class PostCardComponent implements OnInit {
     const modalRef = this.modalService.open(SharePostModalComponent, {
       centered: true,
     });
-    modalRef.componentInstance.title = 'Share post';
+    modalRef.componentInstance.title = 'Share post on Home';
     modalRef.componentInstance.confirmButtonLabel = 'Yes';
     modalRef.componentInstance.cancelButtonLabel = 'No';
     modalRef.componentInstance.post =  post;

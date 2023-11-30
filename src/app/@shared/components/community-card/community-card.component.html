@@ -9,7 +9,7 @@
         loading="lazy"
         class="avatar-img cover-img w-100 h-160-px"
         data-src="{{ community?.coverImg }}"
-        onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-room.png';"
+        onerror="this.onerror=null;this.src='/assets/images/banner/freedom-buzz-high-res.jpeg;'"
         alt="avatar"
       />
     </div>
@@ -53,7 +53,10 @@
             {{ "Delete" }}
           </button>
           <button
-            *ngIf="community.profileId !== profileId && community.memberList.includes(profileId)"
+            *ngIf="
+              community.profileId !== profileId &&
+              community.memberList.includes(profileId)
+            "
             class="btn btn-outline-danger alt third w-80-px"
             (click)="deleteOrLeaveCommunity($event)"
           >
