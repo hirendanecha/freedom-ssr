@@ -63,7 +63,10 @@
             {{ "Leave" }}
           </button>
           <button
-            *ngIf="!community?.memberList.includes(profileId)"
+            *ngIf="
+              community.profileId !== profileId &&
+              !community?.memberList.includes(profileId)
+            "
             class="btn btn-outline-success alt third w-80-px"
             (click)="joinCommunity($event)"
           >
