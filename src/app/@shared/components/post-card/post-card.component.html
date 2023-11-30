@@ -154,10 +154,9 @@
         <div class="d-flex">
           <div
             class="cursor me-2"
-            [appCopyClipboard]="getPostUrl(post)"
+            (click)="getPostUrl(post)"
             >
-            <!-- [appCopyClipboard]="webUrl + 'post/' + post.id" title="Share post link" -->
-            <fa-icon [icon]="['fas', 'share-nodes']" class="font-24-px m-0" />
+            <fa-icon [icon]="['fas', 'share']" class="font-24-px m-0" />
           </div>
           <div ngbDropdown *ngIf="tokenService.getCredentials()">
             <fa-icon

@@ -28,6 +28,7 @@ import { TokenStorageService } from '../../services/token-storage.service';
 import { SeoService } from '../../services/seo.service';
 import { BreakpointService } from '../../services/breakpoint.service';
 import { EditResearchModalComponent } from '../../modals/edit-research-modal/edit-research-modal.component';
+import { SharePostModalComponent } from '../../modals/share-post-modal/share-post-modal.component';
 
 declare var jwplayer: any;
 @Component({
@@ -127,12 +128,29 @@ export class PostCardComponent implements OnInit {
   //     this.playVideo(this.post?.id);
   //   }
   // }
-  getPostUrl(post: any): string {
-    if (post.streamname) {
-      return this.tubeUrl + 'video/' + post.id;
-    } else {
-      return this.webUrl + 'post/' + post.id;
-    }
+  getPostUrl(post: any) {
+    // if (post.streamname) {
+    //   return this.tubeUrl + 'video/' + post.id;
+    // } else {
+    //   return this.webUrl + 'post/' + post.id;
+    // }
+    const modalRef = this.modalService.open(SharePostModalComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.title = 'Share post';
+    modalRef.componentInstance.confirmButtonLabel = 'Yes';
+    modalRef.componentInstance.cancelButtonLabel = 'No';
+    modalRef.componentInstance.post =  post;
+    modalRef.result.then((res) => {
+      if (res.profileid && res.postdescription || res.meta) {
+        this.socketService?.createOrEditPost(res);
+        this.toastService.success('Post create successfully');
+      } else{
+        if (res.profileid) {
+          this.toastService.warring('Something went wrong please try again!');
+        }
+      }
+    });
   }
 
   removeSeeFirstUser(id: number): void {
