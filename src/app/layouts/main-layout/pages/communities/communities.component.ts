@@ -10,7 +10,7 @@ import { CommunityService } from 'src/app/@shared/services/community.service';
   styleUrls: ['./communities.component.scss'],
 })
 export class CommunitiesComponent {
-  activeIdTab: string = 'my';
+  activeIdTab: string = 'local';
   communities: any = [];
   isCommunityLoader: boolean = false;
   profileId: number = null;

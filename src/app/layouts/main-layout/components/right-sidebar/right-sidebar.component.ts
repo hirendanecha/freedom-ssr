@@ -57,9 +57,9 @@ export class RightSidebarComponent implements OnInit {
   }
 
   getCommunityList(): void {
-    const profileId = localStorage.getItem('profileId');
+    const profileId = +localStorage.getItem('profileId');
     this.isCommunitiesLoader = true;
-    this.communityService.getLocalCommunities().subscribe({
+    this.communityService.getLocalCommunities(profileId).subscribe({
       next: (res: any) => {
         // console.log(res)
         if (res) {

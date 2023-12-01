@@ -32,8 +32,8 @@ export class CommunityService {
     return this.http.request(req);
   }
 
-  getLocalCommunities(): Observable<Community> {
-    return this.http.get<Community>(`${this.baseUrl}/get-local-community`);
+  getLocalCommunities(id:number): Observable<Community> {
+    return this.http.get<Community>(`${this.baseUrl}/get-communities-pages/${id}`);
   }
   getCommunity(id, pageType: string): Observable<Community> {
     return this.http.get<Community>(`${this.baseUrl}/?id=${id}&pageType=${pageType}`);
