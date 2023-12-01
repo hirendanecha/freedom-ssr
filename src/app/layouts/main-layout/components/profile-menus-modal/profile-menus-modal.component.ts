@@ -30,7 +30,7 @@ export class ProfileMenusModalComponent {
   ) {
     this.userId = +localStorage.getItem('user_id');
     this.profileId = +localStorage.getItem('profileId');
-   }
+  }
 
   closeMenu(e: MouseEvent, type: string) {
     if (e && type) {
@@ -62,10 +62,10 @@ export class ProfileMenusModalComponent {
     // this.isCollapsed = true;
     this.customerService.logout().subscribe({
       next: (res => {
-        // console.log(res)
+        this.tokenStorageService.signOut();
+        console.log(res)
       })
     })
-    this.tokenStorageService.signOut();
     // this.toastService.success('Logout successfully');
     // this.router.navigate(['/auth']);
     // this.isDomain = false;
@@ -75,7 +75,7 @@ export class ProfileMenusModalComponent {
     this.router.navigate([`settings/edit-profile/${this.userId}`]);
     // window.open(`settings/edit-profile/${userId}`, '_blank')
   }
-  
+
   goToViewProfile() {
     // window.open(`settings/view-profile/${profileId}`, '_blank')
     this.router.navigate([`settings/view-profile/${this.profileId}`]);

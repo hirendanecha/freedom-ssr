@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Customer } from '../constant/customer';
 
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  withCredentials: true,
+};
 @Injectable({
   providedIn: 'root',
 })
@@ -94,13 +98,14 @@ export class CustomerService {
 
   logout(): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/logout`
+      `${this.baseUrl}/logout`,
+      httpOptions
     );
   }
 
   getNotification(id): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/notification/${id}`
+      `${this.baseUrl}/notification/${id}`,
     );
   }
 }
