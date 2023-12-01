@@ -732,7 +732,8 @@ export class PostCardComponent implements OnInit {
 
     if (imgTag) {
       const imgTitle = imgTag.getAttribute('title');
-      if (!imgTitle) {
+      const imgStyle = imgTag.getAttribute('style');
+      if (!imgTitle && !imgStyle) {
         return imgTag.getAttribute('src');
       }
     }
