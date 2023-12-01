@@ -262,8 +262,7 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
         next: (res: any) => {
           res.map(ele => {
             this.unSubscribeProfileIds.push(ele.profileId);
-          })
-          console.log(this.unSubscribeProfileIds);
+          });
           // this.unSubscribeProfileIds = res?.length > 0 ? res : [];
         },
       });
