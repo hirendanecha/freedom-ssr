@@ -68,7 +68,7 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
       'new-post-added',
       (res: any) => {
         if (res[0]) {
-          if (this.communityId === null || (this.communityId === res[0].communityId) ) {
+          if ((this.communityId === null && res[0].communityId === null) || (this.communityId === res[0].communityId)) {
             if (!this.unSubscribeProfileIds.includes(res[0]?.profileid)) {
               console.log('new-post-data', res)
               if (this.editPostIndex >= 0 && this.editPostIndex != null) {
@@ -81,14 +81,15 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
                 );
                 if (this.postList[index]) {
                   this.postList[index] = res[0]
-                } else {
+                }
+                else {
                   this.postList.unshift(res[0]);
                 }
                 // this.getPostList();
               }
             }
           } else {
-            console.log('enter',res[0]);
+            console.log('enter', res[0]);
           }
         }
       },
