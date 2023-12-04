@@ -152,7 +152,10 @@
         </div>
 
         <div class="d-flex">
-          <div class="cursor me-2" (click)="getPostUrl(post)">
+          <div *ngIf="shareButton && tokenService.getCredentials()"
+            class="cursor me-5"
+            (click)="getPostUrl(post)"
+            >
             <fa-icon [icon]="['fas', 'share']" class="font-24-px m-0" />
           </div>
           <div ngbDropdown *ngIf="tokenService.getCredentials()">
