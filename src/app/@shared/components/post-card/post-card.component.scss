@@ -53,7 +53,6 @@
     }
     .post-description {
       p {
-       
         h1 {
           font-size: 18px;
         }
@@ -154,7 +153,7 @@
 
     .post-description {
       white-space: pre-wrap;
-      
+      max-width: 541px;
       p {
         h1 {
           font-size: 18px;
@@ -195,13 +194,13 @@
           color: var(--primary-color) !important;
         }
       }
-      // .single-comment-area {
-      //   .top-area {
-      //     p {
-      //       // line-break: anywhere;
-      //     }
-      //   }
-      // }
+      .single-comment-area {
+        .top-area {
+          p {
+            // line-break: anywhere;
+          }
+        }
+      }
     }
 
     .post-img {
@@ -388,7 +387,6 @@
 
   ::ng-deep {
     .post-description {
-      
       h1,
       h2,
       h3,
@@ -396,7 +394,6 @@
       h5,
       h6,
       span,
-      a,
       b,
       em,
       div,
@@ -405,21 +402,18 @@
         font-size: 16px !important;
         line-height: 22px !important;
         margin: unset !important;
+        letter-spacing: unset !important;
         background-color: unset !important;
         font-weight: 500 !important;
-      
+        color: unset !important;
       }
-      span{
-        color: white !important;
+      a{
+        font-size: 16px !important;
+        line-height: 22px !important;
+        margin: unset !important;
         background-color: unset !important;
+        font-weight: 500 !important;
       }
-      b{
-        color: white !important;
-        background-color: unset !important;
-      }
-   
-
-      
       img,
       svg {
         // max-width: 16px;
@@ -455,6 +449,11 @@
       }
       p, em, span {
         color: var(--para-2nd-color)!important
+      }
+      .comment-description{
+        img{
+          display: none !important;
+        }
       }
     }
   }

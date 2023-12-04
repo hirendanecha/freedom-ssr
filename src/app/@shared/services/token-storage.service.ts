@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ToastService } from './toast.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -24,8 +25,8 @@ export class TokenStorageService {
     sessionStorage.clear();
     const theme = localStorage.getItem('theme');
     localStorage.clear();
-    this.cookieService.delete('auth-user');
-    this.cookieService.deleteAll('/');
+    this.cookieService.delete('auth-user', '/', environment.domain);
+    // this.cookieService.deleteAll('/');
     localStorage.setItem('theme', theme);
     this.toastService.success('Logout successfully');
     this.router.navigate(['/']);

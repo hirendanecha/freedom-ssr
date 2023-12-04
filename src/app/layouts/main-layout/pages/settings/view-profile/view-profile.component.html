@@ -4,7 +4,7 @@
       <div class="upload-single cover-img">
         <div class="profile-picture position-relative text-start">
           <img
-            loading="lazy"
+            loading="eager"
             data-src="{{
               customer?.CoverPicName || '/assets/images/profile-cover.png'
             }}"
@@ -18,7 +18,7 @@
         <div class="col-md-4 profile text-start d-flex align-items-center">
           <img
             class="preview-image w-120-px h-120-px"
-            loading="lazy"
+            loading="eager"
             data-src="{{
               customer?.ProfilePicName ||
                 '/assets/images/avtar/placeholder-user.png'

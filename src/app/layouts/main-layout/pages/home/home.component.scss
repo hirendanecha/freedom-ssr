@@ -107,6 +107,12 @@
       }
     }
   }
+  app-tag-user-input {
+    .inline-meta-loader {
+      top: 10px;
+      left: 240px;
+    }
+  }
   .c-icon-color {
     svg path {
       fill: var(--secondary-color);

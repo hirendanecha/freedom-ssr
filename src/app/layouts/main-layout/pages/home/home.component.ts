@@ -409,7 +409,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         profileId: profileId,
         communityId: this.communityDetails?.Id,
         IsActive: 'Y',
-        isAdmin: 'Y',
+        isAdmin: 'N',
       };
       this.searchText = '';
       console.log(data);

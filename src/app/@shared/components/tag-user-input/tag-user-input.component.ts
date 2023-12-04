@@ -148,6 +148,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
               this.spinner.hide();
             },
             error: () => {
+              this.isMetaLoader = false;
               this.clearMetaData();
               this.spinner.hide();
             },
@@ -155,6 +156,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       }
     } else {
       this.clearMetaData();
+      this.isMetaLoader = false;
     }
   }
 

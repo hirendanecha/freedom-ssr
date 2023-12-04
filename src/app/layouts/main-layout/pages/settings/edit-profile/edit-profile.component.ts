@@ -16,6 +16,7 @@ import { PostService } from 'src/app/@shared/services/post.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
+import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -55,6 +56,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     private postService: PostService,
     public sharedService: SharedService,
     private toastService: ToastService,
+    private uploadService: UploadFilesService,
   ) {
     this.userlocalId = +localStorage.getItem('user_id');
     this.userId = this.route.snapshot.paramMap.get('id');
@@ -181,11 +183,11 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   uploadImgAndUpdateCustomer(): void {
     let uploadObs = {};
     if (this.profileImg?.file?.name) {
-      uploadObs['profileImg'] = this.postService.upload(this.profileImg?.file, this.profileId, 'profile');
+      uploadObs['profileImg'] = this.uploadService.uploadFile(this.profileImg?.file);
     }
 
     if (this.profileCoverImg?.file?.name) {
-      uploadObs['profileCoverImg'] = this.postService.upload(this.profileCoverImg?.file, this.profileId, 'profile-cover');
+      uploadObs['profileCoverImg'] = this.uploadService.uploadFile(this.profileCoverImg?.file);
     }
 
     if (Object.keys(uploadObs)?.length > 0) {
@@ -193,6 +195,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
 
       forkJoin(uploadObs).subscribe({
         next: (res: any) => {
+          console.log(res);
           if (res?.profileImg?.body?.url) {
             this.profileImg['file'] = null;
             this.profileImg['url'] = res?.profileImg?.body?.url;

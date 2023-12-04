@@ -21,11 +21,11 @@
   >
     <fa-icon [icon]="['fas', 'xmark']" class="c-pointer close-icon font-40-px" (click)="closeImagePreview()" />
 
+    <!-- width="600" -->
     <img
       loading="lazy"
       data-src="{{ src }}"
-      width="600"
-      class="w-80 h-80 rounded-3"
+      class="w-80 h-80 rounded-3 image-preview"
       alt="preview-img"
       onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
       (click)="stopPropagation($event)"

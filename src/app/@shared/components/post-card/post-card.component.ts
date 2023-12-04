@@ -10,7 +10,7 @@ import {
   ViewChild,
   afterNextRender,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { SeeFirstUserService } from 'src/app/@shared/services/see-first-user.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
@@ -28,6 +28,7 @@ import { TokenStorageService } from '../../services/token-storage.service';
 import { SeoService } from '../../services/seo.service';
 import { BreakpointService } from '../../services/breakpoint.service';
 import { EditResearchModalComponent } from '../../modals/edit-research-modal/edit-research-modal.component';
+import { SharePostModalComponent } from '../../modals/share-post-modal/share-post-modal.component';
 
 declare var jwplayer: any;
 @Component({
@@ -65,6 +66,7 @@ export class PostCardComponent implements OnInit {
   editCommentsLoader: boolean = false;
   isPostComment: boolean = false;
   webUrl = environment.webUrl;
+  tubeUrl = environment.tubeUrl;
   player: any;
   isExpand = false;
   commentCount = 0;
@@ -74,6 +76,9 @@ export class PostCardComponent implements OnInit {
   unSubscribeProfileIds: any = [];
 
   descriptionimageUrl: string;
+  commentDescriptionimageUrl: string;
+  replayCommentDescriptionimageUrl: string;
+  shareButton = false;
 
   constructor(
     private seeFirstUserService: SeeFirstUserService,
@@ -85,26 +90,34 @@ export class PostCardComponent implements OnInit {
     private spinner: NgxSpinnerService,
     public sharedService: SharedService,
     private router: Router,
+    private route: ActivatedRoute,
     private renderer: Renderer2,
     public tokenService: TokenStorageService,
     private seoService: SeoService,
     public breakpointService: BreakpointService,
-    public activeModal: NgbActiveModal,
+    public activeModal: NgbActiveModal
   ) {
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
+      
       if (this.post?.id && this.post?.posttype === 'V') {
         this.playVideo(this.post?.id);
       }
       this.socketListner();
       this.viewComments(this.post?.id);
 
-      const contentContainer = document.createElement('div');
-      contentContainer.innerHTML = this.post.postdescription;
-      const imgTag = contentContainer.querySelector('img');
-      if (imgTag) {
-        this.descriptionimageUrl = imgTag.getAttribute('src');
-      }
+      this.descriptionimageUrl = this.extractImageUrlFromContent(
+        this.post.postdescription
+      );
+      // const contentContainer = document.createElement('div');
+      // contentContainer.innerHTML = this.post.postdescription;
+      // const imgTag = contentContainer.querySelector('img');
+      // if (imgTag) {
+      //   const imgTitle = imgTag.getAttribute('title');
+      //   if (!imgTitle) {
+      //     this.descriptionimageUrl = imgTag.getAttribute('src');
+      //   }
+      // }
     });
   }
 
@@ -113,11 +126,39 @@ export class PostCardComponent implements OnInit {
     // this.viewComments(this.post?.id);
   }
 
-  // ngAfterViewInit(): void {
-  //   if (this.post?.posttype === 'V') {
-  //     this.playVideo(this.post?.id);
-  //   }
-  // }
+  ngAfterViewInit(): void {
+    // if (this.post?.posttype === 'V') {
+    //   this.playVideo(this.post?.id);
+    // }
+    const path = this.route.snapshot.routeConfig.path;
+    if (path === 'view-profile/:id' || path === 'post/:id') {
+      this.shareButton = true
+    }
+  }
+  getPostUrl(post: any) {
+    // if (post.streamname) {
+    //   return this.tubeUrl + 'video/' + post.id;get-communities-pages
+    // } else {
+    //   return this.webUrl + 'post/' + post.id;
+    // }
+    const modalRef = this.modalService.open(SharePostModalComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.title = 'Share post on Home';
+    modalRef.componentInstance.confirmButtonLabel = 'Yes';
+    modalRef.componentInstance.cancelButtonLabel = 'No';
+    modalRef.componentInstance.post = post;
+    modalRef.result.then((res) => {
+      if (res.profileid && res.postdescription || res.meta) {
+        this.socketService?.createOrEditPost(res);
+        this.toastService.success('Post create successfully');
+      } else {
+        if (res.profileid) {
+          this.toastService.warring('Something went wrong please try again!');
+        }
+      }
+    });
+  }
 
   removeSeeFirstUser(id: number): void {
     this.seeFirstUserService.remove(Number(this.profileId), id).subscribe({
@@ -310,55 +351,58 @@ export class PostCardComponent implements OnInit {
   }
 
   viewComments(id: number): void {
-    // this.isExpand = this.isOpenCommentsPostId == id ? false : true;
-    // this.isOpenCommentsPostId = id;
-    // if (!this.isExpand) {
-    //   this.isOpenCommentsPostId = null;
-    // } else {
-    //   this.isOpenCommentsPostId = id;
-    // }
-    // this.spinner.show();
-    this.editCommentsLoader = true;
-    this.isOpenCommentsPostId = id;
-    this.isCommentsLoader = true;
-    const data = {
-      postId: id,
-      profileId: this.profileId,
-    };
-    this.postService.getComments(data).subscribe({
-      next: (res) => {
-        if (res) {
-          // this.spinner.hide();
-          // this.commentList = res.data.commmentsList.filter((ele: any) => {
-          //   res.data.replyCommnetsList.some((element: any) => {
-          //     if (ele?.id === element?.parentCommentId) {
-          //       ele?.replyCommnetsList.push(element);
-          //       return ele;
-          //     }
-          //   });
-          // });
-          this.commentList = res.data.commmentsList.map((ele: any) => ({
-            ...ele,
-            replyCommnetsList: res.data.replyCommnetsList.filter((ele1) => {
-              return ele.id === ele1.parentCommentId;
-            }),
-          }));
-          const replyCount = res.data.replyCommnetsList.filter((ele1) => {
-            return ele1.parentCommentId;
-          });
-          this.commentCount = this.commentList.length + replyCount.length;
+    if (this.post.id === id) {
+      this.editCommentsLoader = true;
+      this.isOpenCommentsPostId = id;
+      this.isCommentsLoader = true;
+      const data = {
+        postId: id,
+        profileId: this.profileId,
+      };
+      this.postService.getComments(data).subscribe({
+        next: (res) => {
+          if (res) {
+            this.post.commentCount = res.data?.count;
+            res.data.commmentsList.filter((ele: any) => {
+              ele.descImg = this.extractImageUrlFromContent(ele.comment);
+            });
+
+            console.log(res.data.commmentsList);
+            this.commentList = res.data.commmentsList.map((ele: any) => ({
+              ...ele,
+              replyCommnetsList: res.data.replyCommnetsList.filter(
+                (ele1: any) => {
+                  ele1.descImg = this.extractImageUrlFromContent(ele1.comment);
+                  return ele.id === ele1.parentCommentId;
+                }
+              ),
+            }));
+            this.editCommentsLoader = false;
+
+            this.commentList.forEach((element) => {
+              this.commentDescriptionimageUrl = this.extractImageUrlFromContent(
+                element.comment
+              );
+            });
+
+            this.commentList.forEach((element) => {
+              element.replyCommnetsList.forEach((ele) => {
+                this.replayCommentDescriptionimageUrl =
+                  this.extractImageUrlFromContent(ele.comment);
+              });
+            });
+          }
+        },
+        error: (error) => {
+          console.log(error);
           this.editCommentsLoader = false;
-        }
-      },
-      error: (error) => {
-        console.log(error);
-        this.editCommentsLoader = false;
-      },
-      complete: () => {
-        this.isCommentsLoader = false;
-        this.editCommentsLoader = false;
-      },
-    });
+        },
+        complete: () => {
+          this.isCommentsLoader = false;
+          this.editCommentsLoader = false;
+        },
+      });
+    }
   }
 
   deleteComments(comment): void {
@@ -414,9 +458,6 @@ export class PostCardComponent implements OnInit {
       likeCount: comment.likeCount,
     };
     this.likeDisLikePostComment(data);
-    // this.socketService.likeFeedComments(data, (res) => {
-    //   return;
-    // });
   }
 
   likeDisLikePostComment(data): void {
@@ -426,21 +467,17 @@ export class PostCardComponent implements OnInit {
   }
 
   commentOnPost(postId, commentId = null): void {
-    // const postComment = parentPostCommentElement.innerHTML;
     this.commentData.tags = getTagUsersFromAnchorTags(this.commentMessageTags);
     console.log(this.commentData);
     if (this.isPostComment === false) {
       if (this.commentData.comment || this.commentData?.file?.name) {
         this.isPostComment = true;
-        // this.commentData.comment = postComment;
         this.commentData.postId = postId;
         this.commentData.profileId = this.profileId;
         if (commentId) {
           this.commentData['parentCommentId'] = commentId;
         }
         this.uploadCommentFileAndAddComment();
-        // this.commentMessageInputValue = null;
-        // parentPostCommentElement.innerHTML = ''
       } else {
         this.toastService.clear();
         this.toastService.danger('Please enter comment');
@@ -463,10 +500,6 @@ export class PostCardComponent implements OnInit {
                 this.addComment();
                 this.commentMessageInputValue = null;
               }
-              // if (this.commentData.file?.size < 5120000) {
-              // } else {
-              //   this.toastService.warring('Image is too large!');
-              // }
             },
             error: (err) => {
               this.spinner.hide();
@@ -669,5 +702,20 @@ export class PostCardComponent implements OnInit {
     // window.open(pdf);
     // pdfLink.download = "TestFile.pdf";
     pdfLink.click();
+  }
+
+  extractImageUrlFromContent(content: string): string | null {
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = content;
+    const imgTag = contentContainer.querySelector('img');
+
+    if (imgTag) {
+      const imgTitle = imgTag.getAttribute('title');
+      const imgStyle = imgTag.getAttribute('style');
+      if (!imgTitle && !imgStyle) {
+        return imgTag.getAttribute('src');
+      }
+    }
+    return null;
   }
 }

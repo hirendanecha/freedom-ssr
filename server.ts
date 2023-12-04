@@ -147,15 +147,15 @@ export function app(): express.Express {
           console.log({ id });
 
           // if (!isNaN(id) || Math.sign(id) > 0) {
-          const [post]: any = await getPost(id);
+          const [post]: any = await getPost(+id);
 
-          console.log(post);
+          console.log('post===>', post);
           const pdhtml = document.createElement('div');
           pdhtml.innerHTML = post?.postdescription || post?.metadescription;
           const talent = {
             name: post?.title || post?.albumname || 'Freedom.Buzz Post',
             description: pdhtml?.textContent || 'Post content',
-            image: post?.thumbfilename || post?.metaimage || post?.imageUrl,
+            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
           };
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
@@ -192,6 +192,7 @@ async function getCommunity(id: any) {
 }
 
 async function getPost(id: any) {
+  console.log(api_url);
   return fetch(api_url + 'posts/get/' + id).then((resp) => resp.json());
 }
 async function getProfile(id: any) {

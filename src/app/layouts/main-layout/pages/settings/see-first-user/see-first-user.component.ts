@@ -26,7 +26,6 @@ export class SeeFirstUserComponent implements OnInit {
   }
 
   getSeeFirstUsers(): void {
-    debugger
     const profileId = +localStorage.getItem('profileId');
     this.seeFirstUserService.getByProfileId(profileId).subscribe({
       next: (res: any) => {

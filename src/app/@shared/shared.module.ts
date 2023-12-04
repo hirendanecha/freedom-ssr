@@ -72,6 +72,8 @@ import {
   faFileUpload,
   faFile,
   faFilePdf,
+  faShareNodes,
+  faShare,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -92,6 +94,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { PostDetailComponent } from '../layouts/main-layout/pages/home/post-detail/post-detail.component';
 import { EditResearchModalComponent } from './modals/edit-research-modal/edit-research-modal.component';
+import { SharePostModalComponent } from './modals/share-post-modal/share-post-modal.component';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -112,7 +115,8 @@ const sharedComponents = [
   ForgotPasswordComponent,
   PdfPreviewComponent,
   PostDetailComponent,
-  EditResearchModalComponent
+  EditResearchModalComponent,
+  SharePostModalComponent
 ];
 
 const sharedModules = [
@@ -195,7 +199,8 @@ export class SharedModule {
       faFileUpload,
       faFile,
       faFilePdf,
-      faDownload
+      faDownload,
+      faShare
     );
   }
 }
