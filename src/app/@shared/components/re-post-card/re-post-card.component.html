@@ -12,7 +12,7 @@
       *ngIf="post?.Username || post?.FirstName"
     >
       <div class="d-flex align-items-center cursor c-padding posted-wrap-text">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center" (click)="redirectToParentProfile(post)">
           {{ post?.Username || post?.FirstName }}
           <div>
             <fa-icon

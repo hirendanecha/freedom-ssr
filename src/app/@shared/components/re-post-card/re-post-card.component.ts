@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { PostService } from '../../services/post.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-re-post-card',
@@ -11,6 +12,11 @@ export class RePostCardComponent implements AfterViewInit {
 
   descriptionimageUrl: string;
   post: any = {};
+
+  webUrl = environment.webUrl;
+  tubeUrl = environment.tubeUrl;
+
+  sharedPost: string
 
   constructor(private postService: PostService) {}
   ngAfterViewInit(): void {
@@ -26,5 +32,15 @@ export class RePostCardComponent implements AfterViewInit {
         console.log(err);
       },
     });
+  }
+
+  redirectToParentProfile(post){
+    if (this.post.streamname) {
+      this.sharedPost = this.tubeUrl + 'video/' + post.id;
+    } else {
+      this.sharedPost = this.webUrl + 'post/' + post.id;
+    }
+    const url = this.sharedPost;
+    window.open(url, '_blank');
   }
 }
