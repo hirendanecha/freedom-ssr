@@ -95,6 +95,7 @@ import {
 import { PostDetailComponent } from '../layouts/main-layout/pages/home/post-detail/post-detail.component';
 import { EditResearchModalComponent } from './modals/edit-research-modal/edit-research-modal.component';
 import { SharePostModalComponent } from './modals/share-post-modal/share-post-modal.component';
+import { RePostCardComponent } from './components/re-post-card/re-post-card.component';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -116,7 +117,8 @@ const sharedComponents = [
   PdfPreviewComponent,
   PostDetailComponent,
   EditResearchModalComponent,
-  SharePostModalComponent
+  SharePostModalComponent,
+  RePostCardComponent
 ];
 
 const sharedModules = [

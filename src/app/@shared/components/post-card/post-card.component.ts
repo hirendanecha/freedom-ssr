@@ -145,11 +145,11 @@ export class PostCardComponent implements OnInit {
       centered: true,
     });
     modalRef.componentInstance.title = 'Share post on Home';
-    modalRef.componentInstance.confirmButtonLabel = 'Yes';
-    modalRef.componentInstance.cancelButtonLabel = 'No';
+    modalRef.componentInstance.confirmButtonLabel = 'Share';
+    modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.post = post;
     modalRef.result.then((res) => {
-      if (res.profileid && res.postdescription || res.meta) {
+      if (res.profileid) {
         this.socketService?.createOrEditPost(res);
         this.toastService.success('Post create successfully');
       } else {

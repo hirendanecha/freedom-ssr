@@ -6,7 +6,7 @@
     (post?.postdescription ||
       post?.metadescription ||
       post?.imageUrl ||
-      post?.pdfUrl)
+      post?.pdfUrl || post.parentPostId)
   "
 >
   <img
@@ -320,7 +320,9 @@
     <ng-container *ngIf="descriptionimageUrl">
       <app-img-preview [src]="descriptionimageUrl" classes="w-100" />
     </ng-container>
-
+    <ng-container *ngIf="post.parentPostId">
+      <app-re-post-card [id]="post.parentPostId"  />
+    </ng-container>
     <ng-container *ngIf="post?.pdfUrl">
       <!-- <app-pdf-preview [src]="post?.pdfUrl" classes="w-100" /> -->
       <div (click)="pdfView(post?.pdfUrl)">
