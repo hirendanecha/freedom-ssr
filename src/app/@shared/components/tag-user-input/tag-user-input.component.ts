@@ -174,7 +174,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     console.log(user)
     const text = htmlText.replace(
       `@${this.userNameSearch}`,
-      `<a href="/settings/view-profile/${user?.Id}" class="text-danger" data-id="${user?.Id}">@${user?.Username}</a>`
+      `<a href="/settings/view-profile/${user?.Id}" class="text-danger" data-id="${user?.Id}">@${(user?.Username.split(" ")).join("")}</a>`
     );
     console.log(text);
     this.setTagInputDivValue(text);

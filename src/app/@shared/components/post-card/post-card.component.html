@@ -45,7 +45,7 @@
                 class="d-flex align-items-center"
                 (mouseover)="showHoverBox = true"
               >
-                {{ post?.Username || post?.FirstName }}
+              {{ ((post?.Username || post?.FirstName).split(" ")).join("") }}
                 <!-- [ngbTooltip]="post.postcreationdate | date : ' h:mm a MMM d, y'" -->
                 <div>
                   <fa-icon
@@ -90,7 +90,7 @@
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                 alt="avatar"
               />
-              <p class="cursor mt-2">{{ post?.Username || post?.FirstName }}</p>
+              <p class="cursor mt-2">{{ ((post?.Username || post?.FirstName) .split(" ")).join("") }}</p>
               <div
                 class="d-flex"
                 *ngIf="
@@ -500,7 +500,7 @@
                     class="d-flex justify-content-between align-items-center w-100"
                   >
                     <h6 class="m-0">
-                      {{ comment.Username || comment.FirstName }}
+                      {{ ((comment.Username || comment.FirstName).split(" ")).join("")  }}
                       <span class="font-12-px text-lowercase">
                         <fa-icon class="ms-2" [icon]="['fas', 'clock']" />
                         {{ comment.createdDate | dateDay }}</span
@@ -696,7 +696,7 @@
                             class="d-flex justify-content-between align-items-center w-100"
                           >
                             <h6 class="m-0 align-items-center">
-                              {{ reply.Username || reply.FirstName }}
+                              {{ ((reply.Username || reply.FirstName) .split(" ")).join("") }}
                               <span class="font-12-px text-lowercase">
                                 <fa-icon
                                   class="ms-2"

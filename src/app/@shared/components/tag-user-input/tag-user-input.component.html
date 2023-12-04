@@ -1,38 +1,18 @@
-<div
-  #tagInputDiv
-  contenteditable
-  [attr.placeholder]="placeholder"
-  class="tag-input-div input-area c-text"
-  (input)="messageOnKeyEvent()"
-  [mentionConfig]="{
+<div #tagInputDiv contenteditable [attr.placeholder]="placeholder" class="tag-input-div input-area c-text"
+  (input)="messageOnKeyEvent()" [mentionConfig]="{
     items: userList,
     labelKey: 'Username',
     triggerChar: '@',
-  }"
-  [mentionListTemplate]="mentionListTemplate"
-  (itemSelected)="selectTagUser($event)"
-></div>
+  }" [mentionListTemplate]="mentionListTemplate" (itemSelected)="selectTagUser($event)"></div>
 <ng-container *ngIf="isShowMetaLoader">
-  <app-inline-loader
-    *ngIf="isMetaLoader"
-    classes="position-absolute inline-meta-loader"
-  />
+  <app-inline-loader *ngIf="isMetaLoader" classes="position-absolute inline-meta-loader" />
 </ng-container>
 
-<ng-template
-  #mentionListTemplate
-  let-item="item"
-  class="user-dropdown-menu w-100 overflow-auto"
->
+<ng-template #mentionListTemplate let-item="item" class="user-dropdown-menu w-100 overflow-auto">
   <div class="d-flex gap-3 pe-auto overflow-hidden">
-    <img
-      loading="lazy"
-      class="w-32-px h-32-px rounded"
-      data-src="{{ item.ProfilePicName }}"
-      [alt]="item?.Username"
-      onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-    />
-    <span>{{ item.Username }}</span>
+    <img loading="lazy" class="w-32-px h-32-px rounded" data-src="{{ item.ProfilePicName }}" [alt]="item?.Username"
+      onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" />
+    <span>{{ (item.Username.split(" ")).join("") }}</span>
   </div>
 </ng-template>
 <!-- <div #userSearchDropdownRef ngbDropdown>
