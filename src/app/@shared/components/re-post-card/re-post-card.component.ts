@@ -26,7 +26,7 @@ export class RePostCardComponent implements AfterViewInit {
   getPostById(): void {
     this.postService.getPostsByPostId(this.id).subscribe({
       next: (res: any) => {
-        this.post = res[0]
+        this.post = res[0];
       },
       error: (err) => {
         console.log(err);
