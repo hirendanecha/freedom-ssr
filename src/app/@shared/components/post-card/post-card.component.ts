@@ -130,7 +130,7 @@ export class PostCardComponent implements OnInit {
   // }
   getPostUrl(post: any) {
     // if (post.streamname) {
-    //   return this.tubeUrl + 'video/' + post.id;
+    //   return this.tubeUrl + 'video/' + post.id;get-communities-pages
     // } else {
     //   return this.webUrl + 'post/' + post.id;
     // }
@@ -140,12 +140,12 @@ export class PostCardComponent implements OnInit {
     modalRef.componentInstance.title = 'Share post on Home';
     modalRef.componentInstance.confirmButtonLabel = 'Yes';
     modalRef.componentInstance.cancelButtonLabel = 'No';
-    modalRef.componentInstance.post =  post;
+    modalRef.componentInstance.post = post;
     modalRef.result.then((res) => {
       if (res.profileid && res.postdescription || res.meta) {
         this.socketService?.createOrEditPost(res);
         this.toastService.success('Post create successfully');
-      } else{
+      } else {
         if (res.profileid) {
           this.toastService.warring('Something went wrong please try again!');
         }
@@ -344,75 +344,58 @@ export class PostCardComponent implements OnInit {
   }
 
   viewComments(id: number): void {
-    // this.isExpand = this.isOpenCommentsPostId == id ? false : true;
-    // this.isOpenCommentsPostId = id;
-    // if (!this.isExpand) {
-    //   this.isOpenCommentsPostId = null;
-    // } else {
-    //   this.isOpenCommentsPostId = id;
-    // }
-    // this.spinner.show();
-    this.editCommentsLoader = true;
-    this.isOpenCommentsPostId = id;
-    this.isCommentsLoader = true;
-    const data = {
-      postId: id,
-      profileId: this.profileId,
-    };
-    this.postService.getComments(data).subscribe({
-      next: (res) => {
-        if (res) {
-          // this.spinner.hide();
-          // this.commentList = res.data.commmentsList.filter((ele: any) => {
-          //   res.data.replyCommnetsList.some((element: any) => {
-          //     if (ele?.id === element?.parentCommentId) {
-          //       ele?.replyCommnetsList.push(element);
-          //       return ele;
-          //     }
-          //   });
-          // });
-          res.data.commmentsList.filter((ele: any) => {
-            ele.descImg = this.extractImageUrlFromContent(ele.comment);
-          });
-          console.log(res.data.commmentsList);
-          this.commentList = res.data.commmentsList.map((ele: any) => ({
-            ...ele,
-            replyCommnetsList: res.data.replyCommnetsList.filter(
-              (ele1: any) => {
-                ele1.descImg = this.extractImageUrlFromContent(ele1.comment);
-                return ele.id === ele1.parentCommentId;
-              }
-            ),
-          }));
-          const replyCount = res.data.replyCommnetsList.filter((ele1) => {
-            return ele1.parentCommentId;
-          });
-          this.commentCount = this.commentList.length + replyCount.length;
-          this.editCommentsLoader = false;
-
-          this.commentList.forEach((element) => {
-            this.commentDescriptionimageUrl = this.extractImageUrlFromContent(
-              element.comment
-            );
-          });
-
-          this.commentList.forEach((element) => {
-            element.replyCommnetsList.forEach((ele) => {
-              this.replayCommentDescriptionimageUrl =
-                this.extractImageUrlFromContent(ele.comment);
+    if (this.post.id === id) {
+      this.editCommentsLoader = true;
+      this.isOpenCommentsPostId = id;
+      this.isCommentsLoader = true;
+      const data = {
+        postId: id,
+        profileId: this.profileId,
+      };
+      this.postService.getComments(data).subscribe({
+        next: (res) => {
+          if (res) {
+            this.post.commentCount = res.data?.count;
+            res.data.commmentsList.filter((ele: any) => {
+              ele.descImg = this.extractImageUrlFromContent(ele.comment);
             });
-          });
-        }
-      },
-      error: (error) => {
-        console.log(error);
-        this.editCommentsLoader = false;
-      },
-      complete: () => {
-        this.isCommentsLoader = false;
-        this.editCommentsLoader = false;
-      },
-    });
+
+            console.log(res.data.commmentsList);
+            this.commentList = res.data.commmentsList.map((ele: any) => ({
+              ...ele,
+              replyCommnetsList: res.data.replyCommnetsList.filter(
+                (ele1: any) => {
+                  ele1.descImg = this.extractImageUrlFromContent(ele1.comment);
+                  return ele.id === ele1.parentCommentId;
+                }
+              ),
+            }));
+            this.editCommentsLoader = false;
+
+            this.commentList.forEach((element) => {
+              this.commentDescriptionimageUrl = this.extractImageUrlFromContent(
+                element.comment
+              );
+            });
+
+            this.commentList.forEach((element) => {
+              element.replyCommnetsList.forEach((ele) => {
+                this.replayCommentDescriptionimageUrl =
+                  this.extractImageUrlFromContent(ele.comment);
+              });
+            });
+          }
+        },
+        error: (error) => {
+          console.log(error);
+          this.editCommentsLoader = false;
+        },
+        complete: () => {
+          this.isCommentsLoader = false;
+          this.editCommentsLoader = false;
+        },
+      });
+    }
   }
 
   deleteComments(comment): void {
@@ -468,9 +451,6 @@ export class PostCardComponent implements OnInit {
       likeCount: comment.likeCount,
     };
     this.likeDisLikePostComment(data);
-    // this.socketService.likeFeedComments(data, (res) => {
-    //   return;
-    // });
   }
 
   likeDisLikePostComment(data): void {
@@ -480,21 +460,17 @@ export class PostCardComponent implements OnInit {
   }
 
   commentOnPost(postId, commentId = null): void {
-    // const postComment = parentPostCommentElement.innerHTML;
     this.commentData.tags = getTagUsersFromAnchorTags(this.commentMessageTags);
     console.log(this.commentData);
     if (this.isPostComment === false) {
       if (this.commentData.comment || this.commentData?.file?.name) {
         this.isPostComment = true;
-        // this.commentData.comment = postComment;
         this.commentData.postId = postId;
         this.commentData.profileId = this.profileId;
         if (commentId) {
           this.commentData['parentCommentId'] = commentId;
         }
         this.uploadCommentFileAndAddComment();
-        // this.commentMessageInputValue = null;
-        // parentPostCommentElement.innerHTML = ''
       } else {
         this.toastService.clear();
         this.toastService.danger('Please enter comment');
@@ -517,10 +493,6 @@ export class PostCardComponent implements OnInit {
                 this.addComment();
                 this.commentMessageInputValue = null;
               }
-              // if (this.commentData.file?.size < 5120000) {
-              // } else {
-              //   this.toastService.warring('Image is too large!');
-              // }
             },
             error: (err) => {
               this.spinner.hide();

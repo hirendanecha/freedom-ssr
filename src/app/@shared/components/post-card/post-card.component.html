@@ -152,10 +152,7 @@
         </div>
 
         <div class="d-flex">
-          <div
-            class="cursor me-2"
-            (click)="getPostUrl(post)"
-            >
+          <div class="cursor me-2" (click)="getPostUrl(post)">
             <fa-icon [icon]="['fas', 'share']" class="font-24-px m-0" />
           </div>
           <div ngbDropdown *ngIf="tokenService.getCredentials()">
@@ -165,7 +162,7 @@
               role="button"
               ngbDropdownToggle
             />
-  
+
             <div ngbDropdownMenu class="dropdown-menu">
               <ng-container *ngIf="profileId != post.profileid">
                 <button
@@ -203,7 +200,10 @@
                     <span>Unsubscribe</span>
                   </a>
                 </button>
-                <button ngbDropdownItem (click)="goToViewProfile(post.profileid)">
+                <button
+                  ngbDropdownItem
+                  (click)="goToViewProfile(post.profileid)"
+                >
                   <a class="droplist d-flex align-items-center gap-2">
                     <fa-icon [icon]="['fas', 'user']" />
                     <span>View Profile</span>
@@ -240,7 +240,7 @@
                   </a>
                 </button>
               </ng-container>
-  
+
               <button ngbDropdownItem>
                 <a
                   class="droplist d-flex align-items-center gap-2"
@@ -392,7 +392,7 @@
         (click)="viewComments(post?.id)"
       >
         <fa-icon [icon]="['fas', 'comment']" class="font-20-px" />
-        {{ commentCount }}
+        {{ post.commentCount }}
         <p class="d-lg-block d-none m-0">Comments</p>
       </button>
     </div>
