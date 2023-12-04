@@ -10,7 +10,7 @@ import {
   ViewChild,
   afterNextRender,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { SeeFirstUserService } from 'src/app/@shared/services/see-first-user.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
@@ -78,6 +78,7 @@ export class PostCardComponent implements OnInit {
   descriptionimageUrl: string;
   commentDescriptionimageUrl: string;
   replayCommentDescriptionimageUrl: string;
+  shareButton = false;
 
   constructor(
     private seeFirstUserService: SeeFirstUserService,
@@ -89,6 +90,7 @@ export class PostCardComponent implements OnInit {
     private spinner: NgxSpinnerService,
     public sharedService: SharedService,
     private router: Router,
+    private route: ActivatedRoute,
     private renderer: Renderer2,
     public tokenService: TokenStorageService,
     private seoService: SeoService,
@@ -97,6 +99,7 @@ export class PostCardComponent implements OnInit {
   ) {
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
+      
       if (this.post?.id && this.post?.posttype === 'V') {
         this.playVideo(this.post?.id);
       }
@@ -123,11 +126,15 @@ export class PostCardComponent implements OnInit {
     // this.viewComments(this.post?.id);
   }
 
-  // ngAfterViewInit(): void {
-  //   if (this.post?.posttype === 'V') {
-  //     this.playVideo(this.post?.id);
-  //   }
-  // }
+  ngAfterViewInit(): void {
+    // if (this.post?.posttype === 'V') {
+    //   this.playVideo(this.post?.id);
+    // }
+    const path = this.route.snapshot.routeConfig.path;
+    if (path === 'view-profile/:id' || path === 'post/:id') {
+      this.shareButton = true
+    }
+  }
   getPostUrl(post: any) {
     // if (post.streamname) {
     //   return this.tubeUrl + 'video/' + post.id;
