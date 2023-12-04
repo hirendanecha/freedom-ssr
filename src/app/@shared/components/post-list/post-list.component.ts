@@ -54,6 +54,7 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
   ) {
     // console.log(this.route.snapshot.params.id)
     this.userId = this.route.snapshot.params.id;
+    console.log('userid==>', this.userId)
     this.profileId = localStorage.getItem('profileId');
     this.getUnsubscribeProfiles();
 
@@ -68,7 +69,7 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
       'new-post-added',
       (res: any) => {
         if (res[0]) {
-          if ((this.communityId === null && res[0].communityId === null) || (this.communityId === res[0].communityId)) {
+          if (((this.communityId === null && res[0].communityId === null) || (this.communityId === res[0].communityId)) && !this.userId) {
             if (!this.unSubscribeProfileIds.includes(res[0]?.profileid)) {
               console.log('new-post-data', res)
               if (this.editPostIndex >= 0 && this.editPostIndex != null) {
