@@ -117,8 +117,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.notificationId = data.id;
         this.sharedService.isNotify = true;
         if (this.notificationId) {
+          let audio: HTMLAudioElement = new Audio('https://s3.us-east-1.wasabisys.com/freedom-social/toast_sound.mp3');
           this.customerService.getNotification(this.notificationId).subscribe({
             next: (res) => {
+              audio.play();
               console.log(res);
               localStorage.setItem('isRead', res.data[0]?.isRead);
             },
