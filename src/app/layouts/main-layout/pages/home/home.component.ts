@@ -123,10 +123,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               console.log(res);
               localStorage.setItem('isRead', res.data[0]?.isRead);
               var sound = new Howl({
-                src: ['https://s3.us-east-1.wasabisys.com/freedom-social/IPhone%20Notification%20!%20IPhone%20!%20Notification.mp3'],
-                volume: 100
+                src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
               });
-
               sound.play()
             },
             error: (error) => {
