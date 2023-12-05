@@ -28,6 +28,7 @@ import { AddFreedomPageComponent } from '../freedom-page/add-page-modal/add-page
 import { Meta } from '@angular/platform-browser';
 import { MetafrenzyService } from 'ngx-metafrenzy';
 import { isPlatformBrowser } from '@angular/common';
+import { Howl } from 'howler';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -121,6 +122,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             next: (res) => {
               console.log(res);
               localStorage.setItem('isRead', res.data[0]?.isRead);
+              var sound = new Howl({
+                src: ['https://s3.us-east-1.wasabisys.com/freedom-social/IPhone%20Notification%20!%20IPhone%20!%20Notification.mp3'],
+                volume: 100
+              });
+
+              sound.play()
             },
             error: (error) => {
               console.log(error);
