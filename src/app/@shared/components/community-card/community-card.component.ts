@@ -58,15 +58,15 @@ export class CommunityCardComponent {
     });
   }
 
-  deleteOrLeaveCommunity(event: any): void {
+  deleteOrLeaveCommunity(event: any, type = ''): void {
     event.stopPropagation();
     event.preventDefault();
 
     let actionType = '';
     let actionObs = null;
+    console.log(type);
     const modalRef = this.modalService.open(ConfirmationModalComponent);
-
-    if (this.type === 'my') {
+    if (type === 'my') {
       actionType = 'Delete';
       actionObs = this.communityService.deleteCommunity(this.community?.Id);
     } else {
