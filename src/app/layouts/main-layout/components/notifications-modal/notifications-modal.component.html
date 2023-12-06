@@ -23,9 +23,10 @@
           <div class="text-area">
             <h6 class="m-0 mb-1">
               {{ notification?.Username }}
+              
+              <!-- class="unread-notification smtxt" -->
               <span
                 *ngIf="notification?.isRead === 'N'"
-                class="unread-notification smtxt"
               ></span>
               <span class="font-12-px text-lowercase">
                 <fa-icon class="ms-2" [icon]="['fas', 'clock']" />
