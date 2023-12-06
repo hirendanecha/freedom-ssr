@@ -14,7 +14,7 @@ export class CommunitiesComponent {
   communities: any = [];
   isCommunityLoader: boolean = false;
   profileId: number = null;
-
+  
   constructor(
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,

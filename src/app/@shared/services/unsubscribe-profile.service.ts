@@ -17,10 +17,11 @@ export class UnsubscribeProfileService {
   }
 
   remove(id: number): Observable<Object> {
-    return this.http.delete(`${this.baseUrl}/remove/${id}`);
+    // return this.http.delete(`${this.baseUrl}/remove/${id}`);
+    return this.http.delete(`${this.baseUrl}/remove/${id}?q=${Date.now()}`);
   }
 
   getByProfileId(profileId: number): Observable<Object> {
-    return this.http.get(`${this.baseUrl}/getByProfileId/${profileId}`);
+    return this.http.get(`${this.baseUrl}/getByProfileId/${profileId}?q=${Date.now()}`);
   }
 }

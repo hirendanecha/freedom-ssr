@@ -25,12 +25,12 @@ export class SeeFirstUserService {
   }
 
   getByProfileId(profileId: number) {
-    return this.http.get(`${this.baseUrl}/getByProfileId/${profileId}`);
+    return this.http.get(`${this.baseUrl}/getByProfileId/${profileId}&q=${Date.now()}`);
   }
 
   getSeeFirstIdByProfileId(profileId: number) {
     return this.http.get(
-      `${this.baseUrl}/getSeeFirstIdByProfileId/${profileId}`
+      `${this.baseUrl}/getSeeFirstIdByProfileId/${profileId}&q=${Date.now()}`
     );
   }
 }

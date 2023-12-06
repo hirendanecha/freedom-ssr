@@ -15,7 +15,7 @@ export class CommunityCardComponent {
   @Input('community') community: any = {}
   @Input('type') type: string = '';
   @Output('getCommunities') getCommunities: EventEmitter<void> = new EventEmitter<void>();
-
+  
   profileId: number = null;
 
   constructor(

@@ -36,7 +36,7 @@ export class CommunityService {
     return this.http.get<Community>(`${this.baseUrl}/get-communities-pages/${id}`);
   }
   getCommunity(id, pageType: string): Observable<Community> {
-    return this.http.get<Community>(`${this.baseUrl}/?id=${id}&pageType=${pageType}`);
+    return this.http.get<Community>(`${this.baseUrl}/?id=${id}&pageType=${pageType}&q=${Date.now()}`);
   }
 
   createCommunity(communityData): Observable<Community> {
@@ -70,11 +70,11 @@ export class CommunityService {
   }
 
   getCommunityByUserId(id, pageType: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/user/${id}?pageType=${pageType}`);
+    return this.http.get(`${this.baseUrl}/user/${id}?pageType=${pageType}&q=${Date.now()}`);
   }
 
   getJoinedCommunityByProfileId(id, pageType: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/joined-community/${id}?pageType=${pageType}`);
+    return this.http.get(`${this.baseUrl}/joined-community/${id}?pageType=${pageType}&q=${Date.now()}`);
   }
 
   getCommunityById(id): Observable<any> {
