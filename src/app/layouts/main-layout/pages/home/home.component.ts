@@ -125,7 +125,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               var sound = new Howl({
                 src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
               });
-              sound.play()
+              const soundOct = localStorage.getItem('notificationSoundEnabled')
+              if (soundOct !== 'N') {
+                sound.play();
+              }
             },
             error: (error) => {
               console.log(error);

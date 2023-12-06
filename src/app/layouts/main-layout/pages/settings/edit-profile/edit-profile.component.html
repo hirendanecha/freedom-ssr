@@ -98,6 +98,26 @@
         </div> -->
         </div>
       </form>
+      <div class="d-flex flex-column">
+        <label class="d-flex form-label">Preferences</label> 
+        <div class="d-flex">
+          <p class="m-2">
+            Notification Sound when you are tagged
+            <strong>{{ isNotificationSoundEnabled ? 'On' : 'Off' }}</strong>
+          </p>
+          <div class="form-switch">
+            <input
+            [(ngModel)]="isNotificationSoundEnabled"
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckChecked"
+            (change)="notificationSound()"
+          />
+          </div>
+        </div>
+      </div>
+
       <button class="btn btn-primary mt-5 login-button float-end w-100-px" (click)="confirmAndUpdateCustomer()">
         <!-- type="submit" -->
         Update

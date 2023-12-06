@@ -45,6 +45,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     file: null,
     url: ''
   };
+  isNotificationSoundEnabled: boolean = true;
 
   constructor(
     private modalService: NgbModal,
@@ -75,6 +76,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       this.router.navigate([`/login`]);
     }
     this.modalService.dismissAll();
+    const notificationSound = localStorage.getItem('notificationSoundEnabled');
+    if (notificationSound === 'N') {
+      this.isNotificationSoundEnabled = false
+    }
   }
 
   ngAfterViewInit(): void {
@@ -83,6 +88,15 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       .subscribe((event) => {
         this.onZipChange(event['target'].value);
       });
+  }
+
+  notificationSound(){
+    const soundOct = localStorage.getItem('notificationSoundEnabled');
+    if (soundOct === 'Y') {
+      localStorage.setItem('notificationSoundEnabled', 'N');
+    } else {
+      localStorage.setItem('notificationSoundEnabled', this.isNotificationSoundEnabled ? 'Y' : 'N');
+    }
   }
 
   getUserDetails(id): void {
