@@ -38,7 +38,7 @@
         <ng-container *ngIf="['my', 'joined'].includes(type)">
           <button
             class="btn btn-outline-danger alt third w-80-px"
-            (click)="deleteOrLeaveCommunity($event)"
+            (click)="deleteOrLeaveCommunity($event, 'my')"
           >
             {{ type === "my" ? "Delete" : "Leave" }}
           </button>
