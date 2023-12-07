@@ -210,7 +210,9 @@
                     <fa-icon class="ms-2" [icon]="['fas', 'clock']" />
                       {{ item.postcreationdate | dateDay }}</span>
                   </h6>
-                  <span class="ms-1 cursor" (click)="viewUserPost(item.id)">{{ item?.pdfName }} </span>
+                  <!-- <span class="ms-1 cursor" (click)="viewUserPost(item.id)">{{ item?.pdfName }} </span> -->
+                  <!-- <a class="ms-1 cursor" [routerLink]="'/post/' + item?.id" target="_blank">{{ item?.pdfName }}</a> -->
+                  <a class="ms-1 cursor c-color" [href]="item?.pdfUrl" target="_blank">{{ item?.pdfName }}</a>
                 </div>
               </div>
   
