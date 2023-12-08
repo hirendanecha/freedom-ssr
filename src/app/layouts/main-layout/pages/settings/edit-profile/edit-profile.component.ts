@@ -316,7 +316,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     });
   }
   onChangeTag(event) {
-    this.customer.Username = event.target.value.replaceAll(' ', '');
+    this.customer.Username = event.target.value.replaceAll(' ', '').replaceAll(/\s*,+\s*/g, ',');
     console.log(this.customer.Username);
   }
 }

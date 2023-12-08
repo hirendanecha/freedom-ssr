@@ -329,6 +329,6 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     });
   }
   onChangeTag(event) {
-    this.registerForm.get('Username').setValue(event.target.value.replaceAll(' ', ''));
+    this.registerForm.get('Username').setValue(event.target.value.replaceAll(' ', '').replaceAll(/\s*,+\s*/g, ','));
   }
 }
