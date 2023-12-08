@@ -81,7 +81,7 @@ export class CustomerService {
   }
 
   getNotificationList(id: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/get-notification/${id}`);
+    return this.http.get(`${this.baseUrl}/get-notification/${id}?q=${Date.now()}`);
   }
 
   deleteNotification(id: number): Observable<any> {
@@ -106,7 +106,7 @@ export class CustomerService {
 
   getNotification(id): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/notification/${id}`,
+      `${this.baseUrl}/notification/${id}&q=${Date.now()}`,
     );
   }
 }
