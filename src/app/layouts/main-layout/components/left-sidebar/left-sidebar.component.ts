@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { WalletLinkComponent } from '../../../../@shared/modals/wallet-download-modal/1776-wallet.component';
 import {
   NgbActiveOffcanvas,
@@ -13,14 +13,15 @@ import { ResearchSidebarComponent } from '../research-sidebar/research-sidebar.c
 import { RightSidebarComponent } from '../right-sidebar/right-sidebar.component';
 import { ProfileMenusModalComponent } from '../profile-menus-modal/profile-menus-modal.component';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PostService } from 'src/app/@shared/services/post.service';
 
 @Component({
   selector: 'app-left-sidebar',
   templateUrl: './left-sidebar.component.html',
   styleUrls: ['./left-sidebar.component.scss'],
 })
-export class LeftSidebarComponent implements OnInit {
+export class LeftSidebarComponent implements OnInit, AfterViewInit {
   isSettingMenuCollapse = true;
   user: any = {};
   isRead: any
@@ -30,6 +31,8 @@ export class LeftSidebarComponent implements OnInit {
     isShowResearchLeftSideBar: false,
   };
   profileId: number
+  linkMetaData: {}
+  communitySlug = ''
   constructor(
     private modalService: NgbModal,
     public sharedService: SharedService,
@@ -38,7 +41,9 @@ export class LeftSidebarComponent implements OnInit {
     public breakpointService: BreakpointService,
     private offcanvasService: NgbOffcanvas,
     public tokenService: TokenStorageService,
-    private router: Router
+    private router: Router,
+    private postService: PostService,
+    private route: ActivatedRoute
   ) {
     this.profileId = +localStorage.getItem('profileId');
     this.isRead = localStorage.getItem('isRead');
@@ -46,6 +51,9 @@ export class LeftSidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserDetails();
+  }
+
+  ngAfterViewInit(): void {
   }
 
   openWalletPopUp() {
@@ -126,4 +134,5 @@ export class LeftSidebarComponent implements OnInit {
     });
     this.closeSidebar();
   }
+
 }

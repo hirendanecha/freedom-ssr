@@ -159,6 +159,43 @@
         />
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label class="form-label d-flex">Advertizement Link 1</label>
+        <app-tag-user-input
+          class="tag-image-preview"
+          placeholder="Post a link or image or file or let's just talk!"
+          [value]="inputLinkValue1"
+          [isShowMetaLoader]="false"
+          (onDataChange)="onTagUserInputChangeEvent($event)"
+          [isShowMetaLoader]="false"
+          [isShowMetaPreview]="true"
+          [isAllowTagUser]="false"
+        />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label d-flex">Advertizement Link 2</label>
+        <!-- <input
+          type="text"
+          class="input-area"
+          required
+          name="link2"
+          placeholder="Enter your Link"
+          formControlName="link2"
+        /> -->
+        <app-tag-user-input
+          class="tag-image-preview"
+          placeholder="Post a link or image or file or let's just talk!"
+          [value]="inputLinkValue2"
+          [isShowMetaLoader]="false"
+          (onDataChange)="onTagUserInputChangeEvent1($event)"
+          [isShowMetaLoader]="false"
+          [isShowMetaPreview]="true"
+          [isAllowTagUser]="false"
+        />
+      </div>
+    </div>
   </form>
 </div>
 

@@ -32,7 +32,7 @@ export class CommunityService {
     return this.http.request(req);
   }
 
-  getLocalCommunities(id:number): Observable<Community> {
+  getLocalCommunities(id: number): Observable<Community> {
     return this.http.get<Community>(`${this.baseUrl}/get-communities-pages/${id}`);
   }
   getCommunity(id, pageType: string): Observable<Community> {
@@ -92,5 +92,17 @@ export class CommunityService {
     return this.http.delete(
       `${this.baseUrl}/leave?communityId=${id}&profileId=${profileId}`
     );
+  }
+
+  createAdvertizeMentLink(data): Observable<any> {
+    return this.http.post(`${this.baseUrl}/create-advertizement-link`, data);
+  }
+
+  editAdvertizeMentLink(data): Observable<any> {
+    return this.http.post(`${this.baseUrl}/edit-advertizement-link`, data);
+  }
+
+  getLinkById(id): Observable<any> {
+    return this.http.get(`${this.baseUrl}/get-link/${id}`);
   }
 }
