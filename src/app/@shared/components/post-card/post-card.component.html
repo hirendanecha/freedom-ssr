@@ -360,9 +360,9 @@
     </ng-container> -->
 
     <div
-      class="mt-1 friends-list like-comment-share p-3 d-center flex-lg-wrap gap-3 gap-md-0 justify-content-between"
+      class="mt-1 friends-list like-comment-share p-1 d-center flex-lg-wrap gap-3 gap-md-0 justify-content-between"
     >
-      <button
+      <!-- <button
         class="d-center gap-1 gap-sm-2 mdtxt align-items-center"
         data-toggle="tooltip"
         data-placement="bottom"
@@ -379,7 +379,22 @@
         />
         {{ post?.likescount > 0 ? post?.likescount : 0 }}
         <p class="d-lg-block d-none m-0">Likes</p>
-      </button>
+      </button> -->
+      <div>
+        <div ngbDropdown placement="top-start" class="d-inline-block">
+          <button type="button" id="emojiModel" ngbDropdownToggle>
+            <img src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif" width="60" height="60" alt="Emoji">
+            Emojis</button>
+          <div ngbDropdownMenu aria-labelledby="emojiModel" class="emojiModelStyle">
+            <div>
+              <button (click)="selectedEmoji(emoji)" *ngFor="let emoji of emojiPaths">
+                <img data-src="{{ emoji }}" loading="eager" class="emoji-style" alt="Emoji" draggable="false">
+                <!-- <img [src]="emoji" class="emoji-style" alt="Emoji" draggable="false"> -->
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <button
         class="d-center gap-1 gap-sm-2 mdtxt align-items-center"
         ngbTooltip="Coming Soon!"
@@ -420,7 +435,6 @@
               class="outline-0 w-100 comment-input c-text"
             ></div> -->
             <app-tag-user-input
-              class="tag-image-preview"
               placeholder="Comment"
               [value]="commentMessageInputValue"
               [isShowMetaLoader]="false"
@@ -618,7 +632,6 @@
                       class="outline-0 w-100 comment-input c-text"
                     ></div> -->
                     <app-tag-user-input
-                      class="tag-image-preview"
                       placeholder="Reply comment"
                       [value]="commentMessageInputValue"
                       [isShowMetaLoader]="false"

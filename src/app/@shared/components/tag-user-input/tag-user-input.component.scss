@@ -85,4 +85,13 @@
       }
     }
   }
+
+  .tag-image-preview{
+    img{
+      display: none !important;
+    }
+  }
+}
+.tag-image-preview ::ng-deep img[src$=".gif"] {
+  display: unset !important;
 }
