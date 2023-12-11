@@ -1,3 +1,8 @@
 <ng-container *ngIf="post?.id">
   <app-post-card [post]="post" />
 </ng-container>
+
+<ng-container *ngIf="!post?.id">
+  <!-- <app-post-card [post]="post" /> -->
+  <span class="text-center text-bold">Post has been deletted by the end user.</span>
+</ng-container>
