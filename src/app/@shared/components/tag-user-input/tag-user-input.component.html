@@ -10,7 +10,7 @@
 
 <ng-template #mentionListTemplate let-item="item" class="user-dropdown-menu w-100 overflow-auto">
   <div class="d-flex gap-3 pe-auto overflow-hidden">
-    <img loading="lazy" class="w-32-px h-32-px rounded" data-src="{{ item.ProfilePicName }}" [alt]="item?.Username"
+    <img loading="lazy" class="w-32-px h-32-px pt-0 rounded" data-src="{{ item.ProfilePicName }}" [alt]="item?.Username"
       onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" />
     <span>{{ (item.Username.split(" ")).join("") }}</span>
   </div>
