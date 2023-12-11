@@ -374,8 +374,8 @@
     color: var(--para-2nd-color);
     font-weight: 600;
   }
-  
-  .pdf-name{
+
+  .pdf-name {
     color: var(--para-2nd-color);
     margin-left: 5px;
     overflow: hidden;
@@ -386,11 +386,6 @@
   }
 
   ::ng-deep {
-    .tag-image-preview{
-      img{
-        padding-top: 16px;
-      }
-    }
     .post-description {
       h1,
       h2,
@@ -413,7 +408,7 @@
         font-weight: 500 !important;
         color: unset !important;
       }
-      a{
+      a {
         font-size: 16px !important;
         line-height: 22px !important;
         margin: unset !important;
@@ -453,14 +448,28 @@
         margin: unset;
         background-color: unset !important;
       }
-      p, em, span {
-        color: var(--para-2nd-color)!important
+      p,
+      em,
+      span {
+        color: var(--para-2nd-color) !important;
       }
-      .comment-description{
-        img{
+      .comment-description {
+        img {
           display: none !important;
         }
       }
     }
+    .emojiModelStyle {
+      width: 422px;
+      height: 225px;
+
+      .emoji-style{
+        width: 70px;
+      }
+    }
+  }
+  .comment-description ::ng-deep img[src$=".gif"] {
+    display: unset !important;
+    width: 70px;
   }
 }
