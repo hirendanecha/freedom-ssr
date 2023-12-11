@@ -121,8 +121,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.notificationId) {
           this.customerService.getNotification(this.notificationId).subscribe({
             next: (res) => {
-              localStorage.setItem('isRead', res.data[0]?.isRead);
-              if (res.data[0].actionType === 'T') {
+              localStorage.setItem('isRead', res.data[0]?.isRead);   
+              if (res?.data[0]?.actionType === 'T') {          
                 var sound = new Howl({
                   src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
                 });
