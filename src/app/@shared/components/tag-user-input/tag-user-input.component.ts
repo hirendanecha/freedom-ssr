@@ -168,7 +168,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   moveCursorToEnd(): void {
     const range = document.createRange();
     const selection = window.getSelection();
-    range.setStart(this.tagInputDiv?.nativeElement, this.tagInputDiv?.nativeElement.childNodes.length);
+    const tagInputDiv = this.tagInputDiv?.nativeElement;
+    if (tagInputDiv && tagInputDiv.childNodes.length > 0) {
+      range.setStart(this.tagInputDiv?.nativeElement, this.tagInputDiv?.nativeElement.childNodes.length);
+    }
     range.collapse(true);
     selection.removeAllRanges();
     selection.addRange(range);

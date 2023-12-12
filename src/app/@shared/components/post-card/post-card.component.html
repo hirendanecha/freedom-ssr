@@ -360,9 +360,9 @@
     </ng-container> -->
 
     <div
-      class="mt-1 friends-list like-comment-share p-1 d-center flex-lg-wrap gap-3 gap-md-0 justify-content-between"
+      class="mt-1 friends-list like-comment-share p-3 d-center flex-lg-wrap gap-3 gap-md-0 justify-content-between"
     >
-      <!-- <button
+      <button
         class="d-center gap-1 gap-sm-2 mdtxt align-items-center"
         data-toggle="tooltip"
         data-placement="bottom"
@@ -379,8 +379,8 @@
         />
         {{ post?.likescount > 0 ? post?.likescount : 0 }}
         <p class="d-lg-block d-none m-0">Likes</p>
-      </button> -->
-      <div>
+      </button>
+      <!-- <div>
         <div ngbDropdown placement="top-start" class="d-inline-block">
           <button type="button" id="emojiModel" ngbDropdownToggle>
             <img src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif" width="60" height="60" alt="Emoji">
@@ -389,12 +389,11 @@
             <div>
               <button (click)="selectedEmoji(emoji)" *ngFor="let emoji of emojiPaths">
                 <img data-src="{{ emoji }}" loading="eager" class="emoji-style" alt="Emoji" draggable="false">
-                <!-- <img [src]="emoji" class="emoji-style" alt="Emoji" draggable="false"> -->
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <button
         class="d-center gap-1 gap-sm-2 mdtxt align-items-center"
         ngbTooltip="Coming Soon!"
@@ -441,33 +440,49 @@
               (onDataChange)="onTagUserInputChangeEvent($event)"
             />
 
-            <div class="file-upload d-flex me-1">
-              <label class="file">
-                <input
-                  type="file"
-                  accept="image/*"
-                  (change)="onPostFileSelect($event, 'parent')"
-                />
-                <span
-                  class="file-custom border-0 d-grid text-center"
-                  role="button"
-                >
-                  <fa-icon
-                    [icon]="['fas', 'image']"
-                    class="m-0 font-20-px text-primary"
+            <div class="d-flex flex-column flex-sm-row align-items-center">
+              <div ngbDropdown placement="top-start" class="d-inline-block">
+                <button type="button" id="emojiModel" ngbDropdownToggle title="Emojis">
+                  <img src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif" class="emoji-select" alt="Emoji">
+                </button>
+                <!-- Emojis -->
+                <div ngbDropdownMenu aria-labelledby="emojiModel" class="emojiModelStyle">
+                  <div>
+                    <button (click)="selectedEmoji(emoji)" *ngFor="let emoji of emojiPaths">
+                      <img data-src="{{ emoji }}" loading="eager" class="emoji-style" alt="Emoji" draggable="false">
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="file-upload d-flex me-1">
+                <label class="file">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    (change)="onPostFileSelect($event, 'parent')"
                   />
-                </span>
-              </label>
+                  <span
+                    class="file-custom border-0 d-grid text-center"
+                    role="button"
+                  >
+                    <fa-icon
+                      [icon]="['fas', 'image']"
+                      class="m-0 font-20-px text-primary"
+                    />
+                  </span>
+                </label>
+              </div>
+              <div class="file-input d-flex gap-1 gap-md-2">
+                <fa-icon
+                  [icon]="['fas', 'paper-plane']"
+                  class="m-0 font-20-px text-primary"
+                  role="button"
+                  (click)="commentOnPost(post.id)"
+                />
+              </div>
             </div>
 
-            <div class="file-input d-flex gap-1 gap-md-2">
-              <fa-icon
-                [icon]="['fas', 'paper-plane']"
-                class="m-0 font-20-px text-primary"
-                role="button"
-                (click)="commentOnPost(post.id)"
-              />
-            </div>
+
           </div>
           <ng-container *ngIf="isParent && commentData?.imageUrl">
             <div class="position-relative w-56-px h-56-px mt-2">
@@ -633,9 +648,9 @@
                     ></div> -->
                     <app-tag-user-input
                       placeholder="Reply comment"
-                      [value]="commentMessageInputValue"
+                      [value]="replaycommentMessageInputValue"
                       [isShowMetaLoader]="false"
-                      (onDataChange)="onTagUserInputChangeEvent($event)"
+                      (onDataChange)="onTagUserReplayInputChangeEvent($event)"
                     />
                     <div
                       class="file-input d-flex gap-1 gap-md-2 ms-2 align-items-center"
