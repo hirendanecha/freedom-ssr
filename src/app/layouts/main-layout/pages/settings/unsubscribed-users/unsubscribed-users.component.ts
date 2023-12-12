@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { UnsubscribeProfileService } from 'src/app/@shared/services/unsubscribe-profile.service';
 
@@ -14,8 +15,16 @@ export class UnsubscribedUsersComponent implements OnInit {
   constructor(
     private unsubscribeProfileService: UnsubscribeProfileService,
     private toastService: ToastService,
+    private seoService:SeoService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) { }
+  ) { 
+    const data = {
+      title: 'Freedom.Buzz Unsubscribed User',
+      url: `${location.href}`,
+      description: '',
+    };
+    this.seoService.updateSeoMetaData(data);
+  }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
