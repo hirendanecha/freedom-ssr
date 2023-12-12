@@ -51,6 +51,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     if (val === '') {
       this.clearUserSearchData();
       this.clearMetaData();
+      this.onClearFile();
       } else {
       this.getMetaDataFromUrlStr();
       this.checkUserTagFlag();
