@@ -350,20 +350,20 @@
       margin-top: 24px;
     }
   }
-  .custom-width-comment {
-    max-width: 430px;
+  .custom-width-comment ::ng-deep app-tag-user-input{
+    max-width: 385px;
 
-    @media (max-width: 1399px) {
-      max-width: 250px;
-    }
-    @media (max-width: 1199px) {
-      max-width: 385px;
-    }
-    @media (max-width: 991px) {
-      max-width: 495px;
-    }
+    // @media (max-width: 1399px) {
+    //   max-width: 250px;
+    // }
+    // @media (max-width: 1199px) {
+    //   max-width: 315px;
+    // }
+    // @media (max-width: 991px) {
+    //   max-width: 495px;
+    // }
     @media (max-width: 767px) {
-      max-width: 352px;
+      max-width: 315px;
     }
     @media (max-width: 435px) {
       max-width: 206px;
@@ -374,8 +374,8 @@
     color: var(--para-2nd-color);
     font-weight: 600;
   }
-  
-  .pdf-name{
+
+  .pdf-name {
     color: var(--para-2nd-color);
     margin-left: 5px;
     overflow: hidden;
@@ -386,11 +386,6 @@
   }
 
   ::ng-deep {
-    .tag-image-preview{
-      img{
-        padding-top: 16px;
-      }
-    }
     .post-description {
       h1,
       h2,
@@ -413,7 +408,7 @@
         font-weight: 500 !important;
         color: unset !important;
       }
-      a{
+      a {
         font-size: 16px !important;
         line-height: 22px !important;
         margin: unset !important;
@@ -453,14 +448,32 @@
         margin: unset;
         background-color: unset !important;
       }
-      p, em, span {
-        color: var(--para-2nd-color)!important
+      p,
+      em,
+      span {
+        color: var(--para-2nd-color) !important;
       }
-      .comment-description{
-        img{
+      .comment-description {
+        img {
           display: none !important;
         }
       }
     }
+    .emoji-select{
+      max-width: 60px;
+      min-width: 60px;
+    }
+    .emojiModelStyle {
+      width: 282px;
+      // height: 225px;
+
+      .emoji-style{
+        width: 70px;
+      }
+    }
+  }
+  .comment-description ::ng-deep img[src$=".gif"] {
+    display: unset !important;
+    width: 70px;
   }
 }

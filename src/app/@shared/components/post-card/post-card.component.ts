@@ -71,6 +71,7 @@ export class PostCardComponent implements OnInit {
   isExpand = false;
   commentCount = 0;
   commentMessageInputValue: string = '';
+  replaycommentMessageInputValue: string = '';
   commentMessageTags: any[];
   showHoverBox = false;
   unSubscribeProfileIds: any = [];
@@ -79,6 +80,30 @@ export class PostCardComponent implements OnInit {
   commentDescriptionimageUrl: string;
   replayCommentDescriptionimageUrl: string;
   shareButton = false;
+
+  emojiPaths = [
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cry.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cool.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Anger.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Crazy.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Censorship.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Doctor.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Hug.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/In-Love.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Kiss.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/LOL.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Party.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Poop.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sad.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Scholar.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Shock.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sick.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Think.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sleep.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-UP.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-down.gif',
+  ];
 
   constructor(
     private seeFirstUserService: SeeFirstUserService,
@@ -99,7 +124,7 @@ export class PostCardComponent implements OnInit {
   ) {
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
-      
+
       if (this.post?.id && this.post?.posttype === 'V') {
         this.playVideo(this.post?.id);
       }
@@ -132,7 +157,7 @@ export class PostCardComponent implements OnInit {
     // }
     const path = this.route.snapshot.routeConfig.path;
     if (path === 'view-profile/:id' || path === 'post/:id') {
-      this.shareButton = true
+      this.shareButton = true;
     }
   }
   getPostUrl(post: any) {
@@ -499,6 +524,7 @@ export class PostCardComponent implements OnInit {
                 this.commentData['imageUrl'] = res?.body?.url;
                 this.addComment();
                 this.commentMessageInputValue = null;
+                this.replaycommentMessageInputValue = null;
               }
             },
             error: (err) => {
@@ -508,6 +534,7 @@ export class PostCardComponent implements OnInit {
       } else {
         this.addComment();
         this.commentMessageInputValue = null;
+        this.replaycommentMessageInputValue = null;
       }
     }
   }
@@ -598,11 +625,16 @@ export class PostCardComponent implements OnInit {
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    // console.log('comments-data', data)
-    this.commentData.comment = data?.html;
+    this.commentMessageInputValue = data?.html;
+    this.commentData.comment = data?.html;    
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
     // console.log(this.commentData)
+  }
+  onTagUserReplayInputChangeEvent(data: any): void {
+    this.commentData.comment = data?.html;    
+    this.commentData.meta = data?.meta;
+    this.commentMessageTags = data?.tags;
   }
 
   socketListner(): void {
@@ -712,10 +744,28 @@ export class PostCardComponent implements OnInit {
     if (imgTag) {
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
-      if (!imgTitle && !imgStyle) {
+      const imageGif = imgTag
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
+      if (!imgTitle && !imgStyle && !imageGif) {
         return imgTag.getAttribute('src');
       }
     }
     return null;
+  }
+
+  selectedEmoji(emoji) {
+    this.commentMessageInputValue =
+        this.commentMessageInputValue +
+        `<img src=${emoji} width="60" height="60">`;
+  
+    // if (this.commentMessageInputValue) {
+    //   this.commentMessageInputValue =
+    //     this.commentMessageInputValue +
+    //     `<img src=${emoji} width="60" height="60">`;
+    // } else {
+    //   this.commentMessageInputValue = `<img src=${emoji} width="60" height="60">`;
+    // }
   }
 }

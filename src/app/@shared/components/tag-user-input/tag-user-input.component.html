@@ -1,4 +1,4 @@
-<div #tagInputDiv contenteditable [attr.placeholder]="placeholder" class="tag-input-div input-area c-text"
+<div #tagInputDiv contenteditable [attr.placeholder]="placeholder" class="tag-input-div tag-image-preview input-area c-text"
   (input)="messageOnKeyEvent()" [mentionConfig]="{
     items: userList,
     labelKey: 'Username',
@@ -39,4 +39,11 @@
 
 <ng-container *ngIf="isShowMetaPreview && metaData?.metaimage">
   <app-post-meta-data-card [post]="metaData" class="pt-5" />
+</ng-container>
+
+<ng-container *ngIf="copyImage">
+  <div class="rounded shadow-lg m-3">
+    <!-- <fa-icon [icon]="['fas', 'xmark']" class="position-absolute start-100 translate-middle badge bg-danger py-1 font-16-px c-pointer c-icon-color" (click)="onClearFile()" /> -->
+    <img [src]="copyImage">
+  </div>
 </ng-container>
