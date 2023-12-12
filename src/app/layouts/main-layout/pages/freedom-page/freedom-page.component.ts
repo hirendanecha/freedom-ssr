@@ -4,6 +4,7 @@ import { AddFreedomPageComponent } from './add-page-modal/add-page-modal.compone
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommunityService } from 'src/app/@shared/services/community.service';
+import { SeoService } from 'src/app/@shared/services/seo.service';
 
 @Component({
   selector: 'app-freedom-page',
@@ -16,15 +17,23 @@ export class FreedomPageComponent {
   profileId: number
   isPageLoader: boolean = false;
 
+
   constructor(
     private modalService: NgbModal,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private communityService: CommunityService
+    private communityService: CommunityService,
+    private seoService: SeoService
   ) {
     this.profileId = Number(localStorage.getItem('profileId'));
 
     this.getPages();
+    const data = {
+      title: 'Freedom.Buzz Freedom Pages',
+      url: `${location.href}`,
+      description: '',
+    };
+    this.seoService.updateSeoMetaData(data);
   }
 
   createCommunity() {

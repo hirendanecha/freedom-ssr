@@ -26,14 +26,14 @@ import { SeoService } from 'src/app/@shared/services/seo.service';
 import { AddCommunityModalComponent } from '../communities/add-community-modal/add-community-modal.component';
 import { AddFreedomPageComponent } from '../freedom-page/add-page-modal/add-page-modal.component';
 import { Meta } from '@angular/platform-browser';
-import { MetafrenzyService } from 'ngx-metafrenzy';
+// import { MetafrenzyService } from 'ngx-metafrenzy';
 import { isPlatformBrowser } from '@angular/common';
 import { Howl } from 'howler';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [MetafrenzyService]
+  // providers: [MetafrenzyService]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   postMessageInputValue: string = '';
@@ -78,7 +78,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public tokenService: TokenStorageService,
     private seoService: SeoService,
-    private metafrenzyService: MetafrenzyService,
+    // private metafrenzyService: MetafrenzyService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     if (isPlatformBrowser(this.platformId)) {
@@ -97,6 +97,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.isNavigationEnd = true;
       });
+      const data = {
+        title: 'Freedom.Buzz',
+        url: `${location.href}`,
+      };
+      this.seoService.updateSeoMetaData(data);
+
     }
   }
 
@@ -121,8 +127,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.notificationId) {
           this.customerService.getNotification(this.notificationId).subscribe({
             next: (res) => {
-              localStorage.setItem('isRead', res.data[0]?.isRead);   
-              if (res?.data[0]?.actionType === 'T') {          
+              localStorage.setItem('isRead', res.data[0]?.isRead);
+              if (res?.data[0]?.actionType === 'T') {
                 var sound = new Howl({
                   src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
                 });
@@ -203,21 +209,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               description: details.CommunityDescription,
               image: details?.coverImg,
             };
-            this.metafrenzyService.setTitle(data.title);
-            this.metafrenzyService.setMetaTag('og:title', data.title);
-            this.metafrenzyService.setMetaTag('og:description', data.description);
-            this.metafrenzyService.setMetaTag('og:url', data.url);
-            this.metafrenzyService.setMetaTag('og:image', data.image);
-            this.metafrenzyService.setMetaTag("og:site_name", 'Freedom.Buzz');
-            this.metafrenzyService.setOpenGraph({
-              title: data.title,
-              //description: post.postToProfileIdName === '' ? post.profileName: post.postToProfileIdName,
-              description: data.description,
-              url: data.url,
-              image: data.image,
-              site_name: 'Freedom.Buzz'
-            });
-            // this.seoService.updateSeoMetaData(data);
+            // this.metafrenzyService.setTitle(data.title);
+            // this.metafrenzyService.setMetaTag('og:title', data.title);
+            // this.metafrenzyService.setMetaTag('og:description', data.description);
+            // this.metafrenzyService.setMetaTag('og:url', data.url);
+            // this.metafrenzyService.setMetaTag('og:image', data.image);
+            // this.metafrenzyService.setMetaTag("og:site_name", 'Freedom.Buzz');
+            // this.metafrenzyService.setOpenGraph({
+            //   title: data.title,
+            //   //description: post.postToProfileIdName === '' ? post.profileName: post.postToProfileIdName,
+            //   description: data.description,
+            //   url: data.url,
+            //   image: data.image,
+            //   site_name: 'Freedom.Buzz'
+            // });
+            this.seoService.updateSeoMetaData(data);
 
             if (details?.memberList?.length > 0) {
               details['memberIds'] = details?.memberList?.map(
@@ -555,7 +561,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     modalRef.componentInstance.title = `Warning message`;
     modalRef.componentInstance.confirmButtonLabel = 'Ok';
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-    modalRef.componentInstance.message = `Videos on freedom.buzz home are limited to 2 Minutes!
+    modalRef.componentInstance.message = `Videos on Freedom.Buzz home are limited to 2 Minutes!
     Videos must be a mp4 format`;
     modalRef.result.then((res) => {
       if (res === 'success') {
