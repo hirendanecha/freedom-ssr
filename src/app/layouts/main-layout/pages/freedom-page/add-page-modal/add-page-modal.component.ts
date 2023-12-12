@@ -102,8 +102,8 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.inputLinkValue1 = this.data?.link1;
-    this.inputLinkValue2 = this.data?.link2;
+    this.inputLinkValue1 = this.data?.link1 || null;
+    this.inputLinkValue2 = this.data?.link2 || null;
     fromEvent(this.zipCode.nativeElement, 'input')
       .pipe(debounceTime(1000))
       .subscribe((event) => {
@@ -236,7 +236,11 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
                 this.spinner.hide();
               }
           });
-        this.editAdvertizeMentLink(this.data.Id);
+        if (this.data.link1 || this.data.link2) {
+          this.editAdvertizeMentLink(this.data.Id);
+        } else {
+          this.createAdvertizeMentLink(this.data.Id);
+        }
         this.sharedService.advertizementLink = [];
       }
     }

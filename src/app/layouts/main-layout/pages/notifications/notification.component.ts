@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
+import { SeoService } from 'src/app/@shared/services/seo.service';
 
 @Component({
   selector: 'app-notification',
@@ -16,8 +17,16 @@ export class NotificationsComponent {
     private customerService: CustomerService,
     private spinner: NgxSpinnerService,
     private router: Router,
-    private toastService: ToastService
-  ) { }
+    private toastService: ToastService,
+    private seoService: SeoService
+
+  ) 
+  {  const data = {
+    title: 'Freedom.Buzz Notification',
+    url: `${location.href}`,
+    description: '',
+  };
+  this.seoService.updateSeoMetaData(data);}
 
   ngOnInit(): void {
     this.getNotificationList();

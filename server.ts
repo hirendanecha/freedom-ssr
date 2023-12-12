@@ -161,6 +161,22 @@ export function app(): express.Express {
           seo.description = strip_html_tags(talent.description);
           seo.image = talent.image;
           // }
+        } else if (params.indexOf('research/') > -1) {
+          let id = params.split('/');
+          id = id[id.length - 1];
+          console.log({ id });
+
+          const group: any = await getResearchGroup(id);
+
+          console.log('group===>', group);
+          const talent = {
+            name: `Freedom.Buzz Research ${group?.PageTitle}`,
+            description: group?.PageDescription,
+            image: group?.CoverPicName || group?.ProfilePicName
+          };
+          seo.title = talent.name;
+          seo.description = talent.description;
+          seo.image = talent.image;
         }
 
         html = html.replace(/\$TITLE/g, seo.title);
@@ -197,6 +213,12 @@ async function getPost(id: any) {
 }
 async function getProfile(id: any) {
   return fetch(api_url + 'customers/profile/' + id).then((resp: any) =>
+    resp.json()
+  );
+}
+
+async function getResearchGroup(id: any) {
+  return fetch(api_url + 'profile/getGroupBasicDetails/' + id).then((resp: any) =>
     resp.json()
   );
 }

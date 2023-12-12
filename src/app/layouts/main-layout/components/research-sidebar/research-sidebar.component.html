@@ -9,7 +9,7 @@
       <ul class="p-0 m-0">
         <ng-container *ngFor="let research of researches">
           <li>
-            <a [routerLink]="'/research/detail/grpm/' + research?.UniqueLink" target="_blank" class="d-flex align-items-center py-3">
+            <a [routerLink]="'/research/' + research?.UniqueLink" target="_blank" class="d-flex align-items-center py-3">
               <fa-icon [icon]="['fas', 'chevron-right']" />
               <span class="font-14-px ps-2" >{{research?.FirstName}}</span>
             </a>

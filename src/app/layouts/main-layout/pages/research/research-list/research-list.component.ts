@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { ProfileService } from 'src/app/@shared/services/profile.service';
+import { SeoService } from 'src/app/@shared/services/seo.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import {
@@ -58,8 +59,15 @@ export class ResearchListComponent {
     public sharedService: SharedService,
     private spinner: NgxSpinnerService,
     private breakpointService: BreakpointService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private seoService: SeoService
   ) {
+    const data = {
+      title: 'Freedom.Buzz Research',
+      url: `${location.href}`,
+      description: '',
+    };
+    this.seoService.updateSeoMetaData(data);
     this.btnGroupFeedTypeCtrl = new FormControl('All');
     this.btnGroupViewTypeCtrl = new FormControl('TopStories');
 
