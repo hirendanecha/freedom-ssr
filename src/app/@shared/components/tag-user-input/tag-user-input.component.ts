@@ -140,11 +140,18 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
                 const urls = res.meta?.image?.url;
                 const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
 
+                const metatitles = res?.meta?.title;
+                const metatitle = Array.isArray(metatitles) ? metatitles?.[0] : metatitles;
+
+                const metaurls = res?.meta?.url || url;
+                const metaursl = Array.isArray(metaurls) ? metaurls?.[0] : metaurls;
+
+
                 this.metaData = {
-                  title: res?.meta?.title,
+                  title: metatitle,
                   metadescription: res?.meta?.description,
                   metaimage: imgUrl,
-                  metalink: res?.meta?.url || url,
+                  metalink: metaursl,
                   url: url,
                 };
 

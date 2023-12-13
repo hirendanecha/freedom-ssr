@@ -52,6 +52,13 @@
       top: 12px;
       transition: 0.3s ease-in-out;
       color: #fff;
+      border: 2px solid var(--scroll-color);
+      width: 45px;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
 
       &:hover {
         transition: 0.3s ease-in-out;
