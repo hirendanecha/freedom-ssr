@@ -6,7 +6,8 @@
     (post?.postdescription ||
       post?.metadescription ||
       post?.imageUrl ||
-      post?.pdfUrl || post.parentPostId)
+      post?.pdfUrl ||
+      post.parentPostId)
   "
 >
   <img
@@ -45,7 +46,7 @@
                 class="d-flex align-items-center"
                 (mouseover)="showHoverBox = true"
               >
-              {{ ((post?.Username || post?.FirstName).split(" ")).join("") }}
+                {{ (post?.Username || post?.FirstName).split(" ").join("") }}
                 <!-- [ngbTooltip]="post.postcreationdate | date : ' h:mm a MMM d, y'" -->
                 <div>
                   <fa-icon
@@ -90,7 +91,9 @@
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                 alt="avatar"
               />
-              <p class="cursor mt-2">{{ ((post?.Username || post?.FirstName) .split(" ")).join("") }}</p>
+              <p class="cursor mt-2">
+                {{ (post?.Username || post?.FirstName).split(" ").join("") }}
+              </p>
               <div
                 class="d-flex"
                 *ngIf="
@@ -152,10 +155,11 @@
         </div>
 
         <div class="d-flex">
-          <div *ngIf="shareButton && tokenService.getCredentials()"
+          <div
+            *ngIf="shareButton && tokenService.getCredentials()"
             class="cursor me-5"
             (click)="getPostUrl(post)"
-            >
+          >
             <fa-icon [icon]="['fas', 'share']" class="font-24-px m-0" />
           </div>
           <div ngbDropdown *ngIf="tokenService.getCredentials()">
@@ -321,7 +325,7 @@
       <app-img-preview [src]="descriptionimageUrl" classes="w-100" />
     </ng-container>
     <ng-container *ngIf="post.parentPostId">
-      <app-re-post-card [id]="post.parentPostId"  />
+      <app-re-post-card [id]="post.parentPostId" />
     </ng-container>
     <ng-container *ngIf="post?.pdfUrl">
       <!-- <app-pdf-preview [src]="post?.pdfUrl" classes="w-100" /> -->
@@ -426,7 +430,9 @@
         />
 
         <div class="px-3 gap-2 align-items-center w-100">
-          <div class="d-flex gap-2 align-items-center custom-width-comment">
+          <div
+            class="d-flex gap-2 align-items-center custom-width-comment position-relative"
+          >
             <!-- <div
               #parentPostCommentElement
               contenteditable
@@ -434,18 +440,19 @@
               class="outline-0 w-100 comment-input c-text"
             ></div> -->
             <app-tag-user-input
+              class="comment-emoji"
               placeholder="Comment"
               [value]="commentMessageInputValue"
               [isShowMetaLoader]="false"
               (onDataChange)="onTagUserInputChangeEvent($event)"
             />
 
-            <div class="d-flex flex-column flex-sm-row align-items-center">
-              <div ngbDropdown placement="top-end" class="d-inline-block">
+            <div class="d-flex align-items-center">
+              <!-- Emojis -->
+              <!-- <div ngbDropdown placement="top-end" class="d-inline-block">
                 <button type="button" id="emojiModel" ngbDropdownToggle title="Emojis">
-                  <img src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif" class="emoji-select" alt="Emoji">
+                  <img src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif" class="emoji-select" alt="Emoji">
                 </button>
-                <!-- Emojis -->
                 <div ngbDropdownMenu aria-labelledby="emojiModel" class="emojiModelStyle">
                   <div>
                     <button (click)="selectedEmoji(emoji)" *ngFor="let emoji of emojiPaths">
@@ -453,7 +460,7 @@
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="file-upload d-flex me-1">
                 <label class="file">
                   <input
@@ -481,8 +488,6 @@
                 />
               </div>
             </div>
-
-
           </div>
           <ng-container *ngIf="isParent && commentData?.imageUrl">
             <div class="position-relative w-56-px h-56-px mt-2">
@@ -532,7 +537,11 @@
                     class="d-flex justify-content-between align-items-center w-100"
                   >
                     <h6 class="m-0">
-                      {{ ((comment.Username || comment.FirstName).split(" ")).join("")  }}
+                      {{
+                        (comment.Username || comment.FirstName)
+                          .split(" ")
+                          .join("")
+                      }}
                       <span class="font-12-px text-lowercase">
                         <fa-icon class="ms-2" [icon]="['fas', 'clock']" />
                         {{ comment.createdDate | dateDay }}</span
@@ -639,7 +648,7 @@
                   "
                   class="py-2 px-3 gap-2 align-items-center w-100 mb-5"
                 >
-                  <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center position-relative">
                     <!-- <div
                       #childPostCommentElement
                       contenteditable
@@ -647,6 +656,7 @@
                       class="outline-0 w-100 comment-input c-text"
                     ></div> -->
                     <app-tag-user-input
+                      class="replay-comment-emoji"
                       placeholder="Reply comment"
                       [value]="replaycommentMessageInputValue"
                       [isShowMetaLoader]="false"
@@ -728,7 +738,11 @@
                             class="d-flex justify-content-between align-items-center w-100"
                           >
                             <h6 class="m-0 align-items-center">
-                              {{ ((reply.Username || reply.FirstName) .split(" ")).join("") }}
+                              {{
+                                (reply.Username || reply.FirstName)
+                                  .split(" ")
+                                  .join("")
+                              }}
                               <span class="font-12-px text-lowercase">
                                 <fa-icon
                                   class="ms-2"
