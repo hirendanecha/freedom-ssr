@@ -392,7 +392,7 @@ export class PostCardComponent implements OnInit {
               ele.descImg = this.extractImageUrlFromContent(ele.comment);
             });
 
-            console.log(res.data.commmentsList);
+            // console.log(res.data.commmentsList);
             this.commentList = res.data.commmentsList.map((ele: any) => ({
               ...ele,
               replyCommnetsList: res.data.replyCommnetsList.filter(
@@ -625,7 +625,7 @@ export class PostCardComponent implements OnInit {
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.commentMessageInputValue = data?.html;
+    // this.commentMessageInputValue = data?.html;
     this.commentData.comment = data?.html;
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;

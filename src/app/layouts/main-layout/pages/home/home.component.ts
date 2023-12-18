@@ -353,6 +353,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onTagUserInputChangeEvent(data: any): void {
+    // this.postMessageInputValue = data?.html
     this.postData.postdescription = data?.html;
     this.postData.meta = data?.meta;
     this.postMessageTags = data?.tags;
@@ -573,4 +574,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
+
+  // selectedEmoji(emoji) {
+  //   this.postMessageInputValue = this.postMessageInputValue + `<img src=${emoji} width="60" height="60">`;
+  // }
 }

@@ -54,7 +54,7 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
   ) {
     // console.log(this.route.snapshot.params.id)
     this.userId = this.route.snapshot.params.id;
-    console.log('userid==>', this.userId)
+    // console.log('userid==>', this.userId)
     this.profileId = localStorage.getItem('profileId');
     this.getUnsubscribeProfiles();
 
