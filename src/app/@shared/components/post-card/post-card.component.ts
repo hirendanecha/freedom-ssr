@@ -82,7 +82,8 @@ export class PostCardComponent implements OnInit {
   shareButton = false;
 
   emojiPaths = [
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif'
     // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cry.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cool.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Anger.gif',
