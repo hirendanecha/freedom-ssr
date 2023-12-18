@@ -75,7 +75,7 @@ export class AppComponent {
           const profileId = +localStorage.getItem('profileId');
           this.socketService.socket?.emit('join', { room: profileId });
         }
-      }, 5000)
+      }, 3000)
 
     }
   }

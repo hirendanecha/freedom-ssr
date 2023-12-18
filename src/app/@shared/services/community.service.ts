@@ -82,7 +82,7 @@ export class CommunityService {
   }
 
   getCommunityBySlug(slug: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/bySlug/${slug}`);
+    return this.http.get(`${this.baseUrl}/bySlug/${slug}?q=${Date.now()}`);
   }
 
   deleteCommunity(id): Observable<any> {

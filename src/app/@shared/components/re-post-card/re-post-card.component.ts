@@ -1,13 +1,15 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, afterNextRender } from '@angular/core';
 import { PostService } from '../../services/post.service';
 import { environment } from 'src/environments/environment';
+import { NgxSpinnerService } from 'ngx-spinner';
 
+declare var jwplayer: any;
 @Component({
   selector: 'app-re-post-card',
   templateUrl: './re-post-card.component.html',
   styleUrls: ['./re-post-card.component.scss'],
 })
-export class RePostCardComponent implements AfterViewInit {
+export class RePostCardComponent implements AfterViewInit, OnInit {
   @Input('id') id: any = {};
 
   descriptionimageUrl: string;
@@ -17,24 +19,35 @@ export class RePostCardComponent implements AfterViewInit {
   tubeUrl = environment.tubeUrl;
 
   sharedPost: string
+  player: any
 
-  constructor(private postService: PostService) {}
+  constructor(private postService: PostService,
+    private spinner: NgxSpinnerService) {
+  }
+
+  ngOnInit(): void {
+    console.log('id ===>', this.post)
+    this.getPostById();
+  }
+
   ngAfterViewInit(): void {
-    this.getPostById(); 
   }
 
   getPostById(): void {
+    this.spinner.show();
     this.postService.getPostsByPostId(this.id).subscribe({
       next: (res: any) => {
+        this.spinner.hide();
         this.post = res[0];
       },
       error: (err) => {
+        this.spinner.hide();
         console.log(err);
       },
     });
   }
 
-  redirectToParentProfile(post){
+  redirectToParentProfile(post) {
     if (this.post.streamname) {
       this.sharedPost = this.tubeUrl + 'video/' + post.id;
     } else {

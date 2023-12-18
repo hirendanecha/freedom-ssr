@@ -131,10 +131,6 @@ export class PostCardComponent implements OnInit {
       }
       this.socketListner();
       this.viewComments(this.post?.id);
-
-      this.descriptionimageUrl = this.extractImageUrlFromContent(
-        this.post.postdescription
-      );
       // const contentContainer = document.createElement('div');
       // contentContainer.innerHTML = this.post.postdescription;
       // const imgTag = contentContainer.querySelector('img');
@@ -156,6 +152,9 @@ export class PostCardComponent implements OnInit {
     // if (this.post?.posttype === 'V') {
     //   this.playVideo(this.post?.id);
     // }
+    this.descriptionimageUrl = this.extractImageUrlFromContent(
+      this.post.postdescription
+    );
     const path = this.route.snapshot.routeConfig.path;
     if (path === 'view-profile/:id' || path === 'post/:id') {
       this.shareButton = true;
@@ -627,13 +626,13 @@ export class PostCardComponent implements OnInit {
 
   onTagUserInputChangeEvent(data: any): void {
     this.commentMessageInputValue = data?.html;
-    this.commentData.comment = data?.html;    
+    this.commentData.comment = data?.html;
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
     // console.log(this.commentData)
   }
   onTagUserReplayInputChangeEvent(data: any): void {
-    this.commentData.comment = data?.html;    
+    this.commentData.comment = data?.html;
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
   }
@@ -758,9 +757,9 @@ export class PostCardComponent implements OnInit {
 
   selectedEmoji(emoji) {
     this.commentMessageInputValue =
-        this.commentMessageInputValue +
-        `<img src=${emoji} width="60" height="60">`;
-  
+      this.commentMessageInputValue +
+      `<img src=${emoji} width="60" height="60">`;
+
     // if (this.commentMessageInputValue) {
     //   this.commentMessageInputValue =
     //     this.commentMessageInputValue +
