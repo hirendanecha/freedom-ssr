@@ -444,6 +444,7 @@
               placeholder="Comment"
               [value]="commentMessageInputValue"
               [isShowMetaLoader]="false"
+              [isShowEmojis]="true"
               (onDataChange)="onTagUserInputChangeEvent($event)"
             />
 
@@ -660,6 +661,7 @@
                       placeholder="Reply comment"
                       [value]="replaycommentMessageInputValue"
                       [isShowMetaLoader]="false"
+                      [isShowEmojis]="true"
                       (onDataChange)="onTagUserReplayInputChangeEvent($event)"
                     />
                     <div
