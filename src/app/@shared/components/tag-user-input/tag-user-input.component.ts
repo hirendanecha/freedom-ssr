@@ -27,6 +27,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   @Input('isShowMetaPreview') isShowMetaPreview: boolean = true;
   @Input('isAllowTagUser') isAllowTagUser: boolean = true;
   @Input('isShowMetaLoader') isShowMetaLoader: boolean = true;
+  @Input('isShowEmojis') isShowEmojis: boolean = false;
   @Output('onDataChange') onDataChange: EventEmitter<any> =
     new EventEmitter<any>();
 

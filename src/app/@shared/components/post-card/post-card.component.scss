@@ -477,33 +477,33 @@
     }
     .comment-emoji{
       .select-emaojies {
-        right: 45px;
-        top: 5px;
+        right: 45px !important;
+        top: 5px !important;
 
         @media (min-width:768px) and (max-width:991px) {
           right: 110px;
         }
         @media (min-width:576px) and (max-width:767px) {
-          right: 80px;
+          right: 80px !important;
         }
         @media (min-width:545px) and (max-width:575px) {
-          right: 125px;
+          right: 125px !important;
         }
         @media (min-width:500px) and (max-width:544px) {
-          right: 75px;
+          right: 75px !important;
         }
         @media (min-width:460px) and (max-width:494px) {
-          right: 40px;
+          right: 40px !important;
         }
         @media (min-width:400px) and (max-width:435px) {
-          right: 90px;
+          right: 90px !important;
         }
       }
     }
     .replay-comment-emoji{
       .select-emaojies {
-        right: 50px;
-        top: 5px;
+        right: 50px !important;
+        top: 5px !important;
       }
     }
   }
