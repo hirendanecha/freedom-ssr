@@ -1,24 +1,26 @@
+<div class="d-flex align-items-center justify-content-between">
 <div #tagInputDiv contenteditable [attr.placeholder]="placeholder" class="tag-input-div tag-image-preview input-area c-text"
   (input)="messageOnKeyEvent()" [mentionConfig]="{
     items: userList,
     labelKey: 'Username',
     triggerChar: '@',
   }" [mentionListTemplate]="mentionListTemplate" (itemSelected)="selectTagUser($event)"></div>
-  <ng-container *ngIf="isShowEmojis">
-    <div ngbDropdown placement="bottom-end" class="select-emaojies">
-      <button type="button" id="emojiModel" ngbDropdownToggle title="Emojis">
-        <img src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif" class="emoji-select" alt="Emoji">
-      </button>
-      <!-- Emojis -->
-      <div ngbDropdownMenu aria-labelledby="emojiModel" class="emojiModelStyle">
-        <div>
-          <button (click)="selectEmoji(emoji)" *ngFor="let emoji of emojiPaths">
-            <img data-src="{{ emoji }}" loading="eager" class="emoji-style" alt="Emoji" draggable="false">
-          </button>
-        </div>
+<ng-container *ngIf="isShowEmojis">
+  <div ngbDropdown placement="bottom-end" class="select-emaojies">
+    <button type="button" id="emojiModel" ngbDropdownToggle title="Emojis">
+      <img src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif" class="emoji-select" alt="Emoji">
+    </button>
+    <!-- Emojis -->
+    <div ngbDropdownMenu aria-labelledby="emojiModel" class="emojiModelStyle">
+      <div>
+        <button (click)="selectEmoji(emoji)" *ngFor="let emoji of emojiPaths">
+          <img data-src="{{ emoji }}" loading="eager" class="emoji-style" alt="Emoji" draggable="false">
+        </button>
       </div>
     </div>
-  </ng-container>
+  </div>
+</ng-container>
+</div>
 <ng-container *ngIf="isShowMetaLoader">
   <app-inline-loader *ngIf="isMetaLoader" classes="position-absolute inline-meta-loader" />
 </ng-container>
