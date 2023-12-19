@@ -9,6 +9,7 @@
     // line-break: anywhere;
     text-align: start;
     max-width: 541px;
+    width: calc(100% - 60px);
     overflow: hidden;
 
     @media (max-width: 767px) {
@@ -51,9 +52,6 @@
     right: 0;
     top: 5px;
 
-    @media (min-width:768px) and (max-width:991px) {
-      right: 32px;
-    }
     @media (max-width: 575px) {
       right: 52px;
     }

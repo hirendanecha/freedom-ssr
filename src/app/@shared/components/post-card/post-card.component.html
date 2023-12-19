@@ -431,7 +431,7 @@
 
         <div class="px-3 gap-2 align-items-center w-100">
           <div
-            class="d-flex gap-2 align-items-center custom-width-comment position-relative"
+            class="d-flex align-items-baseline custom-width-comment position-relative"
           >
             <!-- <div
               #parentPostCommentElement
@@ -448,7 +448,7 @@
               (onDataChange)="onTagUserInputChangeEvent($event)"
             />
 
-            <div class="d-flex align-items-center">
+            <div class="d-flex gap-2 lign-items-center">
               <!-- Emojis -->
               <!-- <div ngbDropdown placement="top-end" class="d-inline-block">
                 <button type="button" id="emojiModel" ngbDropdownToggle title="Emojis">
@@ -647,9 +647,9 @@
                     post.id === comment.postId &&
                     commentId === comment.id
                   "
-                  class="py-2 px-3 gap-2 align-items-center w-100 mb-5"
+                  class="py-2 px-3 align-items-center w-100 mb-5"
                 >
-                  <div class="d-flex align-items-center position-relative">
+                  <div class="d-flex align-items-baseline position-relative">
                     <!-- <div
                       #childPostCommentElement
                       contenteditable
@@ -665,7 +665,7 @@
                       (onDataChange)="onTagUserReplayInputChangeEvent($event)"
                     />
                     <div
-                      class="file-input d-flex gap-1 gap-md-2 ms-2 align-items-center"
+                      class="file-input d-flex gap-2 align-items-center"
                     >
                       <div class="file-upload d-flex">
                         <label class="file">
