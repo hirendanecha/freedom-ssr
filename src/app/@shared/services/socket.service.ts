@@ -75,4 +75,8 @@ export class SocketService {
   commentOnPost(params, callback: (data: any) => void) {
     this.socket?.emit('comments-on-post', params, callback);
   }
+
+  readNotification(params, callback: (data: any) => void) {
+    this.socket?.emit('isReadNotification', params, callback);
+  }
 }
