@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationId: number;
   buttonClicked = false;
   originalFavicon: HTMLLinkElement;
-  notificationSoundOct = ''
+  notificationSoundOct = '';
 
   constructor(
     private modalService: NgbModal,
@@ -126,15 +126,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketService.socket?.emit('join', { room: this.profileId });
     this.socketService.socket?.on('notification', (data: any) => {
       if (data) {
-        console.log('new-notification', data)
+        console.log('new-notification', data);
         this.notificationId = data.id;
         this.sharedService.isNotify = true;
         this.originalFavicon.href = '/assets/images/icon-unread.jpg';
         if (data?.actionType === 'T') {
           var sound = new Howl({
-            src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
+            src: [
+              'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
+            ],
           });
-          this.notificationSoundOct = localStorage?.getItem('notificationSoundEnabled');
+          this.notificationSoundOct = localStorage?.getItem(
+            'notificationSoundEnabled'
+          );
           if (this.notificationSoundOct !== 'N') {
             if (sound) {
               sound?.play();
@@ -170,7 +174,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
@@ -331,12 +335,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.postData?.pdfUrl
     ) {
       if (!this.postData.meta.metalink) {
-        this.postData.metalink = null
-        this.postData.title = null
-        this.postData.metaimage = null
-        this.postData.metadescription = null
+        this.postData.metalink = null;
+        this.postData.title = null;
+        this.postData.metaimage = null;
+        this.postData.metadescription = null;
         console.log(this.postData);
-
       }
       // this.spinner.show();
       console.log(
@@ -358,7 +361,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onTagUserInputChangeEvent(data: any): void {
     // this.postMessageInputValue = data?.html
-    this.postData.postdescription = data?.html;
+    this.extractImageUrlFromContent(data.html);
+    // this.postData.postdescription = data?.html;
     this.postData.meta = data?.meta;
     this.postMessageTags = data?.tags;
   }
@@ -400,7 +404,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   editCommunity(data): void {
-    let modalRef: any
+    let modalRef: any;
     if (data.pageType === 'community') {
       modalRef = this.modalService.open(AddCommunityModalComponent, {
         centered: true,
@@ -415,8 +419,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         keyboard: false,
         size: 'lg',
       });
-      data.link1 = this.sharedService?.advertizementLink[0]?.url
-      data.link2 = this.sharedService?.advertizementLink[1]?.url
+      data.link1 = this.sharedService?.advertizementLink[0]?.url;
+      data.link2 = this.sharedService?.advertizementLink[1]?.url;
     }
     modalRef.componentInstance.title = `Edit ${data.pageType} Details`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
@@ -510,9 +514,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.toastService.success(res.message);
                 // this.getCommunityDetailsBySlug();
                 this.router.navigate([
-                  `${this.communityDetails.pageType === 'community'
-                    ? 'communities'
-                    : 'pages'
+                  `${
+                    this.communityDetails.pageType === 'community'
+                      ? 'communities'
+                      : 'pages'
                   }`,
                 ]);
               }
@@ -582,4 +587,49 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // selectedEmoji(emoji) {
   //   this.postMessageInputValue = this.postMessageInputValue + `<img src=${emoji} width="60" height="60">`;
   // }
+
+  extractImageUrlFromContent(content: string): void {
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = content;
+    const imgTag = contentContainer.querySelector('img');
+
+    if (imgTag) {
+      const imgTitle = imgTag.getAttribute('title');
+      const imgStyle = imgTag.getAttribute('style');
+      const imageGif = imgTag
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
+      if (!imgTitle && !imgStyle && !imageGif) {
+        const copyImage = imgTag.getAttribute('src');
+        const bytes = copyImage.length;
+        const megabytes = bytes / (1024 * 1024);
+        if (megabytes > 1) {
+          this.postData['postdescription'] = content.replace(copyImage, '');
+          const base64Image = copyImage
+            .trim()
+            .replace(/^data:image\/\w+;base64,/, '');
+          try {
+            const binaryString = window.atob(base64Image);
+            const uint8Array = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              uint8Array[i] = binaryString.charCodeAt(i);
+            }
+            const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+            const fileName = 'copyImage.jpg';
+            const file = new File([blob], fileName, { type: 'image/jpeg' });
+            this.postData.file = file;
+          } catch (error) {
+            console.error('Base64 decoding error:', error);
+          }
+        } else {
+          this.postData['postdescription'] = content;
+        }
+      } else {
+        this.postData['postdescription'] = content;
+      }
+    } else {
+      this.postData['postdescription'] = content;
+    }
+  }
 }
