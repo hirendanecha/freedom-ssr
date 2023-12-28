@@ -284,7 +284,7 @@ export class PostCardComponent implements OnInit {
           this.commentData['id'] = res?.id;
           this.commentData.parentCommentId = res?.parentCommentId;
           this.commentData['file'] = res?.file;
-          this.commentData['imageUrl'] = res?.url;
+          this.commentData['imageUrl'] = res?.imageUrl;
           this.uploadCommentFileAndAddComment();
         }
       });
