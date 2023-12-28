@@ -174,7 +174,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
@@ -514,10 +514,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.toastService.success(res.message);
                 // this.getCommunityDetailsBySlug();
                 this.router.navigate([
-                  `${
-                    this.communityDetails.pageType === 'community'
-                      ? 'communities'
-                      : 'pages'
+                  `${this.communityDetails.pageType === 'community'
+                    ? 'communities'
+                    : 'pages'
                   }`,
                 ]);
               }
@@ -605,7 +604,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         const bytes = copyImage.length;
         const megabytes = bytes / (1024 * 1024);
         if (megabytes > 1) {
-          this.postData['postdescription'] = content.replace(copyImage, '');
+          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">'
+          this.postData['postdescription'] = `<div>${content.replace(copyImage, '').replace(/\<br\>/ig, '').replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+          // this.postData['postdescription'] =  content.replace(copyImage, '').replace(new RegExp(copyImageTag, 'g'), '');
+          // this.postData['postdescription'] = contentContainer.innerText;
+          // this.postData['postdescription'] = content.replace(copyImage, '');
           const base64Image = copyImage
             .trim()
             .replace(/^data:image\/\w+;base64,/, '');

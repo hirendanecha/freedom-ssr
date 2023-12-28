@@ -788,7 +788,9 @@ export class PostCardComponent implements OnInit {
         const bytes = copyImage.length;
         const megabytes = bytes / (1024 * 1024);
         if (megabytes > 1) {
-          this.commentData.comment = content.replace(copyImage, '');
+          // this.commentData.comment = content.replace(copyImage, '');
+          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">'
+          this.commentData.comment = `<div>${content.replace(copyImage, '').replace(/\<br\>/ig, '').replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
           const base64Image = copyImage
             .trim()
             .replace(/^data:image\/\w+;base64,/, '');

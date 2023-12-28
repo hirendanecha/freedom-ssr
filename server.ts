@@ -9,7 +9,7 @@ import fetch from 'node-fetch';
 import { AppServerModule } from './src/main.server';
 import 'localstorage-polyfill';
 import 'reflect-metadata';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 
 // SEO
 // const url = 'https://freedom-api.opash.in';
