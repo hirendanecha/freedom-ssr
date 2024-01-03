@@ -15,6 +15,7 @@ import { CustomerService } from '../../services/customer.service';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { PostService } from '../../services/post.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-tag-user-input',
@@ -74,7 +75,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     private renderer: Renderer2,
     private customerService: CustomerService,
     private postService: PostService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private socketService: SocketService
   ) {
     this.metaDataSubject.pipe(debounceTime(10)).subscribe(() => {
       this.getMetaDataFromUrlStr();
@@ -164,52 +166,86 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     // console.log(url, matches);
     if (url) {
       if (url !== this.metaData?.url) {
-        // this.spinner.show();
+        //   // this.spinner.show();
         this.isMetaLoader = true;
-        this.ngUnsubscribe.next();
-        this.postService
-          .getMetaData({ url })
-          .pipe(takeUntil(this.ngUnsubscribe))
-          .subscribe({
-            next: (res: any) => {
-              this.isMetaLoader = false;
-              if (res?.meta?.image) {
-                const urls = res.meta?.image?.url;
-                const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+        //   this.ngUnsubscribe.next();
+        //   this.postService
+        //     .getMetaData({ url })
+        //     .pipe(takeUntil(this.ngUnsubscribe))
+        //     .subscribe({
+        //       next: (res: any) => {
+        //         this.isMetaLoader = false;
+        //         if (res?.meta?.image) {
+        //           const urls = res.meta?.image?.url;
+        //           const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
 
-                const metatitles = res?.meta?.title;
-                const metatitle = Array.isArray(metatitles)
-                  ? metatitles?.[0]
-                  : metatitles;
+        //           const metatitles = res?.meta?.title;
+        //           const metatitle = Array.isArray(metatitles)
+        //             ? metatitles?.[0]
+        //             : metatitles;
 
-                const metaurls = res?.meta?.url || url;
-                const metaursl = Array.isArray(metaurls)
-                  ? metaurls?.[0]
-                  : metaurls;
+        //           const metaurls = res?.meta?.url || url;
+        //           const metaursl = Array.isArray(metaurls)
+        //             ? metaurls?.[0]
+        //             : metaurls;
 
-                this.metaData = {
-                  title: metatitle,
-                  metadescription: res?.meta?.description,
-                  metaimage: imgUrl,
-                  metalink: metaursl,
-                  url: url,
-                };
+        //           this.metaData = {
+        //             title: metatitle,
+        //             metadescription: res?.meta?.description,
+        //             metaimage: imgUrl,
+        //             metalink: metaursl,
+        //             url: url,
+        //           };
 
-                this.emitChangeEvent();
-              } else {
-                this.metaData.metalink = url
-              }
-              this.spinner.hide();
-            },
-            error: () => {
+        //           this.emitChangeEvent();
+        //         } else {
+        //           this.metaData.metalink = url
+        //         }
+        //         this.spinner.hide();
+        //       },
+        //       error: () => {
+        //         this.metaData.metalink = url
+        //         this.isMetaLoader = false;
+        //         // this.clearMetaData();
+        //         this.spinner.hide();
+        //       },
+        //     });
+        this.socketService.getMeta({ url: url });
+        if (this.socketService.socket.connect()) {
+          this.socketService.socket.on('get-meta', (data: any) => {
+            this.isMetaLoader = false;
+            console.log('meta-data', data);
+            this.isMetaLoader = false;
+            if (data?.image) {
+              const urls = data.image?.url;
+              const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+
+              const metatitles = data?.title;
+              const metatitle = Array.isArray(metatitles)
+                ? metatitles?.[0]
+                : metatitles;
+
+              const metaurls = data?.url || url;
+              const metaursl = Array.isArray(metaurls)
+                ? metaurls?.[0]
+                : metaurls;
+
+              this.metaData = {
+                title: metatitle,
+                metadescription: data?.description,
+                metaimage: imgUrl,
+                metalink: metaursl,
+                url: url,
+              };
+
+              this.emitChangeEvent();
+            } else {
               this.metaData.metalink = url
-              this.isMetaLoader = false;
-              // this.clearMetaData();
-              this.spinner.hide();
-            },
-          });
+            }
+          })
         }
-      } else {
+      }
+    } else {
       this.clearMetaData();
       this.isMetaLoader = false;
     }
@@ -234,8 +270,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     const htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
     const text = htmlText.replace(
       `@${this.userNameSearch}`,
-      `<a href="/settings/view-profile/${
-        user?.Id
+      `<a href="/settings/view-profile/${user?.Id
       }" class="text-danger" data-id="${user?.Id}">@${user?.Username.split(
         ' '
       ).join('')}</a>`
