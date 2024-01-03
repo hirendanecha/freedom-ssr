@@ -107,6 +107,9 @@ export class ForgotPasswordComponent {
               this.loading = false;
             }
         });
+    } else  {
+      this.msg = 'Please enter valid email address';
+      this.type = 'danger';
     }
   }
 
