@@ -168,82 +168,82 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       if (url !== this.metaData?.url) {
         //   // this.spinner.show();
         this.isMetaLoader = true;
-        //   this.ngUnsubscribe.next();
-        //   this.postService
-        //     .getMetaData({ url })
-        //     .pipe(takeUntil(this.ngUnsubscribe))
-        //     .subscribe({
-        //       next: (res: any) => {
-        //         this.isMetaLoader = false;
-        //         if (res?.meta?.image) {
-        //           const urls = res.meta?.image?.url;
-        //           const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+        this.ngUnsubscribe.next();
+        this.postService
+          .getMetaData({ url })
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe({
+            next: (res: any) => {
+              this.isMetaLoader = false;
+              if (res?.meta?.image) {
+                const urls = res.meta?.image?.url;
+                const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
 
-        //           const metatitles = res?.meta?.title;
-        //           const metatitle = Array.isArray(metatitles)
-        //             ? metatitles?.[0]
-        //             : metatitles;
+                const metatitles = res?.meta?.title;
+                const metatitle = Array.isArray(metatitles)
+                  ? metatitles?.[0]
+                  : metatitles;
 
-        //           const metaurls = res?.meta?.url || url;
-        //           const metaursl = Array.isArray(metaurls)
-        //             ? metaurls?.[0]
-        //             : metaurls;
+                const metaurls = res?.meta?.url || url;
+                const metaursl = Array.isArray(metaurls)
+                  ? metaurls?.[0]
+                  : metaurls;
 
-        //           this.metaData = {
-        //             title: metatitle,
-        //             metadescription: res?.meta?.description,
-        //             metaimage: imgUrl,
-        //             metalink: metaursl,
-        //             url: url,
-        //           };
+                this.metaData = {
+                  title: metatitle,
+                  metadescription: res?.meta?.description,
+                  metaimage: imgUrl,
+                  metalink: metaursl,
+                  url: url,
+                };
 
-        //           this.emitChangeEvent();
-        //         } else {
-        //           this.metaData.metalink = url
-        //         }
-        //         this.spinner.hide();
-        //       },
-        //       error: () => {
-        //         this.metaData.metalink = url
-        //         this.isMetaLoader = false;
-        //         // this.clearMetaData();
-        //         this.spinner.hide();
-        //       },
-        //     });
-        this.socketService.getMeta({ url: url });
-        if (this.socketService.socket.connect()) {
-          this.socketService.socket.on('get-meta', (data: any) => {
-            this.isMetaLoader = false;
-            console.log('meta-data', data);
-            this.isMetaLoader = false;
-            if (data?.image) {
-              const urls = data.image?.url;
-              const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
-
-              const metatitles = data?.title;
-              const metatitle = Array.isArray(metatitles)
-                ? metatitles?.[0]
-                : metatitles;
-
-              const metaurls = data?.url || url;
-              const metaursl = Array.isArray(metaurls)
-                ? metaurls?.[0]
-                : metaurls;
-
-              this.metaData = {
-                title: metatitle,
-                metadescription: data?.description,
-                metaimage: imgUrl,
-                metalink: metaursl,
-                url: url,
-              };
-
-              this.emitChangeEvent();
-            } else {
+                this.emitChangeEvent();
+              } else {
+                this.metaData.metalink = url
+              }
+              this.spinner.hide();
+            },
+            error: () => {
               this.metaData.metalink = url
-            }
-          })
-        }
+              this.isMetaLoader = false;
+              // this.clearMetaData();
+              this.spinner.hide();
+            },
+          });
+        // this.socketService.getMeta({ url: url });
+        // if (this.socketService.socket.connect()) {
+        //   this.socketService.socket.on('get-meta', (data: any) => {
+        //     this.isMetaLoader = false;
+        //     console.log('meta-data', data);
+        //     this.isMetaLoader = false;
+        //     if (data?.image) {
+        //       const urls = data.image?.url;
+        //       const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+
+        //       const metatitles = data?.title;
+        //       const metatitle = Array.isArray(metatitles)
+        //         ? metatitles?.[0]
+        //         : metatitles;
+
+        //       const metaurls = data?.url || url;
+        //       const metaursl = Array.isArray(metaurls)
+        //         ? metaurls?.[0]
+        //         : metaurls;
+
+        //       this.metaData = {
+        //         title: metatitle,
+        //         metadescription: data?.description,
+        //         metaimage: imgUrl,
+        //         metalink: metaursl,
+        //         url: url,
+        //       };
+
+        //       this.emitChangeEvent();
+        //     } else {
+        //       this.metaData.metalink = url
+        //     }
+        //   })
+        // }
       }
     } else {
       this.clearMetaData();
