@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-// import { MetafrenzyService } from 'ngx-metafrenzy';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Customer } from 'src/app/@shared/constant/customer';
 import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
@@ -17,11 +16,9 @@ import { environment } from 'src/environments/environment';
   selector: 'app-view-profile',
   templateUrl: './view-profile.component.html',
   styleUrls: ['./view-profile.component.scss'],
-  // providers: [MetafrenzyService]
 })
 export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   customer: any = {};
-  // customer: Customer = new Customer();
   customerPostList: any = [];
   userId = '';
   profilePic: any = {};
@@ -43,7 +40,6 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     public breakpointService: BreakpointService,
     private postService: PostService,
     private seoService: SeoService,
-    // private metafrenzyService: MetafrenzyService
   ) {
     this.router.events.subscribe((event: any) => {
       const id = event?.routerEvent?.url.split('/')[3];
@@ -54,14 +50,14 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       this.profileId = +localStorage.getItem('profileId');
     });
   }
-  
+
   ngOnInit(): void {
     if (!this.tokenStorage.getToken()) {
       this.router.navigate([`/login`]);
     }
     this.modalService.close();
   }
-  
+
 
   ngAfterViewInit(): void { }
 
@@ -79,20 +75,6 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
             description: '',
             image: this.customer?.ProfilePicName,
           };
-          // this.metafrenzyService.setTitle(data.title);
-          // this.metafrenzyService.setMetaTag('og:title', data.title);
-          // this.metafrenzyService.setMetaTag('og:description', data.description);
-          // this.metafrenzyService.setMetaTag('og:url', data.url);
-          // this.metafrenzyService.setMetaTag('og:image', data.image);
-          // this.metafrenzyService.setMetaTag("og:site_name", 'Freedom.Buzz');
-          // this.metafrenzyService.setOpenGraph({
-          //   title: data.title,
-          //   //description: post.postToProfileIdName === '' ? post.profileName: post.postToProfileIdName,
-          //   description: data.description,
-          //   url: data.url,
-          //   image: data.image,
-          //   site_name: 'Freedom.Buzz'
-          // });
           this.seoService.updateSeoMetaData(data);
         }
       },
