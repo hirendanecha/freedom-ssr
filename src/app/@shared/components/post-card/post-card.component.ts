@@ -124,7 +124,6 @@ export class PostCardComponent implements OnInit {
     public breakpointService: BreakpointService,
     public activeModal: NgbActiveModal
   ) {
-    this.router
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
 
