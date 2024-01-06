@@ -80,6 +80,7 @@ export class PostCardComponent implements OnInit {
   commentDescriptionimageUrl: string;
   replayCommentDescriptionimageUrl: string;
   shareButton = false;
+  isViewProfile = false;
 
   emojiPaths = [
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
@@ -123,6 +124,7 @@ export class PostCardComponent implements OnInit {
     public breakpointService: BreakpointService,
     public activeModal: NgbActiveModal
   ) {
+    this.router
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
 
@@ -159,6 +161,7 @@ export class PostCardComponent implements OnInit {
     if (path === 'view-profile/:id' || path === 'post/:id') {
       this.shareButton = true;
     }
+    this.isViewProfile = path.includes('view-profile') || false;
   }
   getPostUrl(post: any) {
     // if (post.streamname) {
@@ -267,9 +270,10 @@ export class PostCardComponent implements OnInit {
   }
 
   editComment(comment): void {
-    if (comment.parentCommentId) {
+    if (comment) {
       const modalRef = this.modalService.open(ReplyCommentModalComponent, {
         centered: true,
+
       });
       modalRef.componentInstance.title = 'Edit Comment';
       modalRef.componentInstance.confirmButtonLabel = 'Comment';
@@ -282,7 +286,9 @@ export class PostCardComponent implements OnInit {
           this.commentData.postId = res?.postId;
           this.commentData.profileId = res?.profileId;
           this.commentData['id'] = res?.id;
-          this.commentData.parentCommentId = res?.parentCommentId;
+          if (res?.parentCommentId) {
+            this.commentData.parentCommentId = res?.parentCommentId;
+          }
           this.commentData['file'] = res?.file;
           this.commentData['imageUrl'] = res?.imageUrl;
           this.uploadCommentFileAndAddComment();
@@ -308,6 +314,7 @@ export class PostCardComponent implements OnInit {
   deletePost(post): void {
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
+      backdrop: 'static',
     });
     modalRef.componentInstance.title = 'Delete Post';
     modalRef.componentInstance.confirmButtonLabel = 'Delete';

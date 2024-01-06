@@ -27,6 +27,7 @@ import { AddCommunityModalComponent } from '../communities/add-community-modal/a
 import { AddFreedomPageComponent } from '../freedom-page/add-page-modal/add-page-modal.component';
 import { isPlatformBrowser } from '@angular/common';
 import { Howl } from 'howler';
+import { EditPostModalComponent } from 'src/app/@shared/modals/edit-post-modal/edit-post-modal.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -316,7 +317,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.postData?.imageUrl ||
       this.postData?.pdfUrl
     ) {
-      if (!this.postData.meta.metalink) {
+      if (!(this.postData?.meta?.metalink || this.postData?.metalink)) {
         this.postData.metalink = null;
         this.postData.title = null;
         this.postData.metaimage = null;
@@ -369,20 +370,23 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log('edit-post', post)
     if (post.posttype === 'V') {
       this.openUploadVideoModal(post);
-    } else if (post.pdfUrl) {
-      this.pdfName = post.pdfUrl.split('/')[3];
-      console.log(this.pdfName);
-      this.postData = { ...post };
-      this.postMessageInputValue = this.postData?.postdescription;
-    } else {
-      this.postData = { ...post };
-      this.postMessageInputValue = this.postData?.postdescription;
     }
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
+    //  else if (post.pdfUrl) {
+    //   this.pdfName = post.pdfUrl.split('/')[3];
+    //   console.log(this.pdfName);
+    //   this.postData = { ...post };
+    //   this.postMessageInputValue = this.postData?.postdescription;
+    // }
+    else {
+      this.openUploadEditPostModal(post);
+      // this.postData = { ...post };
+      // this.postMessageInputValue = this.postData?.postdescription;
+    }
+    // window.scroll({
+    //   top: 0,
+    //   left: 0,
+    //   behavior: 'smooth',
+    // });
   }
 
   editCommunity(data): void {
@@ -545,6 +549,24 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     modalRef.result.then((res) => {
       if (res === 'success') {
         this.socketService.socket?.on('new-post');
+      }
+    });
+  }
+
+  openUploadEditPostModal(post: any = {}): void {
+    const modalRef = this.modalService.open(EditPostModalComponent, {
+      centered: true, backdrop: 'static',
+    });
+    modalRef.componentInstance.title = `Edit Post`;
+    modalRef.componentInstance.confirmButtonLabel = `Save`
+    modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+    modalRef.componentInstance.communityId = this.communityDetails?.Id;
+    modalRef.componentInstance.data = post.id ? post : null;
+    modalRef.result.then((res) => {
+      if (res.id) {
+        this.postData = res
+        console.log(this.postData)
+        this.uploadPostFileAndCreatePost();
       }
     });
   }
