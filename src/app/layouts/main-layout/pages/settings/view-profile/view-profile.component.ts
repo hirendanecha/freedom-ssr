@@ -1,14 +1,16 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Customer } from 'src/app/@shared/constant/customer';
+import { ConfirmationModalComponent } from 'src/app/@shared/modals/confirmation-modal/confirmation-modal.component';
 import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { CommunityService } from 'src/app/@shared/services/community.service';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
+import { ToastService } from 'src/app/@shared/services/toast.service';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 import { environment } from 'src/environments/environment';
 
@@ -31,6 +33,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   pdfList: any = [];
   constructor(
     private modalService: NgbActiveModal,
+    private modal: NgbModal,
     private router: Router,
     private customerService: CustomerService,
     private spinner: NgxSpinnerService,
@@ -40,6 +43,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     public breakpointService: BreakpointService,
     private postService: PostService,
     private seoService: SeoService,
+    private toastService: ToastService
   ) {
     this.router.events.subscribe((event: any) => {
       const id = event?.routerEvent?.url.split('/')[3];
@@ -161,5 +165,34 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     // window.open(pdf);
     // pdfLink.download = "TestFile.pdf";
     pdfLink.click();
+  }
+
+  deletePost(postId): void {
+    console.log(postId);
+    
+    const modalRef = this.modal.open(ConfirmationModalComponent, {
+      centered: true,
+      backdrop: 'static',
+    });
+    modalRef.componentInstance.title = 'Delete post';
+    modalRef.componentInstance.confirmButtonLabel = 'Delete';
+    modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+    modalRef.componentInstance.message =
+      'Are you sure want to delete this post?';
+    modalRef.result.then((res) => {
+      if (res === 'success') {
+          this.postService.deletePost(postId).subscribe({
+            next: (res: any) => {
+              if (res) {
+                this.toastService.success('Post deleted successfully');
+                this.getPdfs()
+            }
+          },
+          error: (error) => {
+            console.log('error : ', error);
+          },
+        });
+      }
+    });
   }
 }
