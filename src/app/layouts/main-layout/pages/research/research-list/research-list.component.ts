@@ -251,27 +251,23 @@ export class ResearchListComponent {
   createImagePost(): void {
     const profileId = localStorage.getItem('profileId');
     if (this.selectedImgFile) {
-      this.postService
-        .uploadFile(this.selectedImgFile)
-        .subscribe({
-          next: (res: any) => {
-            if (res?.body?.url) {
-              this.postImage = res?.body?.url;
-              this.createResearch();
-            }
-          },
-        });
+      this.postService.uploadFile(this.selectedImgFile).subscribe({
+        next: (res: any) => {
+          if (res?.body?.url) {
+            this.postImage = res?.body?.url;
+            this.createResearch();
+          }
+        },
+      });
     } else if (this.selectedpdfFile) {
-      this.postService
-        .uploadFile(this.selectedpdfFile)
-        .subscribe({
-          next: (res: any) => {
-            if (res?.body?.url) {
-              this.postFile = res?.body?.url;
-              this.createResearch();
-            }
-          },
-        });
+      this.postService.uploadFile(this.selectedpdfFile).subscribe({
+        next: (res: any) => {
+          if (res?.body?.url) {
+            this.postFile = res?.body?.url;
+            this.createResearch();
+          }
+        },
+      });
     } else {
       this.createResearch();
     }
@@ -323,17 +319,22 @@ export class ResearchListComponent {
 
   resetPost(): void {
     this.researchForm.reset();
-    this.tagInputDefaultData = null;
+    this.researchForm.get('posttoprofileid').setValue('');
+    this.tagInputDefaultData = 'reset';
     this.selectedImgFile = null;
     this.selectedpdfFile = null;
+    this.postFile = null;
+    this.postImage = null;
     setTimeout(() => {
       this.tagInputDefaultData = null;
     }, 100);
-    console.log(this.tagInputDefaultData)
-    Object.keys(this.researchForm.controls).forEach(key => {
+    // console.log(this.tagInputDefaultData)
+    Object.keys(this.researchForm.controls).forEach((key) => {
       this.researchForm.get(key).setErrors(null);
     });
-    console.log(this.researchForm.value)
+    this.formIsClicked.setValue(false);
+    this.formIsSubmitted.setValue(false);
+    // console.log(this.researchForm.value);
   }
 
   onChangeTag(event) {
