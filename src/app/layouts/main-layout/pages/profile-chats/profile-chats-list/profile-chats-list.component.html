@@ -1,0 +1,275 @@
+<div class="chat-area position-relative">
+  <div class="main">
+    <div class="chat-head py-4 px-5 d-center justify-content-between">
+      <div class="d-flex gap-4 align-items-center">
+        <img
+          [src]="userChat.ProfilePicName"
+          class="rounded-circle"
+          alt="image"
+          onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+        />
+        <div class="profile-status">
+          <h5 class="m-0">
+            <a href="public-profile-post.html" class="m-0">{{
+              userChat.Username
+            }}</a>
+          </h5>
+          <span class="mdtxt">online</span>
+        </div>
+      </div>
+      <div class="d-flex gap-3 align-items-center">
+        <a
+          href="#"
+          class="nav-icon cursor"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Comming Soon!"
+          ><fa-icon [icon]="['fas', 'phone']" class="font-20-px m-1"
+        /></a>
+        <a
+          href="#"
+          class="nav-icon cursor"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Comming Soon!"
+          ><fa-icon [icon]="['fas', 'video']" class="font-20-px m-1"
+        /></a>
+      </div>
+    </div>
+
+    <!-- ui first -->
+    <ng-container *ngIf="!userChat?.createdBy">
+      <div class="d-flex flex-column align-items-center mt-5">
+        <div
+          class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6"
+          style="background-color: var(--box-1st-color); border-radius: 10px"
+        >
+          <img
+            [src]="userChat.ProfilePicName"
+            class="w-60-px h-60-px"
+            alt="image"
+            onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+          />
+          <h5>send invite to {{ userChat?.Username }} for chat</h5>
+          <div>
+            <button class="btn btn-danger mx-3">Cancel</button>
+            <button class="btn btn-primary mx-3">Invite</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ui second -->
+    <ng-container
+      *ngIf="userChat.createdBy !== profileId && userChat.isAccepted === 'N'"
+    >
+      <div class="d-flex flex-column align-items-center mt-5">
+        <div
+          class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6"
+          style="background-color: var(--box-1st-color); border-radius: 10px"
+        >
+          <img
+            [src]="userChat.ProfilePicName"
+            class="w-60-px h-60-px"
+            alt="image"
+          />
+          <h5>{{ userChat.Username }} wants to connect with you</h5>
+          <div>
+            <button class="btn btn-danger mx-3">Cancel</button>
+            <button class="btn btn-primary mx-3">Accept</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ui third -->
+    <ng-container
+      *ngIf="userChat?.createdBy === profileId && userChat.isAccepted === 'N'"
+    >
+      <div class="d-flex flex-column align-items-center mt-5">
+        <div
+          class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6"
+          style="background-color: var(--box-1st-color); border-radius: 10px"
+        >
+          <img
+            [src]="userChat.ProfilePicName"
+            class="rounded-circle w-60-px h-60-px"
+            alt="image"
+          />
+          <h5>{{ userChat.Username }} has not yet accepted the invite</h5>
+          <!-- <div>
+          <button class="btn btn-danger mx-3">Cancel</button>
+          <button class="btn btn-primary mx-3">Send</button>
+        </div> -->
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- <ul class="py-4 px-5 cus-scrollbar bottom-0 main-chat-box overflow-auto">
+            <li class="you">
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+                <div class="message">
+                    <p>Hello! Have you seen my backpack anywhere in office?</p>
+                    <span class="mdtxt">10:42</span>
+                </div>
+            </li>
+            <li class="me">
+                <div class="message">
+                    <p>No, There is no backpack in office.</p>
+                    <span class="mdtxt">10:43</span>
+                </div>
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+            </li>
+            <li class="me">
+                <div class="message">
+                    <p>Thank you for work, see you!</p>
+                    <span class="mdtxt">10:43</span>
+                </div>
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+            </li>
+            <li class="you">
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+                <div class="message">
+                    <p>It is a long established fact that a reader will be distracted by the readable content of a page
+                        when looking at its layout.</p>
+                    <span class="mdtxt">10:44</span>
+                </div>
+            </li>
+            <li class="me">
+                <div class="message">
+                    <p>Many desktop publishing packages and web page editors now</p>
+                    <span class="mdtxt">10:45</span>
+                </div>
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+            </li>
+            <li class="you">
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+                <div class="message">
+                    <p>A page when looking at its layout.</p>
+                    <span class="mdtxt">10:46</span>
+                </div>
+            </li>
+            <li class="me">
+                <div class="message">
+                    <p>It was nice talking to you</p>
+                    <span class="mdtxt">10:47</span>
+                </div>
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+            </li>
+            <li class="you">
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+                <div class="message">
+                    <p>What time is it?</p>
+                    <span class="mdtxt">10:48</span>
+                </div>
+            </li>
+            <li class="me">
+                <div class="message">
+                    <p>It is 11 o'clock</p>
+                    <span class="mdtxt">11:00</span>
+                </div>
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+            </li>
+            <li class="you">
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+                <div class="message">
+                    <p>I am late</p>
+                    <span class="mdtxt">11:42</span>
+                </div>
+            </li>
+            <li class="me">
+                <div class="message">
+                    <p>I have to go now</p>
+                    <span class="mdtxt">11:45</span>
+                </div>
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+            </li>
+            <li class="you">
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+                <div class="message">
+                    <p>Are you okay?</p>
+                    <span class="mdtxt">10:48</span>
+                </div>
+            </li>
+            <li class="you">
+                <div class="entete">
+                    <img src="/assets/images/avtar/placeholder-user.png" alt="image">
+                </div>
+                <div class="message">
+                    <p>Can I help you?</p>
+                    <span class="mdtxt">10:49</span>
+                </div>
+            </li>
+        </ul> -->
+    <div class="text-end chat-footer position-absolute w-100 bottom-0">
+      <form action="#" class="py-3 pt-2 px-5">
+        <div
+          class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
+        >
+          <div class="form-content p-0 d-flex gap-2 align-items-center w-100">
+            <div class="file-input d-flex gap-1 gap-md-2">
+              <div class="file-upload">
+                <label class="file">
+                  <input type="file" />
+                  <span class="file-custom border-0 m-1 d-grid text-center">
+                    <fa-icon [icon]="['fas', 'paperclip']" class="font-20-px" />
+                  </span>
+                </label>
+              </div>
+              <div class="file-upload">
+                <label class="file">
+                  <input type="file" />
+                  <span class="file-custom border-0 m-1 d-grid text-center">
+                    <fa-icon [icon]="['fas', 'image']" class="font-20-px" />
+                  </span>
+                </label>
+              </div>
+              <div class="file-upload">
+                <label class="file">
+                  <input type="file" />
+                  <span class="file-custom border-0 m-1 d-grid text-center">
+                    <fa-icon
+                      [icon]="['fas', 'file-video']"
+                      class="font-20-px"
+                    />
+                  </span>
+                </label>
+              </div>
+            </div>
+            <input
+              class="py-2 input-area message-text"
+              placeholder="Type your message here.."
+            />
+            <div class="btn-area">
+              <button class="cmn-btn px-2 px-sm-5 px-lg-6 lh-lg">Send</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

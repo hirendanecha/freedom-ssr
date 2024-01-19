@@ -10,55 +10,85 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('./pages/home/home.module').then((m) => m.HomeModule),
+        loadChildren: () =>
+          import('./pages/home/home.module').then((m) => m.HomeModule),
         data: {
           isShowLeftSideBar: true,
-          isShowRightSideBar: true
-        }
+          isShowRightSideBar: true,
+        },
       },
       {
         path: 'communities',
-        loadChildren: () => import('./pages/communities/communities.module').then((m) => m.CommunitiesModule),
+        loadChildren: () =>
+          import('./pages/communities/communities.module').then(
+            (m) => m.CommunitiesModule
+          ),
         data: {
-          isShowLeftSideBar: true
+          isShowLeftSideBar: true,
         },
         canActivate: mapToCanActivate([AuthenticationGuard]),
       },
       {
         path: 'pages',
-        loadChildren: () => import('./pages/freedom-page/freedom-page.module').then((m) => m.FreedomPageModule),
+        loadChildren: () =>
+          import('./pages/freedom-page/freedom-page.module').then(
+            (m) => m.FreedomPageModule
+          ),
         data: {
-          isShowLeftSideBar: true
+          isShowLeftSideBar: true,
         },
         canActivate: mapToCanActivate([AuthenticationGuard]),
       },
       {
         path: 'settings',
-        loadChildren: () => import('./pages/settings/settings.module').then((m) => m.SettingsModule),
+        loadChildren: () =>
+          import('./pages/settings/settings.module').then(
+            (m) => m.SettingsModule
+          ),
         data: {
-          isShowLeftSideBar: true
+          isShowLeftSideBar: true,
         },
         canActivate: mapToCanActivate([AuthenticationGuard]),
       },
       {
         path: 'notifications',
-        loadChildren: () => import('./pages/notifications/notification.module').then((m) => m.NotificationsModule),
+        loadChildren: () =>
+          import('./pages/notifications/notification.module').then(
+            (m) => m.NotificationsModule
+          ),
         data: {
-          isShowLeftSideBar: true
+          isShowLeftSideBar: true,
         },
         canActivate: mapToCanActivate([AuthenticationGuard]),
       },
       {
         path: 'research',
-        loadChildren: () => import('./pages/research/research.module').then((m) => m.ResearchModule),
+        loadChildren: () =>
+          import('./pages/research/research.module').then(
+            (m) => m.ResearchModule
+          ),
         data: {
           isShowLeftSideBar: true,
           isShowRightSideBar: true,
-          isShowResearchLeftSideBar: true
+          isShowResearchLeftSideBar: true,
         },
         canActivate: mapToCanActivate([AuthenticationGuard]),
-      }
-    ]
+      },
+      {
+        path: 'profile-chats',
+        loadChildren: () =>
+          import('./pages/profile-chats/profile-chats.module').then(
+            (m) => m.ProfileChartsModule
+          ),
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false,
+          isShowChatListSideBar: true,
+        },
+        canActivate: mapToCanActivate([AuthenticationGuard]),
+      },
+    ],
   },
 ];
 
@@ -66,4 +96,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class MainLayoutRoutingModule { }
+export class MainLayoutRoutingModule {}
