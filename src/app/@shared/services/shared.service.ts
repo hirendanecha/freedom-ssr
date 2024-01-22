@@ -112,6 +112,7 @@ export class SharedService {
           if (res.data) {
             console.log(res.data)
             if (res.data[0]?.link1 || res.data[0]?.link2) {
+              this.advertizementLink = [];
               this.getMetaDataFromUrlStr(res.data[0]?.link1);
               this.getMetaDataFromUrlStr(res.data[0]?.link2);
             }
