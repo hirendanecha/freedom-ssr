@@ -64,7 +64,9 @@ export class ProfileChatsListComponent
     }
     this.socketService.socket.on('new-message', (data) => {
       console.log('new-message', data);
-      this.messageList.push(data);
+      if (this.userChat?.roomId === data?.roomId) {
+        this.messageList.push(data);
+      }
     });
     this.newRoomCreated.emit(true);
   }
