@@ -26,8 +26,7 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
   styleUrls: ['./profile-chats-list.component.scss'],
 })
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked
-{
+  implements AfterViewInit, OnChanges, AfterViewChecked {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -155,7 +154,7 @@ export class ProfileChatsListComponent
           });
         }
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
@@ -167,7 +166,7 @@ export class ProfileChatsListComponent
     try {
       this.myScrollContainer.nativeElement.scrollTop =
         this.myScrollContainer.nativeElement.scrollHeight;
-    } catch (err) {}
+    } catch (err) { }
   }
 
   onPostFileSelect(event: any): void {
@@ -228,8 +227,8 @@ export class ProfileChatsListComponent
     this.selectedFile = null;
   }
 
-  displayLocalTime(utcDateTime: string, offsetHours: number = 5.5): string {
-    const localTime = moment.utc(utcDateTime).local().add(offsetHours, 'hours');
+  displayLocalTime(utcDateTime: string): string {
+    const localTime = moment.utc(utcDateTime).local();
     return localTime.format('h:mm A');
   }
 
