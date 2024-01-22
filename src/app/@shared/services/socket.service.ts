@@ -9,9 +9,7 @@ import { environment } from 'src/environments/environment';
 export class SocketService {
   public socket: any;
 
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
       this.socket = io(environment.socketUrl, {
         reconnectionDelay: 100,
@@ -19,7 +17,8 @@ export class SocketService {
         // reconnection: true,
         randomizationFactor: 0.2,
         // timeout: 120000,
-        reconnectionAttempts: 50000, transports: ["websocket"]
+        reconnectionAttempts: 50000,
+        transports: ['websocket'],
       });
     }
   }
@@ -36,7 +35,6 @@ export class SocketService {
       this.socket?.connect();
       this.socket?.emit('create-new-post', params);
     }
-
   }
 
   editPost(params, callback: (post: any) => void) {
@@ -82,5 +80,27 @@ export class SocketService {
 
   getMeta(params) {
     this.socket?.emit('get-meta', params);
+  }
+
+  // socket for chat
+
+  getChatList(params, callback: (data: any) => void) {
+    this.socket.emit('get-chat-list', params, callback);
+  }
+
+  createChatRoom(params, callback: (data: any) => void) {
+    this.socket.emit('create-room', params, callback);
+  }
+
+  acceptRoom(params, callback: (data: any) => void) {
+    this.socket.emit('accept-room', params, callback);
+  }
+
+  sendMessage(params, callback: (data: any) => void) {
+    this.socket.emit('send-message', params, callback);
+  }
+
+  readMessage(params, callback: (data: any) => void) {
+    this.socket.emit('read-message', params, callback);
   }
 }
