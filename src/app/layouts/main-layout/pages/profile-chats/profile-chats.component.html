@@ -1,16 +1,29 @@
 <div class="row">
-  <div class="col-xxl-3 col-xl-4 col-lg-4 pe-0 m-0 p-0  d-none d-lg-block">
-    <app-profile-chats-sidebar (onNewChat)="onChatPost($event)"></app-profile-chats-sidebar>
+  <div class="col-xxl-3 col-xl-4 col-lg-4 pe-0 m-0 p-0 d-none d-lg-block">
+    <app-profile-chats-sidebar
+      (onNewChat)="onChatPost($event)"
+      [isRoomCreated]="isRoomCreated"
+    ></app-profile-chats-sidebar>
   </div>
-  <div class="col-xxl-9 col-xl-8 col-lg-8 m-lg-0 p-lg-0 mx-md-0 px-md-0 mx-sm-3 px-sm-3">
+  <div
+    class="col-xxl-9 col-xl-8 col-lg-8 m-lg-0 p-lg-0 mx-md-0 px-md-0 mx-sm-3 px-sm-3 bg-color"
+  >
     <div class="d-block d-lg-none">
-      <button class="button profile-active mb-4 mb-lg-0 d-flex align-items-center gap-2">
-        <fa-icon [icon]="['fas', 'sliders']" class="font-20-px" (click)="openChatListidebar()" />
+      <button
+        class="button profile-active mb-4 mb-lg-0 d-flex align-items-center gap-2" (click)="openChatListidebar()"
+      >
+        <fa-icon
+          [icon]="['fas', 'sliders']"
+          class="font-20-px"          
+        />
         <span>Chat List</span>
       </button>
     </div>
     <ng-container *ngIf="userChat">
-      <app-profile-chats-list [userChat]="userChat"></app-profile-chats-list>
+      <app-profile-chats-list
+        [userChat]="userChat"
+        (newRoomCreated)="onNewChatRoom($event)"
+      ></app-profile-chats-list>
     </ng-container>
   </div>
 </div>

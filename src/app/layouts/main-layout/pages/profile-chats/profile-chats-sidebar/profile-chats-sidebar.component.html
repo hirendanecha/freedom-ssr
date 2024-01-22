@@ -49,7 +49,10 @@
       </div>
       <ng-container *ngIf="searchText">
         <div #userSearchDropdownRef ngbDropdown>
-          <div ngbDropdownMenu class="search-user-list w-100 h-300-px overflow-x-hidden overflow-y-auto">
+          <div
+            ngbDropdownMenu
+            class="search-user-list w-100 h-300-px overflow-x-hidden overflow-y-auto"
+          >
             <ng-container *ngFor="let user of userList">
               <div
                 ngbDropdownItem
@@ -64,7 +67,9 @@
                   [alt]="user.Username"
                   onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                 />
-                <span class="overflow-hidden text-truncate">{{ user.Username.split(" ").join("") }}</span>
+                <span class="overflow-hidden text-truncate">{{
+                  user.Username.split(" ").join("")
+                }}</span>
               </div>
             </ng-container>
           </div>
@@ -72,12 +77,12 @@
       </ng-container>
     </div>
     <div class="header-menu cus-scrollbar overflow-auto">
-      <div class="single-item messages-area">
+      <div class="single-item messages-area" *ngFor="let item of chatList">
         <div
           class="text-start d-flex justify-content-between chat-single p-5"
-          *ngFor="let item of chatList"
+          (click)="onChat(item)"
         >
-          <div class="d-flex gap-2" (click)="onChat(item)">
+          <div class="d-flex gap-2">
             <div class="avatar">
               <img
                 class="avatar-img max-un"
@@ -85,37 +90,43 @@
                 alt="avatar"
               />
             </div>
-            <div class="text-area">
+            <div class="text-area d-flex justify-content-between w-200-px">
               <div class="title-area position-relative d-inline-flex">
                 <h6 class="m-0 d-inline-flex">
                   {{ item.Username || item.FirstName }}
                 </h6>
-                <!-- <span class="abs-area position-absolute d-center mdtxt">3</span> -->
+              </div>
+              <div>
+                <span
+                  class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  *ngIf="item?.unReadMessage > 0"
+                  >{{ item?.unReadMessage }}</span
+                >
               </div>
               <!-- <p class="mdtxt sms">{{ item.text }}</p> -->
             </div>
           </div>
-          <div class="btn-group cus-dropdown d-flex gap-3">
+          <!-- <div class="btn-group cus-dropdown d-flex gap-3">
             <div ngbDropdown class="d-inline-block">
               <button class="dropdown-btn" ngbDropdownToggle>
                 <fa-icon [icon]="['fas', 'ellipsis-h']" class="font-20-px" />
               </button>
-              <!-- <div ngbDropdownMenu class="dropdown-menu">
-                                <button ngbDropdownItem>
-                                    <a class="droplist d-flex align-items-center gap-2" href="#">
-                                        <fa-icon [icon]="['fas', 'user-minus']" />
-                                        <span>Unfollow</span>
-                                    </a>
-                                </button>
-                                <button ngbDropdownItem>
-                                    <a class="droplist d-flex align-items-center gap-2" href="#">
-                                        <fa-icon [icon]="['fas', 'ban']" />
-                                        <span>Hide Contact</span>
-                                    </a>
-                                </button>
-                            </div> -->
+              <div ngbDropdownMenu class="dropdown-menu">
+                <button ngbDropdownItem>
+                  <a class="droplist d-flex align-items-center gap-2" href="#">
+                    <fa-icon [icon]="['fas', 'user-minus']" />
+                    <span>Unfollow</span>
+                  </a>
+                </button>
+                <button ngbDropdownItem>
+                  <a class="droplist d-flex align-items-center gap-2" href="#">
+                    <fa-icon [icon]="['fas', 'ban']" />
+                    <span>Hide Contact</span>
+                  </a>
+                </button>
+              </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

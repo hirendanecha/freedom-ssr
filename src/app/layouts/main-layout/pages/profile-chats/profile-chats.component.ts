@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { CommunityService } from 'src/app/@shared/services/community.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ProfileChatsSidebarComponent } from './profile-chats-sidebar/profile-chats-sidebar.component';
+import { MessageService } from 'src/app/@shared/services/message.service';
 
 @Component({
   selector: 'app-freedom-page',
@@ -16,10 +17,12 @@ export class ProfileChartsComponent {
   pageList = [];
   profileId: number;
   isPageLoader: boolean = false;
+  isRoomCreated: boolean = false;
 
   mobileMenuToggle: boolean = false;
 
   userChat: any = {};
+  messageList: any = [];
 
   sidebar: any = {
     isShowLeftSideBar: true,
@@ -36,7 +39,8 @@ export class ProfileChartsComponent {
     private seoService: SeoService,
     private renderer: Renderer2,
     private el: ElementRef,
-    private offcanvasService: NgbOffcanvas
+    private offcanvasService: NgbOffcanvas,
+    private messageService: MessageService
   ) {
     // this.profileId = Number(localStorage.getItem('profileId'));
     // this.getPages();
@@ -58,9 +62,13 @@ export class ProfileChartsComponent {
   }
 
   onChatPost(userName: any) {
-    console.log('userName  : ', userName);
     this.userChat = userName;
   }
+
+  onNewChatRoom(isRoomCreated): void {
+    this.isRoomCreated = isRoomCreated;
+  }
+
   // createCommunity() {
   //   const modalRef = this.modalService.open(AddFreedomPageComponent, {
   //     centered: true,
@@ -119,10 +127,14 @@ export class ProfileChartsComponent {
   //   this.router.navigate(['/communities-post']);
   // }
 
+  // openChatListidebar() {
+  //   this.offcanvasService.open(ProfileChatsSidebarComponent, this.userChat);
+  // }
+
   openChatListidebar() {
-    this.offcanvasService.open(ProfileChatsSidebarComponent, {
-      position: 'start',
-      panelClass: 'w-300-px',
+    const offcanvasRef = this.offcanvasService.open(ProfileChatsSidebarComponent, this.userChat);
+    offcanvasRef.componentInstance.onNewChat.subscribe((emittedData: any) => {
+      this.onChatPost(emittedData)
     });
   }
 }

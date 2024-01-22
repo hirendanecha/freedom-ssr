@@ -92,4 +92,15 @@ export class SocketService {
     this.socket.emit('create-room', params, callback);
   }
 
+  acceptRoom(params, callback: (data: any) => void) {
+    this.socket.emit('accept-room', params, callback);
+  }
+
+  sendMessage(params, callback: (data: any) => void) {
+    this.socket.emit('send-message', params, callback);
+  }
+
+  readMessage(params, callback: (data: any) => void) {
+    this.socket.emit('read-message', params, callback);
+  }
 }

@@ -3,7 +3,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -12,97 +14,21 @@ import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { ProfileService } from 'src/app/@shared/services/profile.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import {
+  NgbActiveOffcanvas,
   NgbDropdown,
   NgbModal,
   NgbOffcanvas,
 } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
+import { MessageService } from 'src/app/@shared/services/message.service';
 
 @Component({
   selector: 'app-profile-chats-sidebar',
   templateUrl: './profile-chats-sidebar.component.html',
   styleUrls: ['./profile-chats-sidebar.component.scss'],
 })
-export class ProfileChatsSidebarComponent implements AfterViewInit {
-  // userSider = [
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Piter Maio',
-  //     text: 'Amet minim mollit non....',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Annette Black',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Ralph Edwards',
-  //     text: 'Amet minim mollit non....',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Darrell Steward',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Wade Warren',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Kathryn Murphy',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Jacob Jones',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Darrell Steward',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Wade Warren',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Kathryn Murphy',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Piter Maio',
-  //     text: 'Amet minim mollit non....',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Annette Black',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Ralph Edwards',
-  //     text: 'Amet minim mollit non....',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Darrell Steward',
-  //     text: 'You: consequat sunt',
-  //   },
-  //   {
-  //     img: '/assets/images/avtar/placeholder-user.png',
-  //     name: 'Wade Warren',
-  //     text: 'You: consequat sunt',
-  //   },
-  // ];
-
+export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   chatList: any = [];
 
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
@@ -112,15 +38,15 @@ export class ProfileChatsSidebarComponent implements AfterViewInit {
   profileId: number;
 
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
-
+  @Input('isRoomCreated') isRoomCreated: boolean = false;
   constructor(
     private customerService: CustomerService,
     private socketService: SocketService,
-    public sharedService: SharedService
+    public sharedService: SharedService,
+    private activeOffcanvas: NgbActiveOffcanvas
   ) {
-    this.getUserList();
+    // this.getUserList();
     this.profileId = +localStorage.getItem('profileId');
-    // this.getChatList();
   }
 
   ngAfterViewInit(): void {
@@ -129,6 +55,16 @@ export class ProfileChatsSidebarComponent implements AfterViewInit {
     }
     this.socketService.socket?.emit('join', { room: this.profileId });
     this.getChatList();
+    if (this.isRoomCreated) {
+      this.getChatList();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('on chan', this.isRoomCreated);
+    if (this.isRoomCreated) {
+      this.getChatList();
+    }
   }
 
   getUserList(): void {
@@ -156,11 +92,9 @@ export class ProfileChatsSidebarComponent implements AfterViewInit {
     });
   }
 
-  onChat(userName: any) {
-    console.log('userName  : ', userName);
-    this.onNewChat?.emit(userName);
+  onChat(item: any) {
+    item.unReadMessage = 0;
+    this.onNewChat?.emit(item);
+    this.activeOffcanvas?.dismiss();
   }
-
-
- 
 }
