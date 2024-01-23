@@ -103,4 +103,12 @@ export class SocketService {
   readMessage(params, callback: (data: any) => void) {
     this.socket.emit('read-message', params, callback);
   }
+
+  editMessage(params, callback: (data: any) => void) {
+    this.socket.emit('edit-message', params, callback);
+  }
+
+  deleteMessage(params, callback: (data: any) => void) {
+    this.socket.emit('delete-message', params, callback);
+  }
 }

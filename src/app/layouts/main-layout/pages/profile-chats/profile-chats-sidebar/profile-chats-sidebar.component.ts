@@ -36,6 +36,7 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   searchText = '';
   userList: any = [];
   profileId: number;
+  selectedChatUser: any;
 
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
@@ -88,12 +89,13 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
 
   getChatList(): void {
     this.socketService.getChatList({ profileId: this.profileId }, (data) => {
-      console.log(data);
+      console.log("getChatList  : ", data);
       this.chatList = data;
     });
   }
 
   onChat(item: any) {
+    this.selectedChatUser = item;
     console.log(item);
     item.unReadMessage = 0;
     this.onNewChat?.emit(item);

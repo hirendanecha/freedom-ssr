@@ -38,8 +38,7 @@
       </div>
     </div>
 
-    <div class="chat-content position-relative" #scrollMe>
-      <!-- [scrollTop]="scrollMe?.scrollHeight" -->
+    <div class="chat-content position-relative" #chatContent>
       <!-- ui first -->
       <ng-container
         *ngIf="
@@ -87,7 +86,9 @@
             />
             <h5>{{ userChat.Username }} wants to connect with you</h5>
             <div>
-              <button class="btn btn-danger mx-3" (click)="onCancel()">Cancel</button>
+              <button class="btn btn-danger mx-3" (click)="onCancel()">
+                Cancel
+              </button>
               <button class="btn btn-primary mx-3" (click)="acceptRoom()">
                 Accept
               </button>
@@ -124,19 +125,42 @@
           class="py-4 px-5 cus-scrollbar bottom-0 main-chat-box"
           *ngFor="let message of messageList"
         >
-          <li class="you" *ngIf="message.sentBy !== this.profileId">
+          <li class="you" *ngIf="message?.sentBy !== this.profileId">
             <!-- <div class="entete">
             <img [src]="userChat.ProfilePicName" alt="image" />
           </div> -->
             <div
               class="message"
-              [title]="displayLocalTime(message.createdDate)"
+              [title]="displayLocalTime(message?.createdDate)"
             >
-              <ng-container *ngIf="message.messageMedia; else msgText">
+            <!-- <div class="btn-group d-flex gap-3">
+              <div ngbDropdown class="d-inline-block">
+                <button class="dropdown-btn" ngbDropdownToggle>
+                  <fa-icon [icon]="['fas', 'ellipsis-h']" class="font-20-px" />
+                </button>
+                <div ngbDropdownMenu class="dropdown-menu">
+                  <button ngbDropdownItem (click)="editMsg(message)">
+                    <a class="droplist d-flex align-items-center gap-2">
+                      <fa-icon [icon]="['fas', 'pen-to-square']" />
+                      <span>Edit</span>
+                    </a>
+                  </button>
+                  <button ngbDropdownItem (click)="deleteMsg(message)">
+                    <a class="droplist d-flex align-items-center gap-2">
+                      <fa-icon [icon]="['fas', 'trash-can']" />
+                      <span>Delete</span>
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div> -->
+
+
+              <ng-container *ngIf="message?.messageMedia; else msgText">
                 <ng-container
-                  *ngIf="isPdf(message.messageMedia); else imageMsg"
+                  *ngIf="isPdf(message?.messageMedia); else imageMsg"
                 >
-                  <div (click)="pdfView(message.messageMedia)">
+                  <div (click)="pdfView(message?.messageMedia)">
                     <fa-icon
                       [icon]="['fas', 'file-pdf']"
                       class="c-pointer close-icon font-44-px"
@@ -147,31 +171,64 @@
                   </div>
                 </ng-container>
                 <ng-template #imageMsg>
-                  <app-img-preview
-                    class="msgImage"
-                    classes="h-180-px"
-                    [src]="message.messageMedia"
-                  />
+                  <ng-container
+                    *ngIf="isGif(message?.messageMedia); else notGif"
+                  >
+                    <img
+                      data-src="{{ message?.messageMedia }}"
+                      loading="eager"
+                      class="emoji-style h-60-px"
+                      alt="Emoji"
+                      draggable="false"
+                    />
+                  </ng-container>
+                  <ng-template #notGif>
+                    <app-img-preview
+                      class="msgImage"
+                      classes="h-180-px"
+                      [src]="message?.messageMedia"
+                    ></app-img-preview>
+                  </ng-template>
                 </ng-template>
               </ng-container>
               <ng-template #msgText>
-                <p class="m-0">{{ message.messageText }}</p>
+                <p class="m-0">{{ message?.messageText }}</p>
               </ng-template>
               <!-- <span class="mdtxt">{{
                 message.createdDate | date : "h:mm a"
               }}</span> -->
             </div>
           </li>
-          <li class="me" *ngIf="message.sentBy === this.profileId">
+          <li class="me" *ngIf="message?.sentBy === this.profileId">
             <div
               class="message"
-              [title]="displayLocalTime(message.createdDate)"
+              [title]="displayLocalTime(message?.createdDate)"
+              (click)="editPopup.toggle()"
             >
-              <ng-container *ngIf="message.messageMedia; else msgText">
+            <div class="btn-group d-flex gap-3">
+              <div ngbDropdown placement="bottom-start" class="d-inline-block" #editPopup="ngbDropdown">
+                <!-- <button class="dropdown-btn" #editPopup ngbDropdownToggle></button> -->
+                <div ngbDropdownMenu class="dropdown-menu">
+                  <button ngbDropdownItem (click)="editMsg(message)">
+                    <a class="droplist d-flex align-items-center gap-2">
+                      <fa-icon [icon]="['fas', 'pen-to-square']" />
+                      <span>Edit</span>
+                    </a>
+                  </button>
+                  <button ngbDropdownItem (click)="deleteMsg(message)">
+                    <a class="droplist d-flex align-items-center gap-2">
+                      <fa-icon [icon]="['fas', 'trash-can']" />
+                      <span>Delete</span>
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+              <ng-container *ngIf="message?.messageMedia; else msgText">
                 <ng-container
-                  *ngIf="isPdf(message.messageMedia); else imageMsg"
+                  *ngIf="isPdf(message?.messageMedia); else imageMsg"
                 >
-                  <div (click)="pdfView(message.messageMedia)">
+                  <div (click)="pdfView(message?.messageMedia)">
                     <fa-icon
                       [icon]="['fas', 'file-pdf']"
                       class="c-pointer close-icon font-44-px"
@@ -182,15 +239,28 @@
                   </div>
                 </ng-container>
                 <ng-template #imageMsg>
-                  <app-img-preview
-                    class="msgImage"
-                    classes="h-180-px"
-                    [src]="message.messageMedia"
-                  />
+                  <ng-container
+                    *ngIf="isGif(message?.messageMedia); else notGif"
+                  >
+                    <img
+                      data-src="{{ message?.messageMedia }}"
+                      loading="eager"
+                      class="emoji-style h-60-px"
+                      alt="Emoji"
+                      draggable="false"
+                    />
+                  </ng-container>
+                  <ng-template #notGif>
+                    <app-img-preview
+                      class="msgImage"
+                      classes="h-180-px"
+                      [src]="message?.messageMedia"
+                    ></app-img-preview>
+                  </ng-template>
                 </ng-template>
               </ng-container>
               <ng-template #msgText>
-                <p class="m-0">{{ message.messageText }}</p>
+                <p class="m-0">{{ message?.messageText }}</p>
               </ng-template>
               <!-- {{ message.createdDate | date : "h:mm a"}} -->
               <!-- {{displayLocalTime(message.createdDate)}} -->
@@ -232,7 +302,7 @@
     </div>
 
     <div
-      class="text-end chat-footer position-absolute w-100 top-100 px-6 bg-color"
+      class="text-end chat-footer position-absolute w-100 px-6 bg-color"
       *ngIf="userChat.isAccepted === 'Y'"
     >
       <ng-container *ngIf="viewUrl && !pdfName">
@@ -308,7 +378,41 @@
                 </label>
               </div>
               <div class="file-upload">
-                <label class="file">
+                <div ngbDropdown placement="top-start" class="select-emaojies">
+                  <button
+                    type="button"
+                    id="emojiModel"
+                    ngbDropdownToggle
+                    title="Emojis"
+                  >
+                    <img
+                      src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif"
+                      class="emoji-select h-40-px w-40-px"
+                      alt="Emoji"
+                    />
+                  </button>
+                  <div
+                    ngbDropdownMenu
+                    aria-labelledby="emojiModel"
+                    class="emojiModelStyle"
+                  >
+                    <div class="emoji-container">
+                      <div
+                        *ngFor="let emoji of emojiPaths"
+                        (click)="selectEmoji(emoji)"
+                      >
+                        <img
+                          data-src="{{ emoji }}"
+                          loading="eager"
+                          class="emoji-style"
+                          alt="Emoji"
+                          draggable="false"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <label class="file">
                   <input
                     type="file"
                     [(ngModel)]="chatObj.msgMedia"
@@ -322,7 +426,7 @@
                       class="font-20-px"
                     />
                   </span>
-                </label>
+                </label> -->
               </div>
             </div>
             <input
@@ -331,6 +435,14 @@
               [(ngModel)]="chatObj.msgText"
               name="msg"
             />
+            <!-- <app-tag-user-input
+            placeholder="Message.."
+            [value]="messageInputValue"
+            [isShowMetaLoader]="false"
+            [isShowMetaPreview]="false"
+            [isShowEmojis]="false"
+            (onDataChange)="onTagUserInputChangeEvent($event)"
+          /> -->
             <div class="btn-area">
               <button
                 class="cmn-btn message px-2 px-sm-5 px-lg-6 lh-lg"

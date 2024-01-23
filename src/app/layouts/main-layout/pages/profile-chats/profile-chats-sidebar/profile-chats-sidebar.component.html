@@ -81,8 +81,9 @@
     <div class="header-menu cus-scrollbar overflow-auto">
       <div class="single-item messages-area" *ngFor="let item of chatList">
         <div
-          class="text-start d-flex justify-content-between chat-single p-5"
+          class="text-start d-flex justify-content-between chat-single mb-3 p-5"
           (click)="onChat(item)"
+          [ngClass]="{ 'active': item === selectedChatUser }"
         >
           <div class="d-flex gap-2">
             <div class="avatar">

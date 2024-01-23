@@ -13,4 +13,7 @@
 .bg-color {
   background: var(--section-1st-color);
   box-shadow: var(--box-shadow);
+  .chat-list-btn {
+    background-color: var(--body-color);
+  }
 }
