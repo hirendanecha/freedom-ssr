@@ -60,6 +60,13 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
     if (this.isRoomCreated) {
       this.getChatList();
     }
+    this.socketService.socket.on('accept-invitation', (data) => {
+      console.log(data);
+      if (data) {
+        this.onChat(data);
+        this.getChatList();
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

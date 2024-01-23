@@ -26,8 +26,7 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
   styleUrls: ['./profile-chats-list.component.scss'],
 })
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked
-{
+  implements AfterViewInit, OnChanges, AfterViewChecked {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -132,7 +131,7 @@ export class ProfileChatsListComponent
       },
       (data: any) => {
         console.log(data);
-        this.userChat = data;
+        // this.userChat = { ...data };
         this.newRoomCreated.emit(true);
       }
     );
@@ -210,14 +209,14 @@ export class ProfileChatsListComponent
           });
         }
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   scrollToBottom() {
-    if (this.userChat?.roomId ) {      
+    if (this.userChat?.roomId) {
       const chatContentElement = this.chatContent.nativeElement;
       chatContentElement.scrollTop = chatContentElement.scrollHeight;
     }
