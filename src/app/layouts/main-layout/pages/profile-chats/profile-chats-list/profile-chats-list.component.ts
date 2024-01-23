@@ -58,20 +58,20 @@ export class ProfileChatsListComponent
   }
 
   ngAfterViewInit(): void {
-    console.log('input', this.userChat);
     if (this.userChat?.roomId) {
       this.getMessageList();
     }
     this.socketService.socket.on('new-message', (data) => {
       console.log('new-message', data);
+      this.newRoomCreated.emit(true);
       if (this.userChat?.roomId === data?.roomId) {
         this.messageList.push(data);
       }
     });
-    this.newRoomCreated.emit(true);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('input', this.userChat);
     if (this.userChat?.roomId) {
       this.getMessageList();
     }
@@ -79,7 +79,7 @@ export class ProfileChatsListComponent
 
   // scroller down
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
   // invite btn
   createChatRoom(): void {
@@ -100,11 +100,13 @@ export class ProfileChatsListComponent
   acceptRoom(): void {
     this.socketService?.acceptRoom(
       {
-        roomId: this.userChat.roomId,
+        roomId: this.userChat?.roomId,
         profileId: this.profileId,
       },
       (data: any) => {
         console.log(data);
+        this.userChat = data;
+        this.newRoomCreated.emit(true);
       }
     );
   }
@@ -121,10 +123,10 @@ export class ProfileChatsListComponent
     console.log(data, this.chatObj);
     this.socketService.sendMessage(data, (data: any) => {
       console.log(data);
+      this.newRoomCreated?.emit(true);
       this.messageList.push(data);
       this.resetData();
     });
-    this.newRoomCreated?.emit(true);
   }
 
   // getMessages
@@ -241,5 +243,9 @@ export class ProfileChatsListComponent
 
   pdfView(pdfUrl) {
     window.open(pdfUrl);
+  }
+
+  onCancel(): void {
+    this.userChat = {}
   }
 }

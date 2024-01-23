@@ -1,13 +1,15 @@
 <div class="chat-area">
   <aside>
     <div class="chat-top p-5">
-      <div class="profile-area d-center justify-content-between">
+      <div
+        class="profile-area d-center justify-content-between align-items-baseline"
+      >
         <div class="avatar-item d-flex mb-4 gap-3 align-items-center">
           <div class="avatar-item">
             <!--  -->
             <img
               [src]="sharedService?.userData?.ProfilePicName"
-              class="w-44-px rounded max-un"
+              class="w-48-px rounded-3"
               alt="avatar"
             />
           </div>
@@ -20,20 +22,20 @@
             <button class="dropdown-btn" ngbDropdownToggle>
               <fa-icon [icon]="['fas', 'ellipsis-h']" class="font-20-px" />
             </button>
-            <!-- <div ngbDropdownMenu class="dropdown-menu">
-                            <button ngbDropdownItem>
-                                <a class="droplist d-flex align-items-center gap-2" href="#">
-                                    <fa-icon [icon]="['fas', 'user-minus']" />
-                                    <span>Unfollow</span>
-                                </a>
-                            </button>
-                            <button ngbDropdownItem>
-                                <a class="droplist d-flex align-items-center gap-2" href="#">
-                                    <fa-icon [icon]="['fas', 'ban']" />
-                                    <span>Hide Contact</span>
-                                </a>
-                            </button>
-                        </div> -->
+            <div ngbDropdownMenu class="dropdown-menu">
+              <button ngbDropdownItem (click)="goToViewProfile()">
+                <a class="droplist d-flex align-items-center gap-2">
+                  <fa-icon [icon]="['fas', 'user']" />
+                  <span>View Profile</span>
+                </a>
+              </button>
+              <!-- <button ngbDropdownItem>
+                <a class="droplist d-flex align-items-center gap-2" href="#">
+                  <fa-icon [icon]="['fas', 'ban']" />
+                  <span>Hide Contact</span>
+                </a>
+              </button> -->
+            </div>
           </div>
         </div>
       </div>
@@ -51,7 +53,7 @@
         <div #userSearchDropdownRef ngbDropdown>
           <div
             ngbDropdownMenu
-            class="search-user-list w-100 h-300-px overflow-x-hidden overflow-y-auto"
+            class="search-user-list w-100 overflow-x-hidden overflow-y-auto"
           >
             <ng-container *ngFor="let user of userList">
               <div
@@ -86,19 +88,21 @@
             <div class="avatar">
               <img
                 class="avatar-img max-un"
-                src="{{ item.ProfilePicName }}"
+                src="{{ item?.ProfilePicName }}"
                 alt="avatar"
               />
             </div>
-            <div class="text-area d-flex justify-content-between w-200-px">
+            <div
+              class="text-area d-flex justify-content-between w-200-px align-items-center"
+            >
               <div class="title-area position-relative d-inline-flex">
                 <h6 class="m-0 d-inline-flex">
-                  {{ item.Username || item.FirstName }}
+                  {{ item?.Username || item?.FirstName }}
                 </h6>
               </div>
               <div>
                 <span
-                  class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
                   *ngIf="item?.unReadMessage > 0"
                   >{{ item?.unReadMessage }}</span
                 >

@@ -21,7 +21,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
-import { MessageService } from 'src/app/@shared/services/message.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-chats-sidebar',
@@ -43,7 +43,8 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
     private customerService: CustomerService,
     private socketService: SocketService,
     public sharedService: SharedService,
-    private activeOffcanvas: NgbActiveOffcanvas
+    private activeOffcanvas: NgbActiveOffcanvas,
+    private router: Router
   ) {
     // this.getUserList();
     this.profileId = +localStorage.getItem('profileId');
@@ -72,15 +73,15 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
       next: (res: any) => {
         if (res?.data?.length > 0) {
           this.userList = res.data;
-          this.userSearchNgbDropdown.open();
+          this.userSearchNgbDropdown?.open();
         } else {
           this.userList = [];
-          this.userSearchNgbDropdown.close();
+          this.userSearchNgbDropdown?.close();
         }
       },
       error: () => {
         this.userList = [];
-        this.userSearchNgbDropdown.close();
+        this.userSearchNgbDropdown?.close();
       },
     });
   }
@@ -93,8 +94,16 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   }
 
   onChat(item: any) {
+    console.log(item);
     item.unReadMessage = 0;
     this.onNewChat?.emit(item);
     this.activeOffcanvas?.dismiss();
+    if (this.searchText) {
+      this.searchText = null;
+    }
+  }
+
+  goToViewProfile(): void {
+    this.router.navigate([`settings/view-profile/${this.profileId}`]);
   }
 }
