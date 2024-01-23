@@ -131,6 +131,7 @@ export class ProfileChatsListComponent
       },
       (data: any) => {
         console.log(data);
+        this.userChat.isAccepted = data.isAccepted;
         // this.userChat = { ...data };
         this.newRoomCreated.emit(true);
       }
