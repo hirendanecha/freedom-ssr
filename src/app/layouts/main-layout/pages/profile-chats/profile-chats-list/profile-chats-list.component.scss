@@ -8,6 +8,9 @@
       overflow-y: auto;
       max-height: calc(100vh - 350px);
       min-height: calc(100vh - 350px);
+      @media (max-width: 991px) {
+        max-height: calc(90vh - 350px) !important;
+      }
     }
     .c-pdf-show {
       overflow: hidden;
@@ -119,5 +122,11 @@
         right: -20px;
       }
     }
+  }
+}
+.chat-footer {
+  top: 100% !important;
+  @media (max-width: 991px) {
+    top: 85% !important;
   }
 }

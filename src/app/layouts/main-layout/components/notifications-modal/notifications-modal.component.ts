@@ -26,18 +26,23 @@ export class NotificationsModalComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const profileId = +localStorage.getItem('profileId');
-    this.socketService.readNotification({ profileId }, (data) => {
-    });
+    this.socketService.readNotification({ profileId }, (data) => {});
   }
 
-  readUnreadNotification(postId: string, notificationId: number): void {
-    this.customerService.readUnreadNotification(notificationId, 'Y').subscribe({
-      next: (res) => {
-        this.router.navigate([`post/${postId}`]);
-        // window.open(`post/${postId}`.toString(), '_blank')
-        this.closeModal();
-      },
-    });
+  readUnreadNotification(postId: string, notification: any = {}): void {
+    this.customerService
+      .readUnreadNotification(notification.id, 'Y')
+      .subscribe({
+        next: (res) => {
+          if (notification.actionType === 'M') {
+            this.router.navigate([`profile-chats`]);
+          } else {
+            this.router.navigate([`post/${postId}`]);
+          }
+          // window.open(`post/${postId}`.toString(), '_blank')
+          this.closeModal();
+        },
+      });
   }
 
   closeModal(): void {
