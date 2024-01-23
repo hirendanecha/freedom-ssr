@@ -26,16 +26,18 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
   styleUrls: ['./profile-chats-list.component.scss'],
 })
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked {
+  implements AfterViewInit, OnChanges, AfterViewChecked
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
-  @ViewChild('chat-content') private myScrollContainer: ElementRef;
+  @ViewChild('chatContent', { static: false }) chatContent: ElementRef;
 
   profileId: number;
   chatObj = {
     msgText: null,
     msgMedia: null,
+    id: null,
   };
   selectedFile: any;
 
@@ -44,6 +46,22 @@ export class ProfileChatsListComponent
   pdfName: string = '';
   viewUrl: string;
   pdfmsg: string;
+  messageInputValue: string;
+
+  emojiPaths = [
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cool.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Anger.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Censorship.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Hug.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Kiss.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/LOL.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Party.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Poop.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sad.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-UP.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-down.gif',
+  ];
 
   // messageList: any = [];
   constructor(
@@ -65,7 +83,14 @@ export class ProfileChatsListComponent
       console.log('new-message', data);
       this.newRoomCreated.emit(true);
       if (this.userChat?.roomId === data?.roomId) {
-        this.messageList.push(data);
+        let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
+        if (data?.isDeleted) {
+          this.messageList.splice(index);
+        } else if (this.messageList[index]) {
+          this.messageList[index] = data;
+        } else {
+          this.messageList.push(data);
+        }
       }
     });
   }
@@ -79,7 +104,9 @@ export class ProfileChatsListComponent
 
   // scroller down
   ngAfterViewChecked() {
-    // this.scrollToBottom();
+    if (this.userChat?.roomId) {
+      // this.scrollToBottom();
+    }
   }
   // invite btn
   createChatRoom(): void {
@@ -113,20 +140,45 @@ export class ProfileChatsListComponent
 
   // send btn
   sendMessage(): void {
-    const data = {
-      messageText: this.chatObj?.msgText,
-      roomId: this.userChat.roomId,
-      sentBy: this.profileId,
-      messageMedia: this.chatObj?.msgMedia,
-      profileId: this.userChat.profileId,
-    };
-    console.log(data, this.chatObj);
-    this.socketService.sendMessage(data, (data: any) => {
-      console.log(data);
-      this.newRoomCreated?.emit(true);
-      this.messageList.push(data);
-      this.resetData();
-    });
+    console.log(this.chatObj);
+    if (this.chatObj.id) {
+      const data = {
+        id: this.chatObj.id,
+        messageText: this.chatObj?.msgText,
+        roomId: this.userChat.roomId,
+        sentBy: this.profileId,
+        messageMedia: this.chatObj?.msgMedia,
+        profileId: this.userChat.profileId,
+      };
+      this.socketService?.editMessage(data, (data: any) => {
+        // this.userChat = data;
+        console.log('edit-message', data);
+        if (data) {
+          let index = this.messageList?.findIndex(
+            (obj) => obj?.id === data?.id
+          );
+          if (this.messageList[index]) {
+            this.messageList[index] = data;
+          }
+        }
+        // this.messageList[data.id] = data;
+        this.resetData();
+      });
+    } else {
+      const data = {
+        messageText: this.chatObj?.msgText,
+        roomId: this.userChat.roomId,
+        sentBy: this.profileId,
+        messageMedia: this.chatObj?.msgMedia,
+        profileId: this.userChat.profileId,
+      };
+      this.socketService.sendMessage(data, (data: any) => {
+        console.log(data);
+        this.newRoomCreated?.emit(true);
+        this.messageList.push(data);
+        this.resetData();
+      });
+    }
   }
 
   // getMessages
@@ -158,19 +210,17 @@ export class ProfileChatsListComponent
           });
         }
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
-  ngOnInit() {
-    this.scrollToBottom();
-  }
+  ngOnInit() {}
 
-  scrollToBottom(): void {
-    try {
-      this.myScrollContainer.nativeElement.scrollTop =
-        this.myScrollContainer.nativeElement.scrollHeight;
-    } catch (err) { }
+  scrollToBottom() {
+    if (this.userChat?.roomId ) {      
+      const chatContentElement = this.chatContent.nativeElement;
+      chatContentElement.scrollTop = chatContentElement.scrollHeight;
+    }
   }
 
   onPostFileSelect(event: any): void {
@@ -229,6 +279,7 @@ export class ProfileChatsListComponent
     this.viewUrl = null;
     this.pdfName = null;
     this.selectedFile = null;
+    this.messageInputValue = null;
   }
 
   displayLocalTime(utcDateTime: string): string {
@@ -246,6 +297,53 @@ export class ProfileChatsListComponent
   }
 
   onCancel(): void {
-    this.userChat = {}
+    this.userChat = {};
+  }
+
+  isGif(src: string): boolean {
+    return src.toLowerCase().endsWith('.gif');
+  }
+
+  onTagUserInputChangeEvent(data: any): void {
+    // // this.postMessageInputValue = data?.html
+    // this.extractImageUrlFromContent(data.html);
+    // // this.postData.postdescription = data?.html;
+    // this.postData.meta = data?.meta;
+    // this.postMessageTags = data?.tags;
+    console.log(data.html);
+    this.chatObj.msgText = data.html;
+  }
+
+  selectEmoji(emoji: any): void {
+    // let htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
+    // const text = `${htmlText} <img src=${emoji} width="50" height="50">`;
+    // this.setTagInputDivValue(text);
+    // this.emitChangeEvent();
+    this.chatObj.msgMedia = emoji;
+    this.sendMessage();
+  }
+
+  editMsg(msgObj): void {
+    this.chatObj['id'] = msgObj?.id;
+    this.chatObj.msgText = msgObj.messageText;
+    this.chatObj.msgMedia = msgObj.messageMedia;
+  }
+
+  deleteMsg(msg): void {
+    this.socketService?.deleteMessage(
+      {
+        roomId: msg?.roomId,
+        sentBy: msg.sentBy,
+        id: msg.id,
+        profileId: this.userChat?.profileId,
+      },
+      (data: any) => {
+        console.log(data);
+        let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
+        if (this.messageList[index]) {
+          this.messageList.splice(index);
+        }
+      }
+    );
   }
 }
