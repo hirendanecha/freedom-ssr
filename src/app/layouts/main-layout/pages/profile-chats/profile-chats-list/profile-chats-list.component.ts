@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import {
   AfterViewChecked,
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -9,11 +10,15 @@ import {
   Inject,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Subject, takeUntil } from 'rxjs';
 import { MessageService } from 'src/app/@shared/services/message.service';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
@@ -25,8 +30,10 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
   templateUrl: './profile-chats-list.component.html',
   styleUrls: ['./profile-chats-list.component.scss'],
 })
+// changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked {
+  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -41,11 +48,16 @@ export class ProfileChatsListComponent
   selectedFile: any;
 
   messageList: any = [];
+  metaURL: any = [];
+  metaData: any = [];
+  ngUnsubscribe: Subject<void> = new Subject<void>();
+  isMetaLoader: boolean = false;
 
   pdfName: string = '';
   viewUrl: string;
   pdfmsg: string;
   messageInputValue: string;
+  firstTimeScroll = false;
 
   emojiPaths = [
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
@@ -69,6 +81,7 @@ export class ProfileChatsListComponent
     private messageService: MessageService,
     private postService: PostService,
     private toastService: ToastService,
+    private spinner: NgxSpinnerService,
     @Inject(DOCUMENT) private document: any
   ) {
     this.profileId = +localStorage.getItem('profileId');
@@ -103,7 +116,8 @@ export class ProfileChatsListComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('input', this.userChat);
+    this.getMetaDataFromUrlStr();
+    // console.log('input', this.userChat);
     if (this.userChat?.roomId) {
       this.getMessageList();
       this.socketService.socket.on('get-users', (data) => {
@@ -118,10 +132,17 @@ export class ProfileChatsListComponent
 
   // scroller down
   ngAfterViewChecked() {
-    if (this.userChat?.roomId) {
-      // this.scrollToBottom();
-    }
+    // this.getMetaDataFromUrlStr();
+    // if (this.userChat?.roomId) {
+    //   this.scrollToBottom();
+    // }
   }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
   // invite btn
   createChatRoom(): void {
     this.socketService.createChatRoom(
@@ -205,7 +226,7 @@ export class ProfileChatsListComponent
     };
     this.messageService.getMessages(messageObj).subscribe({
       next: (data: any) => {
-        console.log(data);
+        this.scrollToBottom();
         this.messageList = data.data;
         const ids = [];
         this.messageList.map((e: any) => {
@@ -225,17 +246,15 @@ export class ProfileChatsListComponent
           });
         }
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   scrollToBottom() {
-    if (this.userChat?.roomId) {
-      const chatContentElement = this.chatContent.nativeElement;
-      chatContentElement.scrollTop = chatContentElement.scrollHeight;
-    }
+    this.chatContent.nativeElement.scrollTop =
+      this.chatContent.nativeElement.scrollHeight;
   }
 
   onPostFileSelect(event: any): void {
@@ -360,5 +379,75 @@ export class ProfileChatsListComponent
         }
       }
     );
+  }
+
+  getMetaData(messageUrl) {
+    const matches = messageUrl?.match(/(?:https?:\/\/|www\.)[^\s]+/g);
+    if (matches) {
+      if (!this.metaURL.includes(matches?.[0])) {
+        this.metaURL.push(matches?.[0]);
+        this.getMetaDataFromUrlStr();
+      }
+    }
+    return this.metaURL;
+  }
+
+  getMetaDataFromUrlStr(): void {
+    // const url = this.metaURL;
+    this.metaURL?.forEach((element) => {
+      let metaData: any;
+      if (element) {
+        // if (element !== this.metaData?.url) {
+        //   // this.spinner.show();
+        this.isMetaLoader = true;
+        this.ngUnsubscribe.next();
+        this.postService
+          .getMetaData({ url: element })
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe({
+            next: (res: any) => {
+              this.isMetaLoader = false;
+              if (res?.meta?.image) {
+                const urls = res.meta?.image?.url;
+                const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+
+                const metatitles = res?.meta?.title;
+                const metatitle = Array.isArray(metatitles)
+                  ? metatitles?.[0]
+                  : metatitles;
+
+                const metaurls = res?.meta?.url || element;
+                const metaursl = Array.isArray(metaurls)
+                  ? metaurls?.[0]
+                  : metaurls;
+
+                metaData = {
+                  title: metatitle,
+                  metadescription: res?.meta?.description,
+                  metaimage: imgUrl,
+                  metalink: metaursl,
+                  url: element,
+                };
+                this.metaData.push(metaData);
+                console.log(this.metaData);
+              } else {
+                metaData.metalink = element;
+                this.metaData.push(metaData);
+                console.log(this.metaData);
+              }
+              this.spinner.hide();
+            },
+            error: () => {
+              this.isMetaLoader = false;
+              metaData = {};
+              this.spinner.hide();
+            },
+          });
+        // }
+      } else {
+        this.metaData = [];
+        this.isMetaLoader = false;
+      }
+    });
   }
 }

@@ -1,7 +1,7 @@
 <div class="chat-area position-relative">
   <div class="main">
     <div
-      class="chat-head py-4 px-5 d-center justify-content-between"
+      class="chat-head py-2 px-5 d-center justify-content-between"
       *ngIf="userChat?.createdBy"
     >
       <div class="d-flex gap-4 align-items-center">
@@ -42,7 +42,11 @@
       </div>
     </div>
 
-    <div class="chat-content position-relative" #chatContent>
+    <div
+      class="chat-content position-relative"
+      #chatContent
+      [scrollTop]="chatContent.scrollHeight"
+    >
       <!-- ui first -->
       <ng-container
         *ngIf="
@@ -126,7 +130,7 @@
 
       <ng-container *ngIf="userChat.roomId && userChat.isAccepted === 'Y'">
         <ul
-          class="py-4 px-5 cus-scrollbar bottom-0 main-chat-box"
+          class="py-2 px-5 cus-scrollbar bottom-0 main-chat-box"
           *ngFor="let message of messageList"
         >
           <li class="you" *ngIf="message?.sentBy !== this.profileId">
@@ -197,6 +201,15 @@
               <ng-template #msgText>
                 <p class="m-0">{{ message?.messageText }}</p>
               </ng-template>
+              <!-- <ng-container
+                *ngIf="getMetaData(message?.messageText)"
+              >
+                <ng-container *ngFor="let meta of metaData">
+                  <div class="chat-meta">
+                    <app-post-meta-data-card [post]="meta" class="pt-2" />
+                  </div>
+                </ng-container>
+              </ng-container> -->
               <!-- <span class="mdtxt">{{
                 message.createdDate | date : "h:mm a"
               }}</span> -->
@@ -206,7 +219,7 @@
             <div
               class="message"
               [title]="displayLocalTime(message?.createdDate)"
-              (click)="editPopup.toggle()"
+              (contextmenu)="editPopup.toggle(); $event.preventDefault()"
             >
               <div class="btn-group d-flex gap-3">
                 <div
@@ -214,9 +227,14 @@
                   placement="bottom-start"
                   class="d-inline-block"
                   #editPopup="ngbDropdown"
+                  autoClose="true"
                 >
-                  <!-- <button class="dropdown-btn" #editPopup ngbDropdownToggle></button> -->
-                  <div ngbDropdownMenu class="dropdown-menu">
+                  <div
+                    ngbDropdownMenu
+                    class="dropdown-menu"
+                    (mouseleave)="editPopup.close()"
+                  >
+                    <!-- <button class="dropdown-btn" #editPopup ngbDropdownToggle></button> -->
                     <button ngbDropdownItem (click)="editMsg(message)">
                       <a class="droplist d-flex align-items-center gap-2">
                         <fa-icon [icon]="['fas', 'pen-to-square']" />
@@ -269,6 +287,15 @@
               </ng-container>
               <ng-template #msgText>
                 <p class="m-0">{{ message?.messageText }}</p>
+                <!-- <ng-container
+                  *ngIf="getMetaData(message?.messageText)"
+                >
+                  <ng-container *ngFor="let meta of metaData">
+                    <div class="chat-meta">
+                      <app-post-meta-data-card [post]="meta" class="pt-2" />
+                    </div>
+                  </ng-container>
+                </ng-container> -->
               </ng-template>
               <!-- {{ message.createdDate | date : "h:mm a"}} -->
               <!-- {{displayLocalTime(message.createdDate)}} -->
