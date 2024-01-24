@@ -120,7 +120,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.socketService.socket?.connect();
     }
 
-    this.socketService.socket?.emit('join', { room: this.profileId });
+    // this.socketService.socket?.emit('join', { room: this.profileId });
     this.socketService.socket?.on('notification', (data: any) => {
       if (data) {
         console.log('new-notification', data);

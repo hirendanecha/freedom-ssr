@@ -116,14 +116,14 @@ export class AppComponent {
       if (!this.socketService.socket?.connected) {
         this.socketService.socket?.connect();
         const profileId = +localStorage.getItem('profileId');
-        this.socketService.socket?.emit('join', { room: profileId });
+        // this.socketService.socket?.emit('join', { room: profileId });
       }
     } else {
       this.tab = setInterval(() => {
         if (!this.socketService.socket?.connected) {
           this.socketService.socket?.connect();
           const profileId = +localStorage.getItem('profileId');
-          this.socketService.socket?.emit('join', { room: profileId });
+          // this.socketService.socket?.emit('join', { room: profileId });
         }
       }, 3000)
 
