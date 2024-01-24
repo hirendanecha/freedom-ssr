@@ -61,7 +61,7 @@ export class AppComponent {
         this.notificationId = data.id;
         this.sharedService.isNotify = true;
         this.originalFavicon.href = '/assets/images/icon-unread.jpg';
-        if (data?.actionType === 'T') {
+        if (data?.actionType === 'T' || data?.actionType === 'M') {
           var sound = new Howl({
             src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
           });

@@ -23,3 +23,12 @@
   @media (max-width: 992px) {
   }
 }
+
+::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px !important;
+  background-color: var(--primary-color) !important;
+}

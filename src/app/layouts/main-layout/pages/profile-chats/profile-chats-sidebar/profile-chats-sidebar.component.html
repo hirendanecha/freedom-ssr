@@ -90,7 +90,8 @@
               <img
                 class="avatar-img max-un"
                 src="{{ item?.ProfilePicName }}"
-                alt="avatar"
+                [alt]="item?.Username || item?.FirstName"
+                onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
               />
             </div>
             <div
