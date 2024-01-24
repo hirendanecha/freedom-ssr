@@ -79,9 +79,14 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   getUserList(): void {
     this.customerService.getProfileList(this.searchText).subscribe({
       next: (res: any) => {
-        if (res?.data?.length > 0) {
-          this.userList = res.data;
-          this.userSearchNgbDropdown?.open();
+        if (res?.data?.length > 0) {          
+
+        this.userList = res.data.filter((user: any) => user.Id!== this.sharedService?.userData?.UserID);
+        this.userList = this.userList.filter((user: any) => 
+          user.Username !== this.searchText && 
+          !this.chatList.some((chatUser: any) => chatUser.profileId === user.Id)
+        );
+        this.userSearchNgbDropdown?.open();
         } else {
           this.userList = [];
           this.userSearchNgbDropdown?.close();
@@ -96,8 +101,7 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
 
   getChatList(): void {
     this.socketService.getChatList({ profileId: this.profileId }, (data) => {
-      console.log("getChatList  : ", data);
-      this.chatList = data;
+      this.chatList = data.filter((user: any) => user.Username != this.sharedService?.userData?.Username);
     });
   }
 

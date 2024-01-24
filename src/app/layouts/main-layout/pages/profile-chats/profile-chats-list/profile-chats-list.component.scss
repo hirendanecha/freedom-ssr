@@ -1,13 +1,13 @@
 :host {
   .main {
     background: var(--section-1st-color);
-    height: 100vh;
+    height: 70vh;
     max-height: calc(100vh - 250px);
 
     .chat-content {
       overflow-y: auto;
       max-height: calc(100vh - 350px);
-      min-height: calc(100vh - 350px);
+      // min-height: calc(100vh - 350px);
       @media (max-width: 991px) {
         max-height: calc(90vh - 350px) !important;
       }
@@ -127,6 +127,6 @@
 .chat-footer {
   top: 100% !important;
   @media (max-width: 991px) {
-    top: 85% !important;
+    top: 83% !important;
   }
 }

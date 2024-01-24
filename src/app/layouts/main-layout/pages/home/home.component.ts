@@ -31,7 +31,7 @@ import { EditPostModalComponent } from 'src/app/@shared/modals/edit-post-modal/e
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   postMessageInputValue: string = '';
@@ -127,7 +127,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.notificationId = data.id;
         this.sharedService.isNotify = true;
         this.originalFavicon.href = '/assets/images/icon-unread.jpg';
-        if (data?.actionType === 'T') {
+        if (data?.actionType === 'T' || data?.actionType === 'M') {
           var sound = new Howl({
             src: [
               'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
@@ -171,7 +171,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
@@ -500,9 +500,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.toastService.success(res.message);
                 // this.getCommunityDetailsBySlug();
                 this.router.navigate([
-                  `${this.communityDetails.pageType === 'community'
-                    ? 'communities'
-                    : 'pages'
+                  `${
+                    this.communityDetails.pageType === 'community'
+                      ? 'communities'
+                      : 'pages'
                   }`,
                 ]);
               }
@@ -555,17 +556,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openUploadEditPostModal(post: any = {}): void {
     const modalRef = this.modalService.open(EditPostModalComponent, {
-      centered: true, backdrop: 'static',
+      centered: true,
+      backdrop: 'static',
     });
     modalRef.componentInstance.title = `Edit Post`;
-    modalRef.componentInstance.confirmButtonLabel = `Save`
+    modalRef.componentInstance.confirmButtonLabel = `Save`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.communityId = this.communityDetails?.Id;
     modalRef.componentInstance.data = post.id ? post : null;
     modalRef.result.then((res) => {
       if (res.id) {
-        this.postData = res
-        console.log(this.postData)
+        this.postData = res;
+        console.log(this.postData);
         this.uploadPostFileAndCreatePost();
       }
     });
@@ -608,8 +610,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         const bytes = copyImage.length;
         const megabytes = bytes / (1024 * 1024);
         if (megabytes > 1) {
-          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">'
-          this.postData['postdescription'] = `<div>${content.replace(copyImage, '').replace(/\<br\>/ig, '').replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
+          this.postData['postdescription'] = `<div>${content
+            .replace(copyImage, '')
+            .replace(/\<br\>/gi, '')
+            .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
           // this.postData['postdescription'] =  content.replace(copyImage, '').replace(new RegExp(copyImageTag, 'g'), '');
           // this.postData['postdescription'] = contentContainer.innerText;
           // this.postData['postdescription'] = content.replace(copyImage, '');
