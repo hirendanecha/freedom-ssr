@@ -17,7 +17,11 @@
               userChat?.Username
             }}</a>
           </h5>
-          <span class="mdtxt">online</span>
+          <span class="mdtxt">{{
+            sharedService?.onlineUserList.includes(userChat?.profileId)
+              ? "online"
+              : ""
+          }}</span>
         </div>
       </div>
       <div class="d-flex gap-3 align-items-center">
@@ -133,7 +137,7 @@
               class="message"
               [title]="displayLocalTime(message?.createdDate)"
             >
-            <!-- <div class="btn-group d-flex gap-3">
+              <!-- <div class="btn-group d-flex gap-3">
               <div ngbDropdown class="d-inline-block">
                 <button class="dropdown-btn" ngbDropdownToggle>
                   <fa-icon [icon]="['fas', 'ellipsis-h']" class="font-20-px" />
@@ -154,7 +158,6 @@
                 </div>
               </div>
             </div> -->
-
 
               <ng-container *ngIf="message?.messageMedia; else msgText">
                 <ng-container
@@ -205,25 +208,30 @@
               [title]="displayLocalTime(message?.createdDate)"
               (click)="editPopup.toggle()"
             >
-            <div class="btn-group d-flex gap-3">
-              <div ngbDropdown placement="bottom-start" class="d-inline-block" #editPopup="ngbDropdown">
-                <!-- <button class="dropdown-btn" #editPopup ngbDropdownToggle></button> -->
-                <div ngbDropdownMenu class="dropdown-menu">
-                  <button ngbDropdownItem (click)="editMsg(message)">
-                    <a class="droplist d-flex align-items-center gap-2">
-                      <fa-icon [icon]="['fas', 'pen-to-square']" />
-                      <span>Edit</span>
-                    </a>
-                  </button>
-                  <button ngbDropdownItem (click)="deleteMsg(message)">
-                    <a class="droplist d-flex align-items-center gap-2">
-                      <fa-icon [icon]="['fas', 'trash-can']" />
-                      <span>Delete</span>
-                    </a>
-                  </button>
+              <div class="btn-group d-flex gap-3">
+                <div
+                  ngbDropdown
+                  placement="bottom-start"
+                  class="d-inline-block"
+                  #editPopup="ngbDropdown"
+                >
+                  <!-- <button class="dropdown-btn" #editPopup ngbDropdownToggle></button> -->
+                  <div ngbDropdownMenu class="dropdown-menu">
+                    <button ngbDropdownItem (click)="editMsg(message)">
+                      <a class="droplist d-flex align-items-center gap-2">
+                        <fa-icon [icon]="['fas', 'pen-to-square']" />
+                        <span>Edit</span>
+                      </a>
+                    </button>
+                    <button ngbDropdownItem (click)="deleteMsg(message)">
+                      <a class="droplist d-flex align-items-center gap-2">
+                        <fa-icon [icon]="['fas', 'trash-can']" />
+                        <span>Delete</span>
+                      </a>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
               <ng-container *ngIf="message?.messageMedia; else msgText">
                 <ng-container
                   *ngIf="isPdf(message?.messageMedia); else imageMsg"

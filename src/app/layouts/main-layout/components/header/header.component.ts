@@ -54,7 +54,7 @@ export class HeaderComponent {
     private socketService: SocketService
   ) {
     this.originalFavicon = document.querySelector('link[rel="icon"]');
-    this.socketService.socket.on('isReadNotification_ack', (data) => {
+    this.socketService?.socket?.on('isReadNotification_ack', (data) => {
       if (data?.profileId) {
         this.sharedService.isNotify = false;
         localStorage.setItem('isRead', data?.isRead);

@@ -16,6 +16,7 @@ export class SharedService {
   isNotify = false;
   linkMetaData: {}
   advertizementLink: any = []
+  onlineUserList: any = []
 
   constructor(
     public modalService: NgbModal,

@@ -51,6 +51,7 @@ export class AppComponent {
 
     if (!this.socketService.socket?.connected) {
       this.socketService.socket?.connect();
+      this.socketService.socket?.emit('online-users');
     }
 
     this.socketService.socket?.emit('join', { room: this.profileId });
@@ -110,7 +111,7 @@ export class AppComponent {
   @HostListener('document:visibilitychange', ['$event']) checkDocumentFocus() {
     if (!window.document.hidden) {
       if (this.tab) {
-        clearInterval(this.tab);  
+        clearInterval(this.tab);
       }
       if (!this.socketService.socket?.connected) {
         this.socketService.socket?.connect();

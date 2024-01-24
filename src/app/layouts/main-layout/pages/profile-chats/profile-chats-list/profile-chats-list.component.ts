@@ -92,12 +92,27 @@ export class ProfileChatsListComponent
         }
       }
     });
+    this.socketService.socket?.emit('online-users');
+    this.socketService.socket.on('get-users', (data) => {
+      data.map(ele => {
+        if (!this.sharedService?.onlineUserList.includes(ele.userId)) {
+          this.sharedService.onlineUserList.push(ele.userId)
+        }
+      })
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('input', this.userChat);
     if (this.userChat?.roomId) {
       this.getMessageList();
+      this.socketService.socket.on('get-users', (data) => {
+        data.map(ele => {
+          if (!this.sharedService?.onlineUserList.includes(ele.userId)) {
+            this.sharedService.onlineUserList.push(ele.userId)
+          }
+        })
+      })
     }
   }
 
