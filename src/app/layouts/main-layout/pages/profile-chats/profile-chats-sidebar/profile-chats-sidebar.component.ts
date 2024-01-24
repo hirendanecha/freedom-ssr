@@ -70,7 +70,7 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('on chan', this.isRoomCreated);
+    // console.log('on chan', this.isRoomCreated);
     if (this.isRoomCreated) {
       this.getChatList();
     }
@@ -107,7 +107,7 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
 
   onChat(item: any) {
     this.selectedChatUser = item;
-    console.log(item);
+    // console.log(item);
     item.unReadMessage = 0;
     this.onNewChat?.emit(item);
     this.activeOffcanvas?.dismiss();
