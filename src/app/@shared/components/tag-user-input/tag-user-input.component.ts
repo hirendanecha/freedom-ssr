@@ -35,8 +35,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   @ViewChild('tagInputDiv', { static: false }) tagInputDiv: ElementRef;
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
-
-  ngUnsubscribe: Subject<void> = new Subject<void>();
+  
   metaDataSubject: Subject<void> = new Subject<void>();
 
   userList = [];
@@ -100,9 +99,6 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-
     this.metaDataSubject.next();
     this.metaDataSubject.complete();
   }
@@ -168,10 +164,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       if (url !== this.metaData?.url) {
         //   // this.spinner.show();
         this.isMetaLoader = true;
-        this.ngUnsubscribe.next();
+        const unsubscribe$ = new Subject<void>();
         this.postService
           .getMetaData({ url })
-          .pipe(takeUntil(this.ngUnsubscribe))
+          .pipe(takeUntil(unsubscribe$))
           .subscribe({
             next: (res: any) => {
               this.isMetaLoader = false;
@@ -208,6 +204,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
               this.isMetaLoader = false;
               // this.clearMetaData();
               this.spinner.hide();
+            },
+            complete: () => {
+              unsubscribe$.next();
+              unsubscribe$.complete();
             },
           });
         // this.socketService.getMeta({ url: url });
