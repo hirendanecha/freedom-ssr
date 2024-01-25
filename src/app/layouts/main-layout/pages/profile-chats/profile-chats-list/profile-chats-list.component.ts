@@ -49,7 +49,7 @@ export class ProfileChatsListComponent
 
   messageList: any = [];
   metaURL: any = [];
-  metaData: any = [];
+  metaData: any = {};
   ngUnsubscribe: Subject<void> = new Subject<void>();
   isMetaLoader: boolean = false;
 
@@ -92,7 +92,7 @@ export class ProfileChatsListComponent
       this.getMessageList();
     }
     this.socketService.socket.on('new-message', (data) => {
-      console.log('new-message', data);
+      // console.log('new-message', data);
       this.newRoomCreated.emit(true);
       if (this.userChat?.roomId === data?.roomId) {
         let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
@@ -107,32 +107,30 @@ export class ProfileChatsListComponent
     });
     this.socketService.socket?.emit('online-users');
     this.socketService.socket.on('get-users', (data) => {
-      data.map(ele => {
+      data.map((ele) => {
         if (!this.sharedService?.onlineUserList.includes(ele.userId)) {
-          this.sharedService.onlineUserList.push(ele.userId)
+          this.sharedService.onlineUserList.push(ele.userId);
         }
-      })
-    })
+      });
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.getMetaDataFromUrlStr();
     // console.log('input', this.userChat);
     if (this.userChat?.roomId) {
       this.getMessageList();
       this.socketService.socket.on('get-users', (data) => {
-        data.map(ele => {
+        data.map((ele) => {
           if (!this.sharedService?.onlineUserList.includes(ele.userId)) {
-            this.sharedService.onlineUserList.push(ele.userId)
+            this.sharedService.onlineUserList.push(ele.userId);
           }
-        })
-      })
+        });
+      });
     }
   }
 
   // scroller down
   ngAfterViewChecked() {
-    // this.getMetaDataFromUrlStr();
     // if (this.userChat?.roomId) {
     //   this.scrollToBottom();
     // }
@@ -208,9 +206,16 @@ export class ProfileChatsListComponent
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
       };
-      this.socketService.sendMessage(data, (data: any) => {
+      this.socketService.sendMessage(data, async (data: any) => {
         console.log(data);
         this.newRoomCreated?.emit(true);
+        const matches = data.messageText?.match(/(?:https?:\/\/|www\.)[^\s]+/g);
+        if (matches?.[0]) {
+          data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
+          console.log(data);
+        } else {
+          return data;
+        }
         this.messageList.push(data);
         this.resetData();
       });
@@ -245,6 +250,19 @@ export class ProfileChatsListComponent
             console.log(res);
           });
         }
+        this.messageList.map(async (element: any) => {
+          const matches = element.messageText?.match(
+            /(?:https?:\/\/|www\.)[^\s]+/g
+          );
+          if (matches?.[0]) {
+            element['metaData'] = await this.getMetaDataFromUrlStr(
+              matches?.[0]
+            );
+            console.log(element);
+          } else {
+            return element;
+          }
+        });
       },
       error: (err) => {},
     });
@@ -338,21 +356,7 @@ export class ProfileChatsListComponent
     return src.toLowerCase().endsWith('.gif');
   }
 
-  onTagUserInputChangeEvent(data: any): void {
-    // // this.postMessageInputValue = data?.html
-    // this.extractImageUrlFromContent(data.html);
-    // // this.postData.postdescription = data?.html;
-    // this.postData.meta = data?.meta;
-    // this.postMessageTags = data?.tags;
-    console.log(data.html);
-    this.chatObj.msgText = data.html;
-  }
-
   selectEmoji(emoji: any): void {
-    // let htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
-    // const text = `${htmlText} <img src=${emoji} width="50" height="50">`;
-    // this.setTagInputDivValue(text);
-    // this.emitChangeEvent();
     this.chatObj.msgMedia = emoji;
     this.sendMessage();
   }
@@ -381,29 +385,16 @@ export class ProfileChatsListComponent
     );
   }
 
-  getMetaData(messageUrl) {
-    const matches = messageUrl?.match(/(?:https?:\/\/|www\.)[^\s]+/g);
-    if (matches) {
-      if (!this.metaURL.includes(matches?.[0])) {
-        this.metaURL.push(matches?.[0]);
-        this.getMetaDataFromUrlStr();
-      }
-    }
-    return this.metaURL;
-  }
-
-  getMetaDataFromUrlStr(): void {
-    // const url = this.metaURL;
-    this.metaURL?.forEach((element) => {
-      let metaData: any;
-      if (element) {
-        // if (element !== this.metaData?.url) {
-        //   // this.spinner.show();
+  getMetaDataFromUrlStr(url: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (url !== this.metaData?.url) {
         this.isMetaLoader = true;
         this.ngUnsubscribe.next();
+        const unsubscribe$ = new Subject<void>();
+
         this.postService
-          .getMetaData({ url: element })
-          .pipe(takeUntil(this.ngUnsubscribe))
+          .getMetaData({ url })
+          .pipe(takeUntil(unsubscribe$))
           .subscribe({
             next: (res: any) => {
               this.isMetaLoader = false;
@@ -416,37 +407,37 @@ export class ProfileChatsListComponent
                   ? metatitles?.[0]
                   : metatitles;
 
-                const metaurls = res?.meta?.url || element;
+                const metaurls = res?.meta?.url || url;
                 const metaursl = Array.isArray(metaurls)
                   ? metaurls?.[0]
                   : metaurls;
 
-                metaData = {
+                this.metaData = {
                   title: metatitle,
                   metadescription: res?.meta?.description,
                   metaimage: imgUrl,
                   metalink: metaursl,
-                  url: element,
+                  url: url,
                 };
-                this.metaData.push(metaData);
-                console.log(this.metaData);
+                resolve(this.metaData);
               } else {
-                metaData.metalink = element;
-                this.metaData.push(metaData);
-                console.log(this.metaData);
+                this.metaData.metalink = url;
+                resolve(this.metaData);
               }
-              this.spinner.hide();
             },
-            error: () => {
+            error: (err) => {
+              this.metaData.metalink = url;
               this.isMetaLoader = false;
-              metaData = {};
               this.spinner.hide();
+              reject(err);
+            },
+            complete: () => {
+              unsubscribe$.next();
+              unsubscribe$.complete();
             },
           });
-        // }
       } else {
-        this.metaData = [];
-        this.isMetaLoader = false;
+        resolve(this.metaData);
       }
     });
   }
