@@ -45,8 +45,8 @@
     <div
       class="chat-content position-relative"
       #chatContent
-      [scrollTop]="chatContent.scrollHeight"
-    >
+      >
+      <!-- [scrollTop]="chatContent.scrollHeight" -->
       <!-- ui first -->
       <ng-container
         *ngIf="
@@ -199,17 +199,16 @@
                 </ng-template>
               </ng-container>
               <ng-template #msgText>
-                <p class="m-0">{{ message?.messageText }}</p>
-              </ng-template>
-              <!-- <ng-container
-                *ngIf="getMetaData(message?.messageText)"
-              >
-                <ng-container *ngFor="let meta of metaData">
+                <p class="m-0" *ngIf="!message?.metaData">{{ message?.messageText }}</p>
+                <ng-container *ngIf="message?.metaData">
                   <div class="chat-meta">
-                    <app-post-meta-data-card [post]="meta" class="pt-2" />
+                    <app-post-meta-data-card
+                      [post]="message.metaData"
+                      class="pt-2"
+                    />
                   </div>
                 </ng-container>
-              </ng-container> -->
+              </ng-template>
               <!-- <span class="mdtxt">{{
                 message.createdDate | date : "h:mm a"
               }}</span> -->
@@ -227,7 +226,6 @@
                   placement="bottom-start"
                   class="d-inline-block"
                   #editPopup="ngbDropdown"
-                  autoClose="true"
                 >
                   <div
                     ngbDropdownMenu
@@ -286,16 +284,15 @@
                 </ng-template>
               </ng-container>
               <ng-template #msgText>
-                <p class="m-0">{{ message?.messageText }}</p>
-                <!-- <ng-container
-                  *ngIf="getMetaData(message?.messageText)"
-                >
-                  <ng-container *ngFor="let meta of metaData">
-                    <div class="chat-meta">
-                      <app-post-meta-data-card [post]="meta" class="pt-2" />
-                    </div>
-                  </ng-container>
-                </ng-container> -->
+                <p class="m-0" *ngIf="!message?.metaData">{{ message?.messageText }}</p>
+                <ng-container *ngIf="message?.metaData">
+                  <div class="chat-meta">
+                    <app-post-meta-data-card
+                      [post]="message?.metaData"
+                      class="pt-2"
+                    />
+                  </div>
+                </ng-container>
               </ng-template>
               <!-- {{ message.createdDate | date : "h:mm a"}} -->
               <!-- {{displayLocalTime(message.createdDate)}} -->
