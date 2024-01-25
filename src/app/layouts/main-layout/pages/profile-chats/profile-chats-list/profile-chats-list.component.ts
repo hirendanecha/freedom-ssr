@@ -32,11 +32,12 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy {
+  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
-  @ViewChild('chatContent', { static: false }) chatContent: ElementRef;
+  @ViewChild('chatContent') chatContent!: ElementRef;
 
   profileId: number;
   chatObj = {
@@ -97,7 +98,9 @@ export class ProfileChatsListComponent
       if (this.userChat?.roomId === data?.roomId) {
         let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
         if (data?.isDeleted) {
-          this.messageList.splice(index);
+          this.messageList = this.messageList.filter(
+            (obj) => obj?.id !== data?.id
+          );
         } else if (this.messageList[index]) {
           this.messageList[index] = data;
         } else {
@@ -150,7 +153,7 @@ export class ProfileChatsListComponent
       },
       (data: any) => {
         this.userChat = { ...data?.room };
-        console.log(data);
+        // console.log(data);
         this.newRoomCreated.emit(true);
       }
     );
@@ -164,7 +167,7 @@ export class ProfileChatsListComponent
         profileId: this.profileId,
       },
       (data: any) => {
-        console.log(data);
+        // console.log(data);
         this.userChat.isAccepted = data.isAccepted;
         // this.userChat = { ...data };
         this.newRoomCreated.emit(true);
@@ -207,13 +210,17 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
       };
       this.socketService.sendMessage(data, async (data: any) => {
-        console.log(data);
+        // console.log(data);
         this.newRoomCreated?.emit(true);
-        const matches = data.messageText?.match(/(?:https?:\/\/|www\.)[^\s]+/g);
+        const matches = data?.messageText?.match(
+          /(?:https?:\/\/|www\.)[^\s]+/g
+        );
         if (matches?.[0]) {
           data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
-          console.log(data);
+          // console.log(data);
         } else {
+          this.messageList.push(data);
+          this.resetData();
           return data;
         }
         this.messageList.push(data);
@@ -226,7 +233,7 @@ export class ProfileChatsListComponent
   getMessageList(): void {
     const messageObj = {
       page: 1,
-      size: 200,
+      size: 500,
       roomId: this.userChat.roomId,
     };
     this.messageService.getMessages(messageObj).subscribe({
@@ -241,7 +248,7 @@ export class ProfileChatsListComponent
             return e;
           }
         });
-        console.log(ids);
+        // console.log(ids);
         if (ids.length) {
           const data = {
             ids: ids,
@@ -258,21 +265,24 @@ export class ProfileChatsListComponent
             element['metaData'] = await this.getMetaDataFromUrlStr(
               matches?.[0]
             );
-            console.log(element);
+            // console.log(element);
           } else {
             return element;
           }
         });
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   scrollToBottom() {
-    this.chatContent.nativeElement.scrollTop =
-      this.chatContent.nativeElement.scrollHeight;
+    setTimeout(() => {
+      if (this.chatContent) {
+        this.chatContent.nativeElement.scrollTop = this.chatContent.nativeElement.scrollHeight;
+      }
+    });
   }
 
   onPostFileSelect(event: any): void {
@@ -376,11 +386,15 @@ export class ProfileChatsListComponent
         profileId: this.userChat?.profileId,
       },
       (data: any) => {
-        console.log(data);
-        let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
-        if (this.messageList[index]) {
-          this.messageList.splice(index);
-        }
+        // console.log(data);
+        this.messageList = this.messageList.filter(
+          (obj) => obj?.id !== data?.id
+        );
+
+        // let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
+        // if (this.messageList[index]) {
+        //   this.messageList.splice(index);
+        // }
       }
     );
   }
