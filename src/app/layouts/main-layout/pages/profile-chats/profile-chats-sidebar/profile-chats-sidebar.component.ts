@@ -55,7 +55,7 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
     if (!this.socketService.socket?.connected) {
       this.socketService.socket?.connect();
     }
-    this.socketService.socket?.emit('join', { room: this.profileId });
+    // this.socketService.socket?.emit('join', { room: this.profileId });
     this.getChatList();
     if (this.isRoomCreated) {
       this.getChatList();

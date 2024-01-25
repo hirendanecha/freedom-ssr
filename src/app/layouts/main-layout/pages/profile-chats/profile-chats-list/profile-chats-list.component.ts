@@ -32,8 +32,7 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy
-{
+  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -91,6 +90,7 @@ export class ProfileChatsListComponent
     if (this.userChat?.roomId) {
       this.getMessageList();
     }
+    this.socketService.socket.off('new-message');
     this.socketService.socket.on('new-message', (data) => {
       // console.log('new-message', data);
       this.newRoomCreated.emit(true);
@@ -264,11 +264,11 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   scrollToBottom() {
     this.chatContent.nativeElement.scrollTop =
@@ -340,7 +340,7 @@ export class ProfileChatsListComponent
   }
 
   isPdf(media: string): boolean {
-    this.pdfmsg = media?.split('/')[3].replaceAll('%', '-');
+    this.pdfmsg = media?.split('/')[3]?.replaceAll('%', '-');
     return media && media.endsWith('.pdf');
   }
 
