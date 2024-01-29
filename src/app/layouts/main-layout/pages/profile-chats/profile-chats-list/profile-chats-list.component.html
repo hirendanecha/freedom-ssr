@@ -42,10 +42,7 @@
       </div>
     </div>
 
-    <div
-      class="chat-content position-relative"
-      #chatContent
-      >
+    <div class="chat-content position-relative" #chatContent>
       <!-- [scrollTop]="chatContent.scrollHeight" -->
       <!-- ui first -->
       <ng-container
@@ -199,7 +196,13 @@
                 </ng-template>
               </ng-container>
               <ng-template #msgText>
-                <p class="m-0" *ngIf="!message?.metaData">{{ message?.messageText }}</p>
+                <p class="m-0" *ngIf="!message?.metaData">
+                  {{
+                    encryptDecryptService.decryptUsingAES256(
+                      message?.messageText
+                    )
+                  }}
+                </p>
                 <ng-container *ngIf="message?.metaData">
                   <div class="chat-meta">
                     <app-post-meta-data-card
@@ -284,7 +287,13 @@
                 </ng-template>
               </ng-container>
               <ng-template #msgText>
-                <p class="m-0" *ngIf="!message?.metaData">{{ message?.messageText }}</p>
+                <p class="m-0" *ngIf="!message?.metaData">
+                  {{
+                    encryptDecryptService.decryptUsingAES256(
+                      message?.messageText
+                    )
+                  }}
+                </p>
                 <ng-container *ngIf="message?.metaData">
                   <div class="chat-meta">
                     <app-post-meta-data-card

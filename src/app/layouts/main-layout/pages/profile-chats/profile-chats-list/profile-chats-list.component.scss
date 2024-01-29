@@ -6,10 +6,10 @@
 
     .chat-content {
       overflow-y: auto;
-      max-height: calc(100vh - 350px);
+      height: calc(100vh - 350px);
       // min-height: calc(100vh - 350px);
       @media (max-width: 991px) {
-        max-height: calc(90vh - 350px) !important;
+        height: calc(90vh - 350px) !important;
       }
     }
     .c-pdf-show {
@@ -103,7 +103,7 @@
 
 ::ng-deep {
   .main-content {
-    box-shadow: var(--box-shadow);
+    // box-shadow: var(--box-shadow);
     .chat-area {
       box-shadow: none;
       .main-chat-box {

@@ -11,5 +11,7 @@ export const environment = {
   socketUrl: `${url}/`,
   webUrl: webUrl,
   tubeUrl: tubeUrl,
-  domain: '.freedom.buzz'
+  domain: '.freedom.buzz',
+  EncryptIV: 8625401029409790,
+  EncryptKey: 8625401029409790
 };

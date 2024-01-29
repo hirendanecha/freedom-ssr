@@ -19,6 +19,7 @@ import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
+import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
 import { MessageService } from 'src/app/@shared/services/message.service';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
@@ -32,8 +33,7 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy
-{
+  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -82,6 +82,7 @@ export class ProfileChatsListComponent
     private postService: PostService,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
+    public encryptDecryptService: EncryptDecryptService,
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -178,9 +179,10 @@ export class ProfileChatsListComponent
   sendMessage(): void {
     // console.log(this.chatObj);
     if (this.chatObj.id) {
+      const message = this.encryptDecryptService.encryptUsingAES256(this.chatObj.msgText)
       const data = {
         id: this.chatObj.id,
-        messageText: this.chatObj?.msgText,
+        messageText: message,
         roomId: this.userChat.roomId,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
@@ -201,8 +203,10 @@ export class ProfileChatsListComponent
         this.resetData();
       });
     } else {
+      const message = this.encryptDecryptService.encryptUsingAES256(this.chatObj.msgText);
+      console.log('encrypted-message', message);
       const data = {
-        messageText: this.chatObj?.msgText,
+        messageText: message,
         roomId: this.userChat.roomId,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
@@ -270,11 +274,11 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   scrollToBottom() {
     setTimeout(() => {
@@ -372,7 +376,7 @@ export class ProfileChatsListComponent
 
   editMsg(msgObj): void {
     this.chatObj['id'] = msgObj?.id;
-    this.chatObj.msgText = msgObj.messageText;
+    this.chatObj.msgText = this.encryptDecryptService.decryptUsingAES256(msgObj.messageText);
     this.chatObj.msgMedia = msgObj.messageMedia;
   }
 

@@ -6,6 +6,7 @@ import { CommunityService } from 'src/app/@shared/services/community.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ProfileChatsSidebarComponent } from './profile-chats-sidebar/profile-chats-sidebar.component';
 import { MessageService } from 'src/app/@shared/services/message.service';
+import { SharedService } from 'src/app/@shared/services/shared.service';
 
 @Component({
   selector: 'app-freedom-page',
@@ -32,24 +33,14 @@ export class ProfileChartsComponent {
   };
 
   constructor(
-    private modalService: NgbModal,
-    private router: Router,
-    private spinner: NgxSpinnerService,
-    private communityService: CommunityService,
-    private seoService: SeoService,
     private renderer: Renderer2,
     private el: ElementRef,
     private offcanvasService: NgbOffcanvas,
-    private messageService: MessageService
+    private sharedService: SharedService
   ) {
-    // this.profileId = Number(localStorage.getItem('profileId'));
-    // this.getPages();
-    // const data = {
-    //   title: 'Freedom.Buzz Freedom Pages',
-    //   url: `${location.href}`,
-    //   description: '',
-    // };
-    // this.seoService.updateSeoMetaData(data);
+    if (this.sharedService.isNotify) {
+      this.sharedService.isNotify = false;
+    }
   }
 
   mobileMenu(): void {
