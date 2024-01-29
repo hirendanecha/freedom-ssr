@@ -82,7 +82,6 @@ export class ProfileChatsListComponent
     private postService: PostService,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    @Inject(DOCUMENT) private document: any
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -91,8 +90,8 @@ export class ProfileChatsListComponent
     if (this.userChat?.roomId) {
       this.getMessageList();
     }
-    this.socketService.socket.off('new-message');
-    this.socketService.socket.on('new-message', (data) => {
+    this.socketService.socket?.off('new-message');
+    this.socketService.socket?.on('new-message', (data) => {
       // console.log('new-message', data);
       this.newRoomCreated.emit(true);
       if (this.userChat?.roomId === data?.roomId) {
@@ -109,7 +108,7 @@ export class ProfileChatsListComponent
       }
     });
     this.socketService.socket?.emit('online-users');
-    this.socketService.socket.on('get-users', (data) => {
+    this.socketService.socket?.on('get-users', (data) => {
       data.map((ele) => {
         if (!this.sharedService?.onlineUserList.includes(ele.userId)) {
           this.sharedService.onlineUserList.push(ele.userId);
@@ -177,7 +176,7 @@ export class ProfileChatsListComponent
 
   // send btn
   sendMessage(): void {
-    console.log(this.chatObj);
+    // console.log(this.chatObj);
     if (this.chatObj.id) {
       const data = {
         id: this.chatObj.id,

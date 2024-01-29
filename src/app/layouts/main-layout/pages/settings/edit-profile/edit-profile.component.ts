@@ -76,7 +76,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       this.router.navigate([`/login`]);
     }
     this.modalService.dismissAll();
-    const notificationSound = localStorage.getItem('notificationSoundEnabled');
+    const notificationSound = JSON.parse(localStorage.getItem('soundPreferences'))?.notificationSoundEnabled;
     if (notificationSound === 'N') {
       this.isNotificationSoundEnabled = false
     }
@@ -90,13 +90,14 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       });
   }
 
-  notificationSound(){
-    const soundOct = localStorage.getItem('notificationSoundEnabled');
-    if (soundOct === 'Y') {
-      localStorage.setItem('notificationSoundEnabled', 'N');
+  notificationSound() {
+    const soundOct = JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    if (soundOct.notificationSoundEnabled === 'Y') {
+      soundOct.notificationSoundEnabled = 'N';
     } else {
-      localStorage.setItem('notificationSoundEnabled', this.isNotificationSoundEnabled ? 'Y' : 'N');
+      soundOct.notificationSoundEnabled = this.isNotificationSoundEnabled ? 'Y' : 'N';
     }
+    localStorage.setItem('soundPreferences', JSON.stringify(soundOct));
   }
 
   getUserDetails(id): void {

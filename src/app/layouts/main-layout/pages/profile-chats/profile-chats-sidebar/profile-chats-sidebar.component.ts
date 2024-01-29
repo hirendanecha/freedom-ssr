@@ -30,6 +30,7 @@ import { Router } from '@angular/router';
 })
 export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   chatList: any = [];
+  pendingChatList: any = [];
 
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
@@ -37,6 +38,9 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   userList: any = [];
   profileId: number;
   selectedChatUser: any;
+
+  isMessageSoundEnabled: boolean = true;
+  isCallSoundEnabled: boolean = true;
 
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
@@ -55,12 +59,12 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
     if (!this.socketService.socket?.connected) {
       this.socketService.socket?.connect();
     }
-    // this.socketService.socket?.emit('join', { room: this.profileId });
+    this.socketService.socket?.emit('join', { room: this.profileId });
     this.getChatList();
     if (this.isRoomCreated) {
       this.getChatList();
     }
-    this.socketService.socket.on('accept-invitation', (data) => {
+    this.socketService.socket?.on('accept-invitation', (data) => {
       console.log(data);
       if (data) {
         this.onChat(data);
@@ -74,19 +78,30 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
     if (this.isRoomCreated) {
       this.getChatList();
     }
+    const notificationSound = JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    if (notificationSound?.messageSoundEnabled === 'N') {
+      this.isMessageSoundEnabled  = false
+    }
+    if (notificationSound?.callSoundEnabled === 'N') {
+      this.isCallSoundEnabled = false
+    }
   }
 
   getUserList(): void {
     this.customerService.getProfileList(this.searchText).subscribe({
       next: (res: any) => {
-        if (res?.data?.length > 0) {          
-
-        this.userList = res.data.filter((user: any) => user.Id!== this.sharedService?.userData?.UserID);
-        this.userList = this.userList.filter((user: any) => 
-          user.Username !== this.searchText && 
-          !this.chatList.some((chatUser: any) => chatUser.profileId === user.Id)
-        );
-        this.userSearchNgbDropdown?.open();
+        if (res?.data?.length > 0) {
+          this.userList = res.data.filter(
+            (user: any) => user.Id !== this.sharedService?.userData?.UserID
+          );
+          this.userList = this.userList.filter(
+            (user: any) =>
+              user.Username !== this.searchText &&
+              !this.chatList.some(
+                (chatUser: any) => chatUser.profileId === user.Id
+              )
+          );
+          this.userSearchNgbDropdown?.open();
         } else {
           this.userList = [];
           this.userSearchNgbDropdown?.close();
@@ -100,8 +115,15 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   }
 
   getChatList(): void {
-    this.socketService.getChatList({ profileId: this.profileId }, (data) => {
-      this.chatList = data.filter((user: any) => user.Username != this.sharedService?.userData?.Username);
+    this.socketService?.getChatList({ profileId: this.profileId }, (data) => {
+      this.chatList = data
+        .filter(
+          (user: any) => user.Username != this.sharedService?.userData?.Username
+        )
+        .filter((user: any) => user.isAccepted === 'Y');
+      this.pendingChatList = data.filter(
+        (user: any) => user.isAccepted === 'N'
+      );
     });
   }
 
@@ -118,5 +140,11 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
 
   goToViewProfile(): void {
     this.router.navigate([`settings/view-profile/${this.profileId}`]);
+  }
+
+  toggleSoundPreference(property: string, ngModelValue: boolean): void {
+    const soundPreferences = JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    soundPreferences[property] = ngModelValue ? 'Y' : 'N';
+    localStorage.setItem('soundPreferences', JSON.stringify(soundPreferences));
   }
 }

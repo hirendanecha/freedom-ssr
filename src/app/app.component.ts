@@ -20,7 +20,6 @@ export class AppComponent {
   profileId = '';
   notificationId: number;
   originalFavicon: HTMLLinkElement;
-  notificationSoundOct = ''
 
   constructor(
     private sharedService: SharedService,
@@ -61,12 +60,27 @@ export class AppComponent {
         this.notificationId = data.id;
         this.sharedService.isNotify = true;
         this.originalFavicon.href = '/assets/images/icon-unread.jpg';
-        if (data?.actionType === 'T' || data?.actionType === 'M') {
+        if (data?.actionType === 'T') {
           var sound = new Howl({
             src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
           });
-          this.notificationSoundOct = localStorage?.getItem('notificationSoundEnabled');
-          if (this.notificationSoundOct !== 'N') {
+          // const soundPrefs = JSON.parse(localStorage.getItem('soundPreferences'));
+          // const notificationSoundOct = soundPrefs ? soundPrefs.notificationSoundEnabled : null;
+          const notificationSoundOct = JSON.parse(localStorage.getItem('soundPreferences'))?.notificationSoundEnabled;
+          if (notificationSoundOct !== 'N') {
+            if (sound) {
+              sound?.play();
+            }
+          }
+        }
+        if (data?.actionType === 'M') {
+          var sound = new Howl({
+            src: [
+              'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
+            ],
+          });
+          const messageSoundOct = JSON.parse(localStorage.getItem('soundPreferences'))?.messageSoundEnabled;
+          if (messageSoundOct !== 'N') {
             if (sound) {
               sound?.play();
             }
