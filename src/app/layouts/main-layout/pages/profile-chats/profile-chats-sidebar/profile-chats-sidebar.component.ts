@@ -80,7 +80,7 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
     }
     const notificationSound = JSON.parse(localStorage.getItem('soundPreferences')) || {};
     if (notificationSound?.messageSoundEnabled === 'N') {
-      this.isMessageSoundEnabled  = false
+      this.isMessageSoundEnabled = false
     }
     if (notificationSound?.callSoundEnabled === 'N') {
       this.isCallSoundEnabled = false
@@ -115,12 +115,13 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   }
 
   getChatList(): void {
+    console.log('innn===>')
     this.socketService?.getChatList({ profileId: this.profileId }, (data) => {
       this.chatList = data
-        .filter(
-          (user: any) => user.Username != this.sharedService?.userData?.Username
+        ?.filter(
+          (user: any) => user.Username != this.sharedService?.userData?.Username && user?.isAccepted === 'Y'
         )
-        .filter((user: any) => user.isAccepted === 'Y');
+      // ?.filter((user: any) => );
       this.pendingChatList = data.filter(
         (user: any) => user.isAccepted === 'N'
       );

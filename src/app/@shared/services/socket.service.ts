@@ -92,7 +92,12 @@ export class SocketService {
   // socket for chat
 
   getChatList(params, callback: (data: any) => void) {
-    this.socket?.emit('get-chat-list', params, callback);
+    if (this.socket?.connected) {
+      this.socket?.emit('get-chat-list', params, callback);
+    } else {
+      this.socket?.connect();
+      this.socket?.emit('get-chat-list', params, callback);
+    }
   }
 
   createChatRoom(params, callback: (data: any) => void) {
