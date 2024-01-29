@@ -63,7 +63,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationId: number;
   buttonClicked = false;
   originalFavicon: HTMLLinkElement;
-  notificationSoundOct = '';
 
   constructor(
     private modalService: NgbModal,
@@ -123,20 +122,31 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.socketService.socket?.emit('join', { room: this.profileId });
     this.socketService.socket?.on('notification', (data: any) => {
       if (data) {
-        console.log('new-notification', data);
+        // console.log('new-notification', data);
         this.notificationId = data.id;
         this.sharedService.isNotify = true;
         this.originalFavicon.href = '/assets/images/icon-unread.jpg';
-        if (data?.actionType === 'T' || data?.actionType === 'M') {
+        if (data?.actionType === 'T') {
           var sound = new Howl({
             src: [
               'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
             ],
           });
-          this.notificationSoundOct = localStorage?.getItem(
-            'notificationSoundEnabled'
-          );
-          if (this.notificationSoundOct !== 'N') {
+          const notificationSoundOct = JSON.parse(localStorage.getItem('soundPreferences'))?.notificationSoundEnabled;
+          if (notificationSoundOct !== 'N') {
+            if (sound) {
+              sound?.play();
+            }
+          }
+        }
+        if (data?.actionType === 'M') {
+          var sound = new Howl({
+            src: [
+              'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
+            ],
+          });
+          const messageSoundOct = JSON.parse(localStorage.getItem('soundPreferences'))?.messageSoundEnabled;
+          if (messageSoundOct !== 'N') {
             if (sound) {
               sound?.play();
             }

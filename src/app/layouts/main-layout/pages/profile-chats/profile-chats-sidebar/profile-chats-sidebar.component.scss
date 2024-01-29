@@ -13,14 +13,24 @@
     max-height: 300px;
     overflow: scroll;
   }
-}
-.avatar-img {
-  max-width: 40px;
-}
+  .avatar-img {
+    max-width: 40px;
+  }
+  .cus-scrollbar {
+    height: 39vh;
+    @media (max-width: 992px) {
+      height: 42vh;
+    }
+  }
+  .cus-scrollbar-pending {
+    height: 17vh;
+    @media (max-width: 992px) {
+      height: 26vh;
+    }
+  }
 
-.cus-scrollbar {
-  height: 81vh;
-  @media (max-width: 992px) {
+  .dropdown-preferences{
+    margin: 0 10px;
   }
 }
 
