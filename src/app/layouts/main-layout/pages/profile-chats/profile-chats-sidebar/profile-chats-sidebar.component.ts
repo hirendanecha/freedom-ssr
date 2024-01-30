@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -28,7 +29,9 @@ import { Router } from '@angular/router';
   templateUrl: './profile-chats-sidebar.component.html',
   styleUrls: ['./profile-chats-sidebar.component.scss'],
 })
-export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
+export class ProfileChatsSidebarComponent
+  implements AfterViewInit, OnChanges, OnInit
+{
   chatList: any = [];
   pendingChatList: any = [];
 
@@ -41,6 +44,7 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
 
   isMessageSoundEnabled: boolean = true;
   isCallSoundEnabled: boolean = true;
+  isChatLoader = false;
 
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
@@ -53,19 +57,27 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   ) {
     // this.getUserList();
     this.profileId = +localStorage.getItem('profileId');
+
+    const notificationSound =
+      JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    if (notificationSound?.messageSoundEnabled === 'N') {
+      this.isMessageSoundEnabled = false;
+    }
+    if (notificationSound?.callSoundEnabled === 'N') {
+      this.isCallSoundEnabled = false;
+    }
+  }
+
+  ngOnInit(): void {
+    this.socketService.connect();
+    this.getChatList();
   }
 
   ngAfterViewInit(): void {
-    if (!this.socketService.socket?.connected) {
-      this.socketService.socket?.connect();
-    }
-    this.socketService.socket?.emit('join', { room: this.profileId });
-    this.getChatList();
     if (this.isRoomCreated) {
       this.getChatList();
     }
     this.socketService.socket?.on('accept-invitation', (data) => {
-      console.log(data);
       if (data) {
         this.onChat(data);
         this.getChatList();
@@ -74,16 +86,9 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log('on chan', this.isRoomCreated);
+    console.log('on chan', this.isRoomCreated);
     if (this.isRoomCreated) {
       this.getChatList();
-    }
-    const notificationSound = JSON.parse(localStorage.getItem('soundPreferences')) || {};
-    if (notificationSound?.messageSoundEnabled === 'N') {
-      this.isMessageSoundEnabled = false
-    }
-    if (notificationSound?.callSoundEnabled === 'N') {
-      this.isCallSoundEnabled = false
     }
   }
 
@@ -92,12 +97,15 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
       next: (res: any) => {
         if (res?.data?.length > 0) {
           this.userList = res.data.filter(
-            (user: any) => user.Id !== this.sharedService?.userData?.UserID
+            (user: any) => user.Id !== this.sharedService?.userData?.Id
           );
           this.userList = this.userList.filter(
             (user: any) =>
-              user.Username !== this.searchText &&
+              // user.Username !== this.searchText &&
               !this.chatList.some(
+                (chatUser: any) => chatUser.profileId === user.Id
+              ) &&
+              !this.pendingChatList.some(
                 (chatUser: any) => chatUser.profileId === user.Id
               )
           );
@@ -115,13 +123,14 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   }
 
   getChatList(): void {
-    console.log('innn===>')
+    this.isChatLoader = true;
     this.socketService?.getChatList({ profileId: this.profileId }, (data) => {
-      this.chatList = data
-        ?.filter(
-          (user: any) => user.Username != this.sharedService?.userData?.Username && user?.isAccepted === 'Y'
-        )
-      // ?.filter((user: any) => );
+      this.isChatLoader = false;
+      this.chatList = data?.filter(
+        (user: any) =>
+          user.Username != this.sharedService?.userData?.Username &&
+          user?.isAccepted === 'Y'
+      );
       this.pendingChatList = data.filter(
         (user: any) => user.isAccepted === 'N'
       );
@@ -130,7 +139,6 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
 
   onChat(item: any) {
     this.selectedChatUser = item;
-    // console.log(item);
     item.unReadMessage = 0;
     this.onNewChat?.emit(item);
     this.activeOffcanvas?.dismiss();
@@ -144,8 +152,13 @@ export class ProfileChatsSidebarComponent implements AfterViewInit, OnChanges {
   }
 
   toggleSoundPreference(property: string, ngModelValue: boolean): void {
-    const soundPreferences = JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    const soundPreferences =
+      JSON.parse(localStorage.getItem('soundPreferences')) || {};
     soundPreferences[property] = ngModelValue ? 'Y' : 'N';
     localStorage.setItem('soundPreferences', JSON.stringify(soundPreferences));
+  }
+
+  clearChatList() {
+    this.onNewChat?.emit({});
   }
 }

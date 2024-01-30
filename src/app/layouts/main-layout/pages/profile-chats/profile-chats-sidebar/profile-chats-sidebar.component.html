@@ -4,7 +4,7 @@
       <div
         class="profile-area d-center justify-content-between align-items-baseline"
       >
-        <div class="avatar-item d-flex mb-2 gap-3 align-items-center">
+        <div class="avatar-item d-flex mb-2 gap-3 align-items-center cursor" (click)="clearChatList()">
           <div class="avatar-item">
             <!--  -->
             <img
@@ -97,29 +97,39 @@
             ngbDropdownMenu
             class="search-user-list w-100 overflow-x-hidden overflow-y-auto"
           >
+          <ng-container *ngIf="userList.length > 0; else noUserFound">
             <ng-container *ngFor="let user of userList">
-              <div
-                ngbDropdownItem
-                class="d-flex gap-3 pe-auto"
-                role="button"
-                (click)="onChat(user)"
-              >
-                <img
-                  loading="lazy"
-                  class="w-32-px h-32-px rounded"
-                  data-src="{{ user.ProfilePicName }}"
-                  [alt]="user.Username"
-                  onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-                />
-                <span class="overflow-hidden text-truncate">{{
-                  user.Username.split(" ").join("")
-                }}</span>
-              </div>
+                <div
+                  ngbDropdownItem
+                  class="d-flex gap-3 pe-auto"
+                  role="button"
+                  (click)="onChat(user)"
+                >
+                  <img
+                    loading="lazy"
+                    class="w-32-px h-32-px rounded"
+                    data-src="{{ user.ProfilePicName }}"
+                    [alt]="user.Username"
+                    onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                  />
+                  <span class="overflow-hidden text-truncate">{{
+                    user.Username.split(" ").join("")
+                  }}</span>
+                </div>
+              </ng-container>
             </ng-container>
+            <ng-template #noUserFound>
+              <div class="text-center">
+                <span>No result found</span>
+              </div>
+            </ng-template>
           </div>
         </div>
       </ng-container>
     </div>
+    <ng-container>
+      <app-inline-loader *ngIf="isChatLoader" />
+    </ng-container>
     <div class="header-menu cus-scrollbar overflow-auto">
       <div class="single-item messages-area" *ngFor="let item of chatList">
         <div
@@ -130,7 +140,7 @@
           <div class="d-flex gap-2">
             <div class="avatar">
               <img
-                class="avatar-img max-un"
+                class="avatar-img h-40-px w-40-px max-un"
                 src="{{ item?.ProfilePicName }}"
                 [alt]="item?.Username || item?.FirstName"
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
@@ -146,9 +156,9 @@
               </div>
               <div>
                 <span
-                  class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
-                  *ngIf="item?.unReadMessage > 0"
-                  >{{ item?.unReadMessage }}</span
+                class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
+                *ngIf="item?.unReadMessage > 0"
+                >{{ item?.unReadMessage }}</span
                 >
               </div>
               <!-- <p class="mdtxt sms">{{ item.text }}</p> -->
@@ -193,7 +203,7 @@
           <div class="d-flex gap-2">
             <div class="avatar">
               <img
-                class="avatar-img max-un"
+                class="avatar-img h-40-px w-40-px max-un"
                 src="{{ item?.ProfilePicName }}"
                 [alt]="item?.Username || item?.FirstName"
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
