@@ -10,23 +10,45 @@ export class SocketService {
   public socket: any;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object,) {
-    if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem("auth-token");
-      if (token) {
-        const customHeaders = {
-          Authorization: `Bearer ${token}`
-        };
-        this.socket = io(environment.socketUrl, {
-          reconnectionDelay: 100,
-          reconnectionDelayMax: 300,
-          // reconnection: true,
-          randomizationFactor: 0.2,
-          // timeout: 120000,
-          reconnectionAttempts: 50000,
-          transports: ['websocket'],
-          auth: customHeaders
-        });
+    const token = localStorage.getItem("auth-token");
+    if (token) {
+      const customHeaders = {
+        Authorization: `Bearer ${token}`
+      };
+      this.socket = io(environment.socketUrl, {
+        reconnectionDelay: 100,
+        reconnectionDelayMax: 300,
+        // reconnection: true,
+        randomizationFactor: 0.2,
+        // timeout: 120000,
+        reconnectionAttempts: 50000,
+        transports: ['websocket'],
+        auth: customHeaders
+      });
+    }
+    // if (isPlatformBrowser(this.platformId)) {
+    // }
+  }
+
+  connect(): void {
+    const token = localStorage.getItem("auth-token");
+    if (token) {
+      const customHeaders = {
+        Authorization: `Bearer ${token}`
+      };
+      if(this.socket){
+        this.socket?.close();
       }
+      this.socket = io(environment.socketUrl, {
+        reconnectionDelay: 100,
+        reconnectionDelayMax: 300,
+        // reconnection: true,
+        randomizationFactor: 0.2,
+        // timeout: 120000,
+        reconnectionAttempts: 50000,
+        transports: ['websocket'],
+        auth: customHeaders
+      });
     }
   }
 
@@ -92,12 +114,7 @@ export class SocketService {
   // socket for chat
 
   getChatList(params, callback: (data: any) => void) {
-    if (this.socket?.connected) {
-      this.socket?.emit('get-chat-list', params, callback);
-    } else {
-      this.socket?.connect();
-      this.socket?.emit('get-chat-list', params, callback);
-    }
+    this.socket?.emit('get-chat-list', params, callback);
   }
 
   createChatRoom(params, callback: (data: any) => void) {

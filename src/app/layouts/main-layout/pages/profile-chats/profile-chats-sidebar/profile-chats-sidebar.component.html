@@ -97,25 +97,32 @@
             ngbDropdownMenu
             class="search-user-list w-100 overflow-x-hidden overflow-y-auto"
           >
+          <ng-container *ngIf="userList.length > 0; else noUserFound">
             <ng-container *ngFor="let user of userList">
-              <div
-                ngbDropdownItem
-                class="d-flex gap-3 pe-auto"
-                role="button"
-                (click)="onChat(user)"
-              >
-                <img
-                  loading="lazy"
-                  class="w-32-px h-32-px rounded"
-                  data-src="{{ user.ProfilePicName }}"
-                  [alt]="user.Username"
-                  onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-                />
-                <span class="overflow-hidden text-truncate">{{
-                  user.Username.split(" ").join("")
-                }}</span>
-              </div>
+                <div
+                  ngbDropdownItem
+                  class="d-flex gap-3 pe-auto"
+                  role="button"
+                  (click)="onChat(user)"
+                >
+                  <img
+                    loading="lazy"
+                    class="w-32-px h-32-px rounded"
+                    data-src="{{ user.ProfilePicName }}"
+                    [alt]="user.Username"
+                    onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                  />
+                  <span class="overflow-hidden text-truncate">{{
+                    user.Username.split(" ").join("")
+                  }}</span>
+                </div>
+              </ng-container>
             </ng-container>
+            <ng-template #noUserFound>
+              <div class="text-center">
+                <span>No result found</span>
+              </div>
+            </ng-template>
           </div>
         </div>
       </ng-container>
