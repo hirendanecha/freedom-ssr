@@ -22,6 +22,11 @@
     }
   }
 
+  .header-image{
+    height: 52px !important;
+    width: 52px !important;
+  }
+
   .preview-chat-media {
     bottom: 82px;
     left: 15px;
@@ -51,6 +56,10 @@
   .bg-color {
     background: var(--section-1st-color);
     box-shadow: var(--box-shadow);
+  }
+
+  .box-bg{
+    background-color: var(--box-1st-color);
   }
 
   ::-webkit-scrollbar {

@@ -44,6 +44,7 @@ export class ProfileChatsSidebarComponent
 
   isMessageSoundEnabled: boolean = true;
   isCallSoundEnabled: boolean = true;
+  isChatLoader = false;
 
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
@@ -57,7 +58,8 @@ export class ProfileChatsSidebarComponent
     // this.getUserList();
     this.profileId = +localStorage.getItem('profileId');
 
-    const notificationSound = JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    const notificationSound =
+      JSON.parse(localStorage.getItem('soundPreferences')) || {};
     if (notificationSound?.messageSoundEnabled === 'N') {
       this.isMessageSoundEnabled = false;
     }
@@ -121,7 +123,9 @@ export class ProfileChatsSidebarComponent
   }
 
   getChatList(): void {
+    this.isChatLoader = true;
     this.socketService?.getChatList({ profileId: this.profileId }, (data) => {
+      this.isChatLoader = false;
       this.chatList = data?.filter(
         (user: any) =>
           user.Username != this.sharedService?.userData?.Username &&
@@ -152,5 +156,9 @@ export class ProfileChatsSidebarComponent
       JSON.parse(localStorage.getItem('soundPreferences')) || {};
     soundPreferences[property] = ngModelValue ? 'Y' : 'N';
     localStorage.setItem('soundPreferences', JSON.stringify(soundPreferences));
+  }
+
+  clearChatList() {
+    this.onNewChat?.emit({});
   }
 }

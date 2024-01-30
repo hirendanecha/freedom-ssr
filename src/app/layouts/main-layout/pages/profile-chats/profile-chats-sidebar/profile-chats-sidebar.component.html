@@ -4,7 +4,7 @@
       <div
         class="profile-area d-center justify-content-between align-items-baseline"
       >
-        <div class="avatar-item d-flex mb-2 gap-3 align-items-center">
+        <div class="avatar-item d-flex mb-2 gap-3 align-items-center cursor" (click)="clearChatList()">
           <div class="avatar-item">
             <!--  -->
             <img
@@ -127,6 +127,9 @@
         </div>
       </ng-container>
     </div>
+    <ng-container>
+      <app-inline-loader *ngIf="isChatLoader" />
+    </ng-container>
     <div class="header-menu cus-scrollbar overflow-auto">
       <div class="single-item messages-area" *ngFor="let item of chatList">
         <div
@@ -137,7 +140,7 @@
           <div class="d-flex gap-2">
             <div class="avatar">
               <img
-                class="avatar-img max-un"
+                class="avatar-img h-40-px w-40-px max-un"
                 src="{{ item?.ProfilePicName }}"
                 [alt]="item?.Username || item?.FirstName"
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
@@ -153,9 +156,9 @@
               </div>
               <div>
                 <span
-                  class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
-                  *ngIf="item?.unReadMessage > 0"
-                  >{{ item?.unReadMessage }}</span
+                class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
+                *ngIf="item?.unReadMessage > 0"
+                >{{ item?.unReadMessage }}</span
                 >
               </div>
               <!-- <p class="mdtxt sms">{{ item.text }}</p> -->
@@ -200,7 +203,7 @@
           <div class="d-flex gap-2">
             <div class="avatar">
               <img
-                class="avatar-img max-un"
+                class="avatar-img h-40-px w-40-px max-un"
                 src="{{ item?.ProfilePicName }}"
                 [alt]="item?.Username || item?.FirstName"
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
