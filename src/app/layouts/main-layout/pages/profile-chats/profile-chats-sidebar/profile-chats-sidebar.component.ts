@@ -30,8 +30,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./profile-chats-sidebar.component.scss'],
 })
 export class ProfileChatsSidebarComponent
-  implements AfterViewInit, OnChanges, OnInit
-{
+  implements AfterViewInit, OnChanges, OnInit {
   chatList: any = [];
   pendingChatList: any = [];
 

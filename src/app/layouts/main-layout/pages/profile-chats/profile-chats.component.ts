@@ -7,6 +7,7 @@ import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ProfileChatsSidebarComponent } from './profile-chats-sidebar/profile-chats-sidebar.component';
 import { MessageService } from 'src/app/@shared/services/message.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
+import { SocketService } from 'src/app/@shared/services/socket.service';
 
 @Component({
   selector: 'app-freedom-page',
@@ -36,11 +37,13 @@ export class ProfileChartsComponent {
     private renderer: Renderer2,
     private el: ElementRef,
     private offcanvasService: NgbOffcanvas,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private socketService: SocketService
   ) {
     if (this.sharedService.isNotify) {
       this.sharedService.isNotify = false;
     }
+    // this.socketService.connect();
   }
 
   mobileMenu(): void {

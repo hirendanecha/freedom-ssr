@@ -91,9 +91,8 @@ export class ProfileChatsListComponent
     if (this.userChat?.roomId) {
       this.getMessageList();
     }
-    this.socketService.socket?.off('new-message');
     this.socketService.socket?.on('new-message', (data) => {
-      // console.log('new-message', data);
+      console.log('new-message', data);
       this.newRoomCreated.emit(true);
       if (this.userChat?.roomId === data?.roomId) {
         let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
