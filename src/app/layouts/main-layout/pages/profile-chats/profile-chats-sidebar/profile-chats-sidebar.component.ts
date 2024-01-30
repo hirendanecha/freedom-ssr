@@ -56,6 +56,14 @@ export class ProfileChatsSidebarComponent
   ) {
     // this.getUserList();
     this.profileId = +localStorage.getItem('profileId');
+
+    const notificationSound = JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    if (notificationSound?.messageSoundEnabled === 'N') {
+      this.isMessageSoundEnabled = false;
+    }
+    if (notificationSound?.callSoundEnabled === 'N') {
+      this.isCallSoundEnabled = false;
+    }
   }
 
   ngOnInit(): void {
@@ -79,14 +87,6 @@ export class ProfileChatsSidebarComponent
     console.log('on chan', this.isRoomCreated);
     if (this.isRoomCreated) {
       this.getChatList();
-    }
-    const notificationSound =
-      JSON.parse(localStorage.getItem('soundPreferences')) || {};
-    if (notificationSound?.messageSoundEnabled === 'N') {
-      this.isMessageSoundEnabled = false;
-    }
-    if (notificationSound?.callSoundEnabled === 'N') {
-      this.isCallSoundEnabled = false;
     }
   }
 
