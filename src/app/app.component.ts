@@ -6,6 +6,8 @@ import { Meta } from '@angular/platform-browser';
 import { SocketService } from './@shared/services/socket.service';
 import { CustomerService } from './@shared/services/customer.service';
 import { Howl } from 'howler';
+import { IncomingcallModalComponent } from './@shared/modals/incoming-call-modal/incoming-call-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -26,9 +28,10 @@ export class AppComponent {
     private spinner: NgxSpinnerService,
     private socketService: SocketService,
     private customerService: CustomerService,
+    private modalService: NgbModal,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.checkDocumentFocus()
+    this.checkDocumentFocus();
   }
 
   ngOnInit(): void {
@@ -56,17 +59,21 @@ export class AppComponent {
     this.socketService.socket?.emit('join', { room: this.profileId });
     this.socketService.socket?.on('notification', (data: any) => {
       if (data) {
-        console.log('new-notification', data)
+        console.log('new-notification', data);
         this.notificationId = data.id;
-        this.sharedService.isNotify = true;
         this.originalFavicon.href = '/assets/images/icon-unread.jpg';
         if (data?.actionType === 'T') {
+          this.sharedService.isNotify = true;
           var sound = new Howl({
-            src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
+            src: [
+              'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
+            ],
           });
           // const soundPrefs = JSON.parse(localStorage.getItem('soundPreferences'));
           // const notificationSoundOct = soundPrefs ? soundPrefs.notificationSoundEnabled : null;
-          const notificationSoundOct = JSON.parse(localStorage.getItem('soundPreferences'))?.notificationSoundEnabled;
+          const notificationSoundOct = JSON.parse(
+            localStorage.getItem('soundPreferences')
+          )?.notificationSoundEnabled;
           if (notificationSoundOct !== 'N') {
             if (sound) {
               sound?.play();
@@ -74,17 +81,38 @@ export class AppComponent {
           }
         }
         if (data?.actionType === 'M') {
+          this.sharedService.isNotify = true;
           var sound = new Howl({
             src: [
               'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
             ],
           });
-          const messageSoundOct = JSON.parse(localStorage.getItem('soundPreferences'))?.messageSoundEnabled;
+          const messageSoundOct = JSON.parse(
+            localStorage.getItem('soundPreferences')
+          )?.messageSoundEnabled;
           if (messageSoundOct !== 'N') {
             if (sound) {
               sound?.play();
             }
           }
+        }
+        if (data?.actionType === 'VC') {
+          var callSound = new Howl({
+            src: [
+              'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
+            ],
+            loop: true,
+          });
+          const modalRef = this.modalService.open(IncomingcallModalComponent, {
+            centered: true,
+            size: 'sm',
+            backdrop: 'static',
+          });
+          modalRef.componentInstance.calldata = data;
+          modalRef.componentInstance.sound = callSound;
+          modalRef.result.then((res) => {
+            console.log(res);
+          });
         }
         if (this.notificationId) {
           this.customerService.getNotification(this.notificationId).subscribe({
@@ -103,7 +131,6 @@ export class AppComponent {
       this.sharedService.isNotify = true;
     }
   }
-
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -139,8 +166,7 @@ export class AppComponent {
           const profileId = +localStorage.getItem('profileId');
           // this.socketService.socket?.emit('join', { room: profileId });
         }
-      }, 3000)
-
+      }, 3000);
     }
   }
 }

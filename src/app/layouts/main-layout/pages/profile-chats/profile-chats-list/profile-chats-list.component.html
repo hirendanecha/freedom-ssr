@@ -25,18 +25,19 @@
         </div>
       </div>
       <div class="d-flex gap-3 align-items-center">
-        <a
+        <!-- <a
           class="nav-icon cursor"
           data-toggle="tooltip"
           data-placement="bottom"
           title="Comming Soon!"
           ><fa-icon [icon]="['fas', 'phone']" class="font-20-px m-1"
-        /></a>
+        /></a> -->
         <a
           class="nav-icon cursor"
           data-toggle="tooltip"
           data-placement="bottom"
-          title="Comming Soon!"
+          title="Video Call"
+          (click)="startCall()"
           ><fa-icon [icon]="['fas', 'video']" class="font-20-px m-1"
         /></a>
       </div>

@@ -15,10 +15,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
+import { ConferenceLinkComponent } from 'src/app/@shared/modals/create-conference-link/conference-link-modal.component';
 import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
 import { MessageService } from 'src/app/@shared/services/message.service';
 import { PostService } from 'src/app/@shared/services/post.service';
@@ -84,7 +85,8 @@ export class ProfileChatsListComponent
     private postService: PostService,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    public encryptDecryptService: EncryptDecryptService
+    public encryptDecryptService: EncryptDecryptService,
+    private modalService: NgbModal
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -474,6 +476,29 @@ export class ProfileChatsListComponent
           });
       } else {
         resolve(this.metaData);
+      }
+    });
+  }
+
+  startCall(): void {
+    const modalRef = this.modalService.open(ConferenceLinkComponent, {
+      centered: true,
+      size: 'md',
+    });
+    modalRef.result.then((res) => {
+      // console.log(res);
+      if (res) {
+        this.chatObj.msgText = res;
+        this.sendMessage();
+        const data = {
+          notificationToProfileId: this.userChat.profileId,
+          roomId: this.userChat.roomId,
+          notificationByProfileId: this.profileId,
+          link: res,
+        };
+        this.socketService?.startCall(data, (data: any) => {
+          console.log(data);
+        });
       }
     });
   }

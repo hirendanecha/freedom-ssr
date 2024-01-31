@@ -144,4 +144,12 @@ export class SocketService {
   deleteMessage(params, callback: (data: any) => void) {
     this.socket.emit('delete-message', params, callback);
   }
+
+  startCall(params, callback: (data: any) => void) {
+    this.socket.emit('start-call', params, callback);
+  }  
+
+  hangUpCall(params, callback: (data: any) => void) {
+    this.socket.emit('decile-call', params, callback);
+  }  
 }
