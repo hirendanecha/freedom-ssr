@@ -137,7 +137,21 @@
             color: var(--heading-1st-color);
           }
         }
+        .message { 
+          .options {
+            visibility: hidden !important;
+          }
+          &:hover {
+            .options {
+              visibility: visible !important;              
+            }
+          }
+        }
+        
       }
+    }
+    .dropdown-toggle::after {
+      display:none;
     }
     .message {
       .dropdown-menu.show {

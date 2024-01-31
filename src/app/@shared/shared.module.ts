@@ -81,7 +81,10 @@ import {
   faSearch,
   faBan,
   faFileVideo,
-  faSliders
+  faSliders,
+  faCopy,
+  faPhoneSlash,
+  faEllipsisV
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -105,6 +108,8 @@ import { EditResearchModalComponent } from './modals/edit-research-modal/edit-re
 import { SharePostModalComponent } from './modals/share-post-modal/share-post-modal.component';
 import { RePostCardComponent } from './components/re-post-card/re-post-card.component';
 import { EditPostModalComponent } from './modals/edit-post-modal/edit-post-modal.component';
+import { ConferenceLinkComponent } from './modals/create-conference-link/conference-link-modal.component';
+import { IncomingcallModalComponent } from './modals/incoming-call-modal/incoming-call-modal.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -129,7 +134,9 @@ const sharedComponents = [
   EditResearchModalComponent,
   SharePostModalComponent,
   RePostCardComponent,
-  EditPostModalComponent
+  EditPostModalComponent,
+  ConferenceLinkComponent,
+  IncomingcallModalComponent
 ];
 
 const sharedModules = [
@@ -222,7 +229,10 @@ export class SharedModule {
       faSearch,
       faBan,
       faFileVideo,
-      faSliders
+      faSliders,
+      faCopy,
+      faPhoneSlash,
+      faEllipsisV
     );
   }
 }
