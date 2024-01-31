@@ -223,6 +223,7 @@ export class ProfileChatsListComponent
       this.socketService.sendMessage(data, async (data: any) => {
         // console.log(data);
         this.isFileUploadInProgress = false;
+        this.scrollToBottom();
         this.newRoomCreated?.emit(true);
         const matches = data?.messageText?.match(
           /(?:https?:\/\/|www\.)[^\s]+/g

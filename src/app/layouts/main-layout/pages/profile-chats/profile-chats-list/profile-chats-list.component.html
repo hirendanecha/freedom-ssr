@@ -113,6 +113,7 @@
               [src]="userChat.ProfilePicName"
               class="rounded-circle w-60-px h-60-px"
               alt="image"
+              onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png'"
             />
             <h5>{{ userChat.Username }} has not yet accepted the invite</h5>
             <!-- <div>
@@ -133,7 +134,7 @@
             <img [src]="userChat.ProfilePicName" alt="image" />
           </div> -->
             <div
-              class="message"
+              class="message d-flex gap-3"
               [title]="displayLocalTime(message?.createdDate)"
             >
               <!-- <div class="btn-group d-flex gap-3">
@@ -213,27 +214,15 @@
               <!-- <span class="mdtxt">{{
                 message.createdDate | date : "h:mm a"
               }}</span> -->
-            </div>
-          </li>
-          <li class="me" *ngIf="message?.sentBy === this.profileId">
-            <div
-              class="message"
-              [title]="displayLocalTime(message?.createdDate)"
-              (contextmenu)="editPopup.toggle(); $event.preventDefault()"
-            >
-              <div class="btn-group d-flex gap-3">
-                <div
-                  ngbDropdown
-                  placement="bottom-start"
-                  class="d-inline-block"
-                  #editPopup="ngbDropdown"
-                >
-                  <div
-                    ngbDropdownMenu
-                    class="dropdown-menu"
-                    (mouseleave)="editPopup.close()"
-                  >
-                    <!-- <button class="dropdown-btn" #editPopup ngbDropdownToggle></button> -->
+               <!-- <div class="btn-group d-flex gap-3 options">
+                <div ngbDropdown class="d-inline-block">
+                  <button class="dropdown-btn" ngbDropdownToggle>
+                    <fa-icon
+                      [icon]="['fas', 'ellipsis-h']"
+                      class="font-20-px"
+                    />
+                  </button>
+                  <div ngbDropdownMenu class="dropdown-menu">
                     <button ngbDropdownItem (click)="editMsg(message)">
                       <a class="droplist d-flex align-items-center gap-2">
                         <fa-icon [icon]="['fas', 'pen-to-square']" />
@@ -248,7 +237,14 @@
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> -->
+            </div>
+          </li>
+          <li class="me" *ngIf="message?.sentBy === this.profileId">
+            <div
+              class="message d-flex gap-3"
+              [title]="displayLocalTime(message?.createdDate)"
+            >
               <ng-container *ngIf="message?.messageMedia; else msgText">
                 <ng-container
                   *ngIf="isPdf(message?.messageMedia); else imageMsg"
@@ -292,6 +288,7 @@
                     )
                   }}
                 </p>
+
                 <ng-container *ngIf="message?.metaData">
                   <div class="chat-meta">
                     <app-post-meta-data-card
@@ -306,6 +303,30 @@
               <!-- <span class="mdtxt">{{
               message.createdDate | date : "h:mm a"
             }}</span> -->
+              <div class="btn-group d-flex gap-3 options">
+                <div ngbDropdown class="d-inline-block">
+                  <button class="dropdown-btn" ngbDropdownToggle>
+                    <fa-icon
+                      [icon]="['fas', 'ellipsis-v']"
+                      class="font-20-px"
+                    />
+                  </button>
+                  <div ngbDropdownMenu class="dropdown-menu">
+                    <button ngbDropdownItem (click)="editMsg(message)" *ngIf="!message?.messageMedia">
+                      <a class="droplist d-flex align-items-center gap-2">
+                        <fa-icon [icon]="['fas', 'pen-to-square']" />
+                        <span>Edit</span>
+                      </a>
+                    </button>
+                    <button ngbDropdownItem (click)="deleteMsg(message)">
+                      <a class="droplist d-flex align-items-center gap-2">
+                        <fa-icon [icon]="['fas', 'trash-can']" />
+                        <span>Delete</span>
+                      </a>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- <div class="entete">
             <img [src]="sharedService?.userData?.ProfilePicName" alt="image" />
