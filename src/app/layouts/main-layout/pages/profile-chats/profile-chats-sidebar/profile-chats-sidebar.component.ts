@@ -67,6 +67,13 @@ export class ProfileChatsSidebarComponent
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.sharedService.getIsRoomCreatedObservable().subscribe(isRoomCreated => {
+      this.isRoomCreated = isRoomCreated;
+      this.getChatList();
+    });
+  }
+
   ngOnInit(): void {
     this.socketService.connect();
     this.getChatList();
@@ -83,14 +90,7 @@ export class ProfileChatsSidebarComponent
       }
     });
   }
-
-  ngOnChanges(): void {
-    console.log('on chan', this.isRoomCreated);
-    if (this.isRoomCreated) {
-      this.getChatList();
-    }
-  }
-
+  
   getUserList(): void {
     this.customerService.getProfileList(this.searchText).subscribe({
       next: (res: any) => {

@@ -5,6 +5,7 @@ import { CustomerService } from './customer.service';
 import { CommunityService } from './community.service';
 import { PostService } from './post.service';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,8 @@ export class SharedService {
   linkMetaData: {}
   advertizementLink: any = []
   onlineUserList: any = []
+
+  private isRoomCreatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     public modalService: NgbModal,
@@ -148,5 +151,14 @@ export class SharedService {
         console.log(err);
       },
     });
+  }
+
+  updateIsRoomCreated(value: boolean): void {
+    this.isRoomCreatedSubject.next(value);
+  }
+
+  // Method to get an Observable that emits isRoomCreated changes
+  getIsRoomCreatedObservable(): Observable<boolean> {
+    return this.isRoomCreatedSubject.asObservable();
   }
 }

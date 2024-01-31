@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnDestroy, Renderer2 } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -8,13 +8,14 @@ import { ProfileChatsSidebarComponent } from './profile-chats-sidebar/profile-ch
 import { MessageService } from 'src/app/@shared/services/message.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-freedom-page',
   templateUrl: './profile-chats.component.html',
   styleUrls: ['./profile-chats.component.scss'],
 })
-export class ProfileChartsComponent {
+export class ProfileChartsComponent implements OnDestroy {
   activeIdTab: string = 'local';
   pageList = [];
   profileId: number;
@@ -46,6 +47,7 @@ export class ProfileChartsComponent {
     // this.socketService.connect();
   }
 
+
   mobileMenu(): void {
     this.mobileMenuToggle = !this.mobileMenuToggle;
     this.renderer.setStyle(
@@ -59,8 +61,9 @@ export class ProfileChartsComponent {
     this.userChat = userName;
   }
 
-  onNewChatRoom(isRoomCreated): void {
+  onNewChatRoom(isRoomCreated) {
     this.isRoomCreated = isRoomCreated;
+    return this.sharedService.updateIsRoomCreated(this.isRoomCreated);
   }
 
   // createCommunity() {
@@ -130,5 +133,9 @@ export class ProfileChartsComponent {
     offcanvasRef.componentInstance.onNewChat.subscribe((emittedData: any) => {
       this.onChatPost(emittedData)
     });
+  }
+
+  ngOnDestroy(): void {
+    this.isRoomCreated = false;
   }
 }
