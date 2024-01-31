@@ -225,9 +225,11 @@ export class ProfileChatsListComponent
         this.isFileUploadInProgress = false;
         this.scrollToBottom();
         this.newRoomCreated?.emit(true);
-        const matches = data?.messageText?.match(
-          /(?:https?:\/\/|www\.)[^\s]+/g
+
+        const url = this.encryptDecryptService.decryptUsingAES256(
+          data.messageText
         );
+        const matches = url?.match(/(?:https?:\/\/|www\.)[^\s]+/g);
         if (matches?.[0]) {
           data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
           // console.log(data);
