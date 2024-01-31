@@ -22,7 +22,7 @@
     }
   }
 
-  .header-image{
+  .header-image {
     height: 52px !important;
     width: 52px !important;
   }
@@ -58,7 +58,7 @@
     box-shadow: var(--box-shadow);
   }
 
-  .box-bg{
+  .box-bg {
     background-color: var(--box-1st-color);
   }
 
@@ -137,21 +137,20 @@
             color: var(--heading-1st-color);
           }
         }
-        .message { 
+      }
+      .drop-options {
+        .options {
+          visibility: hidden !important;
+        }
+        &:hover {
           .options {
-            visibility: hidden !important;
-          }
-          &:hover {
-            .options {
-              visibility: visible !important;              
-            }
+            visibility: visible !important;
           }
         }
-        
       }
     }
     .dropdown-toggle::after {
-      display:none;
+      display: none;
     }
     .message {
       .dropdown-menu.show {
