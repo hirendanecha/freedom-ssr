@@ -84,7 +84,7 @@ export class ProfileChatsSidebarComponent
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     console.log('on chan', this.isRoomCreated);
     if (this.isRoomCreated) {
       this.getChatList();

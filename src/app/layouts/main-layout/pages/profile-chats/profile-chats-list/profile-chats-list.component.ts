@@ -33,7 +33,8 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy {
+  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -45,6 +46,7 @@ export class ProfileChatsListComponent
     msgMedia: null,
     id: null,
   };
+  isFileUploadInProgress: boolean = false;
   selectedFile: any;
 
   messageList: any = [];
@@ -82,7 +84,7 @@ export class ProfileChatsListComponent
     private postService: PostService,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    public encryptDecryptService: EncryptDecryptService,
+    public encryptDecryptService: EncryptDecryptService
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -178,7 +180,9 @@ export class ProfileChatsListComponent
   sendMessage(): void {
     // console.log(this.chatObj);
     if (this.chatObj.id) {
-      const message = this.encryptDecryptService.encryptUsingAES256(this.chatObj.msgText)
+      const message = this.encryptDecryptService.encryptUsingAES256(
+        this.chatObj.msgText
+      );
       const data = {
         id: this.chatObj.id,
         messageText: message,
@@ -190,6 +194,7 @@ export class ProfileChatsListComponent
       this.socketService?.editMessage(data, (data: any) => {
         // this.userChat = data;
         console.log('edit-message', data);
+        this.isFileUploadInProgress = false;
         if (data) {
           let index = this.messageList?.findIndex(
             (obj) => obj?.id === data?.id
@@ -202,8 +207,10 @@ export class ProfileChatsListComponent
         this.resetData();
       });
     } else {
-      const message = this.encryptDecryptService.encryptUsingAES256(this.chatObj.msgText);
-      console.log('encrypted-message', message);
+      const message = this.encryptDecryptService.encryptUsingAES256(
+        this.chatObj.msgText
+      );
+      // console.log('encrypted-message', message);
       const data = {
         messageText: message,
         roomId: this.userChat.roomId,
@@ -213,6 +220,7 @@ export class ProfileChatsListComponent
       };
       this.socketService.sendMessage(data, async (data: any) => {
         // console.log(data);
+        this.isFileUploadInProgress = false;
         this.newRoomCreated?.emit(true);
         const matches = data?.messageText?.match(
           /(?:https?:\/\/|www\.)[^\s]+/g
@@ -260,9 +268,10 @@ export class ProfileChatsListComponent
           });
         }
         this.messageList.map(async (element: any) => {
-          const matches = element.messageText?.match(
-            /(?:https?:\/\/|www\.)[^\s]+/g
+          const url = this.encryptDecryptService.decryptUsingAES256(
+            element.messageText
           );
+          const matches = url?.match(/(?:https?:\/\/|www\.)[^\s]+/g);
           if (matches?.[0]) {
             element['metaData'] = await this.getMetaDataFromUrlStr(
               matches?.[0]
@@ -273,16 +282,17 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   scrollToBottom() {
     setTimeout(() => {
       if (this.chatContent) {
-        this.chatContent.nativeElement.scrollTop = this.chatContent.nativeElement.scrollHeight;
+        this.chatContent.nativeElement.scrollTop =
+          this.chatContent.nativeElement.scrollHeight;
       }
     });
   }
@@ -315,29 +325,37 @@ export class ProfileChatsListComponent
   }
 
   uploadPostFileAndCreatePost(): void {
-    if (this.chatObj.msgText || this.selectedFile.name) {
-      if (this.selectedFile) {
-        this.postService.uploadFile(this.selectedFile).subscribe({
-          next: (res: any) => {
-            // this.spinner.hide();
-            if (res?.body?.url) {
-              this.chatObj.msgMedia = res?.body?.url;
-              this.sendMessage();
-            }
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        });
+    if (!this.isFileUploadInProgress) {
+      if (this.chatObj.msgText || this.selectedFile.name) {
+        if (this.selectedFile) {
+          this.isFileUploadInProgress = true;
+          this.postService.uploadFile(this.selectedFile).subscribe({
+            next: (res: any) => {
+              // this.spinner.hide();
+              if (res?.body?.url) {
+                this.isFileUploadInProgress = false;
+                this.chatObj.msgMedia = res?.body?.url;
+                this.sendMessage();
+              }
+            },
+            error: (err) => {
+              this.isFileUploadInProgress = false;
+              console.log(err);
+            },
+          });
+        } else {
+          this.isFileUploadInProgress = true;
+          this.sendMessage();
+        }
       } else {
+        this.isFileUploadInProgress = true;
         this.sendMessage();
       }
-    } else {
-      this.sendMessage();
     }
   }
 
   resetData(): void {
+    this.chatObj['id'] = null;
     this.chatObj.msgMedia = null;
     this.chatObj.msgText = null;
     this.viewUrl = null;
@@ -375,7 +393,9 @@ export class ProfileChatsListComponent
 
   editMsg(msgObj): void {
     this.chatObj['id'] = msgObj?.id;
-    this.chatObj.msgText = this.encryptDecryptService.decryptUsingAES256(msgObj.messageText);
+    this.chatObj.msgText = this.encryptDecryptService.decryptUsingAES256(
+      msgObj.messageText
+    );
     this.chatObj.msgMedia = msgObj.messageMedia;
   }
 
