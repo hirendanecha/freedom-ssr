@@ -329,8 +329,6 @@ export class ProfileChatsListComponent
     } else if (file.type.includes('image/')) {
       this.selectedFile = file;
       this.viewUrl = URL.createObjectURL(file);
-    } else {
-      this.toastService.success('Post create successfully');
     }
     // console.log(this.selectedFile);
   }
