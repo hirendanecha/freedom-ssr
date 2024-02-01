@@ -142,10 +142,10 @@
         </div>
       </ng-container>
     </div>
-    <ng-container>
-      <app-inline-loader *ngIf="isChatLoader" />
-    </ng-container>
     <div class="header-menu cus-scrollbar overflow-auto">
+      <ng-container>
+        <app-inline-loader *ngIf="isChatLoader" />
+      </ng-container>
       <div class="single-item messages-area" *ngFor="let item of chatList">
         <div
           class="text-start d-flex justify-content-between chat-single p-5"
