@@ -4,7 +4,10 @@
       <div
         class="profile-area d-center justify-content-between align-items-baseline"
       >
-        <div class="avatar-item d-flex mb-2 gap-3 align-items-center cursor" (click)="clearChatList()">
+        <div
+          class="avatar-item d-flex mb-2 gap-3 align-items-center cursor"
+          (click)="clearChatList()"
+        >
           <div class="avatar-item">
             <!--  -->
             <img
@@ -31,20 +34,27 @@
               </button> -->
               <div class="dropdown-preferences">
                 <div class="d-flex flex-column">
-                  <label class="d-flex form-label">Sound Preferences</label> 
+                  <label class="d-flex form-label">Sound Preferences</label>
                   <div class="d-flex align-items-baseline">
                     <p class="m-1">
                       Sound for new message
-                      <strong>{{ isMessageSoundEnabled ? 'On' : 'Off' }}</strong>
+                      <strong>{{
+                        isMessageSoundEnabled ? "On" : "Off"
+                      }}</strong>
                     </p>
                     <div class="form-switch">
                       <input
-                      [(ngModel)]="isMessageSoundEnabled"
-                      class="form-check-input p-2"
-                      type="checkbox"
-                      role="switch"
-                      id="flexSwitchCheckChecked"
-                      (change)="toggleSoundPreference('messageSoundEnabled', isMessageSoundEnabled)"
+                        [(ngModel)]="isMessageSoundEnabled"
+                        class="form-check-input p-2"
+                        type="checkbox"
+                        role="switch"
+                        id="flexSwitchCheckChecked"
+                        (change)="
+                          toggleSoundPreference(
+                            'messageSoundEnabled',
+                            isMessageSoundEnabled
+                          )
+                        "
                       />
                       <!-- (change)="notificationSound()" -->
                     </div>
@@ -54,16 +64,21 @@
                   <div class="d-flex align-items-baseline">
                     <p class="m-1">
                       Call ring tone
-                      <strong>{{ isCallSoundEnabled ? 'On' : 'Off' }}</strong>
+                      <strong>{{ isCallSoundEnabled ? "On" : "Off" }}</strong>
                     </p>
                     <div class="form-switch">
                       <input
-                      [(ngModel)]="isCallSoundEnabled"
-                      class="form-check-input p-2"
-                      type="checkbox"
-                      role="switch"
-                      id="flexSwitchCheckChecked"
-                      (change)="toggleSoundPreference('callSoundEnabled', isCallSoundEnabled)"
+                        [(ngModel)]="isCallSoundEnabled"
+                        class="form-check-input p-2"
+                        type="checkbox"
+                        role="switch"
+                        id="flexSwitchCheckChecked"
+                        (change)="
+                          toggleSoundPreference(
+                            'callSoundEnabled',
+                            isCallSoundEnabled
+                          )
+                        "
                       />
                       <!-- (change)="callSound()" -->
                     </div>
@@ -97,8 +112,8 @@
             ngbDropdownMenu
             class="search-user-list w-100 overflow-x-hidden overflow-y-auto"
           >
-          <ng-container *ngIf="userList.length > 0; else noUserFound">
-            <ng-container *ngFor="let user of userList">
+            <ng-container *ngIf="userList.length > 0; else noUserFound">
+              <ng-container *ngFor="let user of userList">
                 <div
                   ngbDropdownItem
                   class="d-flex gap-3 pe-auto"
@@ -135,7 +150,7 @@
         <div
           class="text-start d-flex justify-content-between chat-single p-5"
           (click)="onChat(item)"
-          [ngClass]="{ 'active': item === selectedChatUser }"
+          [ngClass]="{ active: item === selectedChatUser }"
         >
           <div class="d-flex gap-2">
             <div class="avatar">
@@ -147,19 +162,32 @@
               />
             </div>
             <div
-              class="text-area d-flex justify-content-between w-200-px align-items-center"
+              class="text-area d-flex justify-content-between w-248-px align-items-center"
             >
-              <div class="title-area position-relative d-inline-flex">
+              <div class="title-area position-relative d-grid">
                 <h6 class="m-0 d-inline-flex">
                   {{ item?.Username || item?.FirstName }}
                 </h6>
-              </div>
-              <div>
+                <!-- <span class="font-16-px">{{ item?.updatedDate | dateDay }}</span> -->
                 <span
-                class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
-                *ngIf="item?.unReadMessage > 0"
-                >{{ item?.unReadMessage }}</span
+                  class="font-16-px last-message"
+                  *ngIf="item?.lastMessageText"
+                  >{{
+                    encryptDecryptService?.decryptUsingAES256(
+                      item?.lastMessageText
+                    )
+                  }}</span
                 >
+              </div>
+              <div class="d-flex align-items-center">
+                <span
+                  class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
+                  *ngIf="item?.unReadMessage > 0"
+                  >{{ item?.unReadMessage }}</span
+                >
+                <span class="font-12-px">
+                  {{ item?.updatedDate | messageTime }}
+                </span>
               </div>
               <!-- <p class="mdtxt sms">{{ item.text }}</p> -->
             </div>
@@ -194,11 +222,14 @@
       <span class="m-1">Pending Invites:</span>
     </div>
     <div class="header-menu cus-scrollbar-pending overflow-auto">
-      <div class="single-item messages-area" *ngFor="let item of pendingChatList">
+      <div
+        class="single-item messages-area"
+        *ngFor="let item of pendingChatList"
+      >
         <div
           class="text-start d-flex justify-content-between chat-single p-5"
           (click)="onChat(item)"
-          [ngClass]="{ 'active': item === selectedChatUser }"
+          [ngClass]="{ active: item === selectedChatUser }"
         >
           <div class="d-flex gap-2">
             <div class="avatar">
@@ -210,20 +241,26 @@
               />
             </div>
             <div
-              class="text-area d-flex justify-content-between w-200-px align-items-center"
+              class="text-area d-flex justify-content-between w-248-px align-items-center"
             >
-              <div class="title-area position-relative d-inline-flex">
+              <div
+                class="title-area position-relative d-flex justify-content-between w-100"
+              >
                 <h6 class="m-0 d-inline-flex">
                   {{ item?.Username || item?.FirstName }}
                 </h6>
+                <!-- <span class="font-16-px">{{ item?.updatedDate | dateDay }}</span> -->
+                <span class="font-12-px last-message">{{
+                  item?.createdDate | messageTime
+                }}</span>
               </div>
-              <div>
+              <!-- <div>
                 <span
                   class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
                   *ngIf="item?.unReadMessage > 0"
                   >{{ item?.unReadMessage }}</span
                 >
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

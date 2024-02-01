@@ -23,6 +23,7 @@ import {
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { Router } from '@angular/router';
+import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
 
 @Component({
   selector: 'app-profile-chats-sidebar',
@@ -52,7 +53,8 @@ export class ProfileChatsSidebarComponent
     private socketService: SocketService,
     public sharedService: SharedService,
     private activeOffcanvas: NgbActiveOffcanvas,
-    private router: Router
+    private router: Router,
+    public encryptDecryptService: EncryptDecryptService
   ) {
     // this.getUserList();
     this.profileId = +localStorage.getItem('profileId');
@@ -90,7 +92,7 @@ export class ProfileChatsSidebarComponent
       }
     });
   }
-  
+
   getUserList(): void {
     this.customerService.getProfileList(this.searchText).subscribe({
       next: (res: any) => {
@@ -130,6 +132,7 @@ export class ProfileChatsSidebarComponent
           user.Username != this.sharedService?.userData?.Username &&
           user?.isAccepted === 'Y'
       );
+      console.log('chatList===>', this.chatList);
       this.pendingChatList = data.filter(
         (user: any) => user.isAccepted === 'N'
       );

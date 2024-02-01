@@ -9,6 +9,17 @@
   //   .border-top {
   //     border-top: 1px solid var(--bs-border-color) !important;
   //   }
+
+  .messages-area {
+    .last-message {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+  }
   .search-user-list {
     max-height: 300px;
     overflow: scroll;
@@ -29,7 +40,7 @@
     }
   }
 
-  .dropdown-preferences{
+  .dropdown-preferences {
     margin: 0 10px;
   }
 }
