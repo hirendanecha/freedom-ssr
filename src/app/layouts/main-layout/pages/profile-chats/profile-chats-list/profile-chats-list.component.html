@@ -13,9 +13,7 @@
         />
         <div class="profile-status">
           <h5 class="m-0">
-            <a class="m-0">{{
-              userChat?.Username
-            }}</a>
+            <a class="m-0">{{ userChat?.Username }}</a>
           </h5>
           <span class="mdtxt">{{
             sharedService?.onlineUserList.includes(userChat?.profileId)
@@ -134,7 +132,7 @@
             <img [src]="userChat.ProfilePicName" alt="image" />
           </div> -->
             <div
-              class="message d-flex gap-3"
+              class="message d-flex gap-3 flex-column"
               [title]="displayLocalTime(message?.createdDate)"
             >
               <!-- <div class="btn-group d-flex gap-3">
@@ -159,7 +157,7 @@
               </div>
             </div> -->
 
-              <ng-container *ngIf="message?.messageMedia; else msgText">
+              <ng-container *ngIf="message?.messageMedia">
                 <ng-container
                   *ngIf="isPdf(message?.messageMedia); else imageMsg"
                 >
@@ -194,14 +192,18 @@
                   </ng-template>
                 </ng-template>
               </ng-container>
-              <ng-template #msgText>
-                <p class="m-0" *ngIf="!message?.metaData">
-                  {{
+              <!-- *ngIf="!message?.metaData" -->
+              <div class="d-flex flex-column">
+                <p
+                  *ngIf="message?.messageText !== null"
+                  class="m-0"
+                  [innerHTML]="
                     encryptDecryptService.decryptUsingAES256(
                       message?.messageText
                     )
-                  }}
-                </p>
+                  "
+                ></p>
+
                 <ng-container *ngIf="message?.metaData">
                   <div class="chat-meta">
                     <app-post-meta-data-card
@@ -210,11 +212,11 @@
                     />
                   </div>
                 </ng-container>
-              </ng-template>
+              </div>
               <!-- <span class="mdtxt">{{
                 message.createdDate | date : "h:mm a"
               }}</span> -->
-               <!-- <div class="btn-group d-flex gap-3 options">
+              <!-- <div class="btn-group d-flex gap-3 options">
                 <div ngbDropdown class="d-inline-block">
                   <button class="dropdown-btn" ngbDropdownToggle>
                     <fa-icon
@@ -243,15 +245,27 @@
           <li class="me" *ngIf="message?.sentBy === this.profileId">
             <div class="d-flex flex-row-reverse gap-2 drop-options">
               <div class="btn-group d-flex options">
-                <div ngbDropdown #editPopup="ngbDropdown" class="d-inline-block">
+                <div
+                  ngbDropdown
+                  #editPopup="ngbDropdown"
+                  class="d-inline-block"
+                >
                   <button class="dropdown-btn" ngbDropdownToggle>
                     <fa-icon
                       [icon]="['fas', 'ellipsis-v']"
                       class="font-20-px"
                     />
                   </button>
-                  <div ngbDropdownMenu class="dropdown-menu" (mouseleave)="editPopup.close()">
-                    <button ngbDropdownItem (click)="editMsg(message)" *ngIf="!message?.messageMedia">
+                  <div
+                    ngbDropdownMenu
+                    class="dropdown-menu"
+                    (mouseleave)="editPopup.close()"
+                  >
+                    <button
+                      ngbDropdownItem
+                      (click)="editMsg(message)"
+                      *ngIf="!message?.messageMedia"
+                    >
                       <a class="droplist d-flex align-items-center gap-2">
                         <fa-icon [icon]="['fas', 'pen-to-square']" />
                         <span>Edit</span>
@@ -267,11 +281,11 @@
                 </div>
               </div>
               <div
-                class="message d-flex gap-3"
+                class="message d-flex gap-3 flex-column"
                 [title]="displayLocalTime(message?.createdDate)"
-                >
+              >
                 <!-- (contextmenu)="editPopup.toggle(); $event.preventDefault()" -->
-                <ng-container *ngIf="message?.messageMedia; else msgText">
+                <ng-container *ngIf="message?.messageMedia">
                   <ng-container
                     *ngIf="isPdf(message?.messageMedia); else imageMsg"
                   >
@@ -306,30 +320,32 @@
                     </ng-template>
                   </ng-template>
                 </ng-container>
-                <ng-template #msgText>
-                  <p class="m-0" *ngIf="!message?.metaData">
-                    {{
+                <!-- *ngIf="!message?.metaData" -->
+                <div class="d-flex flex-column">
+                  <p
+                    *ngIf="message?.messageText !== null"
+                    class="m-0"
+                    [innerHTML]="
                       encryptDecryptService.decryptUsingAES256(
                         message?.messageText
                       )
-                    }}
-                  </p>
-  
+                    "
+                  ></p>
                   <ng-container *ngIf="message?.metaData">
                     <div class="chat-meta">
                       <app-post-meta-data-card
-                        [post]="message?.metaData"
+                        [post]="message.metaData"
                         class="pt-2"
                       />
                     </div>
                   </ng-container>
-                </ng-template>
+                </div>
                 <!-- {{ message.createdDate | date : "h:mm a"}} -->
                 <!-- {{displayLocalTime(message.createdDate)}} -->
                 <!-- <span class="mdtxt">{{
                 message.createdDate | date : "h:mm a"
               }}</span> -->
-            </div>
+              </div>
             </div>
             <!-- <div class="entete">
             <img [src]="sharedService?.userData?.ProfilePicName" alt="image" />
@@ -491,20 +507,24 @@
                 </label> -->
               </div>
             </div>
-            <input
+            <!-- <input
               class="py-2 input-area message-text"
               placeholder="Type your message here.."
               [(ngModel)]="chatObj.msgText"
               name="msg"
+            /> -->
+            <app-tag-user-input
+              class="message-input-field message-text"
+              placeholder="Type your message here.."
+              [value]="messageInputValue"
+              [isShowMetaLoader]="false"
+              [isAllowTagUser]="false"
+              [isShowMetaPreview]="false"
+              [isCopyImagePreview]="false"
+              [isShowEmojis]="false"
+              (onDataChange)="onTagUserInputChangeEvent($event)"
             />
-            <!-- <app-tag-user-input
-            placeholder="Message.."
-            [value]="messageInputValue"
-            [isShowMetaLoader]="false"
-            [isShowMetaPreview]="false"
-            [isShowEmojis]="false"
-            (onDataChange)="onTagUserInputChangeEvent($event)"
-          /> -->
+            <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
             <div class="btn-area">
               <button
                 class="cmn-btn message px-2 px-sm-5 px-lg-6 lh-lg"

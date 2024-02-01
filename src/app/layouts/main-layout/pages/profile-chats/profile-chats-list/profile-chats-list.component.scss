@@ -53,6 +53,7 @@
       }
     }
   }
+
   .bg-color {
     background: var(--section-1st-color);
     box-shadow: var(--box-shadow);
@@ -158,13 +159,24 @@
         right: -20px;
       }
     }
+
+    .message-input-field {
+      .tag-input-div {
+        background-color: var(--body-color);
+        max-width: calc(100% - 5px) !important;
+        width: 100% !important;
+        min-height: unset !important;
+        height: 44px;
+        padding: 9px;
+      }
+    }
   }
 
   .chat-meta {
     max-width: 250px;
     app-post-meta-data-card {
       .post-meta-description {
-        display: none;
+        display: none !important;
       }
     }
     .post-description {

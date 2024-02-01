@@ -26,6 +26,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   @Input('value') value: string = '';
   @Input('placeholder') placeholder: string = 'ss';
   @Input('isShowMetaPreview') isShowMetaPreview: boolean = true;
+  @Input('isCopyImagePreview') isCopyImagePreview: boolean = true;
   @Input('isAllowTagUser') isAllowTagUser: boolean = true;
   @Input('isShowMetaLoader') isShowMetaLoader: boolean = true;
   @Input('isShowEmojis') isShowEmojis: boolean = false;
