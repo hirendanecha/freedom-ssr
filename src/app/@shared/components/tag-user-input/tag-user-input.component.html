@@ -58,7 +58,7 @@
   <app-post-meta-data-card [post]="metaData" class="pt-5" />
 </ng-container>
 
-<ng-container *ngIf="copyImage">
+<ng-container *ngIf="isCopyImagePreview && copyImage">
   <div class="rounded m-3">
     <!-- <fa-icon [icon]="['fas', 'xmark']" class="position-absolute start-100 translate-middle badge bg-danger py-1 font-16-px c-pointer c-icon-color" (click)="onClearFile()" /> -->
     <img [src]="copyImage">

@@ -34,7 +34,8 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy {
+  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -58,7 +59,7 @@ export class ProfileChatsListComponent
   pdfName: string = '';
   viewUrl: string;
   pdfmsg: string;
-  messageInputValue: string;
+  messageInputValue: string = '';
   firstTimeScroll = false;
 
   emojiPaths = [
@@ -181,9 +182,10 @@ export class ProfileChatsListComponent
   sendMessage(): void {
     // console.log(this.chatObj);
     if (this.chatObj.id) {
-      const message = this.encryptDecryptService.encryptUsingAES256(
-        this.chatObj.msgText
-      );
+      const message =
+        this.chatObj.msgText !== null
+          ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
+          : null;
       const data = {
         id: this.chatObj.id,
         messageText: message,
@@ -194,7 +196,7 @@ export class ProfileChatsListComponent
       };
       this.socketService?.editMessage(data, (data: any) => {
         // this.userChat = data;
-        console.log('edit-message', data);
+        // console.log('edit-message', data);
         this.isFileUploadInProgress = false;
         if (data) {
           let index = this.messageList?.findIndex(
@@ -208,9 +210,10 @@ export class ProfileChatsListComponent
         this.resetData();
       });
     } else {
-      const message = this.encryptDecryptService.encryptUsingAES256(
-        this.chatObj.msgText
-      );
+      const message =
+        this.chatObj.msgText !== null
+          ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
+          : null;
       // console.log('encrypted-message', message);
       const data = {
         messageText: message,
@@ -225,10 +228,14 @@ export class ProfileChatsListComponent
         this.scrollToBottom();
         this.newRoomCreated?.emit(true);
 
-        const url = this.encryptDecryptService.decryptUsingAES256(
-          data.messageText
+        const url =
+          data.messageText !== null
+            ? this.encryptDecryptService.decryptUsingAES256(data.messageText)
+            : null;
+        const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
+        const matches = text?.match(
+          /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
         );
-        const matches = url?.match(/(?:https?:\/\/|www\.)[^\s]+/g);
         if (matches?.[0]) {
           data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
           // console.log(data);
@@ -272,10 +279,16 @@ export class ProfileChatsListComponent
           });
         }
         this.messageList.map(async (element: any) => {
-          const url = this.encryptDecryptService.decryptUsingAES256(
-            element.messageText
+          const url =
+            element.messageText !== null
+              ? this.encryptDecryptService.decryptUsingAES256(
+                  element.messageText
+                )
+              : null;
+          const text = url.replace(/<br\s*\/?>|<[^>]*>/g, '');
+          const matches = text?.match(
+            /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
           );
-          const matches = url?.match(/(?:https?:\/\/|www\.)[^\s]+/g);
           if (matches?.[0]) {
             element['metaData'] = await this.getMetaDataFromUrlStr(
               matches?.[0]
@@ -286,11 +299,11 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   scrollToBottom() {
     setTimeout(() => {
@@ -319,13 +332,25 @@ export class ProfileChatsListComponent
     } else {
       this.toastService.success('Post create successfully');
     }
-    console.log(this.selectedFile);
+    // console.log(this.selectedFile);
   }
 
   removePostSelectedFile(): void {
     this.selectedFile = null;
     this.pdfName = null;
     this.viewUrl = null;
+    this.resetData();
+  }
+
+  onTagUserInputChangeEvent(data: any): void {
+    // this.chatObj.msgText = data.html;
+    this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
+    // this.extractImageUrlFromContent(data?.html);
+    // this.postData.postdescription = data?.html;
+    // this.postMessageTags = data?.tags;
+    if (data.html === '') {
+      this.resetData();
+    }
   }
 
   uploadPostFileAndCreatePost(): void {
@@ -365,7 +390,12 @@ export class ProfileChatsListComponent
     this.viewUrl = null;
     this.pdfName = null;
     this.selectedFile = null;
-    this.messageInputValue = null;
+    this.messageInputValue = '';
+    if (this.messageInputValue !== null) {
+      setTimeout(() => {
+        this.messageInputValue = null;
+      }, 10);
+    }
   }
 
   displayLocalTime(utcDateTime: string): string {
@@ -397,7 +427,7 @@ export class ProfileChatsListComponent
 
   editMsg(msgObj): void {
     this.chatObj['id'] = msgObj?.id;
-    this.chatObj.msgText = this.encryptDecryptService.decryptUsingAES256(
+    this.messageInputValue = this.encryptDecryptService?.decryptUsingAES256(
       msgObj.messageText
     );
     this.chatObj.msgMedia = msgObj.messageMedia;
@@ -413,6 +443,7 @@ export class ProfileChatsListComponent
       },
       (data: any) => {
         // console.log(data);
+        this.newRoomCreated.emit(true);
         this.messageList = this.messageList.filter(
           (obj) => obj?.id !== data?.id
         );
@@ -505,4 +536,48 @@ export class ProfileChatsListComponent
     });
   }
 
+  extractImageUrlFromContent(content: string) {
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = content;
+    const imgTag = contentContainer.querySelector('img');
+    if (imgTag) {
+      const imgTitle = imgTag.getAttribute('title');
+      const imgStyle = imgTag.getAttribute('style');
+      const imageGif = imgTag
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
+      if (!imgTitle && !imgStyle && !imageGif) {
+        const copyImage = imgTag.getAttribute('src');
+        let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
+        const messageText = `<div>${content
+          .replace(copyImage, '')
+          .replace(/\<br\>/gi, '')
+          .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+        const base64Image = copyImage
+          .trim()
+          .replace(/^data:image\/\w+;base64,/, '');
+        try {
+          const binaryString = window.atob(base64Image);
+          const uint8Array = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            uint8Array[i] = binaryString.charCodeAt(i);
+          }
+          const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+          const fileName = `copyImage-${new Date().getTime()}.jpg`;
+          const file = new File([blob], fileName, { type: 'image/jpeg' });
+          this.selectedFile = file;
+          this.viewUrl = URL.createObjectURL(file);
+        } catch (error) {
+          console.error('Base64 decoding error:', error);
+        }
+        if (messageText !== '<div></div>') {
+          return messageText;
+        }
+      }
+    } else {
+      return content;
+    }
+    return null;
+  }
 }

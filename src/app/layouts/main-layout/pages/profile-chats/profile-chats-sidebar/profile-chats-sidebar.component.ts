@@ -132,7 +132,6 @@ export class ProfileChatsSidebarComponent
           user.Username != this.sharedService?.userData?.Username &&
           user?.isAccepted === 'Y'
       );
-      console.log('chatList===>', this.chatList);
       this.pendingChatList = data.filter(
         (user: any) => user.isAccepted === 'N'
       );

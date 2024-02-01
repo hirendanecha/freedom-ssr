@@ -171,13 +171,19 @@
                 <!-- <span class="font-16-px">{{ item?.updatedDate | dateDay }}</span> -->
                 <span
                   class="font-16-px last-message"
-                  *ngIf="item?.lastMessageText"
-                  >{{
+                  *ngIf="item?.lastMessageText !== null"
+                  [innerHTML]="
+                    encryptDecryptService.decryptUsingAES256(
+                      item?.lastMessageText
+                    )
+                  "
+                >
+                  <!-- {{
                     encryptDecryptService?.decryptUsingAES256(
                       item?.lastMessageText
                     )
-                  }}</span
-                >
+                  }} -->
+                </span>
               </div>
               <div class="d-flex align-items-center">
                 <span
