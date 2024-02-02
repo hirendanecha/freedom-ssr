@@ -1,14 +1,12 @@
 import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { SharedService } from './@shared/services/shared.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Meta } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
 import { SocketService } from './@shared/services/socket.service';
 import { CustomerService } from './@shared/services/customer.service';
 import { Howl } from 'howler';
 import { IncomingcallModalComponent } from './@shared/modals/incoming-call-modal/incoming-call-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { OutgoingcallModalComponent } from './@shared/modals/outgoing-call-modal/outgoing-call-modal.component';
 
 @Component({
   selector: 'app-root',
