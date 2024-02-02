@@ -15,10 +15,11 @@
     .c-pdf-show {
       overflow: hidden;
       display: -webkit-inline-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       word-break: break-word;
       text-overflow: ellipsis;
+      cursor: pointer;
     }
   }
 
@@ -30,6 +31,9 @@
   .preview-chat-media {
     bottom: 82px;
     left: 15px;
+    background: var(--box-1st-color);
+    border-radius: 16px;
+    padding: 5px;
   }
 
   button:disabled {
