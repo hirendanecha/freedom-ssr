@@ -117,7 +117,7 @@ export class AppComponent {
         }
         if (data?.actionType === 'SC') {
           this.modalService.dismissAll();
-          window.open(data.link, '_blank');
+          window?.open(data?.link, '_blank');
         }
         if (this.notificationId) {
           this.customerService.getNotification(this.notificationId).subscribe({

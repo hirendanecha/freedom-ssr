@@ -220,7 +220,7 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
       };
       // console.log(data);
-      
+
       this.socketService.sendMessage(data, async (data: any) => {
         // console.log(data);
         this.isFileUploadInProgress = false;
@@ -284,7 +284,7 @@ export class ProfileChatsListComponent
                   element.messageText
                 )
               : null;
-          const text = url.replace(/<br\s*\/?>|<[^>]*>/g, '');
+          const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
             /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
           );
@@ -557,12 +557,12 @@ export class ProfileChatsListComponent
         const copyImage = imgTag.getAttribute('src');
         let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
         const messageText = `<div>${content
-          .replace(copyImage, '')
-          .replace(/\<br\>/gi, '')
-          .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+          ?.replace(copyImage, '')
+          ?.replace(/\<br\>/gi, '')
+          ?.replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
         const base64Image = copyImage
           .trim()
-          .replace(/^data:image\/\w+;base64,/, '');
+          ?.replace(/^data:image\/\w+;base64,/, '');
         try {
           const binaryString = window.atob(base64Image);
           const uint8Array = new Uint8Array(binaryString.length);
