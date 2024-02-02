@@ -219,6 +219,8 @@ export class ProfileChatsListComponent
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
       };
+      // console.log(data);
+      
       this.socketService.sendMessage(data, async (data: any) => {
         // console.log(data);
         this.isFileUploadInProgress = false;
@@ -519,6 +521,7 @@ export class ProfileChatsListComponent
 
     const data = {
       ProfilePicName: this.userChat.ProfilePicName,
+      Username: this.userChat.Username,
       notificationToProfileId: this.userChat.profileId,
       roomId: this.userChat.roomId,
       notificationByProfileId: this.profileId,
