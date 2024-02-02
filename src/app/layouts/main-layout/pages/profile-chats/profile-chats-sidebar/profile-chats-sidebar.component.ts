@@ -17,8 +17,6 @@ import { SeoService } from 'src/app/@shared/services/seo.service';
 import {
   NgbActiveOffcanvas,
   NgbDropdown,
-  NgbModal,
-  NgbOffcanvas,
 } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
@@ -56,7 +54,6 @@ export class ProfileChatsSidebarComponent
     private router: Router,
     public encryptDecryptService: EncryptDecryptService
   ) {
-    // this.getUserList();
     this.profileId = +localStorage.getItem('profileId');
 
     const notificationSound =
@@ -102,7 +99,6 @@ export class ProfileChatsSidebarComponent
           );
           this.userList = this.userList.filter(
             (user: any) =>
-              // user.Username !== this.searchText &&
               !this.chatList.some(
                 (chatUser: any) => chatUser.profileId === user.Id
               ) &&

@@ -23,13 +23,6 @@
         </div>
       </div>
       <div class="d-flex gap-3 align-items-center">
-        <!-- <a
-          class="nav-icon cursor"
-          data-toggle="tooltip"
-          data-placement="bottom"
-          title="Comming Soon!"
-          ><fa-icon [icon]="['fas', 'phone']" class="font-20-px m-1"
-        /></a> -->
         <a
           class="nav-icon cursor"
           data-toggle="tooltip"
@@ -42,7 +35,6 @@
     </div>
 
     <div class="chat-content position-relative" #chatContent>
-      <!-- [scrollTop]="chatContent.scrollHeight" -->
       <!-- ui first -->
       <ng-container
         *ngIf="
@@ -114,10 +106,6 @@
               onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png'"
             />
             <h5>{{ userChat.Username }} has not yet accepted the invite</h5>
-            <!-- <div>
-          <button class="btn btn-danger mx-3">Cancel</button>
-          <button class="btn btn-primary mx-3">Send</button>
-        </div> -->
           </div>
         </div>
       </ng-container>
@@ -128,35 +116,10 @@
           *ngFor="let message of messageList"
         >
           <li class="you" *ngIf="message?.sentBy !== this.profileId">
-            <!-- <div class="entete">
-            <img [src]="userChat.ProfilePicName" alt="image" />
-          </div> -->
             <div
               class="message d-flex gap-3 flex-column"
               [title]="displayLocalTime(message?.createdDate)"
             >
-              <!-- <div class="btn-group d-flex gap-3">
-              <div ngbDropdown class="d-inline-block">
-                <button class="dropdown-btn" ngbDropdownToggle>
-                  <fa-icon [icon]="['fas', 'ellipsis-h']" class="font-20-px" />
-                </button>
-                <div ngbDropdownMenu class="dropdown-menu">
-                  <button ngbDropdownItem (click)="editMsg(message)">
-                    <a class="droplist d-flex align-items-center gap-2">
-                      <fa-icon [icon]="['fas', 'pen-to-square']" />
-                      <span>Edit</span>
-                    </a>
-                  </button>
-                  <button ngbDropdownItem (click)="deleteMsg(message)">
-                    <a class="droplist d-flex align-items-center gap-2">
-                      <fa-icon [icon]="['fas', 'trash-can']" />
-                      <span>Delete</span>
-                    </a>
-                  </button>
-                </div>
-              </div>
-            </div> -->
-
               <ng-container *ngIf="message?.messageMedia">
                 <ng-container
                   *ngIf="isPdf(message?.messageMedia); else imageMsg"
@@ -192,7 +155,6 @@
                   </ng-template>
                 </ng-template>
               </ng-container>
-              <!-- *ngIf="!message?.metaData" -->
               <div class="d-flex flex-column">
                 <p
                   *ngIf="message?.messageText !== null"
@@ -213,33 +175,6 @@
                   </div>
                 </ng-container>
               </div>
-              <!-- <span class="mdtxt">{{
-                message.createdDate | date : "h:mm a"
-              }}</span> -->
-              <!-- <div class="btn-group d-flex gap-3 options">
-                <div ngbDropdown class="d-inline-block">
-                  <button class="dropdown-btn" ngbDropdownToggle>
-                    <fa-icon
-                      [icon]="['fas', 'ellipsis-h']"
-                      class="font-20-px"
-                    />
-                  </button>
-                  <div ngbDropdownMenu class="dropdown-menu">
-                    <button ngbDropdownItem (click)="editMsg(message)">
-                      <a class="droplist d-flex align-items-center gap-2">
-                        <fa-icon [icon]="['fas', 'pen-to-square']" />
-                        <span>Edit</span>
-                      </a>
-                    </button>
-                    <button ngbDropdownItem (click)="deleteMsg(message)">
-                      <a class="droplist d-flex align-items-center gap-2">
-                        <fa-icon [icon]="['fas', 'trash-can']" />
-                        <span>Delete</span>
-                      </a>
-                    </button>
-                  </div>
-                </div>
-              </div> -->
             </div>
           </li>
           <li class="me" *ngIf="message?.sentBy === this.profileId">
@@ -320,7 +255,6 @@
                     </ng-template>
                   </ng-template>
                 </ng-container>
-                <!-- *ngIf="!message?.metaData" -->
                 <div class="d-flex flex-column">
                   <p
                     *ngIf="message?.messageText !== null"
@@ -340,16 +274,8 @@
                     </div>
                   </ng-container>
                 </div>
-                <!-- {{ message.createdDate | date : "h:mm a"}} -->
-                <!-- {{displayLocalTime(message.createdDate)}} -->
-                <!-- <span class="mdtxt">{{
-                message.createdDate | date : "h:mm a"
-              }}</span> -->
               </div>
             </div>
-            <!-- <div class="entete">
-            <img [src]="sharedService?.userData?.ProfilePicName" alt="image" />
-          </div> -->
           </li>
         </ul>
       </ng-container>
@@ -370,10 +296,6 @@
               <h5>welcome</h5>
               <h5>{{ sharedService?.userData?.Username }}</h5>
             </div>
-            <!-- <div>
-          <button class="btn btn-danger mx-3">Cancel</button>
-          <button class="btn btn-primary mx-3">Send</button>
-        </div> -->
           </div>
         </div>
       </ng-container>
@@ -490,29 +412,8 @@
                     </div>
                   </div>
                 </div>
-                <!-- <label class="file">
-                  <input
-                    type="file"
-                    [(ngModel)]="chatObj.msgMedia"
-                    name="gif"
-                    (change)="onPostFileSelect($event)"
-                    accept="video/mp4*"
-                  />
-                  <span class="file-custom border-0 m-1 d-grid text-center">
-                    <fa-icon
-                      [icon]="['fas', 'file-video']"
-                      class="font-20-px"
-                    />
-                  </span>
-                </label> -->
               </div>
             </div>
-            <!-- <input
-              class="py-2 input-area message-text"
-              placeholder="Type your message here.."
-              [(ngModel)]="chatObj.msgText"
-              name="msg"
-            /> -->
             <app-tag-user-input
               class="message-input-field message-text"
               placeholder="Type your message here.."

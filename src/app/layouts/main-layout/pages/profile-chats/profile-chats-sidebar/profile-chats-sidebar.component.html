@@ -26,12 +26,6 @@
               <fa-icon [icon]="['fas', 'ellipsis-h']" class="font-20-px" />
             </button>
             <div ngbDropdownMenu class="dropdown-menu">
-              <!-- <button ngbDropdownItem (click)="goToViewProfile()">
-                <a class="droplist d-flex align-items-center gap-2">
-                  <fa-icon [icon]="['fas', 'user']" />
-                  <span>View Profile</span>
-                </a>
-              </button> -->
               <div class="dropdown-preferences">
                 <div class="d-flex flex-column">
                   <label class="d-flex form-label">Sound Preferences</label>
@@ -56,7 +50,6 @@
                           )
                         "
                       />
-                      <!-- (change)="notificationSound()" -->
                     </div>
                   </div>
                 </div>
@@ -80,17 +73,10 @@
                           )
                         "
                       />
-                      <!-- (change)="callSound()" -->
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- <button ngbDropdownItem>
-                <a class="droplist d-flex align-items-center gap-2" href="#">
-                  <fa-icon [icon]="['fas', 'ban']" />
-                  <span>Hide Contact</span>
-                </a>
-              </button> -->
             </div>
           </div>
         </div>
@@ -168,7 +154,6 @@
                 <h6 class="m-0 d-inline-flex">
                   {{ item?.Username || item?.FirstName }}
                 </h6>
-                <!-- <span class="font-16-px">{{ item?.updatedDate | dateDay }}</span> -->
                 <span
                   class="font-16-px last-message"
                   *ngIf="item?.lastMessageText !== null"
@@ -178,11 +163,6 @@
                     )
                   "
                 >
-                  <!-- {{
-                    encryptDecryptService?.decryptUsingAES256(
-                      item?.lastMessageText
-                    )
-                  }} -->
                 </span>
               </div>
               <div class="d-flex align-items-center">
@@ -195,30 +175,8 @@
                   {{ item?.updatedDate | messageTime }}
                 </span>
               </div>
-              <!-- <p class="mdtxt sms">{{ item.text }}</p> -->
             </div>
           </div>
-          <!-- <div class="btn-group cus-dropdown d-flex gap-3">
-            <div ngbDropdown class="d-inline-block">
-              <button class="dropdown-btn" ngbDropdownToggle>
-                <fa-icon [icon]="['fas', 'ellipsis-h']" class="font-20-px" />
-              </button>
-              <div ngbDropdownMenu class="dropdown-menu">
-                <button ngbDropdownItem>
-                  <a class="droplist d-flex align-items-center gap-2" href="#">
-                    <fa-icon [icon]="['fas', 'user-minus']" />
-                    <span>Unfollow</span>
-                  </a>
-                </button>
-                <button ngbDropdownItem>
-                  <a class="droplist d-flex align-items-center gap-2" href="#">
-                    <fa-icon [icon]="['fas', 'ban']" />
-                    <span>Hide Contact</span>
-                  </a>
-                </button>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
     </div>
@@ -255,18 +213,10 @@
                 <h6 class="m-0 d-inline-flex">
                   {{ item?.Username || item?.FirstName }}
                 </h6>
-                <!-- <span class="font-16-px">{{ item?.updatedDate | dateDay }}</span> -->
                 <span class="font-12-px last-message">{{
                   item?.createdDate | messageTime
                 }}</span>
               </div>
-              <!-- <div>
-                <span
-                  class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
-                  *ngIf="item?.unReadMessage > 0"
-                  >{{ item?.unReadMessage }}</span
-                >
-              </div> -->
             </div>
           </div>
         </div>

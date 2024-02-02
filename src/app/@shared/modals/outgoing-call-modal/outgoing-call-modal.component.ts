@@ -7,7 +7,7 @@ import { SocketService } from '../../services/socket.service';
   templateUrl: './outgoing-call-modal.component.html',
   styleUrls: ['./outgoing-call-modal.component.scss'],
 })
-export class OutgoingcallModalComponent implements OnInit, AfterViewInit {
+export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
   @Input() cancelButtonLabel: string = 'Hangup';
   @Input() confirmButtonLabel: string = 'Join';
   @Input() title: string = 'Outgoing call...';

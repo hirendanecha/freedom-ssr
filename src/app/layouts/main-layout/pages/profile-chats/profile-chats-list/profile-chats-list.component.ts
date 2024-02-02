@@ -16,7 +16,7 @@ import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
-import { OutgoingcallModalComponent } from 'src/app/@shared/modals/outgoing-call-modal/outgoing-call-modal.component';
+import { OutGoingCallModalComponent } from 'src/app/@shared/modals/outgoing-call-modal/outgoing-call-modal.component';
 import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
 import { MessageService } from 'src/app/@shared/services/message.service';
 import { PostService } from 'src/app/@shared/services/post.service';
@@ -31,8 +31,7 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy
-{
+  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -281,8 +280,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText !== null
               ? this.encryptDecryptService.decryptUsingAES256(
-                  element.messageText
-                )
+                element.messageText
+              )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -298,11 +297,11 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   scrollToBottom() {
     setTimeout(() => {
@@ -511,7 +510,7 @@ export class ProfileChatsListComponent
   }
 
   startCall(): void {
-    const modalRef = this.modalService.open(OutgoingcallModalComponent, {
+    const modalRef = this.modalService.open(OutGoingCallModalComponent, {
       centered: true,
       size: 'sm',
       backdrop: 'static',
@@ -529,7 +528,6 @@ export class ProfileChatsListComponent
     };
     modalRef.componentInstance.calldata = data;
     modalRef.componentInstance.title = 'RINGING...';
-    modalRef.componentInstance.parentComponant = 'ProfileChatsListComponent';
 
     this.socketService?.startCall(data, (data: any) => {
       // console.log(data);
@@ -537,7 +535,7 @@ export class ProfileChatsListComponent
     modalRef.result.then((res) => {
       if (res === 'cancel') {
         this.chatObj.msgText = 'Your call has been ended';
-        this.sendMessage();
+        // this.sendMessage();
       }
     });
   }

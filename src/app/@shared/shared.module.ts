@@ -111,7 +111,7 @@ import { EditPostModalComponent } from './modals/edit-post-modal/edit-post-modal
 import { ConferenceLinkComponent } from './modals/create-conference-link/conference-link-modal.component';
 import { IncomingcallModalComponent } from './modals/incoming-call-modal/incoming-call-modal.component';
 import { AppointmentCallComponent } from './components/appointment-call/appointment-call.component';
-import { OutgoingcallModalComponent } from './modals/outgoing-call-modal/outgoing-call-modal.component';
+import { OutGoingCallModalComponent } from './modals/outgoing-call-modal/outgoing-call-modal.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -139,7 +139,7 @@ const sharedComponents = [
   EditPostModalComponent,
   ConferenceLinkComponent,
   IncomingcallModalComponent,
-  OutgoingcallModalComponent,
+  OutGoingCallModalComponent,
   AppointmentCallComponent
 ];
 

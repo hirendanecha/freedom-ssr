@@ -12,10 +12,10 @@ import {
 } from '@angular/core';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { CustomerService } from '../../services/customer.service';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { PostService } from '../../services/post.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SocketService } from '../../services/socket.service';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-tag-user-input',
