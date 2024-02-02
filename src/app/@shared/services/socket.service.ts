@@ -150,6 +150,10 @@ export class SocketService {
   }  
 
   hangUpCall(params, callback: (data: any) => void) {
-    this.socket.emit('decile-call', params, callback);
+    this.socket.emit('decline-call', params, callback);
+  }  
+
+  pickUpCall(params, callback: (data: any) => void) {
+    this.socket.emit('pick-up-call', params, callback);
   }  
 }

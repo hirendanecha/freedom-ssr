@@ -35,7 +35,6 @@ export class PostDetailComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.router.events.subscribe((event: any) => {
         const id = event?.routerEvent?.url.split('/')[2];
-        console.log(id);
         this.postId = id;
         if (this.postId) {
           this.getPostsByPostId();
