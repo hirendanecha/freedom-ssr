@@ -23,7 +23,7 @@ import { PostService } from 'src/app/@shared/services/post.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
-
+import { Howl } from 'howler';
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -526,7 +526,14 @@ export class ProfileChatsListComponent
       notificationByProfileId: this.profileId,
       link: originUrl,
     };
+    var callSound = new Howl({
+      src: [
+        'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
+      ],
+      loop: true,
+    });
     modalRef.componentInstance.calldata = data;
+    modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
     this.socketService?.startCall(data, (data: any) => {
