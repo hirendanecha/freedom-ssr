@@ -533,7 +533,7 @@ export class ProfileChatsListComponent
       loop: true,
     });
     modalRef.componentInstance.calldata = data;
-    modalRef.componentInstance.sound = callSound;
+    // modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
     this.socketService?.startCall(data, (data: any) => {
