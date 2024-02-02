@@ -533,7 +533,7 @@ export class ProfileChatsListComponent
     });
     modalRef.result.then((res) => {
       if (res === 'cancel') {
-        this.chatObj.msgText = 'Your call has been end.';
+        this.chatObj.msgText = 'Your call has been ended';
         this.sendMessage();
       }
     });
