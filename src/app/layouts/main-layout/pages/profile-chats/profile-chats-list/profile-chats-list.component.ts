@@ -2,12 +2,9 @@ import { DOCUMENT } from '@angular/common';
 import {
   AfterViewChecked,
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
-  Inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -19,7 +16,7 @@ import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
-import { ConferenceLinkComponent } from 'src/app/@shared/modals/create-conference-link/conference-link-modal.component';
+import { OutgoingcallModalComponent } from 'src/app/@shared/modals/outgoing-call-modal/outgoing-call-modal.component';
 import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
 import { MessageService } from 'src/app/@shared/services/message.service';
 import { PostService } from 'src/app/@shared/services/post.service';
@@ -512,24 +509,32 @@ export class ProfileChatsListComponent
   }
 
   startCall(): void {
-    const modalRef = this.modalService.open(ConferenceLinkComponent, {
+    const modalRef = this.modalService.open(OutgoingcallModalComponent, {
       centered: true,
-      size: 'md',
+      size: 'sm',
+      backdrop: 'static',
+    });
+    const originUrl =
+      'https://facetime.tube/' + `callId-${new Date().getTime()}`;
+
+    const data = {
+      ProfilePicName: this.userChat.ProfilePicName,
+      notificationToProfileId: this.userChat.profileId,
+      roomId: this.userChat.roomId,
+      notificationByProfileId: this.profileId,
+      link: originUrl,
+    };
+    modalRef.componentInstance.calldata = data;
+    modalRef.componentInstance.title = 'RINGING...';
+    modalRef.componentInstance.parentComponant = 'ProfileChatsListComponent';
+
+    this.socketService?.startCall(data, (data: any) => {
+      // console.log(data);
     });
     modalRef.result.then((res) => {
-      // console.log(res);
-      if (res) {
-        this.chatObj.msgText = res;
+      if (res === 'cancel') {
+        this.chatObj.msgText = 'Your call has been end.';
         this.sendMessage();
-        const data = {
-          notificationToProfileId: this.userChat.profileId,
-          roomId: this.userChat.roomId,
-          notificationByProfileId: this.profileId,
-          link: res,
-        };
-        this.socketService?.startCall(data, (data: any) => {
-          console.log(data);
-        });
       }
     });
   }

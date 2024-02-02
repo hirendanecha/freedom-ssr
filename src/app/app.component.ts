@@ -8,6 +8,7 @@ import { CustomerService } from './@shared/services/customer.service';
 import { Howl } from 'howler';
 import { IncomingcallModalComponent } from './@shared/modals/incoming-call-modal/incoming-call-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OutgoingcallModalComponent } from './@shared/modals/outgoing-call-modal/outgoing-call-modal.component';
 
 @Component({
   selector: 'app-root',
@@ -113,6 +114,10 @@ export class AppComponent {
           modalRef.result.then((res) => {
             console.log(res);
           });
+        }
+        if (data?.actionType === 'SC') {
+          this.modalService.dismissAll();
+          window.open(data.link, '_blank');
         }
         if (this.notificationId) {
           this.customerService.getNotification(this.notificationId).subscribe({

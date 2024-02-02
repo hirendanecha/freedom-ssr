@@ -110,6 +110,8 @@ import { RePostCardComponent } from './components/re-post-card/re-post-card.comp
 import { EditPostModalComponent } from './modals/edit-post-modal/edit-post-modal.component';
 import { ConferenceLinkComponent } from './modals/create-conference-link/conference-link-modal.component';
 import { IncomingcallModalComponent } from './modals/incoming-call-modal/incoming-call-modal.component';
+import { AppointmentCallComponent } from './components/appointment-call/appointment-call.component';
+import { OutgoingcallModalComponent } from './modals/outgoing-call-modal/outgoing-call-modal.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -136,7 +138,9 @@ const sharedComponents = [
   RePostCardComponent,
   EditPostModalComponent,
   ConferenceLinkComponent,
-  IncomingcallModalComponent
+  IncomingcallModalComponent,
+  OutgoingcallModalComponent,
+  AppointmentCallComponent
 ];
 
 const sharedModules = [
