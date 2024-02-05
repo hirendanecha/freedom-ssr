@@ -116,7 +116,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
           // window.location.reload();
 
           // Redirect to a new page after reload
-          window.location.href = "http://localhost:4200/home";
+          window.location.href = "https://www.freedom.buzz/home";
           this.toastService.success('Logged in successfully');
           // this.router.navigate([`/home`]);
         } else {
