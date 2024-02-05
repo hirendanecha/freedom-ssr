@@ -24,6 +24,7 @@ import { SharedService } from 'src/app/@shared/services/shared.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { Howl } from 'howler';
+import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-modal/create-group-modal.component';
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -31,7 +32,8 @@ import { Howl } from 'howler';
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy {
+  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -88,13 +90,18 @@ export class ProfileChatsListComponent
   }
 
   ngAfterViewInit(): void {
-    if (this.userChat?.roomId) {
+    console.log(this.userChat);
+
+    if (this.userChat?.roomId || this.userChat?.groupId) {
       this.getMessageList();
     }
     this.socketService.socket?.on('new-message', (data) => {
       console.log('new-message', data);
       this.newRoomCreated.emit(true);
-      if (this.userChat?.roomId === data?.roomId) {
+      if (
+        this.userChat?.roomId === data?.roomId ||
+        this.userChat?.groupId === data?.groupId
+      ) {
         let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
         if (data?.isDeleted) {
           this.messageList = this.messageList.filter(
@@ -119,7 +126,7 @@ export class ProfileChatsListComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     // console.log('input', this.userChat);
-    if (this.userChat?.roomId) {
+    if (this.userChat?.roomId || this.userChat?.groupId) {
       this.getMessageList();
       this.socketService.socket.on('get-users', (data) => {
         data.map((ele) => {
@@ -185,7 +192,8 @@ export class ProfileChatsListComponent
       const data = {
         id: this.chatObj.id,
         messageText: message,
-        roomId: this.userChat.roomId,
+        roomId: this.userChat?.roomId,
+        groupId: this.userChat?.groupId,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
@@ -213,7 +221,8 @@ export class ProfileChatsListComponent
       // console.log('encrypted-message', message);
       const data = {
         messageText: message,
-        roomId: this.userChat.roomId,
+        roomId: this.userChat.roomId || null,
+        groupId: this.userChat?.groupId || null,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
@@ -253,7 +262,8 @@ export class ProfileChatsListComponent
     const messageObj = {
       page: 1,
       size: 500,
-      roomId: this.userChat.roomId,
+      roomId: this.userChat?.roomId || null,
+      groupId: this.userChat?.groupId || null,
     };
     this.messageService.getMessages(messageObj).subscribe({
       next: (data: any) => {
@@ -280,8 +290,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText !== null
               ? this.encryptDecryptService.decryptUsingAES256(
-                element.messageText
-              )
+                  element.messageText
+                )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -297,11 +307,11 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   scrollToBottom() {
     setTimeout(() => {
@@ -432,6 +442,7 @@ export class ProfileChatsListComponent
   deleteMsg(msg): void {
     this.socketService?.deleteMessage(
       {
+        groupId: msg?.groupId,
         roomId: msg?.roomId,
         sentBy: msg.sentBy,
         id: msg.id,
@@ -590,5 +601,26 @@ export class ProfileChatsListComponent
       return content;
     }
     return null;
+  }
+
+  createGroup() {
+    const modalRef = this.modalService.open(CreateGroupModalComponent, {
+      centered: true,
+      size: 'md',
+    });
+    const data = {
+      Id: this.userChat.profileId,
+      ProfilePicName: this.userChat.ProfilePicName,
+      Username: this.userChat.Username,
+    };
+    modalRef.componentInstance.data = data;
+    modalRef.result.then((res) => {
+      if (res) {
+        console.log(res);
+        this.socketService?.createGroup(res, (data: any) => {
+          this.newRoomCreated.emit(true);
+        });
+      }
+    });
   }
 }

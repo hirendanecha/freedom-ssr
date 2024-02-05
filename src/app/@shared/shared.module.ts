@@ -84,7 +84,9 @@ import {
   faSliders,
   faCopy,
   faPhoneSlash,
-  faEllipsisV
+  faEllipsisV,
+  faUsers,
+  faCommentAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -112,6 +114,7 @@ import { ConferenceLinkComponent } from './modals/create-conference-link/confere
 import { IncomingcallModalComponent } from './modals/incoming-call-modal/incoming-call-modal.component';
 import { AppointmentCallComponent } from './components/appointment-call/appointment-call.component';
 import { OutGoingCallModalComponent } from './modals/outgoing-call-modal/outgoing-call-modal.component';
+import { CreateGroupModalComponent } from './modals/create-group-modal/create-group-modal.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -140,7 +143,8 @@ const sharedComponents = [
   ConferenceLinkComponent,
   IncomingcallModalComponent,
   OutGoingCallModalComponent,
-  AppointmentCallComponent
+  AppointmentCallComponent,
+  CreateGroupModalComponent
 ];
 
 const sharedModules = [
@@ -236,7 +240,10 @@ export class SharedModule {
       faSliders,
       faCopy,
       faPhoneSlash,
-      faEllipsisV
+      faEllipsisV,
+      faUsers,
+      faCommentAlt,
+      faLayerGroup
     );
   }
 }
