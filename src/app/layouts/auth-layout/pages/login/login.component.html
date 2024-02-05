@@ -25,10 +25,10 @@
         #signInForm="ngForm"
         [formGroup]="loginForm"
         (ngSubmit)="signInForm.form.valid && onSubmit()"
-        *ngIf="!isLoggedIn"
         novalidate
         autocomplete="none"
-      >
+        >
+        <!-- *ngIf="!isLoggedIn" -->
         <div
           class="alert alert-{{ type }}"
           role="alert"

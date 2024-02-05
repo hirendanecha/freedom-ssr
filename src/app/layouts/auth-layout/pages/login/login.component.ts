@@ -113,8 +113,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
             })
             // this.onlineUserList = data;
           })
+          // window.location.reload();
+
+          // Redirect to a new page after reload
+          window.location.href = "http://localhost:4200/home";
           this.toastService.success('Logged in successfully');
-          this.router.navigate([`/home`]);
+          // this.router.navigate([`/home`]);
         } else {
           this.loginMessage = data.mesaage;
           this.spinner.hide();
