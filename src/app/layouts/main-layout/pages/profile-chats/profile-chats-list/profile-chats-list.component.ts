@@ -8,6 +8,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -32,8 +33,7 @@ import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-m
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy
-{
+  implements AfterViewInit, OnChanges, AfterViewChecked, OnDestroy, OnInit {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -89,7 +89,7 @@ export class ProfileChatsListComponent
     this.profileId = +localStorage.getItem('profileId');
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit() {
     console.log(this.userChat);
 
     if (this.userChat?.roomId || this.userChat?.groupId) {
@@ -113,6 +113,7 @@ export class ProfileChatsListComponent
           this.messageList.push(data);
         }
       }
+      this.scrollToBottom();
     });
     this.socketService.socket?.emit('online-users');
     this.socketService.socket?.on('get-users', (data) => {
@@ -122,6 +123,9 @@ export class ProfileChatsListComponent
         }
       });
     });
+  }
+
+  ngAfterViewInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -148,6 +152,9 @@ export class ProfileChatsListComponent
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+    if (this.socketService?.socket) {
+      this.socketService.socket?.disconnect();
+    }
   }
 
   // invite btn
@@ -290,8 +297,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText !== null
               ? this.encryptDecryptService.decryptUsingAES256(
-                  element.messageText
-                )
+                element.messageText
+              )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -307,11 +314,10 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
-  ngOnInit() {}
 
   scrollToBottom() {
     setTimeout(() => {
@@ -397,11 +403,11 @@ export class ProfileChatsListComponent
     this.pdfName = null;
     this.selectedFile = null;
     this.messageInputValue = '';
-    if (this.messageInputValue !== null) {
+    // if (this.messageInputValue !== null) {
       setTimeout(() => {
         this.messageInputValue = null;
       }, 10);
-    }
+    // }
   }
 
   displayLocalTime(utcDateTime: string): string {
@@ -476,6 +482,7 @@ export class ProfileChatsListComponent
           .subscribe({
             next: (res: any) => {
               this.isMetaLoader = false;
+              this.scrollToBottom();
               if (res?.meta?.image) {
                 const urls = res.meta?.image?.url;
                 const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
@@ -623,4 +630,5 @@ export class ProfileChatsListComponent
       }
     });
   }
+
 }

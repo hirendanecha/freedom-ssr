@@ -1,14 +1,15 @@
-import { Component, ElementRef, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileChatsSidebarComponent } from './profile-chats-sidebar/profile-chats-sidebar.component';
 import { SharedService } from 'src/app/@shared/services/shared.service';
+import { SocketService } from 'src/app/@shared/services/socket.service';
 
 @Component({
-  selector: 'app-freedom-page',
+  selector: 'app-profile-chat-list',
   templateUrl: './profile-chats.component.html',
   styleUrls: ['./profile-chats.component.scss'],
 })
-export class ProfileChartsComponent implements OnDestroy {
+export class ProfileChartsComponent implements OnDestroy, OnInit {
   activeIdTab: string = 'local';
   pageList = [];
   profileId: number;
@@ -31,11 +32,15 @@ export class ProfileChartsComponent implements OnDestroy {
     private renderer: Renderer2,
     private el: ElementRef,
     private offcanvasService: NgbOffcanvas,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private socketService: SocketService
   ) {
     if (this.sharedService.isNotify) {
       this.sharedService.isNotify = false;
     }
+  }
+  ngOnInit(): void {
+    this.socketService.connect();
   }
 
   mobileMenu(): void {
@@ -69,5 +74,8 @@ export class ProfileChartsComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.isRoomCreated = false;
+    if (this.socketService?.socket) {
+      this.socketService.socket?.disconnect();
+    }
   }
 }

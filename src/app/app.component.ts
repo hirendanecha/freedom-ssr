@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, HostListener, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { SharedService } from './@shared/services/shared.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { isPlatformBrowser } from '@angular/common';
@@ -13,7 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'freedom-ssr';
   showButton = false;
   tab: any;
@@ -38,101 +38,101 @@ export class AppComponent {
       this.profileId = localStorage.getItem('profileId');
       this.originalFavicon = document.querySelector('link[rel="icon"]');
       this.sharedService.getUserDetails();
+      this.spinner.hide();
+      setTimeout(() => {
+        const splashScreenLoader = document.getElementById('splashScreenLoader');
+        if (splashScreenLoader) {
+          splashScreenLoader.style.display = 'none';
+        }
+      }, 1000);
+
+      if (!this.socketService.socket?.connected) {
+        this.socketService.socket?.connect();
+        this.socketService.socket?.emit('online-users');
+      }
+
+      this.socketService.socket?.emit('join', { room: this.profileId });
+      this.socketService.socket?.on('notification', (data: any) => {
+        if (data) {
+          console.log('new-notification', data);
+          this.notificationId = data.id;
+          this.originalFavicon.href = '/assets/images/icon-unread.jpg';
+          if (data?.actionType === 'T') {
+            this.sharedService.isNotify = true;
+            var sound = new Howl({
+              src: [
+                'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
+              ],
+            });
+            // const soundPrefs = JSON.parse(localStorage.getItem('soundPreferences'));
+            // const notificationSoundOct = soundPrefs ? soundPrefs.notificationSoundEnabled : null;
+            const notificationSoundOct = JSON.parse(
+              localStorage.getItem('soundPreferences')
+            )?.notificationSoundEnabled;
+            if (notificationSoundOct !== 'N') {
+              if (sound) {
+                sound?.play();
+              }
+            }
+          }
+          if (data?.actionType === 'M') {
+            this.sharedService.isNotify = true;
+            var sound = new Howl({
+              src: [
+                'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
+              ],
+            });
+            const messageSoundOct = JSON.parse(
+              localStorage.getItem('soundPreferences')
+            )?.messageSoundEnabled;
+            if (messageSoundOct !== 'N') {
+              if (sound) {
+                sound?.play();
+              }
+            }
+          }
+          if (data?.actionType === 'VC') {
+            var callSound = new Howl({
+              src: [
+                'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
+              ],
+              loop: true,
+            });
+            const modalRef = this.modalService.open(IncomingcallModalComponent, {
+              centered: true,
+              size: 'sm',
+              backdrop: 'static',
+            });
+            modalRef.componentInstance.calldata = data;
+            modalRef.componentInstance.sound = callSound;
+            modalRef.result.then((res) => {
+              console.log(res);
+            });
+          }
+          if (data?.actionType === 'SC') {
+            this.modalService.dismissAll();
+            window?.open(data?.link, '_blank');
+          }
+          if (this.notificationId) {
+            this.customerService.getNotification(this.notificationId).subscribe({
+              next: (res) => {
+                localStorage.setItem('isRead', res.data[0]?.isRead);
+              },
+              error: (error) => {
+                console.log(error);
+              },
+            });
+          }
+        }
+      });
+      const isRead = localStorage.getItem('isRead');
+      if (isRead === 'N') {
+        this.sharedService.isNotify = true;
+      }
     }
   }
 
   ngAfterViewInit(): void {
-    this.spinner.hide();
-    setTimeout(() => {
-      const splashScreenLoader = document.getElementById('splashScreenLoader');
-      if (splashScreenLoader) {
-        splashScreenLoader.style.display = 'none';
-      }
-    }, 1000);
-
-    if (!this.socketService.socket?.connected) {
-      this.socketService.socket?.connect();
-      this.socketService.socket?.emit('online-users');
-    }
-
-    this.socketService.socket?.emit('join', { room: this.profileId });
-    this.socketService.socket?.on('notification', (data: any) => {
-      if (data) {
-        console.log('new-notification', data);
-        this.notificationId = data.id;
-        this.originalFavicon.href = '/assets/images/icon-unread.jpg';
-        if (data?.actionType === 'T') {
-          this.sharedService.isNotify = true;
-          var sound = new Howl({
-            src: [
-              'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
-            ],
-          });
-          // const soundPrefs = JSON.parse(localStorage.getItem('soundPreferences'));
-          // const notificationSoundOct = soundPrefs ? soundPrefs.notificationSoundEnabled : null;
-          const notificationSoundOct = JSON.parse(
-            localStorage.getItem('soundPreferences')
-          )?.notificationSoundEnabled;
-          if (notificationSoundOct !== 'N') {
-            if (sound) {
-              sound?.play();
-            }
-          }
-        }
-        if (data?.actionType === 'M') {
-          this.sharedService.isNotify = true;
-          var sound = new Howl({
-            src: [
-              'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
-            ],
-          });
-          const messageSoundOct = JSON.parse(
-            localStorage.getItem('soundPreferences')
-          )?.messageSoundEnabled;
-          if (messageSoundOct !== 'N') {
-            if (sound) {
-              sound?.play();
-            }
-          }
-        }
-        if (data?.actionType === 'VC') {
-          var callSound = new Howl({
-            src: [
-              'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
-            ],
-            loop: true,
-          });
-          const modalRef = this.modalService.open(IncomingcallModalComponent, {
-            centered: true,
-            size: 'sm',
-            backdrop: 'static',
-          });
-          modalRef.componentInstance.calldata = data;
-          modalRef.componentInstance.sound = callSound;
-          modalRef.result.then((res) => {
-            console.log(res);
-          });
-        }
-        if (data?.actionType === 'SC') {
-          this.modalService.dismissAll();
-          window?.open(data?.link, '_blank');
-        }
-        if (this.notificationId) {
-          this.customerService.getNotification(this.notificationId).subscribe({
-            next: (res) => {
-              localStorage.setItem('isRead', res.data[0]?.isRead);
-            },
-            error: (error) => {
-              console.log(error);
-            },
-          });
-        }
-      }
-    });
-    const isRead = localStorage.getItem('isRead');
-    if (isRead === 'N') {
-      this.sharedService.isNotify = true;
-    }
   }
 
   @HostListener('window:scroll', [])

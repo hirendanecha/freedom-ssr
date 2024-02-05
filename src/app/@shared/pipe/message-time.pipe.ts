@@ -33,7 +33,7 @@ export class MessageTimePipe implements PipeTransform {
     }
 
     if (diffInWeeks < 4) {
-      return `${days[targetDate.getDay()]} ${diffInWeeks} weeks ago`;
+      return `${diffInWeeks}weeks ago`;
     }
 
     // For older dates, return the actual date

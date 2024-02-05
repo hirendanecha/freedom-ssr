@@ -62,10 +62,10 @@ export class ProfileMenusModalComponent {
 
   logout(): void {
     // this.isCollapsed = true;
-    this.socketService.socket?.emit('offline', (data) => {
+    this.socketService?.socket?.emit('offline', (data) => {
       console.log('user=>', data)
     })
-    this.socketService.socket.on('get-users', (data) => {
+    this.socketService?.socket?.on('get-users', (data) => {
       data.map(ele => {
         if (!this.sharedService.onlineUserList.includes(ele.userId)) {
           this.sharedService.onlineUserList.push(ele.userId)
