@@ -31,13 +31,12 @@ export class ProfileChartsComponent implements OnDestroy {
     private renderer: Renderer2,
     private el: ElementRef,
     private offcanvasService: NgbOffcanvas,
-    private sharedService: SharedService,
+    private sharedService: SharedService
   ) {
     if (this.sharedService.isNotify) {
       this.sharedService.isNotify = false;
     }
   }
-
 
   mobileMenu(): void {
     this.mobileMenuToggle = !this.mobileMenuToggle;
@@ -49,6 +48,7 @@ export class ProfileChartsComponent implements OnDestroy {
   }
 
   onChatPost(userName: any) {
+    console.log(userName);
     this.userChat = userName;
   }
 
@@ -58,9 +58,12 @@ export class ProfileChartsComponent implements OnDestroy {
   }
 
   openChatListSidebar() {
-    const offcanvasRef = this.offcanvasService.open(ProfileChatsSidebarComponent, this.userChat);
+    const offcanvasRef = this.offcanvasService.open(
+      ProfileChatsSidebarComponent,
+      this.userChat
+    );
     offcanvasRef.componentInstance.onNewChat.subscribe((emittedData: any) => {
-      this.onChatPost(emittedData)
+      this.onChatPost(emittedData);
     });
   }
 

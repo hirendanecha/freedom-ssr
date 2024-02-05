@@ -14,10 +14,7 @@ import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { ProfileService } from 'src/app/@shared/services/profile.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
-import {
-  NgbActiveOffcanvas,
-  NgbDropdown,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveOffcanvas, NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { Router } from '@angular/router';
@@ -29,9 +26,11 @@ import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.
   styleUrls: ['./profile-chats-sidebar.component.scss'],
 })
 export class ProfileChatsSidebarComponent
-  implements AfterViewInit, OnChanges, OnInit {
+  implements AfterViewInit, OnChanges, OnInit
+{
   chatList: any = [];
   pendingChatList: any = [];
+  groupList: any = [];
 
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
@@ -43,6 +42,7 @@ export class ProfileChatsSidebarComponent
   isMessageSoundEnabled: boolean = true;
   isCallSoundEnabled: boolean = true;
   isChatLoader = false;
+  selectedButton: string = 'chats';
 
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
@@ -67,20 +67,26 @@ export class ProfileChatsSidebarComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.sharedService.getIsRoomCreatedObservable().subscribe(isRoomCreated => {
-      this.isRoomCreated = isRoomCreated;
-      this.getChatList();
-    });
+    this.sharedService
+      .getIsRoomCreatedObservable()
+      .subscribe((isRoomCreated) => {
+        this.isRoomCreated = isRoomCreated;
+        this.getChatList();
+        this.getGroupList();
+      });
   }
 
   ngOnInit(): void {
     this.socketService.connect();
     this.getChatList();
+    this.getGroupList();
   }
 
   ngAfterViewInit(): void {
+    this.getGroupList();
     if (this.isRoomCreated) {
       this.getChatList();
+      this.getGroupList();
     }
     this.socketService.socket?.on('accept-invitation', (data) => {
       if (data) {
@@ -137,6 +143,10 @@ export class ProfileChatsSidebarComponent
   onChat(item: any) {
     this.selectedChatUser = item;
     item.unReadMessage = 0;
+    if (item.groupId) {
+      item.isAccepted = 'Y';
+    }
+    console.log(item);
     this.onNewChat?.emit(item);
     this.activeOffcanvas?.dismiss();
     if (this.searchText) {
@@ -157,5 +167,18 @@ export class ProfileChatsSidebarComponent
 
   clearChatList() {
     this.onNewChat?.emit({});
+  }
+
+  selectButton(buttonType: string): void {
+    this.selectedButton =
+      this.selectedButton === buttonType ? null : buttonType;
+  }
+
+  getGroupList(): void {
+    this.isChatLoader = true;
+    this.socketService?.getGroup({ profileId: this.profileId }, (data) => {
+      this.isChatLoader = false;
+      this.groupList = data;
+    });
   }
 }
