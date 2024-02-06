@@ -53,7 +53,7 @@ export class ProfileChartsComponent implements OnDestroy, OnInit {
   }
 
   onChatPost(userName: any) {
-    console.log(userName);
+    // console.log(userName);
     this.userChat = userName;
   }
 

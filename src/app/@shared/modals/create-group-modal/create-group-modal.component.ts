@@ -15,6 +15,7 @@ export class CreateGroupModalComponent implements OnInit {
   @Input() title: string = 'Add to Group';
   @Input() message: string;
   @Input() data: any;
+  @Input() groupId: number;
   profileId: number;
   searchText = '';
   userList: any = [];
@@ -33,7 +34,9 @@ export class CreateGroupModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.addedInvitesList.push(this.data);
+    if (this.data) {
+      this.addedInvitesList.push(this.data);
+    }
   }
 
   getUserList(): void {
@@ -69,12 +72,11 @@ export class CreateGroupModalComponent implements OnInit {
     let groupMembers = this.addedInvitesList.map((item) => item.Id);
     let groupMembersName = this.addedInvitesList.map((item) => item.Username);
     let commaSeparatedString = groupMembersName.join(', ');
-    console.log(commaSeparatedString);
-    
     const groupData = {
       profileId: this.profileId,
       groupName: commaSeparatedString,
       profileIds: groupMembers,
+      groupId : this.groupId || null,
     };
     this.activateModal.close(groupData);
   }

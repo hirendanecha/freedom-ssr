@@ -164,4 +164,12 @@ export class SocketService {
   getGroup(params, callback: (data: any) => void) {
     this.socket.emit('get-group-list', params, callback);
   }
+
+  getGroupData(params, callback: (data: any) => void) {
+    this.socket.emit('get-group', params, callback);
+  }
+  
+  removeGroupMember(params, callback: (data: any) => void) {
+    this.socket.emit('remove-member', params, callback);
+  }
 }

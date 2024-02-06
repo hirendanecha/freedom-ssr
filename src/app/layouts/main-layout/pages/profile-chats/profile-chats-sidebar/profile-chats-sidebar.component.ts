@@ -146,7 +146,7 @@ export class ProfileChatsSidebarComponent
     if (item.groupId) {
       item.isAccepted = 'Y';
     }
-    console.log(item);
+    // console.log(item);
     this.onNewChat?.emit(item);
     this.activeOffcanvas?.dismiss();
     if (this.searchText) {
@@ -170,8 +170,7 @@ export class ProfileChatsSidebarComponent
   }
 
   selectButton(buttonType: string): void {
-    this.selectedButton =
-      this.selectedButton === buttonType ? null : buttonType;
+    this.selectedButton = this.selectedButton === buttonType ? buttonType : buttonType;
   }
 
   getGroupList(): void {
