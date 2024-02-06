@@ -34,8 +34,7 @@ import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
-{
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -200,16 +199,8 @@ export class ProfileChatsListComponent
         groupId: this.userChat?.groupId,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
-        profileIds: [],
+        profileId: this.userChat.profileId
       };
-      if (this.userChat?.groupId) {
-        // console.log(this.groupData);
-        data.profileIds = this.groupData?.memberList.map(
-          (e: any) => e.profileId
-        );
-      } else {
-        data.profileIds = [this.userChat.profileId];
-      }
       this.socketService?.editMessage(data, (data: any) => {
         // this.userChat = data;
         // console.log('edit-message', data);
@@ -237,15 +228,9 @@ export class ProfileChatsListComponent
         groupId: this.userChat?.groupId || null,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
-        profileIds: [],
+        profileId: this.userChat.profileId
       };
-      if (this.userChat?.groupId && this.groupData?.memberList) {
-        data.profileIds = this.groupData?.memberList?.map(
-          (e: any) => e?.profileId
-        );
-      } else {
-        data.profileIds = [this.userChat.profileId];
-      }
+
       // console.log(data);
 
       this.socketService.sendMessage(data, async (data: any) => {
@@ -255,8 +240,8 @@ export class ProfileChatsListComponent
         this.newRoomCreated?.emit(true);
 
         const url =
-          data.messageText !== null
-            ? this.encryptDecryptService.decryptUsingAES256(data.messageText)
+          data.messageText != null
+            ? this.encryptDecryptService?.decryptUsingAES256(data.messageText)
             : null;
         const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
         const matches = text?.match(
@@ -280,7 +265,7 @@ export class ProfileChatsListComponent
   getMessageList(): void {
     const messageObj = {
       page: 1,
-      size: 500,
+      size: 1000,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
     };
@@ -307,10 +292,10 @@ export class ProfileChatsListComponent
         }
         this.messageList.map(async (element: any) => {
           const url =
-            element.messageText !== null
-              ? this.encryptDecryptService.decryptUsingAES256(
-                  element.messageText
-                )
+            element.messageText != null
+              ? this.encryptDecryptService?.decryptUsingAES256(
+                element?.messageText
+              )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -326,7 +311,7 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
@@ -549,11 +534,13 @@ export class ProfileChatsListComponent
     const data = {
       ProfilePicName: this.userChat.ProfilePicName,
       Username: this.userChat.Username,
-      notificationToProfileIds: this.userChat.profileId,
+      notificationToProfileId: this.userChat.profileId,
       roomId: this.userChat.roomId,
+      groupId: this.userChat.groupId,
       notificationByProfileId: this.profileId,
       link: originUrl,
     };
+  
     var callSound = new Howl({
       src: [
         'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',

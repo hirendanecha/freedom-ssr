@@ -6,12 +6,12 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root'
 })
 export class EncryptDecryptService {
-    private key = CryptoJS.enc.Utf8.parse(environment.EncryptKey);
-    private iv = CryptoJS.enc.Utf8.parse(environment.EncryptIV);
+    private key = CryptoJS?.enc.Utf8.parse(environment.EncryptKey);
+    private iv = CryptoJS?.enc.Utf8.parse(environment.EncryptIV);
     constructor() { }
     // Methods for the encrypt and decrypt Using AES
     encryptUsingAES256(text): any {
-        var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(text), this.key, {
+        var encrypted = CryptoJS?.AES?.encrypt(CryptoJS.enc.Utf8.parse(text), this.key, {
             keySize: 128 / 8,
             iv: this.iv,
             mode: CryptoJS.mode.CBC,
@@ -20,7 +20,7 @@ export class EncryptDecryptService {
         return encrypted.toString();
     }
     decryptUsingAES256(decString) {
-        var decrypted = CryptoJS.AES.decrypt(decString, this.key, {
+        var decrypted = CryptoJS?.AES?.decrypt(decString, this.key, {
             keySize: 128 / 8,
             iv: this.iv,
             mode: CryptoJS.mode.CBC,

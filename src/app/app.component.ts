@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { SharedService } from './@shared/services/shared.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { isPlatformBrowser } from '@angular/common';
@@ -7,13 +7,14 @@ import { CustomerService } from './@shared/services/customer.service';
 import { Howl } from 'howler';
 import { IncomingcallModalComponent } from './@shared/modals/incoming-call-modal/incoming-call-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastService } from './@shared/services/toast.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   title = 'freedom-ssr';
   showButton = false;
   tab: any;
@@ -21,17 +22,19 @@ export class AppComponent implements OnInit, AfterViewInit {
   profileId = '';
   notificationId: number;
   originalFavicon: HTMLLinkElement;
-
+  currentURL = [];
   constructor(
     private sharedService: SharedService,
     private spinner: NgxSpinnerService,
     private socketService: SocketService,
     private customerService: CustomerService,
     private modalService: NgbModal,
+    private toasterService: ToastService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.checkDocumentFocus();
   }
+
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -75,7 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit {
               }
             }
           }
-          if (data?.actionType === 'M') {
+          if (data?.actionType === 'M' && data.notificationToProfileId != this.profileId) {
             this.sharedService.isNotify = true;
             var sound = new Howl({
               src: [
@@ -90,8 +93,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                 sound?.play();
               }
             }
+            this.toasterService.success(data?.notificationDesc)
           }
-          if (data?.actionType === 'VC') {
+          if (data?.actionType === 'VC' && data?.notificationByProfileId != this.profileId) {
             var callSound = new Howl({
               src: [
                 'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
@@ -110,8 +114,12 @@ export class AppComponent implements OnInit, AfterViewInit {
             });
           }
           if (data?.actionType === 'SC') {
-            this.modalService.dismissAll();
-            window?.open(data?.link, '_blank');
+            console.log(this.currentURL)
+            if (!this.currentURL.includes(data?.link)) {
+              this.currentURL.push(data.link)
+              this.modalService.dismissAll();
+              window?.open(data?.link, '_blank');
+            }
           }
           if (this.notificationId) {
             this.customerService.getNotification(this.notificationId).subscribe({
@@ -172,4 +180,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       }, 3000);
     }
   }
+
+  ngOnDestroy(): void {
+    this.currentURL = [];
+  }
+
 }

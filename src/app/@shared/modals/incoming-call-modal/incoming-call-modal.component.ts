@@ -18,7 +18,7 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
   constructor(
     public activateModal: NgbActiveModal,
     private socketService: SocketService
-  ) {}
+  ) { }
 
   ngAfterViewInit(): void {
     const SoundOct = JSON.parse(
@@ -41,7 +41,7 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   pickUpCall(): void {
     this.sound?.stop();

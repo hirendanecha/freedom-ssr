@@ -535,7 +535,7 @@
                 class="message d-flex flex-column"
                 [title]="displayLocalTime(message?.createdDate)"
               >
-                <span class="font-12-px">{{ message.Username }}</span>
+                <span class="font-12-px">{{ message?.Username }}</span>
                 <ng-container *ngIf="message?.messageMedia">
                   <ng-container
                     *ngIf="isPdf(message?.messageMedia); else imageMsg"
