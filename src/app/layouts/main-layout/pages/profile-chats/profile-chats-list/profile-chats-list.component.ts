@@ -99,8 +99,8 @@ export class ProfileChatsListComponent
       console.log('new-message', data);
       this.newRoomCreated.emit(true);
       if (
-        this.userChat?.roomId === data?.roomId ||
-        this.userChat?.groupId === data?.groupId
+        data?.sentBy !== this.profileId && (this.userChat?.roomId === data?.roomId ||
+          this.userChat?.groupId === data?.groupId)
       ) {
         let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
         if (data?.isDeleted) {
@@ -540,7 +540,7 @@ export class ProfileChatsListComponent
       notificationByProfileId: this.profileId,
       link: originUrl,
     };
-  
+
     var callSound = new Howl({
       src: [
         'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',

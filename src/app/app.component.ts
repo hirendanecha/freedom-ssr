@@ -19,7 +19,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   showButton = false;
   tab: any;
 
-  profileId = '';
+  profileId: number;
   notificationId: number;
   originalFavicon: HTMLLinkElement;
   currentURL = [];
@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.profileId = localStorage.getItem('profileId');
+      this.profileId = +localStorage.getItem('profileId');
       this.originalFavicon = document.querySelector('link[rel="icon"]');
       this.sharedService.getUserDetails();
       this.spinner.hide();
@@ -56,7 +56,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.socketService.socket?.emit('join', { room: this.profileId });
       this.socketService.socket?.on('notification', (data: any) => {
-        if (data) {
+        if (data && data.notificationToProfileId !== this.profileId) {
           console.log('new-notification', data);
           this.notificationId = data.id;
           this.originalFavicon.href = '/assets/images/icon-unread.jpg';
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               }
             }
           }
-          if (data?.actionType === 'M' && data.notificationToProfileId != this.profileId) {
+          if (data?.actionType === 'M' && data.notificationToProfileId !== this.profileId) {
             this.sharedService.isNotify = true;
             var sound = new Howl({
               src: [
