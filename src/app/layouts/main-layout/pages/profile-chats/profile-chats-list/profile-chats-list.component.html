@@ -1,245 +1,167 @@
 <div class="chat-area position-relative">
-  <div class="main">
-    <div
-      class="chat-head py-2 px-3 d-center justify-content-between"
-      *ngIf="userChat?.createdBy"
-    >
-      <div class="d-flex gap-4 align-items-center">
+  <!-- ui fourth -->
+  <ng-container *ngIf="!userChat.Username">
+    <div class="d-flex flex-column align-items-center mt-5">
+      <div
+        class="d-flex flex-row justify-content-center align-items-center gap-5 my-8 p-6 w-75 rounded-3 box-bg"
+      >
         <img
-          [src]="userChat?.profileImage || userChat?.ProfilePicName"
-          class="rounded-circle header-image"
+          [src]="sharedService?.userData?.ProfilePicName"
+          class="rounded-circle w-60-px h-60-px"
           alt="image"
           onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
         />
-        <div class="profile-status">
-          <h5 class="m-0">
-            <a class="m-0">{{ userChat.groupName || userChat?.Username }}</a>
-          </h5>
-          <span class="mdtxt" *ngIf="!userChat?.groupId">{{
-            sharedService?.onlineUserList.includes(userChat?.profileId)
-              ? "online"
-              : ""
-          }}</span>
+        <div>
+          <h5>welcome</h5>
+          <h5>{{ sharedService?.userData?.Username }}</h5>
         </div>
-      </div>
-      <div class="d-flex gap-3 align-items-center">
-        <a
-          class="nav-icon cursor"
-          data-toggle="tooltip"
-          data-placement="bottom"
-          title="Create Group"
-          (click)="createGroup()"
-          ><fa-icon [icon]="['fas', 'users']" class="font-20-px m-1"
-        /></a>
-        <a
-          class="nav-icon cursor"
-          data-toggle="tooltip"
-          data-placement="bottom"
-          title="Video Call"
-          (click)="startCall()"
-          ><fa-icon [icon]="['fas', 'video']" class="font-20-px m-1"
-        /></a>
       </div>
     </div>
-
-    <div
-      class="chat-content position-relative"
-      #chatContent
-    >
-      <!--
-      ui
-      first
-      --
-    >
-      <ng-container
-        *ngIf="
-          (!(userChat?.roomId || userChat.groupId) &&
-            userChat?.isAccepted === 'N') ||
-          (userChat?.Id && !(userChat?.roomId || userChat.groupId))
-        "
+  </ng-container>
+  <ng-container *ngIf="userChat?.roomId">
+    <div class="main">
+      <div
+        class="chat-head py-2 px-3 d-center justify-content-between"
+        *ngIf="userChat?.createdBy"
       >
-        <div class="d-flex flex-column align-items-center mt-5">
-          <div
-            class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg"
-          >
-            <img
-              [src]="userChat.ProfilePicName"
-              class="w-60-px h-60-px"
-              alt="image"
-              onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-            />
-            <h5>send invite to {{ userChat?.Username }} for chat</h5>
-            <div>
-              <button class="btn btn-danger mx-3" (click)="onCancel()">
-                Cancel
-              </button>
-              <button class="btn btn-primary mx-3" (click)="createChatRoom()">
-                Invite
-              </button>
-            </div>
+        <div class="d-flex gap-4 align-items-center">
+          <img
+            [src]="userChat?.profileImage || userChat?.ProfilePicName"
+            class="rounded-circle header-image"
+            alt="image"
+            onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+          />
+          <div class="profile-status">
+            <h5 class="m-0">
+              <a class="m-0">{{ userChat.groupName || userChat?.Username }}</a>
+            </h5>
+            <span class="mdtxt" *ngIf="!userChat?.groupId">{{
+              sharedService?.onlineUserList.includes(userChat?.profileId)
+                ? "online"
+                : ""
+            }}</span>
           </div>
         </div>
-      </ng-container>
-
-      <!-- ui second -->
-      <ng-container
-        *ngIf="userChat?.createdBy !== profileId && userChat.isAccepted === 'N'"
-      >
-        <div class="d-flex flex-column align-items-center mt-5">
-          <div
-            class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg"
-          >
-            <img
-              [src]="userChat.ProfilePicName"
-              class="w-60-px h-60-px"
-              alt="image"
-            />
-            <h5>{{ userChat.Username }} wants to connect with you</h5>
-            <div>
-              <button class="btn btn-danger mx-3" (click)="onCancel()">
-                Cancel
-              </button>
-              <button class="btn btn-primary mx-3" (click)="acceptRoom()">
-                Accept
-              </button>
-            </div>
-          </div>
+        <div class="d-flex gap-3 align-items-center">
+          <a
+            class="nav-icon cursor"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Create Group"
+            (click)="createGroup()"
+            ><fa-icon [icon]="['fas', 'users']" class="font-20-px m-1"
+          /></a>
+          <a
+            class="nav-icon cursor"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Video Call"
+            (click)="startCall()"
+            ><fa-icon [icon]="['fas', 'video']" class="font-20-px m-1"
+          /></a>
         </div>
-      </ng-container>
+      </div>
 
-      <!-- ui third -->
-      <ng-container
-        *ngIf="userChat?.createdBy === profileId && userChat.isAccepted === 'N'"
+      <div class="chat-content position-relative" #chatContent>
+        <!--
+        ui
+        first
+        --
       >
-        <div class="d-flex flex-column align-items-center mt-5">
-          <div
-            class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg"
-          >
-            <img
-              [src]="userChat.ProfilePicName"
-              class="rounded-circle w-60-px h-60-px"
-              alt="image"
-              onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png'"
-            />
-            <h5>{{ userChat.Username }} has not yet accepted the invite</h5>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-container
-        *ngIf="
-          (userChat?.roomId || userChat?.groupId) && userChat.isAccepted === 'Y'
-        "
-      >
-        <ul
-          class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
-          *ngFor="let message of messageList"
+        <ng-container
+          *ngIf="
+            (!(userChat?.roomId || userChat.groupId) &&
+              userChat?.isAccepted === 'N') ||
+            (userChat?.Id && !(userChat?.roomId || userChat.groupId))
+          "
         >
-          <li class="you" *ngIf="message?.sentBy !== this.profileId">
+          <div class="d-flex flex-column align-items-center mt-5">
             <div
-              class="message d-flex gap-3 flex-column"
-              [title]="displayLocalTime(message?.createdDate)"
+              class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg"
             >
-              <ng-container *ngIf="message?.messageMedia">
-                <ng-container
-                  *ngIf="isPdf(message?.messageMedia); else imageMsg"
-                >
-                  <div (click)="pdfView(message?.messageMedia)">
-                    <fa-icon
-                      [icon]="['fas', 'file-pdf']"
-                      class="c-pointer close-icon font-44-px"
-                    ></fa-icon>
-                    <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
-                      {{ pdfmsg }}
-                    </p>
-                  </div>
-                </ng-container>
-                <ng-template #imageMsg>
-                  <ng-container
-                    *ngIf="isGif(message?.messageMedia); else notGif"
-                  >
-                    <img
-                      data-src="{{ message?.messageMedia }}"
-                      loading="eager"
-                      class="emoji-style h-60-px"
-                      alt="Emoji"
-                      draggable="false"
-                    />
-                  </ng-container>
-                  <ng-template #notGif>
-                    <app-img-preview
-                      class="msgImage"
-                      classes="h-180-px"
-                      [src]="message?.messageMedia"
-                    ></app-img-preview>
-                  </ng-template>
-                </ng-template>
-              </ng-container>
-              <div class="d-flex flex-column">
-                <p
-                  *ngIf="message?.messageText !== null"
-                  class="m-0"
-                  [innerHTML]="
-                    encryptDecryptService.decryptUsingAES256(
-                      message?.messageText
-                    )
-                  "
-                ></p>
-
-                <ng-container *ngIf="message?.metaData">
-                  <div class="chat-meta">
-                    <app-post-meta-data-card
-                      [post]="message.metaData"
-                      class="pt-2"
-                    />
-                  </div>
-                </ng-container>
+              <img
+                [src]="userChat.ProfilePicName"
+                class="w-60-px h-60-px"
+                alt="image"
+                onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+              />
+              <h5>send invite to {{ userChat?.Username }} for chat</h5>
+              <div>
+                <button class="btn btn-danger mx-3" (click)="onCancel()">
+                  Cancel
+                </button>
+                <button class="btn btn-primary mx-3" (click)="createChatRoom()">
+                  Invite
+                </button>
               </div>
             </div>
-          </li>
-          <li class="me" *ngIf="message?.sentBy === this.profileId">
-            <div class="d-flex flex-row-reverse gap-2 drop-options">
-              <div class="btn-group d-flex options">
-                <div
-                  ngbDropdown
-                  #editPopup="ngbDropdown"
-                  class="d-inline-block"
-                >
-                  <button class="dropdown-btn" ngbDropdownToggle>
-                    <fa-icon
-                      [icon]="['fas', 'ellipsis-v']"
-                      class="font-20-px"
-                    />
-                  </button>
-                  <div
-                    ngbDropdownMenu
-                    class="dropdown-menu"
-                    (mouseleave)="editPopup.close()"
-                  >
-                    <button
-                      ngbDropdownItem
-                      (click)="editMsg(message)"
-                      *ngIf="!message?.messageMedia"
-                    >
-                      <a class="droplist d-flex align-items-center gap-2">
-                        <fa-icon [icon]="['fas', 'pen-to-square']" />
-                        <span>Edit</span>
-                      </a>
-                    </button>
-                    <button ngbDropdownItem (click)="deleteMsg(message)">
-                      <a class="droplist d-flex align-items-center gap-2">
-                        <fa-icon [icon]="['fas', 'trash-can']" />
-                        <span>Delete</span>
-                      </a>
-                    </button>
-                  </div>
-                </div>
+          </div>
+        </ng-container>
+  
+         ui second -->
+        <ng-container
+          *ngIf="
+            userChat?.createdBy !== profileId && userChat.isAccepted === 'N'
+          "
+        >
+          <div class="d-flex flex-column align-items-center mt-5">
+            <div
+              class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg"
+            >
+              <img
+                [src]="userChat.ProfilePicName"
+                class="w-60-px h-60-px"
+                alt="image"
+              />
+              <h5>{{ userChat.Username }} wants to connect with you</h5>
+              <div>
+                <button class="btn btn-danger mx-3" (click)="onCancel()">
+                  Cancel
+                </button>
+                <button class="btn btn-primary mx-3" (click)="acceptRoom()">
+                  Accept
+                </button>
               </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- ui third -->
+        <ng-container
+          *ngIf="
+            userChat?.createdBy === profileId && userChat.isAccepted === 'N'
+          "
+        >
+          <div class="d-flex flex-column align-items-center mt-5">
+            <div
+              class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg"
+            >
+              <img
+                [src]="userChat.ProfilePicName"
+                class="rounded-circle w-60-px h-60-px"
+                alt="image"
+                onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png'"
+              />
+              <h5>{{ userChat.Username }} has not yet accepted the invite</h5>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container
+          *ngIf="
+            (userChat?.roomId || userChat?.groupId) &&
+            userChat.isAccepted === 'Y'
+          "
+        >
+          <ul
+            class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
+            *ngFor="let message of messageList"
+          >
+            <li class="you" *ngIf="message?.sentBy !== this.profileId">
               <div
                 class="message d-flex gap-3 flex-column"
                 [title]="displayLocalTime(message?.createdDate)"
               >
-                <!-- (contextmenu)="editPopup.toggle(); $event.preventDefault()" -->
                 <ng-container *ngIf="message?.messageMedia">
                   <ng-container
                     *ngIf="isPdf(message?.messageMedia); else imageMsg"
@@ -285,6 +207,7 @@
                       )
                     "
                   ></p>
+
                   <ng-container *ngIf="message?.metaData">
                     <div class="chat-meta">
                       <app-post-meta-data-card
@@ -295,169 +218,629 @@
                   </ng-container>
                 </div>
               </div>
-            </div>
-          </li>
-        </ul>
-      </ng-container>
-
-      <!-- ui fourth -->
-      <ng-container *ngIf="!userChat?.Username">
-        <div class="d-flex flex-column align-items-center mt-5">
-          <div
-            class="d-flex flex-row justify-content-center align-items-center gap-5 my-8 p-6 w-75 rounded-3 box-bg"
-          >
-            <img
-              [src]="sharedService?.userData?.ProfilePicName"
-              class="rounded-circle w-60-px h-60-px"
-              alt="image"
-              onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-            />
-            <div>
-              <h5>welcome</h5>
-              <h5>{{ sharedService?.userData?.Username }}</h5>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </div>
-
-    <div
-      class="text-end chat-footer position-absolute w-100 px-sm-6 bg-color"
-      *ngIf="userChat.isAccepted === 'Y'"
-    >
-      <ng-container *ngIf="viewUrl && !pdfName">
-        <div
-          class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
-        >
-          <img
-            loading="lazy"
-            data-src="{{ viewUrl }}"
-            class="w-100 h-100 rounded-4"
-            alt="icon"
-            onerror="this.onerror=null;"
-          />
-          <fa-icon
-            [icon]="['fas', 'xmark']"
-            class="position-absolute top-0 start-100 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
-            role="button"
-            (click)="removePostSelectedFile()"
-          />
-        </div>
-      </ng-container>
-      <ng-container *ngIf="pdfName">
-        <div
-          class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
-        >
-          <fa-icon
-            [icon]="['fas', 'file-pdf']"
-            class="c-pointer close-icon font-40-px"
-          />
-          <span class="c-pdf-show" [title]="pdfName.replaceAll('%', ' ')">{{
-            pdfName.replaceAll("%", " ")
-          }}</span>
-          <fa-icon
-            [icon]="['fas', 'xmark']"
-            class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
-            role="button"
-            (click)="removePostSelectedFile()"
-          />
-        </div>
-      </ng-container>
-      <form class="py-3 pt-2 px-3">
-        <div
-          class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
-        >
-          <div class="form-content p-0 d-flex gap-2 align-items-center w-100">
-            <div class="file-input d-flex gap-1 gap-md-2">
-              <div class="file-upload">
-                <label class="file">
-                  <input
-                    type="file"
-                    [(ngModel)]="chatObj.msgMedia"
-                    name="doc"
-                    accept="application/pdf"
-                    (change)="onPostFileSelect($event)"
-                  />
-                  <span class="file-custom border-0 m-1 d-grid text-center">
-                    <fa-icon [icon]="['fas', 'paperclip']" class="font-20-px" />
-                  </span>
-                </label>
-              </div>
-              <div class="file-upload">
-                <label class="file">
-                  <input
-                    type="file"
-                    [(ngModel)]="chatObj.msgMedia"
-                    name="image"
-                    accept="image/*"
-                    (change)="onPostFileSelect($event)"
-                  />
-                  <span class="file-custom border-0 m-1 d-grid text-center">
-                    <fa-icon [icon]="['fas', 'image']" class="font-20-px" />
-                  </span>
-                </label>
-              </div>
-              <div class="file-upload">
-                <div ngbDropdown placement="top-start" class="select-emaojies">
-                  <button
-                    type="button"
-                    id="emojiModel"
-                    ngbDropdownToggle
-                    title="Emojis"
-                  >
-                    <img
-                      src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif"
-                      class="emoji-select h-40-px w-40-px"
-                      alt="Emoji"
-                    />
-                  </button>
+            </li>
+            <li class="me" *ngIf="message?.sentBy === this.profileId">
+              <div class="d-flex flex-row-reverse gap-2 drop-options">
+                <div class="btn-group d-flex options">
                   <div
-                    ngbDropdownMenu
-                    aria-labelledby="emojiModel"
-                    class="emojiModelStyle"
+                    ngbDropdown
+                    #editPopup="ngbDropdown"
+                    class="d-inline-block"
                   >
-                    <div class="emoji-container">
-                      <div
-                        *ngFor="let emoji of emojiPaths"
-                        (click)="selectEmoji(emoji)"
+                    <button class="dropdown-btn" ngbDropdownToggle>
+                      <fa-icon
+                        [icon]="['fas', 'ellipsis-v']"
+                        class="font-20-px"
+                      />
+                    </button>
+                    <div
+                      ngbDropdownMenu
+                      class="dropdown-menu"
+                      (mouseleave)="editPopup.close()"
+                    >
+                      <button
+                        ngbDropdownItem
+                        (click)="editMsg(message)"
+                        *ngIf="!message?.messageMedia"
+                      >
+                        <a class="droplist d-flex align-items-center gap-2">
+                          <fa-icon [icon]="['fas', 'pen-to-square']" />
+                          <span>Edit</span>
+                        </a>
+                      </button>
+                      <button ngbDropdownItem (click)="deleteMsg(message)">
+                        <a class="droplist d-flex align-items-center gap-2">
+                          <fa-icon [icon]="['fas', 'trash-can']" />
+                          <span>Delete</span>
+                        </a>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="message d-flex gap-3 flex-column"
+                  [title]="displayLocalTime(message?.createdDate)"
+                >
+                  <!-- (contextmenu)="editPopup.toggle(); $event.preventDefault()" -->
+                  <ng-container *ngIf="message?.messageMedia">
+                    <ng-container
+                      *ngIf="isPdf(message?.messageMedia); else imageMsg"
+                    >
+                      <div (click)="pdfView(message?.messageMedia)">
+                        <fa-icon
+                          [icon]="['fas', 'file-pdf']"
+                          class="c-pointer close-icon font-44-px"
+                        ></fa-icon>
+                        <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
+                          {{ pdfmsg }}
+                        </p>
+                      </div>
+                    </ng-container>
+                    <ng-template #imageMsg>
+                      <ng-container
+                        *ngIf="isGif(message?.messageMedia); else notGif"
                       >
                         <img
-                          data-src="{{ emoji }}"
+                          data-src="{{ message?.messageMedia }}"
                           loading="eager"
-                          class="emoji-style"
+                          class="emoji-style h-60-px"
                           alt="Emoji"
                           draggable="false"
                         />
+                      </ng-container>
+                      <ng-template #notGif>
+                        <app-img-preview
+                          class="msgImage"
+                          classes="h-180-px"
+                          [src]="message?.messageMedia"
+                        ></app-img-preview>
+                      </ng-template>
+                    </ng-template>
+                  </ng-container>
+                  <div class="d-flex flex-column">
+                    <p
+                      *ngIf="message?.messageText !== null"
+                      class="m-0"
+                      [innerHTML]="
+                        encryptDecryptService.decryptUsingAES256(
+                          message?.messageText
+                        )
+                      "
+                    ></p>
+                    <ng-container *ngIf="message?.metaData">
+                      <div class="chat-meta">
+                        <app-post-meta-data-card
+                          [post]="message.metaData"
+                          class="pt-2"
+                        />
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </ng-container>
+      </div>
+
+      <div
+        class="text-end chat-footer position-absolute w-100 px-sm-6 bg-color"
+        *ngIf="userChat.isAccepted === 'Y'"
+      >
+        <ng-container *ngIf="viewUrl && !pdfName">
+          <div
+            class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
+          >
+            <img
+              loading="lazy"
+              data-src="{{ viewUrl }}"
+              class="w-100 h-100 rounded-4"
+              alt="icon"
+              onerror="this.onerror=null;"
+            />
+            <fa-icon
+              [icon]="['fas', 'xmark']"
+              class="position-absolute top-0 start-100 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
+              role="button"
+              (click)="removePostSelectedFile()"
+            />
+          </div>
+        </ng-container>
+        <ng-container *ngIf="pdfName">
+          <div
+            class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
+          >
+            <fa-icon
+              [icon]="['fas', 'file-pdf']"
+              class="c-pointer close-icon font-40-px"
+            />
+            <span class="c-pdf-show" [title]="pdfName.replaceAll('%', ' ')">{{
+              pdfName.replaceAll("%", " ")
+            }}</span>
+            <fa-icon
+              [icon]="['fas', 'xmark']"
+              class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
+              role="button"
+              (click)="removePostSelectedFile()"
+            />
+          </div>
+        </ng-container>
+        <form class="py-3 pt-2 px-3">
+          <div
+            class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
+          >
+            <div class="form-content p-0 d-flex gap-2 align-items-center w-100">
+              <div class="file-input d-flex gap-1 gap-md-2">
+                <div class="file-upload">
+                  <label class="file">
+                    <input
+                      type="file"
+                      [(ngModel)]="chatObj.msgMedia"
+                      name="doc"
+                      accept="application/pdf"
+                      (change)="onPostFileSelect($event)"
+                    />
+                    <span class="file-custom border-0 m-1 d-grid text-center">
+                      <fa-icon
+                        [icon]="['fas', 'paperclip']"
+                        class="font-20-px"
+                      />
+                    </span>
+                  </label>
+                </div>
+                <div class="file-upload">
+                  <label class="file">
+                    <input
+                      type="file"
+                      [(ngModel)]="chatObj.msgMedia"
+                      name="image"
+                      accept="image/*"
+                      (change)="onPostFileSelect($event)"
+                    />
+                    <span class="file-custom border-0 m-1 d-grid text-center">
+                      <fa-icon [icon]="['fas', 'image']" class="font-20-px" />
+                    </span>
+                  </label>
+                </div>
+                <div class="file-upload">
+                  <div
+                    ngbDropdown
+                    placement="top-start"
+                    class="select-emaojies"
+                  >
+                    <button
+                      type="button"
+                      id="emojiModel"
+                      ngbDropdownToggle
+                      title="Emojis"
+                    >
+                      <img
+                        src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif"
+                        class="emoji-select h-40-px w-40-px"
+                        alt="Emoji"
+                      />
+                    </button>
+                    <div
+                      ngbDropdownMenu
+                      aria-labelledby="emojiModel"
+                      class="emojiModelStyle"
+                    >
+                      <div class="emoji-container">
+                        <div
+                          *ngFor="let emoji of emojiPaths"
+                          (click)="selectEmoji(emoji)"
+                        >
+                          <img
+                            data-src="{{ emoji }}"
+                            loading="eager"
+                            class="emoji-style"
+                            alt="Emoji"
+                            draggable="false"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <app-tag-user-input
-              class="message-input-field message-text"
-              placeholder="Type your message here.."
-              [value]="messageInputValue"
-              [isShowMetaLoader]="false"
-              [isAllowTagUser]="false"
-              [isShowMetaPreview]="false"
-              [isCopyImagePreview]="false"
-              [isShowEmojis]="false"
-              (onDataChange)="onTagUserInputChangeEvent($event)"
-            />
-            <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
-            <div class="btn-area">
-              <button
-                class="cmn-btn message px-2 px-sm-5 px-lg-6 lh-lg"
-                (click)="uploadPostFileAndCreatePost()"
-                [disabled]="!chatObj.msgText && !selectedFile"
-              >
-                Send
-              </button>
+              <app-tag-user-input
+                class="message-input-field message-text"
+                placeholder="Type your message here.."
+                [value]="messageInputValue"
+                [isShowMetaLoader]="false"
+                [isAllowTagUser]="false"
+                [isShowMetaPreview]="false"
+                [isCopyImagePreview]="false"
+                [isShowEmojis]="false"
+                (onDataChange)="onTagUserInputChangeEvent($event)"
+              />
+              <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
+              <div class="btn-area">
+                <button
+                  class="cmn-btn message px-2 px-sm-5 px-lg-6 lh-lg"
+                  (click)="uploadPostFileAndCreatePost()"
+                  [disabled]="!chatObj.msgText && !selectedFile"
+                >
+                  Send
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
+  </ng-container>
+  <ng-container *ngIf="userChat?.groupId">
+    <div class="main">
+      <div
+        class="chat-head py-2 px-3 d-center justify-content-between"
+        *ngIf="userChat?.createdBy"
+      >
+        <div
+          class="d-flex gap-4 align-baseline c-pointer"
+          (click)="groupEditDetails(groupData)"
+        >
+          <img
+            [src]="userChat?.profileImage"
+            class="rounded-circle header-image"
+            alt="image"
+            onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+          />
+          <div class="profile-status">
+            <h5 class="m-0">
+              <a class="m-0">{{ groupData.groupName }}</a>
+            </h5>
+            <!-- <span class="mdtxt" *ngIf="!userChat?.groupId">{{
+              sharedService?.onlineUserList.includes(userChat?.profileId)
+                ? "online"
+                : ""
+            }}</span> -->
+            <span>{{ groupData.members }} participants</span>
+          </div>
+          <fa-icon [icon]="['fas', 'gear']" class="font-20-px m-1" />
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+          <!-- <a
+            class="nav-icon cursor"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Create Group"
+            (click)="createGroup()"
+            ><fa-icon [icon]="['fas', 'users']" class="font-20-px m-1"
+          /></a> -->
+          <a
+            class="nav-icon cursor"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Video Call"
+            (click)="startCall()"
+            ><fa-icon [icon]="['fas', 'video']" class="font-20-px m-1"
+          /></a>
+        </div>
+      </div>
+
+      <div class="chat-content position-relative" #chatContent>
+        <ng-container
+          *ngIf="
+            (userChat?.roomId || userChat?.groupId) &&
+            userChat.isAccepted === 'Y'
+          "
+        >
+          <ul
+            class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
+            *ngFor="let message of messageList"
+          >
+            <li class="you" *ngIf="message?.sentBy !== this.profileId">
+              <div
+                class="message d-flex flex-column"
+                [title]="displayLocalTime(message?.createdDate)"
+              >
+                <span class="font-12-px">{{ message.Username }}</span>
+                <ng-container *ngIf="message?.messageMedia">
+                  <ng-container
+                    *ngIf="isPdf(message?.messageMedia); else imageMsg"
+                  >
+                    <div (click)="pdfView(message?.messageMedia)">
+                      <fa-icon
+                        [icon]="['fas', 'file-pdf']"
+                        class="c-pointer close-icon font-44-px"
+                      ></fa-icon>
+                      <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
+                        {{ pdfmsg }}
+                      </p>
+                    </div>
+                  </ng-container>
+                  <ng-template #imageMsg>
+                    <ng-container
+                      *ngIf="isGif(message?.messageMedia); else notGif"
+                    >
+                      <img
+                        data-src="{{ message?.messageMedia }}"
+                        loading="eager"
+                        class="emoji-style h-60-px"
+                        alt="Emoji"
+                        draggable="false"
+                      />
+                    </ng-container>
+                    <ng-template #notGif>
+                      <app-img-preview
+                        class="msgImage"
+                        classes="h-180-px"
+                        [src]="message?.messageMedia"
+                      ></app-img-preview>
+                    </ng-template>
+                  </ng-template>
+                </ng-container>
+                <div class="d-flex flex-column">
+                  <p
+                    *ngIf="message?.messageText !== null"
+                    class="m-0"
+                    [innerHTML]="
+                      encryptDecryptService.decryptUsingAES256(
+                        message?.messageText
+                      )
+                    "
+                  ></p>
+
+                  <ng-container *ngIf="message?.metaData">
+                    <div class="chat-meta">
+                      <app-post-meta-data-card
+                        [post]="message.metaData"
+                        class="pt-2"
+                      />
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </li>
+            <li class="me" *ngIf="message?.sentBy === this.profileId">
+              <div class="d-flex flex-row-reverse gap-2 drop-options">
+                <div class="btn-group d-flex options">
+                  <div
+                    ngbDropdown
+                    #editPopup="ngbDropdown"
+                    class="d-inline-block"
+                  >
+                    <button class="dropdown-btn" ngbDropdownToggle>
+                      <fa-icon
+                        [icon]="['fas', 'ellipsis-v']"
+                        class="font-20-px"
+                      />
+                    </button>
+                    <div
+                      ngbDropdownMenu
+                      class="dropdown-menu"
+                      (mouseleave)="editPopup.close()"
+                    >
+                      <button
+                        ngbDropdownItem
+                        (click)="editMsg(message)"
+                        *ngIf="!message?.messageMedia"
+                      >
+                        <a class="droplist d-flex align-items-center gap-2">
+                          <fa-icon [icon]="['fas', 'pen-to-square']" />
+                          <span>Edit</span>
+                        </a>
+                      </button>
+                      <button ngbDropdownItem (click)="deleteMsg(message)">
+                        <a class="droplist d-flex align-items-center gap-2">
+                          <fa-icon [icon]="['fas', 'trash-can']" />
+                          <span>Delete</span>
+                        </a>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="message d-flex gap-3 flex-column"
+                  [title]="displayLocalTime(message?.createdDate)"
+                >
+                  <ng-container *ngIf="message?.messageMedia">
+                    <ng-container
+                      *ngIf="isPdf(message?.messageMedia); else imageMsg"
+                    >
+                      <div (click)="pdfView(message?.messageMedia)">
+                        <fa-icon
+                          [icon]="['fas', 'file-pdf']"
+                          class="c-pointer close-icon font-44-px"
+                        ></fa-icon>
+                        <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
+                          {{ pdfmsg }}
+                        </p>
+                      </div>
+                    </ng-container>
+                    <ng-template #imageMsg>
+                      <ng-container
+                        *ngIf="isGif(message?.messageMedia); else notGif"
+                      >
+                        <img
+                          data-src="{{ message?.messageMedia }}"
+                          loading="eager"
+                          class="emoji-style h-60-px"
+                          alt="Emoji"
+                          draggable="false"
+                        />
+                      </ng-container>
+                      <ng-template #notGif>
+                        <app-img-preview
+                          class="msgImage"
+                          classes="h-180-px"
+                          [src]="message?.messageMedia"
+                        ></app-img-preview>
+                      </ng-template>
+                    </ng-template>
+                  </ng-container>
+                  <div class="d-flex flex-column">
+                    <p
+                      *ngIf="message?.messageText !== null"
+                      class="m-0"
+                      [innerHTML]="
+                        encryptDecryptService.decryptUsingAES256(
+                          message?.messageText
+                        )
+                      "
+                    ></p>
+                    <ng-container *ngIf="message?.metaData">
+                      <div class="chat-meta">
+                        <app-post-meta-data-card
+                          [post]="message.metaData"
+                          class="pt-2"
+                        />
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </ng-container>
+      </div>
+
+      <div
+        class="text-end chat-footer position-absolute w-100 px-sm-6 bg-color"
+        *ngIf="userChat.isAccepted === 'Y'"
+      >
+        <ng-container *ngIf="viewUrl && !pdfName">
+          <div
+            class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
+          >
+            <img
+              loading="lazy"
+              data-src="{{ viewUrl }}"
+              class="w-100 h-100 rounded-4"
+              alt="icon"
+              onerror="this.onerror=null;"
+            />
+            <fa-icon
+              [icon]="['fas', 'xmark']"
+              class="position-absolute top-0 start-100 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
+              role="button"
+              (click)="removePostSelectedFile()"
+            />
+          </div>
+        </ng-container>
+        <ng-container *ngIf="pdfName">
+          <div
+            class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
+          >
+            <fa-icon
+              [icon]="['fas', 'file-pdf']"
+              class="c-pointer close-icon font-40-px"
+            />
+            <span class="c-pdf-show" [title]="pdfName.replaceAll('%', ' ')">{{
+              pdfName.replaceAll("%", " ")
+            }}</span>
+            <fa-icon
+              [icon]="['fas', 'xmark']"
+              class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
+              role="button"
+              (click)="removePostSelectedFile()"
+            />
+          </div>
+        </ng-container>
+        <form class="py-3 pt-2 px-3">
+          <div
+            class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
+          >
+            <div class="form-content p-0 d-flex gap-2 align-items-center w-100">
+              <div class="file-input d-flex gap-1 gap-md-2">
+                <div class="file-upload">
+                  <label class="file">
+                    <input
+                      type="file"
+                      [(ngModel)]="chatObj.msgMedia"
+                      name="doc"
+                      accept="application/pdf"
+                      (change)="onPostFileSelect($event)"
+                    />
+                    <span class="file-custom border-0 m-1 d-grid text-center">
+                      <fa-icon
+                        [icon]="['fas', 'paperclip']"
+                        class="font-20-px"
+                      />
+                    </span>
+                  </label>
+                </div>
+                <div class="file-upload">
+                  <label class="file">
+                    <input
+                      type="file"
+                      [(ngModel)]="chatObj.msgMedia"
+                      name="image"
+                      accept="image/*"
+                      (change)="onPostFileSelect($event)"
+                    />
+                    <span class="file-custom border-0 m-1 d-grid text-center">
+                      <fa-icon [icon]="['fas', 'image']" class="font-20-px" />
+                    </span>
+                  </label>
+                </div>
+                <div class="file-upload">
+                  <div
+                    ngbDropdown
+                    placement="top-start"
+                    class="select-emaojies"
+                  >
+                    <button
+                      type="button"
+                      id="emojiModel"
+                      ngbDropdownToggle
+                      title="Emojis"
+                    >
+                      <img
+                        src="https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif"
+                        class="emoji-select h-40-px w-40-px"
+                        alt="Emoji"
+                      />
+                    </button>
+                    <div
+                      ngbDropdownMenu
+                      aria-labelledby="emojiModel"
+                      class="emojiModelStyle"
+                    >
+                      <div class="emoji-container">
+                        <div
+                          *ngFor="let emoji of emojiPaths"
+                          (click)="selectEmoji(emoji)"
+                        >
+                          <img
+                            data-src="{{ emoji }}"
+                            loading="eager"
+                            class="emoji-style"
+                            alt="Emoji"
+                            draggable="false"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <app-tag-user-input
+                class="message-input-field message-text"
+                placeholder="Type your message here.."
+                [value]="messageInputValue"
+                [isShowMetaLoader]="false"
+                [isAllowTagUser]="false"
+                [isShowMetaPreview]="false"
+                [isCopyImagePreview]="false"
+                [isShowEmojis]="false"
+                (onDataChange)="onTagUserInputChangeEvent($event)"
+              />
+              <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
+              <div class="btn-area">
+                <button
+                  class="cmn-btn message px-2 px-sm-5 px-lg-6 lh-lg"
+                  (click)="uploadPostFileAndCreatePost()"
+                  [disabled]="!chatObj.msgText && !selectedFile"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </ng-container>
 </div>
