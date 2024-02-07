@@ -531,65 +531,67 @@
             *ngFor="let message of messageList"
           >
             <li class="you" *ngIf="message?.sentBy !== this.profileId">
-              <div
-                class="message d-flex flex-column"
-                [title]="displayLocalTime(message?.createdDate)"
-              >
+              <div class="d-flex flex-column">
                 <span class="font-12-px">{{ message?.Username }}</span>
-                <ng-container *ngIf="message?.messageMedia">
-                  <ng-container
-                    *ngIf="isPdf(message?.messageMedia); else imageMsg"
-                  >
-                    <div (click)="pdfView(message?.messageMedia)">
-                      <fa-icon
-                        [icon]="['fas', 'file-pdf']"
-                        class="c-pointer close-icon font-44-px"
-                      ></fa-icon>
-                      <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
-                        {{ pdfmsg }}
-                      </p>
-                    </div>
-                  </ng-container>
-                  <ng-template #imageMsg>
+                <div
+                  class="message d-flex flex-column"
+                  [title]="displayLocalTime(message?.createdDate)"
+                >
+                  <ng-container *ngIf="message?.messageMedia">
                     <ng-container
-                      *ngIf="isGif(message?.messageMedia); else notGif"
+                      *ngIf="isPdf(message?.messageMedia); else imageMsg"
                     >
-                      <img
-                        data-src="{{ message?.messageMedia }}"
-                        loading="eager"
-                        class="emoji-style h-60-px"
-                        alt="Emoji"
-                        draggable="false"
-                      />
+                      <div (click)="pdfView(message?.messageMedia)">
+                        <fa-icon
+                          [icon]="['fas', 'file-pdf']"
+                          class="c-pointer close-icon font-44-px"
+                        ></fa-icon>
+                        <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
+                          {{ pdfmsg }}
+                        </p>
+                      </div>
                     </ng-container>
-                    <ng-template #notGif>
-                      <app-img-preview
-                        class="msgImage"
-                        classes="h-180-px"
-                        [src]="message?.messageMedia"
-                      ></app-img-preview>
+                    <ng-template #imageMsg>
+                      <ng-container
+                        *ngIf="isGif(message?.messageMedia); else notGif"
+                      >
+                        <img
+                          data-src="{{ message?.messageMedia }}"
+                          loading="eager"
+                          class="emoji-style h-60-px"
+                          alt="Emoji"
+                          draggable="false"
+                        />
+                      </ng-container>
+                      <ng-template #notGif>
+                        <app-img-preview
+                          class="msgImage"
+                          classes="h-180-px"
+                          [src]="message?.messageMedia"
+                        ></app-img-preview>
+                      </ng-template>
                     </ng-template>
-                  </ng-template>
-                </ng-container>
-                <div class="d-flex flex-column">
-                  <p
-                    *ngIf="message?.messageText !== null"
-                    class="m-0"
-                    [innerHTML]="
-                      encryptDecryptService.decryptUsingAES256(
-                        message?.messageText
-                      )
-                    "
-                  ></p>
-
-                  <ng-container *ngIf="message?.metaData">
-                    <div class="chat-meta">
-                      <app-post-meta-data-card
-                        [post]="message.metaData"
-                        class="pt-2"
-                      />
-                    </div>
                   </ng-container>
+                  <div class="d-flex flex-column">
+                    <p
+                      *ngIf="message?.messageText !== null"
+                      class="m-0"
+                      [innerHTML]="
+                        encryptDecryptService.decryptUsingAES256(
+                          message?.messageText
+                        )
+                      "
+                    ></p>
+  
+                    <ng-container *ngIf="message?.metaData">
+                      <div class="chat-meta">
+                        <app-post-meta-data-card
+                          [post]="message.metaData"
+                          class="pt-2"
+                        />
+                      </div>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
             </li>

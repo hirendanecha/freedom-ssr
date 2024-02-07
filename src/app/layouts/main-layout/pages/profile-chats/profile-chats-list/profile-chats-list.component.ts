@@ -616,7 +616,7 @@ export class ProfileChatsListComponent
     });
     if (!this.userChat.groupId) {
       const data = {
-        profileId: this.userChat.profileId,
+        Id: this.userChat.profileId,
         ProfilePicName: this.userChat.ProfilePicName,
         Username: this.userChat.Username,
       };
@@ -647,13 +647,16 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.groupId = this.userChat?.groupId;
     modalRef.result.then((res) => {
-      if (res) {
+      if (res !== 'cancel') {
         // console.log(res);
         this.socketService?.createGroup(res, (data: any) => {
           // console.log(data);
           this.groupData = data;
           this.newRoomCreated.emit(true);
         });
+      } else {
+        this.newRoomCreated.emit(true);
+        this.userChat = {};
       }
     });
   }

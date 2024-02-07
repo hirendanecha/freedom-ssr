@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { CustomerService } from '../../services/customer.service';
 import { Router } from '@angular/router';
 import { SocketService } from '../../services/socket.service';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-create-group-modal',
@@ -28,7 +29,8 @@ export class CreateGroupModalComponent implements OnInit {
 
   constructor(
     public activateModal: NgbActiveModal,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private sharedService: SharedService
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -43,7 +45,15 @@ export class CreateGroupModalComponent implements OnInit {
     this.customerService.getProfileList(this.searchText).subscribe({
       next: (res: any) => {
         if (res?.data?.length > 0) {
-          this.userList = res.data;
+          const userList = res.data.filter((user: any) => {
+            return user.Id !== this.sharedService?.userData?.Id;
+          });
+          this.userList = userList.filter((user) => {
+            return !this.addedInvitesList.some(
+              (invite) => invite.Id === user.Id
+            );
+          });
+          // console.log(this.userList);
           this.userSearchNgbDropdown.open();
         } else {
           this.userList = [];
@@ -76,7 +86,7 @@ export class CreateGroupModalComponent implements OnInit {
       profileId: this.profileId,
       groupName: commaSeparatedString,
       profileIds: groupMembers,
-      groupId : this.groupId || null,
+      groupId: this.groupId || null,
     };
     this.activateModal.close(groupData);
   }
