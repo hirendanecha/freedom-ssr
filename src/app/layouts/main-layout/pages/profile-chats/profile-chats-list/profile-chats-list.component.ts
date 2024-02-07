@@ -34,7 +34,8 @@ import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -99,7 +100,8 @@ export class ProfileChatsListComponent
       console.log('new-message', data);
       this.newRoomCreated.emit(true);
       if (
-        data?.sentBy !== this.profileId && (this.userChat?.roomId === data?.roomId ||
+        data?.sentBy !== this.profileId &&
+        (this.userChat?.roomId === data?.roomId ||
           this.userChat?.groupId === data?.groupId)
       ) {
         let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
@@ -128,6 +130,7 @@ export class ProfileChatsListComponent
     // console.log('input', this.userChat);
     if (this.userChat?.groupId) {
       this.getGroupDetails(this.userChat.groupId);
+      this.resetData();
     }
     if (this.userChat?.roomId || this.userChat?.groupId) {
       this.getMessageList();
@@ -199,7 +202,7 @@ export class ProfileChatsListComponent
         groupId: this.userChat?.groupId,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
-        profileId: this.userChat.profileId
+        profileId: this.userChat.profileId,
       };
       this.socketService?.editMessage(data, (data: any) => {
         // this.userChat = data;
@@ -228,7 +231,7 @@ export class ProfileChatsListComponent
         groupId: this.userChat?.groupId || null,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
-        profileId: this.userChat.profileId
+        profileId: this.userChat.profileId,
       };
 
       // console.log(data);
@@ -294,8 +297,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText != null
               ? this.encryptDecryptService?.decryptUsingAES256(
-                element?.messageText
-              )
+                  element?.messageText
+                )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -311,7 +314,7 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
@@ -351,7 +354,6 @@ export class ProfileChatsListComponent
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.chatObj.msgText = data?.tags;
     this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
     // this.extractImageUrlFromContent(data?.html);
     // this.postData.postdescription = data?.html;

@@ -191,9 +191,15 @@
       -webkit-box-orient: vertical;
     }
   }
-  .group-input-field{
+  .group-input-field {
     mention-list {
-      top: -250px !important;
+      top: unset !important;
+      bottom: 225px;
+
+      .mention-menu {
+        max-height: 162px !important;
+        min-height: 162px;
+      }
     }
   }
 }

@@ -16,4 +16,9 @@ export class MessageService {
         return this.http.post(`${this.baseUrl}`, obj);
     }
 
+    getRoomProfileList(searchText, id): Observable<object> {
+      return this.http.get(
+        `${this.baseUrl}/get-members/${id}?searchText=${searchText}`
+      );
+    }
 }
