@@ -136,9 +136,9 @@
         </button>
       </div>
     </div>
-    <div class="header-menu cus-scrollbar overflow-auto">
+    <div class="header-menu cus-scrollbar overflow-auto position-relative">
       <ng-container>
-        <app-inline-loader *ngIf="isChatLoader" />
+        <app-inline-loader class="position-absolute" *ngIf="isChatLoader" />
       </ng-container>
       <ng-container *ngIf="selectedButton === 'chats'"
       >
@@ -161,7 +161,7 @@
               class="text-area d-flex justify-content-between sidebar-items align-items-center"
             >
               <div class="title-area position-relative d-grid">
-                <h6 class="m-0 d-inline-flex">
+                <h6 class="m-0 d-inline-flex sidebar-head-text">
                   {{ item?.Username || item?.FirstName }}
                 </h6>
                 <span
@@ -211,7 +211,7 @@
               class="text-area d-flex justify-content-between sidebar-items align-items-center"
             >
               <div class="title-area position-relative d-grid">
-                <h6 class="m-0 d-inline-flex">
+                <h6 class="m-0 d-inline-flex sidebar-head-text">
                   {{ item?.groupName }}
                 </h6>
                 <span
@@ -232,7 +232,7 @@
                   >{{ item?.unReadMessage }}</span
                 >
                 <span class="font-12-px">
-                  {{ item?.createdDate | messageTime }}
+                  {{ item?.updatedDate | messageTime }}
                 </span>
               </div>
             </div>
@@ -271,7 +271,7 @@
               <div
                 class="title-area position-relative d-flex justify-content-between w-100"
               >
-                <h6 class="m-0 d-inline-flex">
+                <h6 class="m-0 d-inline-flex sidebar-head-text">
                   {{ item?.Username || item?.FirstName }}
                 </h6>
                 <span class="font-12-px last-message">{{

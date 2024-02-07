@@ -91,12 +91,56 @@
 
   <ng-container *ngIf="addedInvitesList.length">
     <div class="chat-top p-2 px-5">
-      <span class="m-1">Selected members:</span>
+      <h5 class="m-1">Selected members:</h5>
     </div>
+    <div class="bg-box pe-3 rounded-2">
+      <div class="header-menu cus-scrollbar-pending overflow-auto">
+        <div
+          class="single-item messages-area d-flex justify-content-between align-items-baseline"
+          *ngFor="let item of addedInvitesList"
+        >
+          <div
+            class="text-start d-flex justify-content-between chat-single px-5 py-2"
+          >
+            <div class="d-flex gap-2">
+              <div class="avatar">
+                <img
+                  class="avatar-img h-40-px w-40-px max-un"
+                  src="{{ item?.ProfilePicName }}"
+                  [alt]="item?.Username || item?.FirstName"
+                  onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                />
+              </div>
+              <div
+                class="text-area d-flex justify-content-between sidebar-items align-items-center"
+              >
+                <div class="title-area">
+                  <h6 class="m-0">
+                    {{ item?.Username || item?.FirstName }}
+                  </h6>
+                </div>
+              </div>
+            </div>
+          </div>
+          <fa-icon
+            [icon]="['fas', 'xmark']"
+            class="font-20-px"
+            role="button"
+            (click)="removeUser(item)"
+          />
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="chat-top p-2 px-5">
+    <h5 class="m-1">Group members:</h5>
+  </div>
+  <div class="bg-box pe-3 rounded-2">
     <div class="header-menu cus-scrollbar-pending overflow-auto">
       <div
-        class="single-item messages-area d-flex justify-content-between"
-        *ngFor="let item of addedInvitesList"
+        class="single-item messages-area d-flex justify-content-between align-items-baseline"
+        *ngFor="let item of data.memberList"
       >
         <div
           class="text-start d-flex justify-content-between chat-single px-5 py-2"
@@ -125,58 +169,18 @@
           [icon]="['fas', 'xmark']"
           class="font-20-px"
           role="button"
-          (click)="removeUser(item)"
+          (click)="removeGroupUser(item.profileId)"
         />
       </div>
-    </div>
-  </ng-container>
-
-  <div class="chat-top p-2 px-5">
-    <span class="m-1">Group members:</span>
-  </div>
-  <div class="header-menu cus-scrollbar-pending overflow-auto">
-    <div
-      class="single-item messages-area d-flex justify-content-between"
-      *ngFor="let item of data.memberList"
-    >
-      <div
-        class="text-start d-flex justify-content-between chat-single px-5 py-2"
-      >
-        <div class="d-flex gap-2">
-          <div class="avatar">
-            <img
-              class="avatar-img h-40-px w-40-px max-un"
-              src="{{ item?.ProfilePicName }}"
-              [alt]="item?.Username || item?.FirstName"
-              onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-            />
-          </div>
-          <div
-            class="text-area d-flex justify-content-between sidebar-items align-items-center"
-          >
-            <div class="title-area">
-              <h6 class="m-0">
-                {{ item?.Username || item?.FirstName }}
-              </h6>
-            </div>
-          </div>
-        </div>
-      </div>
-      <fa-icon
-        [icon]="['fas', 'xmark']"
-        class="font-20-px"
-        role="button"
-        (click)="removeGroupUser(item.profileId)"
-      />
     </div>
   </div>
 </div>
 
-<div class="modal-footer justify-content-end gap-2">
-  <!-- <button type="button" class="btn btn-sm btn-danger" (click)="activeModal.close('cancel')">
+<div class="modal-footer justify-content-between gap-2">
+  <button type="button" class="btn btn-sm btn-danger" (click)="removeGroupUser(profileId)">
     {{ cancelButtonLabel }}
-  </button> -->
-
+  </button>
+  <!-- (click)="activateModal.close('cancel')" -->
   <button type="button" class="btn btn-sm btn-secondary" (click)="upload()">
     {{ confirmButtonLabel }}
   </button>

@@ -16,6 +16,7 @@ import { PostService } from '../../services/post.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SocketService } from '../../services/socket.service';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-tag-user-input',
@@ -30,13 +31,14 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   @Input('isAllowTagUser') isAllowTagUser: boolean = true;
   @Input('isShowMetaLoader') isShowMetaLoader: boolean = true;
   @Input('isShowEmojis') isShowEmojis: boolean = false;
+  @Input('isCustomeSearch') isCustomeSearch: number = null;
   @Output('onDataChange') onDataChange: EventEmitter<any> =
     new EventEmitter<any>();
 
   @ViewChild('tagInputDiv', { static: false }) tagInputDiv: ElementRef;
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
-  
+
   metaDataSubject: Subject<void> = new Subject<void>();
 
   userList = [];
@@ -76,7 +78,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     private customerService: CustomerService,
     private postService: PostService,
     private spinner: NgxSpinnerService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private messageService: MessageService
   ) {
     this.metaDataSubject.pipe(debounceTime(10)).subscribe(() => {
       this.getMetaDataFromUrlStr();
@@ -137,10 +140,14 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       const validUserName = /^[A-Za-z0-9_]+$/.test('');
       if (atSymbolIndex !== -1) {
         this.userNameSearch = htmlText.substring(atSymbolIndex + 1);
-        if (this.userNameSearch.length > 2 && !validUserName) {
+        if (this.isCustomeSearch && this.userNameSearch.length > 0 && !validUserName) {
           this.getUserList(this.userNameSearch);
         } else {
-          this.clearUserSearchData();
+          if (this.userNameSearch.length > 2 && !validUserName) {
+            this.getUserList(this.userNameSearch);
+          } else {
+            this.clearUserSearchData();
+          }
         }
       } else {
         this.clearUserSearchData();
@@ -196,12 +203,12 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
                 this.emitChangeEvent();
               } else {
-                this.metaData.metalink = url
+                this.metaData.metalink = url;
               }
               this.spinner.hide();
             },
             error: () => {
-              this.metaData.metalink = url
+              this.metaData.metalink = url;
               this.isMetaLoader = false;
               // this.clearMetaData();
               this.spinner.hide();
@@ -271,7 +278,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     const htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
     const text = htmlText.replace(
       `@${this.userNameSearch}`,
-      `<a href="/settings/view-profile/${user?.Id
+      `<a href="/settings/view-profile/${
+        user?.Id
       }" class="text-danger" data-id="${user?.Id}">@${user?.Username.split(
         ' '
       ).join('')}</a>`
@@ -290,20 +298,38 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   }
 
   getUserList(search: string): void {
-    this.customerService.getProfileList(search).subscribe({
-      next: (res: any) => {
-        if (res?.data?.length > 0) {
-          this.userList = res.data.map((e) => e);
-          console.log(this.userList);
-          // this.userSearchNgbDropdown.open();
-        } else {
+    if (this.isCustomeSearch) {
+      this.messageService
+        .getRoomProfileList(search, this.isCustomeSearch)
+        .subscribe({
+          next: (res: any) => {
+            if (res?.data?.length > 0) {
+              this.userList = res.data.map((e) => e);
+              // console.log(this.userList);
+              // this.userSearchNgbDropdown.open();
+            } else {
+              this.clearUserSearchData();
+            }
+          },
+          error: () => {
+            this.clearUserSearchData();
+          },
+        });
+    } else {
+      this.customerService.getProfileList(search).subscribe({
+        next: (res: any) => {
+          if (res?.data?.length > 0) {
+            this.userList = res.data.map((e) => e);
+            // this.userSearchNgbDropdown.open();
+          } else {
+            this.clearUserSearchData();
+          }
+        },
+        error: () => {
           this.clearUserSearchData();
-        }
-      },
-      error: () => {
-        this.clearUserSearchData();
-      },
-    });
+        },
+      });
+    }
   }
 
   clearUserSearchData(): void {
@@ -332,7 +358,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
 
       // this.value = `${htmlText}`.replace(/\<div\>\<br\>\<\/div\>/gi, '');
-      this.value = `${htmlText}`.replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>');
+      this.value = `${htmlText}`.replace(
+        /(?:<div><br><\/div>\s*)+/gi,
+        '<div><br></div>'
+      );
       // this.moveCursorToEnd();
       // console.log('htmlText', `${htmlText}`.replace(/\<div\>\<br\>\<\/div\>/ig, ''))
       // console.log('htmlText', this.value);

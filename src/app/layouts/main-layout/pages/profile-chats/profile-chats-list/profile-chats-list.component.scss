@@ -191,6 +191,17 @@
       -webkit-box-orient: vertical;
     }
   }
+  .group-input-field {
+    mention-list {
+      top: unset !important;
+      bottom: 225px;
+
+      .mention-menu {
+        max-height: 162px !important;
+        min-height: 162px;
+      }
+    }
+  }
 }
 .chat-footer {
   top: 100% !important;
