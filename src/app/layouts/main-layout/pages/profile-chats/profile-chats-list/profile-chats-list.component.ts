@@ -351,7 +351,7 @@ export class ProfileChatsListComponent
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    // this.chatObj.msgText = data?.tags;
+    this.chatObj.msgText = data?.tags;
     this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
     // this.extractImageUrlFromContent(data?.html);
     // this.postData.postdescription = data?.html;

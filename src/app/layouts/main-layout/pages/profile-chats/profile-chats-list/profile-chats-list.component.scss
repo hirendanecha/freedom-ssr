@@ -191,6 +191,11 @@
       -webkit-box-orient: vertical;
     }
   }
+  .group-input-field{
+    mention-list {
+      top: -250px !important;
+    }
+  }
 }
 .chat-footer {
   top: 100% !important;

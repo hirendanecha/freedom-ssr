@@ -816,17 +816,19 @@
                   </div>
                 </div>
               </div>
-              <app-tag-user-input
-                class="message-input-field message-text"
-                placeholder="Type your message here.."
-                [value]="messageInputValue"
-                [isShowMetaLoader]="false"
-                [isAllowTagUser]="false"
-                [isShowMetaPreview]="false"
-                [isCopyImagePreview]="false"
-                [isShowEmojis]="false"
-                (onDataChange)="onTagUserInputChangeEvent($event)"
-              />
+              <div class="group-input-field w-100">
+                <app-tag-user-input
+                  class="message-input-field message-text"
+                  placeholder="Type your message here.."
+                  [value]="messageInputValue"
+                  [isShowMetaLoader]="false"
+                  [isShowMetaPreview]="false"
+                  [isCopyImagePreview]="false"
+                  [isShowEmojis]="false"
+                  (onDataChange)="onTagUserInputChangeEvent($event)"
+                  />
+              </div>
+                <!-- [isAllowTagUser]="false" -->
               <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
               <div class="btn-area">
                 <button
