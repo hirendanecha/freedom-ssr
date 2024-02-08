@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Howl } from 'howler';
 import { SocketService } from '../../services/socket.service';
+import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
 
 @Component({
   selector: 'app-incoming-call-modal',
@@ -18,7 +19,8 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
   currentURL: any = [];
   constructor(
     public activateModal: NgbActiveModal,
-    private socketService: SocketService
+    private socketService: SocketService,
+    public encryptDecryptService: EncryptDecryptService,
   ) { }
 
   ngAfterViewInit(): void {
@@ -76,7 +78,20 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
     };
     this.socketService?.hangUpCall(data, (data: any) => {
       // console.log(data);
+      this.sendMessage()
       this.activateModal.close('cancel');
     });
+  }
+
+  sendMessage(){
+    const message = this.encryptDecryptService?.encryptUsingAES256('You have a missed call.');
+    const data = {
+      messageText: message,
+      roomId: this.calldata?.roomId || null,
+      groupId: this.calldata?.groupId || null,
+      sentBy: this.calldata.notificationToProfileId,
+      profileId: this.calldata.notificationByProfileId,
+    };
+    this.socketService.sendMessage(data, async (data: any) => {})
   }
 }

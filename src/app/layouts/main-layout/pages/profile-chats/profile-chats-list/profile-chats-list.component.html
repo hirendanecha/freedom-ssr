@@ -157,69 +157,166 @@
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
             *ngFor="let message of messageList"
           >
+            <span
+              class="font-12-px data-text-color"
+              *ngIf="message?.sentBy !== this.profileId"
+              >{{ displayLocalTime(message?.createdDate) }}</span
+            >
             <li class="you" *ngIf="message?.sentBy !== this.profileId">
-              <div
-                class="message d-flex gap-3 flex-column"
-                [title]="displayLocalTime(message?.createdDate)"
-              >
-                <ng-container *ngIf="message?.messageMedia">
-                  <ng-container
-                    *ngIf="isPdf(message?.messageMedia); else imageMsg"
-                  >
-                    <div (click)="pdfView(message?.messageMedia)">
-                      <fa-icon
-                        [icon]="['fas', 'file-pdf']"
-                        class="c-pointer close-icon font-44-px"
-                      ></fa-icon>
-                      <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
-                        {{ pdfmsg }}
-                      </p>
-                    </div>
-                  </ng-container>
-                  <ng-template #imageMsg>
-                    <ng-container
-                      *ngIf="isGif(message?.messageMedia); else notGif"
-                    >
-                      <img
-                        data-src="{{ message?.messageMedia }}"
-                        loading="eager"
-                        class="emoji-style h-60-px"
-                        alt="Emoji"
-                        draggable="false"
-                      />
-                    </ng-container>
-                    <ng-template #notGif>
-                      <app-img-preview
-                        class="msgImage"
-                        classes="h-180-px"
-                        [src]="message?.messageMedia"
-                      ></app-img-preview>
-                    </ng-template>
-                  </ng-template>
-                </ng-container>
-                <div class="d-flex flex-column">
-                  <p
-                    *ngIf="message?.messageText !== null"
-                    class="m-0"
-                    [innerHTML]="
-                      encryptDecryptService.decryptUsingAES256(
-                        message?.messageText
-                      )
-                    "
-                  ></p>
-
-                  <ng-container *ngIf="message?.metaData">
-                    <div class="chat-meta">
-                      <app-post-meta-data-card
-                        [post]="message.metaData"
-                        class="pt-2"
-                      />
+              <div class="d-flex flex-column">
+                <div class="d-flex">
+                  <ng-container *ngIf="message?.messageMedia">
+                    <div class="message mb-3">
+                      <ng-container
+                        *ngIf="isPdf(message?.messageMedia); else imageMsg"
+                      >
+                        <div (click)="pdfView(message?.messageMedia)">
+                          <fa-icon
+                            [icon]="['fas', 'file-pdf']"
+                            class="c-pointer close-icon font-44-px"
+                          ></fa-icon>
+                          <p
+                            class="pdf-name text-truncate mb-0"
+                            [title]="pdfmsg"
+                          >
+                            {{ pdfmsg }}
+                          </p>
+                        </div>
+                      </ng-container>
+                      <ng-template #imageMsg>
+                        <ng-container
+                          *ngIf="isGif(message?.messageMedia); else notGif"
+                        >
+                          <img
+                            data-src="{{ message?.messageMedia }}"
+                            loading="eager"
+                            class="emoji-style h-60-px"
+                            alt="Emoji"
+                            draggable="false"
+                          />
+                        </ng-container>
+                        <ng-template #notGif>
+                          <app-img-preview
+                            class="msgImage"
+                            classes="h-180-px"
+                            [src]="message?.messageMedia"
+                          ></app-img-preview>
+                        </ng-template>
+                      </ng-template>
                     </div>
                   </ng-container>
                 </div>
+                <div
+                  class="message d-flex gap-3 flex-column"
+                  [title]="displayLocalTime(message?.createdDate)"
+                >
+                  <div class="d-flex flex-column">
+                    <p
+                      *ngIf="message?.messageText !== null"
+                      class="m-0"
+                      [innerHTML]="
+                        encryptDecryptService.decryptUsingAES256(
+                          message?.messageText
+                        )
+                      "
+                    ></p>
+
+                    <ng-container *ngIf="message?.metaData">
+                      <div class="chat-meta">
+                        <app-post-meta-data-card
+                          [post]="message.metaData"
+                          class="pt-2"
+                        />
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
               </div>
             </li>
-            <li class="me" *ngIf="message?.sentBy === this.profileId">
+
+            <li
+              class="me d-flex flex-column gap-1"
+              *ngIf="message?.sentBy === this.profileId"
+            >
+              <span class="font-12-px data-text-color">{{
+                displayLocalTime(message?.createdDate)
+              }}</span>
+              <ng-container *ngIf="message?.messageMedia">
+                <div class="d-flex flex-row-reverse gap-2 drop-options">
+                  <div class="btn-group d-flex options">
+                    <div
+                      ngbDropdown
+                      #editPopup="ngbDropdown"
+                      class="d-inline-block"
+                    >
+                      <button class="dropdown-btn" ngbDropdownToggle>
+                        <fa-icon
+                          [icon]="['fas', 'ellipsis-v']"
+                          class="font-20-px"
+                        />
+                      </button>
+                      <div
+                        ngbDropdownMenu
+                        class="dropdown-menu"
+                        (mouseleave)="editPopup.close()"
+                      >
+                        <button
+                          ngbDropdownItem
+                          (click)="editMsg(message)"
+                          *ngIf="!message?.messageMedia"
+                        >
+                          <a class="droplist d-flex align-items-center gap-2">
+                            <fa-icon [icon]="['fas', 'pen-to-square']" />
+                            <span>Edit</span>
+                          </a>
+                        </button>
+                        <button ngbDropdownItem (click)="deleteMsg(message)">
+                          <a class="droplist d-flex align-items-center gap-2">
+                            <fa-icon [icon]="['fas', 'trash-can']" />
+                            <span>Delete</span>
+                          </a>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="message">
+                    <ng-container
+                      *ngIf="isPdf(message?.messageMedia); else imageMsg"
+                    >
+                      <div (click)="pdfView(message?.messageMedia)">
+                        <fa-icon
+                          [icon]="['fas', 'file-pdf']"
+                          class="c-pointer close-icon font-44-px"
+                        ></fa-icon>
+                        <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
+                          {{ pdfmsg }}
+                        </p>
+                      </div>
+                    </ng-container>
+                    <ng-template #imageMsg>
+                      <ng-container
+                        *ngIf="isGif(message?.messageMedia); else notGif"
+                      >
+                        <img
+                          data-src="{{ message?.messageMedia }}"
+                          loading="eager"
+                          class="emoji-style h-60-px"
+                          alt="Emoji"
+                          draggable="false"
+                        />
+                      </ng-container>
+                      <ng-template #notGif>
+                        <app-img-preview
+                          class="msgImage"
+                          classes="h-180-px"
+                          [src]="message?.messageMedia"
+                        ></app-img-preview>
+                      </ng-template>
+                    </ng-template>
+                  </div>
+                </div>
+              </ng-container>
+
               <div class="d-flex flex-row-reverse gap-2 drop-options">
                 <div class="btn-group d-flex options">
                   <div
@@ -262,41 +359,6 @@
                   [title]="displayLocalTime(message?.createdDate)"
                 >
                   <!-- (contextmenu)="editPopup.toggle(); $event.preventDefault()" -->
-                  <ng-container *ngIf="message?.messageMedia">
-                    <ng-container
-                      *ngIf="isPdf(message?.messageMedia); else imageMsg"
-                    >
-                      <div (click)="pdfView(message?.messageMedia)">
-                        <fa-icon
-                          [icon]="['fas', 'file-pdf']"
-                          class="c-pointer close-icon font-44-px"
-                        ></fa-icon>
-                        <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
-                          {{ pdfmsg }}
-                        </p>
-                      </div>
-                    </ng-container>
-                    <ng-template #imageMsg>
-                      <ng-container
-                        *ngIf="isGif(message?.messageMedia); else notGif"
-                      >
-                        <img
-                          data-src="{{ message?.messageMedia }}"
-                          loading="eager"
-                          class="emoji-style h-60-px"
-                          alt="Emoji"
-                          draggable="false"
-                        />
-                      </ng-container>
-                      <ng-template #notGif>
-                        <app-img-preview
-                          class="msgImage"
-                          classes="h-180-px"
-                          [src]="message?.messageMedia"
-                        ></app-img-preview>
-                      </ng-template>
-                    </ng-template>
-                  </ng-container>
                   <div class="d-flex flex-column">
                     <p
                       *ngIf="message?.messageText !== null"
@@ -532,7 +594,233 @@
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
             *ngFor="let message of messageList"
           >
+          <div class="d-flex" *ngIf="message?.sentBy !== this.profileId">
+            <span class="font-12-px">{{ message?.Username }},</span>
+              <span
+                class="font-12-px data-text-color"
+                >{{ displayLocalTime(message?.createdDate) }}</span
+              >
+          </div>
             <li class="you" *ngIf="message?.sentBy !== this.profileId">
+              <div class="d-flex flex-column">
+                <div class="d-flex">
+                  <ng-container *ngIf="message?.messageMedia">
+                    <div class="message mb-3">
+                      <ng-container
+                        *ngIf="isPdf(message?.messageMedia); else imageMsg"
+                      >
+                        <div (click)="pdfView(message?.messageMedia)">
+                          <fa-icon
+                            [icon]="['fas', 'file-pdf']"
+                            class="c-pointer close-icon font-44-px"
+                          ></fa-icon>
+                          <p
+                            class="pdf-name text-truncate mb-0"
+                            [title]="pdfmsg"
+                          >
+                            {{ pdfmsg }}
+                          </p>
+                        </div>
+                      </ng-container>
+                      <ng-template #imageMsg>
+                        <ng-container
+                          *ngIf="isGif(message?.messageMedia); else notGif"
+                        >
+                          <img
+                            data-src="{{ message?.messageMedia }}"
+                            loading="eager"
+                            class="emoji-style h-60-px"
+                            alt="Emoji"
+                            draggable="false"
+                          />
+                        </ng-container>
+                        <ng-template #notGif>
+                          <app-img-preview
+                            class="msgImage"
+                            classes="h-180-px"
+                            [src]="message?.messageMedia"
+                          ></app-img-preview>
+                        </ng-template>
+                      </ng-template>
+                    </div>
+                  </ng-container>
+                </div>
+                <div
+                  class="message d-flex gap-3 flex-column"
+                  [title]="displayLocalTime(message?.createdDate)"
+                >
+                  <div class="d-flex flex-column">
+                    <p
+                      *ngIf="message?.messageText !== null"
+                      class="m-0"
+                      [innerHTML]="
+                        encryptDecryptService.decryptUsingAES256(
+                          message?.messageText
+                        )
+                      "
+                    ></p>
+
+                    <ng-container *ngIf="message?.metaData">
+                      <div class="chat-meta">
+                        <app-post-meta-data-card
+                          [post]="message.metaData"
+                          class="pt-2"
+                        />
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li
+              class="me d-flex flex-column gap-1"
+              *ngIf="message?.sentBy === this.profileId"
+            >
+              <span class="font-12-px data-text-color">{{
+                displayLocalTime(message?.createdDate)
+              }}</span>
+              <ng-container *ngIf="message?.messageMedia">
+                <div class="d-flex flex-row-reverse gap-2 drop-options">
+                  <div class="btn-group d-flex options">
+                    <div
+                      ngbDropdown
+                      #editPopup="ngbDropdown"
+                      class="d-inline-block"
+                    >
+                      <button class="dropdown-btn" ngbDropdownToggle>
+                        <fa-icon
+                          [icon]="['fas', 'ellipsis-v']"
+                          class="font-20-px"
+                        />
+                      </button>
+                      <div
+                        ngbDropdownMenu
+                        class="dropdown-menu"
+                        (mouseleave)="editPopup.close()"
+                      >
+                        <button
+                          ngbDropdownItem
+                          (click)="editMsg(message)"
+                          *ngIf="!message?.messageMedia"
+                        >
+                          <a class="droplist d-flex align-items-center gap-2">
+                            <fa-icon [icon]="['fas', 'pen-to-square']" />
+                            <span>Edit</span>
+                          </a>
+                        </button>
+                        <button ngbDropdownItem (click)="deleteMsg(message)">
+                          <a class="droplist d-flex align-items-center gap-2">
+                            <fa-icon [icon]="['fas', 'trash-can']" />
+                            <span>Delete</span>
+                          </a>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="message">
+                    <ng-container
+                      *ngIf="isPdf(message?.messageMedia); else imageMsg"
+                    >
+                      <div (click)="pdfView(message?.messageMedia)">
+                        <fa-icon
+                          [icon]="['fas', 'file-pdf']"
+                          class="c-pointer close-icon font-44-px"
+                        ></fa-icon>
+                        <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
+                          {{ pdfmsg }}
+                        </p>
+                      </div>
+                    </ng-container>
+                    <ng-template #imageMsg>
+                      <ng-container
+                        *ngIf="isGif(message?.messageMedia); else notGif"
+                      >
+                        <img
+                          data-src="{{ message?.messageMedia }}"
+                          loading="eager"
+                          class="emoji-style h-60-px"
+                          alt="Emoji"
+                          draggable="false"
+                        />
+                      </ng-container>
+                      <ng-template #notGif>
+                        <app-img-preview
+                          class="msgImage"
+                          classes="h-180-px"
+                          [src]="message?.messageMedia"
+                        ></app-img-preview>
+                      </ng-template>
+                    </ng-template>
+                  </div>
+                </div>
+              </ng-container>
+
+              <div class="d-flex flex-row-reverse gap-2 drop-options">
+                <div class="btn-group d-flex options">
+                  <div
+                    ngbDropdown
+                    #editPopup="ngbDropdown"
+                    class="d-inline-block"
+                  >
+                    <button class="dropdown-btn" ngbDropdownToggle>
+                      <fa-icon
+                        [icon]="['fas', 'ellipsis-v']"
+                        class="font-20-px"
+                      />
+                    </button>
+                    <div
+                      ngbDropdownMenu
+                      class="dropdown-menu"
+                      (mouseleave)="editPopup.close()"
+                    >
+                      <button
+                        ngbDropdownItem
+                        (click)="editMsg(message)"
+                        *ngIf="!message?.messageMedia"
+                      >
+                        <a class="droplist d-flex align-items-center gap-2">
+                          <fa-icon [icon]="['fas', 'pen-to-square']" />
+                          <span>Edit</span>
+                        </a>
+                      </button>
+                      <button ngbDropdownItem (click)="deleteMsg(message)">
+                        <a class="droplist d-flex align-items-center gap-2">
+                          <fa-icon [icon]="['fas', 'trash-can']" />
+                          <span>Delete</span>
+                        </a>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="message d-flex gap-3 flex-column"
+                  [title]="displayLocalTime(message?.createdDate)"
+                >
+                  <!-- (contextmenu)="editPopup.toggle(); $event.preventDefault()" -->
+                  <div class="d-flex flex-column">
+                    <p
+                      *ngIf="message?.messageText !== null"
+                      class="m-0"
+                      [innerHTML]="
+                        encryptDecryptService.decryptUsingAES256(
+                          message?.messageText
+                        )
+                      "
+                    ></p>
+                    <ng-container *ngIf="message?.metaData">
+                      <div class="chat-meta">
+                        <app-post-meta-data-card
+                          [post]="message.metaData"
+                          class="pt-2"
+                        />
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <!-- <li class="you" *ngIf="message?.sentBy !== this.profileId">
               <div class="d-flex flex-column">
                 <span class="font-12-px">{{ message?.Username }}</span>
                 <div
@@ -584,7 +872,7 @@
                         )
                       "
                     ></p>
-  
+
                     <ng-container *ngIf="message?.metaData">
                       <div class="chat-meta">
                         <app-post-meta-data-card
@@ -695,7 +983,7 @@
                   </div>
                 </div>
               </div>
-            </li>
+            </li> -->
           </ul>
         </ng-container>
       </div>
@@ -833,9 +1121,9 @@
                   [isCustomeSearch]="userChat?.groupId"
                   (keydown.enter)="uploadPostFileAndCreatePost()"
                   (keydown.shift.enter)="$event.stopPropagation()"
-                  />
+                />
               </div>
-                <!-- [isAllowTagUser]="false" -->
+              <!-- [isAllowTagUser]="false" -->
               <div class="btn-area">
                 <button
                   class="cmn-btn message px-2 px-sm-5 px-lg-6 lh-lg"
