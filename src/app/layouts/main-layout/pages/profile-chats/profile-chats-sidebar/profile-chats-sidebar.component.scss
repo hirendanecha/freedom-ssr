@@ -9,15 +9,15 @@
   //   .border-top {
   //     border-top: 1px solid var(--bs-border-color) !important;
   //   }
-  .sidebar-head-text{
+  .sidebar-head-text {
     max-width: 178px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box !important;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
-    
-    @media (max-width:991px) {
+
+    @media (max-width: 991px) {
       max-width: 162px;
     }
   }
@@ -29,7 +29,7 @@
       margin: 0 5px;
     }
     button.active {
-      background-color: var(--btn-1st-color) ;
+      background-color: var(--btn-1st-color);
     }
   }
 
@@ -84,4 +84,25 @@
 ::-webkit-scrollbar-thumb {
   border-radius: 10px !important;
   background-color: var(--primary-color) !important;
+}
+
+::ng-deep {
+  .last-message {
+    div,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    a,
+    span,
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+  }
 }

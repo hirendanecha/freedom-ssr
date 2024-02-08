@@ -536,7 +536,7 @@ export class ProfileChatsListComponent
     const data = {
       ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
       Username: this.groupData?.groupName || this?.userChat.Username,
-      notificationToProfileId: this.userChat.profileId,
+      notificationToProfileId: this.groupData.profileId || this.userChat.profileId,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
       notificationByProfileId: this.profileId,
@@ -559,8 +559,12 @@ export class ProfileChatsListComponent
     modalRef.result.then((res) => {
       if (res === 'cancel') {
         this.chatObj.msgText = 'Your call has been ended';
-        // this.sendMessage();
+        this.sendMessage();
       }
+      // if (res === 'missCalled') {
+      //   this.chatObj.msgText = 'You have a missed call';
+      //   this.sendMessage();
+      // }
     });
   }
 
