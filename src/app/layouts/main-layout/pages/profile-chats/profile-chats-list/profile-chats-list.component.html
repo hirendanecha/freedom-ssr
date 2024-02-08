@@ -453,6 +453,8 @@
                 [isCopyImagePreview]="false"
                 [isShowEmojis]="false"
                 (onDataChange)="onTagUserInputChangeEvent($event)"
+                (keydown.enter)="uploadPostFileAndCreatePost()"
+                (keydown.shift.enter)="$event.stopPropagation()"
               />
               <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
               <div class="btn-area">
@@ -829,10 +831,11 @@
                   [isShowEmojis]="false"
                   (onDataChange)="onTagUserInputChangeEvent($event)"
                   [isCustomeSearch]="userChat?.groupId"
+                  (keydown.enter)="uploadPostFileAndCreatePost()"
+                  (keydown.shift.enter)="$event.stopPropagation()"
                   />
               </div>
                 <!-- [isAllowTagUser]="false" -->
-              <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
               <div class="btn-area">
                 <button
                   class="cmn-btn message px-2 px-sm-5 px-lg-6 lh-lg"
