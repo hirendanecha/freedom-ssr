@@ -34,8 +34,7 @@ import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
-{
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -112,6 +111,7 @@ export class ProfileChatsListComponent
         } else if (this.messageList[index]) {
           this.messageList[index] = data;
         } else {
+          this.scrollToBottom();
           this.messageList.push(data);
         }
       }
@@ -227,14 +227,14 @@ export class ProfileChatsListComponent
       // console.log('encrypted-message', message);
       const data = {
         messageText: message,
-        roomId: this.userChat.roomId || null,
+        roomId: this.userChat?.roomId || null,
         groupId: this.userChat?.groupId || null,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
       };
 
-      // console.log(data);
+      console.log(data);
 
       this.socketService.sendMessage(data, async (data: any) => {
         // console.log(data);
@@ -297,8 +297,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText != null
               ? this.encryptDecryptService?.decryptUsingAES256(
-                  element?.messageText
-                )
+                element?.messageText
+              )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -314,7 +314,7 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
@@ -534,15 +534,15 @@ export class ProfileChatsListComponent
       'https://facetime.tube/' + `callId-${new Date().getTime()}`;
 
     const data = {
-      ProfilePicName: this.userChat.ProfilePicName,
-      Username: this.userChat.Username,
+      ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+      Username: this.groupData?.groupName || this?.userChat.Username,
       notificationToProfileId: this.userChat.profileId,
-      roomId: this.userChat.roomId,
-      groupId: this.userChat.groupId,
+      roomId: this.userChat?.roomId || null,
+      groupId: this.userChat?.groupId || null,
       notificationByProfileId: this.profileId,
       link: originUrl,
     };
-
+    console.log('outgoing-data', data);
     var callSound = new Howl({
       src: [
         'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',

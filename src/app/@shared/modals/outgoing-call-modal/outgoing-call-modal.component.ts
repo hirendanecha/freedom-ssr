@@ -32,7 +32,7 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
     this.hangUpTimeout = setTimeout(() => {
       this.hangUpCall();
     }, 60000);
-    
+
     this.socketService.socket?.on('notification', (data: any) => {
       if (data?.actionType === 'DC') {
         this.activateModal.close('cancel');
@@ -53,7 +53,8 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
     this.sound?.stop();
     const data = {
       notificationToProfileId: this.calldata.notificationToProfileId,
-      roomId: this.calldata.roomId,
+      roomId: this.calldata?.roomId,
+      groupId: this.calldata?.groupId,
       notificationByProfileId: this.calldata.notificationByProfileId,
     };
     this.socketService?.hangUpCall(data, (data: any) => {

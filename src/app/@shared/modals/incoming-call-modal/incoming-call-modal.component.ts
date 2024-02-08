@@ -15,6 +15,7 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
   @Input() calldata: any;
   @Input() sound: any;
   hangUpTimeout: any;
+  currentURL: any = [];
   constructor(
     public activateModal: NgbActiveModal,
     private socketService: SocketService
@@ -46,15 +47,20 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
   pickUpCall(): void {
     this.sound?.stop();
     clearTimeout(this.hangUpTimeout);
-    window.open(this.calldata.link, '_blank');
+    if (!this.currentURL.includes(this.calldata?.link)) {
+      this.currentURL.push(this.calldata.link)
+      window.open(this.calldata.link, '_blank');
+    }
     this.activateModal.close('success');
 
     const data = {
       notificationToProfileId: this.calldata.notificationByProfileId,
-      roomId: this.calldata.roomId,
+      roomId: this.calldata?.roomId,
+      groupId: this.calldata?.groupId,
       notificationByProfileId: this.calldata.notificationToProfileId,
       link: this.calldata.link,
     };
+    console.log('pick-up-call', data)
     this.socketService?.pickUpCall(data, (data: any) => {
       console.log(data);
     });
@@ -64,7 +70,8 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
     this.sound?.stop();
     const data = {
       notificationToProfileId: this.calldata.notificationByProfileId,
-      roomId: this.calldata.roomId,
+      roomId: this.calldata?.roomId,
+      groupId: this.calldata?.groupId,
       notificationByProfileId: this.calldata.notificationToProfileId,
     };
     this.socketService?.hangUpCall(data, (data: any) => {

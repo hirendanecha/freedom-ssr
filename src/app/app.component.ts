@@ -33,12 +33,17 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.checkDocumentFocus();
+    this.profileId = +localStorage.getItem('profileId');
+
   }
 
 
   ngOnInit(): void {
+    this.socketService.socket?.emit('join', { room: this.profileId });
+  }
+
+  ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.profileId = +localStorage.getItem('profileId');
       this.originalFavicon = document.querySelector('link[rel="icon"]');
       this.sharedService.getUserDetails();
       this.spinner.hide();
@@ -54,7 +59,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.socketService.socket?.emit('online-users');
       }
 
-      this.socketService.socket?.emit('join', { room: this.profileId });
       this.socketService.socket?.on('notification', (data: any) => {
         if (data) {
           console.log('new-notification', data);
@@ -78,7 +82,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               }
             }
           }
-          if (data?.actionType === 'M' && data.notificationToProfileId !== this.profileId) {
+          if (data?.actionType === 'M' && data?.notificationByProfileId !== this.profileId) {
             this.sharedService.isNotify = true;
             var sound = new Howl({
               src: [
@@ -95,7 +99,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             this.toasterService.success(data?.notificationDesc)
           }
-          if (data?.actionType === 'VC' && data?.notificationByProfileId != this.profileId) {
+          if (data?.actionType === 'VC' && data?.notificationByProfileId !== this.profileId) {
             var callSound = new Howl({
               src: [
                 'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
@@ -113,7 +117,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               console.log(res);
             });
           }
-          if (data?.actionType === 'SC') {
+          if (data?.actionType === 'SC' && data?.notificationByProfileId !== this.profileId) {
             console.log(this.currentURL)
             if (!this.currentURL.includes(data?.link)) {
               this.currentURL.push(data.link)
@@ -138,9 +142,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sharedService.isNotify = true;
       }
     }
-  }
-
-  ngAfterViewInit(): void {
   }
 
   @HostListener('window:scroll', [])
