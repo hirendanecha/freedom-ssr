@@ -147,6 +147,7 @@ export class ProfileChatsSidebarComponent
       item.isAccepted = 'Y';
     }
     // console.log(item);
+    this.notificationNavigation()
     this.onNewChat?.emit(item);
     this.activeOffcanvas?.dismiss();
     if (this.searchText) {
@@ -179,5 +180,13 @@ export class ProfileChatsSidebarComponent
       this.isChatLoader = false;
       this.groupList = data;
     });
+  }
+
+  notificationNavigation() {
+    const isRead = localStorage.getItem('isRead');
+    if (isRead === 'N') {
+      localStorage.setItem('isRead', 'Y');
+      this.sharedService.isNotify = false;
+    }
   }
 }
