@@ -207,6 +207,7 @@
                   </ng-container>
                 </div>
                 <div
+                *ngIf="message?.messageText !== null"
                   class="message d-flex gap-3 flex-column"
                   [title]="displayLocalTime(message?.createdDate)"
                 >
@@ -317,7 +318,7 @@
                 </div>
               </ng-container>
 
-              <div class="d-flex flex-row-reverse gap-2 drop-options">
+              <div class="d-flex flex-row-reverse gap-2 drop-options" *ngIf="message?.messageText !== null">
                 <div class="btn-group d-flex options">
                   <div
                     ngbDropdown
@@ -645,29 +646,32 @@
                     </div>
                   </ng-container>
                 </div>
-                <div
-                  class="message d-flex gap-3 flex-column"
-                  [title]="displayLocalTime(message?.createdDate)"
-                >
-                  <div class="d-flex flex-column">
-                    <p
-                      *ngIf="message?.messageText !== null"
-                      class="m-0"
-                      [innerHTML]="
-                        encryptDecryptService.decryptUsingAES256(
-                          message?.messageText
-                        )
-                      "
-                    ></p>
-
-                    <ng-container *ngIf="message?.metaData">
-                      <div class="chat-meta">
-                        <app-post-meta-data-card
-                          [post]="message.metaData"
-                          class="pt-2"
-                        />
-                      </div>
-                    </ng-container>
+                <div class="d-flex">
+                  <div
+                  *ngIf="message?.messageText !== null"
+                    class="message d-flex gap-3 flex-column"
+                    [title]="displayLocalTime(message?.createdDate)"
+                  >
+                    <div class="d-flex flex-column">
+                      <p
+                        *ngIf="message?.messageText !== null"
+                        class="m-0"
+                        [innerHTML]="
+                          encryptDecryptService.decryptUsingAES256(
+                            message?.messageText
+                          )
+                        "
+                      ></p>
+  
+                      <ng-container *ngIf="message?.metaData">
+                        <div class="chat-meta">
+                          <app-post-meta-data-card
+                            [post]="message.metaData"
+                            class="pt-2"
+                          />
+                        </div>
+                      </ng-container>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -756,7 +760,7 @@
                 </div>
               </ng-container>
 
-              <div class="d-flex flex-row-reverse gap-2 drop-options">
+              <div class="d-flex flex-row-reverse gap-2 drop-options" *ngIf="message?.messageText !== null">
                 <div class="btn-group d-flex options">
                   <div
                     ngbDropdown
