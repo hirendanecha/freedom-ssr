@@ -18,7 +18,7 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
   constructor(
     public activateModal: NgbActiveModal,
     private socketService: SocketService
-  ) { }
+  ) {}
 
   ngAfterViewInit(): void {
     const SoundOct = JSON.parse(
@@ -36,12 +36,13 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
 
     this.socketService.socket?.on('notification', (data: any) => {
       if (data?.actionType === 'DC') {
-      this.activateModal.close('cancel');
+        this.sound?.stop();
+        this.activateModal.close('cancel');
       }
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   pickUpCall(): void {
     this.sound?.stop();

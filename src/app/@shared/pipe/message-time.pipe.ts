@@ -32,8 +32,17 @@ export class MessageTimePipe implements PipeTransform {
       return `${days[targetDate.getDay()]}`;
     }
 
-    if (diffInWeeks < 4) {
-      return `${diffInWeeks}weeks ago`;
+    if (diffInWeeks === 1) {
+      return '1 week ago';
+    }
+
+    if (diffInWeeks > 1 && diffInWeeks < 4) {
+      return `${diffInWeeks} weeks ago`;
+    }
+
+    if (diffInDays >= 28) {
+      const diffInMonths = Math.round(diffInDays / 30);
+      return `${diffInMonths} month${diffInMonths > 1 ? 's' : ''} ago`;
     }
 
     // For older dates, return the actual date

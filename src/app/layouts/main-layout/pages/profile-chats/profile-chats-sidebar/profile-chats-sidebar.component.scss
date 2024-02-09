@@ -49,6 +49,7 @@
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
+      max-height: 21px;
     }
   }
   .search-user-list {
@@ -74,6 +75,18 @@
 
   .dropdown-preferences {
     margin: 0 10px;
+  }
+
+  .online-status {
+    .abs-area {
+      left: 30px;
+      top: 28px;
+      width: 12px;
+      height: 12px;
+      // background: var(--highlight-color);
+      background: #00a469;
+      border-radius: 50%;
+    }
   }
 }
 
