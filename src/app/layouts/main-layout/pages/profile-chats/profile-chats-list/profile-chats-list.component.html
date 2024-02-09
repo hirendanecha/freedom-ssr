@@ -506,19 +506,21 @@
                   </div>
                 </div>
               </div>
-              <app-tag-user-input
-                class="message-input-field message-text"
-                placeholder="Type your message here.."
-                [value]="messageInputValue"
-                [isShowMetaLoader]="false"
-                [isAllowTagUser]="false"
-                [isShowMetaPreview]="false"
-                [isCopyImagePreview]="false"
-                [isShowEmojis]="false"
-                (onDataChange)="onTagUserInputChangeEvent($event)"
-                (keydown.enter)="uploadPostFileAndCreatePost()"
-                (keydown.shift.enter)="$event.stopPropagation()"
-              />
+              <div class="chat-input-field position-relative w-100">
+                <app-tag-user-input
+                  class="message-input-field message-text"
+                  placeholder="Type your message here.."
+                  [value]="messageInputValue"
+                  [isShowMetaLoader]="false"
+                  [isAllowTagUser]="false"
+                  [isShowMetaPreview]="false"
+                  [isCopyImagePreview]="false"
+                  [isShowEmojis]="false"
+                  (onDataChange)="onTagUserInputChangeEvent($event)"
+                  (keydown.enter)="uploadPostFileAndCreatePost()"
+                  (keydown.shift.enter)="$event.stopPropagation()"
+                />
+              </div>
               <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
               <div class="btn-area">
                 <button
@@ -1112,7 +1114,7 @@
                   </div>
                 </div>
               </div>
-              <div class="group-input-field w-100">
+              <div class="group-input-field w-100 position-relative">
                 <app-tag-user-input
                   class="message-input-field message-text"
                   placeholder="Type your message here.."
