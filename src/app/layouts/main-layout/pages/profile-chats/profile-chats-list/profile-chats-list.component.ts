@@ -127,10 +127,13 @@ export class ProfileChatsListComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log('input', this.userChat);
     if (this.userChat?.groupId) {
+      console.log('input', this.userChat);
       this.getGroupDetails(this.userChat.groupId);
       this.resetData();
+    } else {
+      console.log('input', this.userChat);
+      this.groupData = null;
     }
     if (this.userChat?.roomId || this.userChat?.groupId) {
       this.getMessageList();
@@ -536,12 +539,14 @@ export class ProfileChatsListComponent
     const data = {
       ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
       Username: this.groupData?.groupName || this?.userChat.Username,
-      notificationToProfileId: this.groupData.profileId || this.userChat.profileId,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
       notificationByProfileId: this.profileId,
       link: originUrl,
     };
+    if (!data?.groupId) {
+      data['notificationToProfileId'] = this.userChat.profileId;
+    }
     console.log('outgoing-data', data);
     var callSound = new Howl({
       src: [
