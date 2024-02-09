@@ -149,7 +149,10 @@
           [ngClass]="{ active: item === selectedChatUser }"
         >
           <div class="d-flex gap-2">
-            <div class="avatar">
+            <div class="avatar position-relative online-status">
+              <span class="abs-area position-absolute d-center smtxt"
+              *ngIf="sharedService?.onlineUserList.includes(item?.profileId)"
+              ></span>
               <img
                 class="avatar-img h-40-px w-40-px max-un"
                 src="{{ item?.ProfilePicName }}"
