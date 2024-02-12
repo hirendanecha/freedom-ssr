@@ -34,7 +34,7 @@
   }
 
   .sidebar-items {
-    width: 240px;
+    width: 215px;
 
     @media (max-width: 992px) {
       width: 200px;
@@ -50,6 +50,7 @@
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       max-height: 21px;
+      pointer-events: none;
     }
   }
   .search-user-list {
@@ -60,7 +61,7 @@
     max-width: 40px;
   }
   .cus-scrollbar {
-    height: 36vh;
+    height: 44vh;
     // height: 39vh;
     @media (max-width: 992px) {
       height: 42vh;
