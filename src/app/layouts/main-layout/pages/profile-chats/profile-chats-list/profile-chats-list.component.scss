@@ -6,10 +6,10 @@
 
     .chat-content {
       overflow-y: auto;
-      height: calc(100vh - 350px);
+      height: calc(100vh - 310px);
       // min-height: calc(100vh - 350px);
       @media (max-width: 991px) {
-        height: calc(90vh - 350px) !important;
+        height: calc(90vh - 310px) !important;
       }
     }
     .c-pdf-show {
@@ -213,9 +213,9 @@
     }
   }
 }
-.chat-footer {
-  top: 100% !important;
-  @media (max-width: 991px) {
-    top: 83% !important;
-  }
-}
+// .chat-footer {
+//   top: 100% !important;
+//   @media (max-width: 991px) {
+//     top: 83% !important;
+//   }
+// }

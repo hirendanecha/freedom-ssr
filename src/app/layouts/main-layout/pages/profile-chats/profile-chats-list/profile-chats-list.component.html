@@ -1,4 +1,32 @@
 <div class="chat-area position-relative">
+  <ng-container
+    *ngIf="
+      (!userChat?.roomId && userChat?.isAccepted === 'N') ||
+      (userChat?.Id && !userChat?.roomId)
+    "
+  >
+    <div class="d-flex flex-column align-items-center mt-5">
+      <div
+        class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg w-75"
+      >
+        <img
+          [src]="userChat.ProfilePicName"
+          class="w-60-px h-60-px"
+          alt="image"
+          onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+        />
+        <h5>send invite to {{ userChat?.Username }} for chat</h5>
+        <div>
+          <button class="btn btn-danger mx-3" (click)="onCancel()">
+            Cancel
+          </button>
+          <button class="btn btn-primary mx-3" (click)="createChatRoom()">
+            Invite
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
   <!-- ui fourth -->
   <ng-container *ngIf="!userChat.Username">
     <div class="d-flex flex-column align-items-center mt-5">
@@ -159,7 +187,7 @@
           >
             <span
               class="font-12-px data-text-color"
-              *ngIf="message?.sentBy !== this.profileId"
+              *ngIf="message?.sentBy !== this.profileId && message?.createdDate"
               >{{ displayLocalTime(message?.createdDate) }}</span
             >
             <li class="you" *ngIf="message?.sentBy !== this.profileId">
@@ -207,10 +235,10 @@
                   </ng-container>
                 </div>
                 <div
-                *ngIf="message?.messageText !== null"
+                  *ngIf="message?.messageText !== null"
                   class="message d-flex gap-3 flex-column"
-                  [title]="displayLocalTime(message?.createdDate)"
-                >
+                  >
+                  <!-- [title]="displayLocalTime(message?.createdDate)" -->
                   <div class="d-flex flex-column">
                     <p
                       *ngIf="message?.messageText !== null"
@@ -274,7 +302,7 @@
                         <button ngbDropdownItem (click)="deleteMsg(message)">
                           <a class="droplist d-flex align-items-center gap-2">
                             <fa-icon [icon]="['fas', 'trash-can']" />
-                            <span>Delete</span>
+                            <span class="data-text-color">Delete</span>
                           </a>
                         </button>
                       </div>
@@ -318,7 +346,10 @@
                 </div>
               </ng-container>
 
-              <div class="d-flex flex-row-reverse gap-2 drop-options" *ngIf="message?.messageText !== null">
+              <div
+                class="d-flex flex-row-reverse gap-2 drop-options"
+                *ngIf="message?.messageText !== null"
+              >
                 <div class="btn-group d-flex options">
                   <div
                     ngbDropdown
@@ -357,8 +388,8 @@
                 </div>
                 <div
                   class="message d-flex gap-3 flex-column"
-                  [title]="displayLocalTime(message?.createdDate)"
-                >
+                  >
+                  <!-- [title]="displayLocalTime(message?.createdDate)" -->
                   <!-- (contextmenu)="editPopup.toggle(); $event.preventDefault()" -->
                   <div class="d-flex flex-column">
                     <p
@@ -509,7 +540,7 @@
               <div class="chat-input-field position-relative w-100">
                 <app-tag-user-input
                   class="message-input-field message-text"
-                  placeholder="Type your message here.."
+                  placeholder="Message.."
                   [value]="messageInputValue"
                   [isShowMetaLoader]="false"
                   [isAllowTagUser]="false"
@@ -597,13 +628,12 @@
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
             *ngFor="let message of messageList"
           >
-          <div class="d-flex" *ngIf="message?.sentBy !== this.profileId">
-            <span class="font-12-px">{{ message?.Username }},</span>
-              <span
-                class="font-12-px data-text-color"
-                >{{ displayLocalTime(message?.createdDate) }}</span
-              >
-          </div>
+            <div class="d-flex" *ngIf="message?.sentBy !== this.profileId && message?.createdDate && message?.Username">
+              <span class="font-12-px">{{ message?.Username }},</span>
+              <span class="font-12-px data-text-color">{{
+                displayLocalTime(message?.createdDate)
+              }}</span>
+            </div>
             <li class="you" *ngIf="message?.sentBy !== this.profileId">
               <div class="d-flex flex-column">
                 <div class="d-flex">
@@ -650,10 +680,10 @@
                 </div>
                 <div class="d-flex">
                   <div
-                  *ngIf="message?.messageText !== null"
+                    *ngIf="message?.messageText !== null"
                     class="message d-flex gap-3 flex-column"
-                    [title]="displayLocalTime(message?.createdDate)"
-                  >
+                    >
+                    <!-- [title]="displayLocalTime(message?.createdDate)" -->
                     <div class="d-flex flex-column">
                       <p
                         *ngIf="message?.messageText !== null"
@@ -664,7 +694,7 @@
                           )
                         "
                       ></p>
-  
+
                       <ng-container *ngIf="message?.metaData">
                         <div class="chat-meta">
                           <app-post-meta-data-card
@@ -683,7 +713,7 @@
               class="me d-flex flex-column gap-1"
               *ngIf="message?.sentBy === this.profileId"
             >
-              <span class="font-12-px data-text-color">{{
+              <span class="font-12-px data-text-color" *ngIf="message?.createdDate">{{
                 displayLocalTime(message?.createdDate)
               }}</span>
               <ng-container *ngIf="message?.messageMedia">
@@ -762,7 +792,10 @@
                 </div>
               </ng-container>
 
-              <div class="d-flex flex-row-reverse gap-2 drop-options" *ngIf="message?.messageText !== null">
+              <div
+                class="d-flex flex-row-reverse gap-2 drop-options"
+                *ngIf="message?.messageText !== null"
+              >
                 <div class="btn-group d-flex options">
                   <div
                     ngbDropdown
@@ -793,7 +826,7 @@
                       <button ngbDropdownItem (click)="deleteMsg(message)">
                         <a class="droplist d-flex align-items-center gap-2">
                           <fa-icon [icon]="['fas', 'trash-can']" />
-                          <span>Delete</span>
+                          <span class="data-text-color">Delete</span>
                         </a>
                       </button>
                     </div>
@@ -801,8 +834,8 @@
                 </div>
                 <div
                   class="message d-flex gap-3 flex-column"
-                  [title]="displayLocalTime(message?.createdDate)"
-                >
+                  >
+                  <!-- [title]="displayLocalTime(message?.createdDate)" -->
                   <!-- (contextmenu)="editPopup.toggle(); $event.preventDefault()" -->
                   <div class="d-flex flex-column">
                     <p
@@ -1117,7 +1150,7 @@
               <div class="group-input-field w-100 position-relative">
                 <app-tag-user-input
                   class="message-input-field message-text"
-                  placeholder="Type your message here.."
+                  placeholder="Message.."
                   [value]="messageInputValue"
                   [isShowMetaLoader]="false"
                   [isShowMetaPreview]="false"

@@ -1,9 +1,14 @@
 <app-header />
 
 <div class="main-content d-flex justify-content-start align-items-start">
-  <div class="container">
+  <div class="" [ngClass]="!sidebar?.isShowChatModule ? 'container' : 'w-100'">
     <div class="d-lg-flex d-block w-100 gap-5 main-layout pt-5">
-      <ng-container *ngIf="sidebar?.isShowLeftSideBar && (breakpointService?.screen | async).lg.gatherThen">
+      <ng-container
+        *ngIf="
+          sidebar?.isShowLeftSideBar &&
+          (breakpointService?.screen | async).lg.gatherThen
+        "
+      >
         <div class="my-profile-sidebar min-vh-100">
           <ng-container *ngIf="!sidebar?.isShowResearchLeftSideBar">
             <app-left-sidebar />
@@ -19,7 +24,12 @@
         <router-outlet />
       </div>
 
-      <ng-container *ngIf="sidebar?.isShowRightSideBar && (breakpointService?.screen | async).xl.gatherThen">
+      <ng-container
+        *ngIf="
+          sidebar?.isShowRightSideBar &&
+          (breakpointService?.screen | async).xl.gatherThen
+        "
+      >
         <div class="my-list-sidebar min-vh-100">
           <app-right-sidebar />
         </div>
