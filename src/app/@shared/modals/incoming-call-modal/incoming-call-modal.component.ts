@@ -35,10 +35,11 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
         this.sound?.play();
       }
     }
-
-    this.hangUpTimeout = setTimeout(() => {
-      this.hangUpCall();
-    }, 60000);
+    if (!this.hangUpTimeout) {
+      this.hangUpTimeout = setTimeout(() => {
+        this.hangUpCall();
+      }, 60000);
+    }
     this.socketService.socket?.on('notification', (data: any) => {
       if (data?.actionType === 'DC') {
         this.sound.stop();
@@ -74,6 +75,7 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
 
   hangUpCall(): void {
     this.sound?.stop();
+    clearTimeout(this.hangUpTimeout);
     const data = {
       notificationToProfileId: this.calldata.notificationByProfileId || this.profileId,
       roomId: this.calldata?.roomId,

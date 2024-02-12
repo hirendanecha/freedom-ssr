@@ -18,7 +18,7 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
   constructor(
     public activateModal: NgbActiveModal,
     private socketService: SocketService
-  ) {}
+  ) { }
 
   ngAfterViewInit(): void {
     const SoundOct = JSON.parse(
@@ -29,10 +29,12 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
         this.sound?.play();
       }
     }
-    this.hangUpTimeout = setTimeout(() => {
-      this.hangUpCall();
-      this.activateModal.close('missCalled');
-    }, 60000);
+    if (!this.hangUpTimeout) {
+      this.hangUpTimeout = setTimeout(() => {
+        this.hangUpCall();
+        this.activateModal.close('missCalled');
+      }, 60000);
+    }
 
     this.socketService.socket?.on('notification', (data: any) => {
       if (data?.actionType === 'DC') {
@@ -42,7 +44,7 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   pickUpCall(): void {
     this.sound?.stop();

@@ -46,6 +46,7 @@ export class NotificationsComponent {
         next: (res: any) => {
           this.spinner.hide();
           this.notificationList = res?.data;
+          console.log(this.notificationList)
         },
         error:
           (error) => {

@@ -357,8 +357,8 @@ export class ProfileChatsListComponent
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
-    // this.extractImageUrlFromContent(data?.html);
+    // this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
+    this.chatObj.msgText = data?.html;
     // this.postData.postdescription = data?.html;
     // this.postMessageTags = data?.tags;
     if (data.html === '') {
@@ -577,46 +577,40 @@ export class ProfileChatsListComponent
     const contentContainer = document.createElement('div');
     contentContainer.innerHTML = content;
     const imgTag = contentContainer.querySelector('img');
-    if (imgTag) {
-      const imgTitle = imgTag.getAttribute('title');
-      const imgStyle = imgTag.getAttribute('style');
-      const imageGif = imgTag
-        .getAttribute('src')
-        .toLowerCase()
-        .endsWith('.gif');
-      if (!imgTitle && !imgStyle && !imageGif) {
-        const copyImage = imgTag.getAttribute('src');
-        let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
-        const messageText = `<div>${content
-          ?.replace(copyImage, '')
-          ?.replace(/\<br\>/gi, '')
-          ?.replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
-        const base64Image = copyImage
-          .trim()
-          ?.replace(/^data:image\/\w+;base64,/, '');
-        try {
-          const binaryString = window.atob(base64Image);
-          const uint8Array = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) {
-            uint8Array[i] = binaryString.charCodeAt(i);
-          }
-          const blob = new Blob([uint8Array], { type: 'image/jpeg' });
-          const fileName = `copyImage-${new Date().getTime()}.jpg`;
-          const file = new File([blob], fileName, { type: 'image/jpeg' });
-          this.selectedFile = file;
-          this.viewUrl = URL.createObjectURL(file);
-        } catch (error) {
-          console.error('Base64 decoding error:', error);
-        }
-        if (messageText !== '<div></div>') {
-          return messageText;
-        }
-      }
-    } else {
-      return content;
+
+    if (!imgTag) return content;
+
+    const imgTitle = imgTag.getAttribute('title');
+    const imgStyle = imgTag.getAttribute('style');
+    const imageGif = imgTag.getAttribute('src').toLowerCase().endsWith('.gif');
+
+    if (imgTitle || imgStyle || imageGif) return null;
+
+    const copyImage = imgTag.getAttribute('src');
+    const messageText = `<div>${content.replace(copyImage, '').replace(/<br>/gi, '').replace(/<img\s*src\s*=\s*""\s*alt\s*="">/g, '')}</div>`;
+
+    if (messageText === '<div></div>') return null;
+
+    const base64Image = copyImage.trim().replace(/^data:image\/\w+;base64,/, '');
+
+    try {
+      const binaryString = window.atob(base64Image);
+      const uint8Array = new Uint8Array(binaryString.length);
+      Array.from(binaryString).map((char, i) => uint8Array[i] = char.charCodeAt(0));
+
+      const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+      const fileName = `copyImage-${new Date().getTime()}.jpg`;
+      const file = new File([blob], fileName, { type: 'image/jpeg' });
+
+      this.selectedFile = file;
+      this.viewUrl = URL.createObjectURL(file);
+    } catch (error) {
+      console.error('Base64 decoding error:', error);
     }
-    return null;
+
+    return messageText;
   }
+
 
   createGroup() {
     const modalRef = this.modalService.open(CreateGroupModalComponent, {

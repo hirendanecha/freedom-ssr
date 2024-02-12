@@ -26,7 +26,7 @@ export class NotificationsModalComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const profileId = +localStorage.getItem('profileId');
-    this.socketService.readNotification({ profileId }, (data) => {});
+    this.socketService.readNotification({ profileId }, (data) => { });
   }
 
   readUnreadNotification(postId: string, notification: any = {}): void {
@@ -34,7 +34,8 @@ export class NotificationsModalComponent implements AfterViewInit {
       .readUnreadNotification(notification.id, 'Y')
       .subscribe({
         next: (res) => {
-          if (notification.actionType === 'M') {
+          const type = ['M', 'SC', 'DC', 'VC']
+          if (type.includes(notification?.actionType)) {
             this.router.navigate([`profile-chats`]);
           } else {
             this.router.navigate([`post/${postId}`]);
