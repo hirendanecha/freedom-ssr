@@ -43,7 +43,7 @@ export class ProfileChatsSidebarComponent
   isCallSoundEnabled: boolean = true;
   isChatLoader = false;
   selectedButton: string = 'chats';
-
+  originalFavicon: HTMLLinkElement;
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
   constructor(
@@ -55,9 +55,8 @@ export class ProfileChatsSidebarComponent
     public encryptDecryptService: EncryptDecryptService
   ) {
     this.profileId = +localStorage.getItem('profileId');
-
     const notificationSound =
-      JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    JSON.parse(localStorage.getItem('soundPreferences')) || {};
     if (notificationSound?.messageSoundEnabled === 'N') {
       this.isMessageSoundEnabled = false;
     }
@@ -65,8 +64,9 @@ export class ProfileChatsSidebarComponent
       this.isCallSoundEnabled = false;
     }
   }
-
+  
   ngOnChanges(changes: SimpleChanges): void {
+    this.originalFavicon = document.querySelector('link[rel="icon"]');
     this.sharedService
       .getIsRoomCreatedObservable()
       .subscribe((isRoomCreated) => {
@@ -185,6 +185,7 @@ export class ProfileChatsSidebarComponent
   notificationNavigation() {
     const isRead = localStorage.getItem('isRead');
     if (isRead === 'N') {
+      this.originalFavicon.href = '/assets/images/icon.jpg';
       localStorage.setItem('isRead', 'Y');
       this.sharedService.isNotify = false;
     }
