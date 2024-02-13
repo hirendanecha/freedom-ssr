@@ -9,11 +9,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
-import { ProfileService } from 'src/app/@shared/services/profile.service';
-import { SeoService } from 'src/app/@shared/services/seo.service';
 import { NgbActiveOffcanvas, NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
@@ -26,8 +22,7 @@ import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.
   styleUrls: ['./profile-chats-sidebar.component.scss'],
 })
 export class ProfileChatsSidebarComponent
-  implements AfterViewInit, OnChanges, OnInit
-{
+  implements AfterViewInit, OnChanges, OnInit {
   chatList: any = [];
   pendingChatList: any = [];
   groupList: any = [];
@@ -43,6 +38,7 @@ export class ProfileChatsSidebarComponent
   isCallSoundEnabled: boolean = true;
   isChatLoader = false;
   selectedButton: string = 'chats';
+  newChatList = [];
 
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
@@ -125,7 +121,7 @@ export class ProfileChatsSidebarComponent
     });
   }
 
-  getChatList(): void {
+  getChatList() {
     this.isChatLoader = true;
     this.socketService?.getChatList({ profileId: this.profileId }, (data) => {
       this.isChatLoader = false;
@@ -134,10 +130,12 @@ export class ProfileChatsSidebarComponent
           user.Username != this.sharedService?.userData?.Username &&
           user?.isAccepted === 'Y'
       );
+      this.mergeUserChatList();
       this.pendingChatList = data.filter(
         (user: any) => user.isAccepted === 'N'
       );
     });
+    return this.chatList;
   }
 
   onChat(item: any) {
@@ -174,11 +172,12 @@ export class ProfileChatsSidebarComponent
     this.selectedButton = this.selectedButton === buttonType ? buttonType : buttonType;
   }
 
-  getGroupList(): void {
+  getGroupList() {
     this.isChatLoader = true;
     this.socketService?.getGroup({ profileId: this.profileId }, (data) => {
       this.isChatLoader = false;
       this.groupList = data;
+      this.mergeUserChatList();
     });
   }
 
@@ -187,6 +186,16 @@ export class ProfileChatsSidebarComponent
     if (isRead === 'N') {
       localStorage.setItem('isRead', 'Y');
       this.sharedService.isNotify = false;
+    }
+  }
+
+  mergeUserChatList(): void {
+    const chatList = this.chatList;
+    const groupList = this.groupList;
+    const mergeChatList = [...chatList, ...groupList];
+    mergeChatList.sort((a, b) => new Date(b.updatedDate).getTime() - new Date(a.updatedDate).getTime());
+    if (mergeChatList?.length) {
+      this.newChatList = mergeChatList;
     }
   }
 }

@@ -140,9 +140,111 @@
       <ng-container>
         <app-inline-loader class="position-absolute" *ngIf="isChatLoader" />
       </ng-container>
-      <ng-container
-      >
-      <div class="single-item messages-area" *ngFor="let item of chatList">
+      <!-- <ng-container>
+        <div class="single-item messages-area" *ngFor="let item of chatList">
+          <div
+            class="text-start d-flex justify-content-between chat-single p-5"
+            (click)="onChat(item)"
+            [ngClass]="{ active: item === selectedChatUser }"
+          >
+            <div class="d-flex gap-2">
+              <div class="avatar position-relative online-status">
+                <span
+                  class="abs-area position-absolute d-center smtxt"
+                  *ngIf="
+                    sharedService?.onlineUserList.includes(item?.profileId)
+                  "
+                ></span>
+                <img
+                  class="avatar-img h-40-px w-40-px max-un"
+                  src="{{ item?.ProfilePicName }}"
+                  [alt]="item?.Username || item?.FirstName"
+                  onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                />
+              </div>
+              <div
+                class="text-area d-flex justify-content-between sidebar-items align-items-center"
+              >
+                <div class="title-area position-relative d-grid">
+                  <h6 class="m-0 d-inline-flex sidebar-head-text">
+                    {{ item?.Username || item?.FirstName }}
+                  </h6>
+                  <span
+                    class="font-16-px last-message"
+                    *ngIf="item?.lastMessageText !== null"
+                    [innerHTML]="
+                      encryptDecryptService.decryptUsingAES256(
+                        item?.lastMessageText
+                      )
+                    "
+                  >
+                  </span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
+                    *ngIf="item?.unReadMessage > 0"
+                    >{{ item?.unReadMessage }}</span
+                  >
+                  <span class="font-12-px">
+                    {{ item?.updatedDate | messageTime }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container>
+        <div class="single-item messages-area" *ngFor="let item of groupList">
+          <div
+            class="text-start d-flex justify-content-between chat-single p-5"
+            (click)="onChat(item)"
+            [ngClass]="{ active: item === selectedChatUser }"
+          >
+            <div class="d-flex gap-2">
+              <div class="avatar">
+                <img
+                  class="avatar-img h-40-px w-40-px max-un"
+                  src="{{ item?.profileImage }}"
+                  [alt]="item?.groupName"
+                  onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                />
+              </div>
+              <div
+                class="text-area d-flex justify-content-between sidebar-items align-items-center"
+              >
+                <div class="title-area position-relative d-grid">
+                  <h6 class="m-0 d-inline-flex sidebar-head-text">
+                    {{ item?.groupName }}
+                  </h6>
+                  <span
+                    class="font-16-px last-message"
+                    *ngIf="item?.lastMessageText !== null"
+                    [innerHTML]="
+                      encryptDecryptService.decryptUsingAES256(
+                        item?.lastMessageText
+                      )
+                    "
+                  >
+                  </span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
+                    *ngIf="item?.unReadMessage > 0"
+                    >{{ item?.unReadMessage }}</span
+                  >
+                  <span class="font-12-px">
+                    {{ item?.updatedDate | messageTime }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container> -->
+      <div class="single-item messages-area" *ngFor="let item of newChatList">
         <div
           class="text-start d-flex justify-content-between chat-single p-5"
           (click)="onChat(item)"
@@ -150,13 +252,20 @@
         >
           <div class="d-flex gap-2">
             <div class="avatar position-relative online-status">
-              <span class="abs-area position-absolute d-center smtxt"
-              *ngIf="sharedService?.onlineUserList.includes(item?.profileId)"
-              ></span>
+              <ng-container *ngIf="item?.roomId">
+                <span
+                  class="abs-area position-absolute d-center smtxt"
+                  *ngIf="
+                    sharedService?.onlineUserList.includes(item?.profileId)
+                  "
+                ></span>
+              </ng-container>
               <img
                 class="avatar-img h-40-px w-40-px max-un"
-                src="{{ item?.ProfilePicName }}"
-                [alt]="item?.Username || item?.FirstName"
+                src="{{
+                  item?.roomId ? item?.ProfilePicName : item?.profileImage
+                }}"
+                [alt]="item?.groupName || item?.Username"
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
               />
             </div>
@@ -165,7 +274,7 @@
             >
               <div class="title-area position-relative d-grid">
                 <h6 class="m-0 d-inline-flex sidebar-head-text">
-                  {{ item?.Username || item?.FirstName }}
+                  {{ item?.groupName || item?.Username }}
                 </h6>
                 <span
                   class="font-16-px last-message"
@@ -192,57 +301,6 @@
           </div>
         </div>
       </div>
-    </ng-container>
-      <ng-container
-      >
-      <div class="single-item messages-area" *ngFor="let item of groupList">
-        <div
-          class="text-start d-flex justify-content-between chat-single p-5"
-          (click)="onChat(item)"
-          [ngClass]="{ active: item === selectedChatUser }"
-        >
-          <div class="d-flex gap-2">
-            <div class="avatar">
-              <img
-                class="avatar-img h-40-px w-40-px max-un"
-                src="{{ item?.profileImage }}"
-                [alt]="item?.groupName"
-                onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-              />
-            </div>
-            <div
-              class="text-area d-flex justify-content-between sidebar-items align-items-center"
-            >
-              <div class="title-area position-relative d-grid">
-                <h6 class="m-0 d-inline-flex sidebar-head-text">
-                  {{ item?.groupName }}
-                </h6>
-                <span
-                  class="font-16-px last-message"
-                  *ngIf="item?.lastMessageText !== null"
-                  [innerHTML]="
-                    encryptDecryptService.decryptUsingAES256(
-                      item?.lastMessageText
-                    )
-                  "
-                >
-                </span>
-              </div>
-              <div class="d-flex align-items-center">
-                <span
-                  class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
-                  *ngIf="item?.unReadMessage > 0"
-                  >{{ item?.unReadMessage }}</span
-                >
-                <span class="font-12-px">
-                  {{ item?.updatedDate | messageTime }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-container>
     </div>
   </aside>
   <aside>
