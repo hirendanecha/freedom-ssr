@@ -34,7 +34,8 @@ import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -61,6 +62,8 @@ export class ProfileChatsListComponent
   pdfmsg: string;
   messageInputValue: string = '';
   firstTimeScroll = false;
+  activePage = 1;
+  hasMoreData = false;
 
   emojiPaths = [
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
@@ -128,15 +131,21 @@ export class ProfileChatsListComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.userChat?.groupId) {
-      console.log('input', this.userChat);
+      // console.log('input', this.userChat);
+      this.activePage = 1;
+      this.messageList = [];
+      this.hasMoreData = false;
       this.getGroupDetails(this.userChat.groupId);
       this.resetData();
     } else {
-      console.log('input', this.userChat);
+      // console.log('input', this.userChat);
       this.groupData = null;
     }
     if (this.userChat?.roomId || this.userChat?.groupId) {
+      this.activePage = 1;
+      this.messageList = [];
       this.getMessageList();
+      this.hasMoreData = false;
       this.socketService.socket.on('get-users', (data) => {
         data.map((ele) => {
           if (!this.sharedService?.onlineUserList.includes(ele.userId)) {
@@ -267,19 +276,41 @@ export class ProfileChatsListComponent
     }
   }
 
+  loadMoreChats() {
+    this.activePage = this.activePage + 1;
+    this.getMessageList();
+  }
+
   // getMessages
   getMessageList(): void {
     const messageObj = {
-      page: 1,
+      // page: 1,
+      page: this.activePage,
       size: 50,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
     };
     this.messageService.getMessages(messageObj).subscribe({
       next: (data: any) => {
-        this.scrollToBottom();
-        this.messageList = data.data;
-        this.messageList.sort((a, b) => a.id - b.id);
+        if (this.activePage === 1) {
+          this.scrollToBottom();
+        }
+        // this.messageList = data.data;
+        if (data?.data.length > 0) {
+          this.messageList = [...this.messageList, ...data.data];
+
+          this.messageList.sort(
+            (a, b) =>
+              new Date(a.createdDate).getTime() -
+              new Date(b.createdDate).getTime()
+          );
+          // console.log(this.messageList);
+        } else {
+          this.hasMoreData = false;
+        }
+        if (this.activePage < data.pagination.totalPages) {
+          this.hasMoreData = true;
+        }
         const ids = [];
         this.messageList.map((e: any) => {
           if (e.isRead === 'N' && e.sentBy !== this.profileId) {
@@ -301,8 +332,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText != null
               ? this.encryptDecryptService?.decryptUsingAES256(
-                element?.messageText
-              )
+                  element?.messageText
+                )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -318,7 +349,7 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
@@ -358,7 +389,7 @@ export class ProfileChatsListComponent
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    console.log('input string ==>', data)
+    console.log('input string ==>', data);
     this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
     // this.chatObj.msgText = data?.html;
     // this.postData.postdescription = data?.html;
@@ -539,7 +570,8 @@ export class ProfileChatsListComponent
       'https://facetime.tube/' + `callId-${new Date().getTime()}`;
 
     const data = {
-      ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+      ProfilePicName:
+        this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
       Username: this.groupData?.groupName || this?.userChat.Username,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
