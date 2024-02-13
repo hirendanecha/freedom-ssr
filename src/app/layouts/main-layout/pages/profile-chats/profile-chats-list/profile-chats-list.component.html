@@ -63,14 +63,21 @@
             <h5 class="m-0">
               <a class="m-0">{{ userChat.groupName || userChat?.Username }}</a>
             </h5>
-            <span class="mdtxt" *ngIf="!userChat?.groupId">{{
-              sharedService?.onlineUserList.includes(userChat?.profileId)
-                ? "online"
-                : ""
-            }}</span>
+            <ng-container *ngIf="!typingData?.isTyping">
+              <span class="mdtxt" *ngIf="!userChat?.groupId">{{
+                sharedService?.onlineUserList.includes(userChat?.profileId)
+                  ? "online"
+                  : ""
+              }}</span>
+            </ng-container>
+            <ng-container *ngIf="typingData?.isTyping && typingData.profileId !== profileId">
+              <span class="mdtxt" *ngIf="!userChat?.groupId">{{
+                "typing..."
+              }}</span>
+            </ng-container>
           </div>
         </div>
-        <div class="d-flex gap-3 align-items-center">
+        <div class="d-flex gap-3 align-items-center" *ngIf="userChat.isAccepted === 'Y'">
           <a
             class="nav-icon cursor"
             data-toggle="tooltip"
@@ -181,7 +188,11 @@
             userChat.isAccepted === 'Y'
           "
         >
-          <div class="d-center m-3 text-white c-pointer" (click)="loadMoreChats()" *ngIf="hasMoreData">
+          <div
+            class="d-center m-3 text-white c-pointer"
+            (click)="loadMoreChats()"
+            *ngIf="hasMoreData"
+          >
             <fa-icon
               [icon]="['fas', 'refresh']"
               class="font-24-px me-2"
@@ -244,7 +255,7 @@
                 <div
                   *ngIf="message?.messageText !== null"
                   class="message d-flex gap-3 flex-column"
-                  >
+                >
                   <!-- [title]="displayLocalTime(message?.createdDate)" -->
                   <div class="d-flex flex-column">
                     <p
@@ -553,9 +564,11 @@
                   [isCopyImagePreview]="false"
                   [isShowEmojis]="false"
                   (onDataChange)="onTagUserInputChangeEvent($event)"
-                  (keydown.enter)="uploadPostFileAndCreatePost()"
-                  (keydown.shift.enter)="$event.stopPropagation()"
-                />
+                  (keypress)="startTypingChat(true)"
+                  (keydown)="delayedStartTypingChat()"
+                  />
+                  <!-- (keydown.enter)="uploadPostFileAndCreatePost()"
+                  (keydown.shift.enter)="$event.stopPropagation()" -->
               </div>
               <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
               <div class="btn-area">
@@ -598,7 +611,12 @@
                 ? "online"
                 : ""
             }}</span> -->
-            <span>{{ groupData.members }} participants</span>
+            <ng-container *ngIf="typingData?.isTyping && typingData.profileId !== profileId">
+              <span class="mdtxt" *ngIf="userChat?.groupId">{{
+               typingData.Username + " is typing..."
+              }}</span>
+            </ng-container>
+            <span *ngIf="!typingData?.isTyping">{{ groupData.members }} participants</span>
           </div>
           <fa-icon [icon]="['fas', 'gear']" class="font-20-px m-1" />
         </div>
@@ -628,19 +646,30 @@
             (userChat?.roomId || userChat?.groupId) &&
             userChat.isAccepted === 'Y'
           "
-        >   
-        <div class="d-center m-3 text-white c-pointer" (click)="loadMoreChats()" *ngIf="hasMoreData">
-          <fa-icon
-            [icon]="['fas', 'refresh']"
-            class="font-24-px me-2"
-          ></fa-icon>
-          Loadmore
-        </div>
+        >
+          <div
+            class="d-center m-3 text-white c-pointer"
+            (click)="loadMoreChats()"
+            *ngIf="hasMoreData"
+          >
+            <fa-icon
+              [icon]="['fas', 'refresh']"
+              class="font-24-px me-2"
+            ></fa-icon>
+            Loadmore
+          </div>
           <ul
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
             *ngFor="let message of messageList"
           >
-            <div class="d-flex" *ngIf="message?.sentBy !== this.profileId && message?.createdDate && message?.Username">
+            <div
+              class="d-flex"
+              *ngIf="
+                message?.sentBy !== this.profileId &&
+                message?.createdDate &&
+                message?.Username
+              "
+            >
               <span class="font-12-px">{{ message?.Username }},</span>
               <span class="font-12-px data-text-color">{{
                 displayLocalTime(message?.createdDate)
@@ -694,7 +723,7 @@
                   <div
                     *ngIf="message?.messageText !== null"
                     class="message d-flex gap-3 flex-column"
-                    >
+                  >
                     <!-- [title]="displayLocalTime(message?.createdDate)" -->
                     <div class="d-flex flex-column">
                       <p
@@ -725,9 +754,11 @@
               class="me d-flex flex-column gap-1"
               *ngIf="message?.sentBy === this.profileId"
             >
-              <span class="font-12-px data-text-color" *ngIf="message?.createdDate">{{
-                displayLocalTime(message?.createdDate)
-              }}</span>
+              <span
+                class="font-12-px data-text-color"
+                *ngIf="message?.createdDate"
+                >{{ displayLocalTime(message?.createdDate) }}</span
+              >
               <ng-container *ngIf="message?.messageMedia">
                 <div class="d-flex flex-row-reverse gap-2 drop-options">
                   <div class="btn-group d-flex options">
@@ -844,9 +875,7 @@
                     </div>
                   </div>
                 </div>
-                <div
-                  class="message d-flex gap-3 flex-column"
-                  >
+                <div class="message d-flex gap-3 flex-column">
                   <!-- [title]="displayLocalTime(message?.createdDate)" -->
                   <!-- (contextmenu)="editPopup.toggle(); $event.preventDefault()" -->
                   <div class="d-flex flex-column">
@@ -1170,9 +1199,11 @@
                   [isShowEmojis]="false"
                   (onDataChange)="onTagUserInputChangeEvent($event)"
                   [isCustomeSearch]="userChat?.groupId"
-                  (keydown.enter)="uploadPostFileAndCreatePost()"
-                  (keydown.shift.enter)="$event.stopPropagation()"
-                />
+                  (keypress)="startTypingChat(true)"
+                  (keydown)="delayedStartTypingChat()"
+                  />
+                  <!-- (keydown.enter)="uploadPostFileAndCreatePost()"
+                  (keydown.shift.enter)="$event.stopPropagation()" -->
               </div>
               <!-- [isAllowTagUser]="false" -->
               <div class="btn-area">
