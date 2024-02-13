@@ -271,7 +271,7 @@ export class ProfileChatsListComponent
   getMessageList(): void {
     const messageObj = {
       page: 1,
-      size: 1000,
+      size: 50,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
     };
@@ -279,6 +279,7 @@ export class ProfileChatsListComponent
       next: (data: any) => {
         this.scrollToBottom();
         this.messageList = data.data;
+        this.messageList.sort((a, b) => a.id - b.id);
         const ids = [];
         this.messageList.map((e: any) => {
           if (e.isRead === 'N' && e.sentBy !== this.profileId) {
