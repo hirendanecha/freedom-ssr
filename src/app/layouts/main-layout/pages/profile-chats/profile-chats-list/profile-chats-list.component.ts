@@ -16,7 +16,7 @@ import {
 import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { OutGoingCallModalComponent } from 'src/app/@shared/modals/outgoing-call-modal/outgoing-call-modal.component';
 import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
 import { MessageService } from 'src/app/@shared/services/message.service';
@@ -65,6 +65,8 @@ export class ProfileChatsListComponent
   activePage = 1;
   hasMoreData = false;
 
+  typingData: any = {};
+  isTyping = false;
   emojiPaths = [
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cool.gif',
@@ -119,13 +121,17 @@ export class ProfileChatsListComponent
         }
       }
     });
-    this.socketService.socket?.emit('online-users');
     this.socketService.socket?.on('get-users', (data) => {
       data.map((ele) => {
         if (!this.sharedService?.onlineUserList.includes(ele.userId)) {
           this.sharedService.onlineUserList.push(ele.userId);
         }
       });
+    });
+    this.socketService.socket?.emit('online-users');
+    this.socketService.socket?.on('typing', (data) => {
+      console.log(data);
+      this.typingData = data;
     });
   }
 
@@ -136,7 +142,7 @@ export class ProfileChatsListComponent
       this.messageList = [];
       this.hasMoreData = false;
       this.getGroupDetails(this.userChat.groupId);
-      this.resetData();
+      // this.resetData();
     } else {
       // console.log('input', this.userChat);
       this.groupData = null;
@@ -191,7 +197,7 @@ export class ProfileChatsListComponent
         profileId: this.profileId,
       },
       (data: any) => {
-        // console.log(data);
+        console.log(data);
         this.userChat.isAccepted = data.isAccepted;
         // this.userChat = { ...data };
         this.newRoomCreated.emit(true);
@@ -274,6 +280,7 @@ export class ProfileChatsListComponent
         this.resetData();
       });
     }
+    this.startTypingChat(false);
   }
 
   loadMoreChats() {
@@ -389,11 +396,7 @@ export class ProfileChatsListComponent
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    console.log('input string ==>', data);
     this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
-    // this.chatObj.msgText = data?.html;
-    // this.postData.postdescription = data?.html;
-    // this.postMessageTags = data?.tags;
     if (data.html === '') {
       this.resetData();
     }
@@ -430,6 +433,9 @@ export class ProfileChatsListComponent
   }
 
   resetData(): void {
+    console.log('in');
+
+    // this.startTypingChat(false);
     this.chatObj['id'] = null;
     this.chatObj.msgMedia = null;
     this.chatObj.msgText = null;
@@ -702,5 +708,27 @@ export class ProfileChatsListComponent
         this.userChat = {};
       }
     });
+  }
+
+  startTypingChat(isTyping) {
+    console.log(isTyping);
+
+    this.socketService?.startTyping(
+      {
+        groupId: this.userChat?.groupId,
+        roomId: this.userChat?.roomId,
+        profileId: this.profileId,
+        isTyping: isTyping,
+      },
+      (data: any) => {
+        console.log(data);
+      }
+    );
+  }
+
+  delayedStartTypingChat() {
+    setTimeout(() => {
+      this.startTypingChat(false);
+    }, 2000);
   }
 }

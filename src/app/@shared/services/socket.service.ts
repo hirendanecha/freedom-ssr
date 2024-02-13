@@ -9,12 +9,12 @@ import { environment } from 'src/environments/environment';
 export class SocketService {
   public socket: any;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem("auth-token");
+      const token = localStorage.getItem('auth-token');
       if (token) {
         const customHeaders = {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         };
         this.socket = io(environment.socketUrl, {
           reconnectionDelay: 100,
@@ -24,7 +24,7 @@ export class SocketService {
           // timeout: 120000,
           reconnectionAttempts: 50000,
           transports: ['websocket'],
-          auth: customHeaders
+          auth: customHeaders,
         });
       }
     }
@@ -32,10 +32,10 @@ export class SocketService {
 
   connect(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem("auth-token");
+      const token = localStorage.getItem('auth-token');
       if (token) {
         const customHeaders = {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         };
         // if (this.socket) {
         //   this.socket?.close();
@@ -49,7 +49,7 @@ export class SocketService {
             // timeout: 120000,
             reconnectionAttempts: 50000,
             transports: ['websocket'],
-            auth: customHeaders
+            auth: customHeaders,
           });
         }
       }
@@ -147,11 +147,11 @@ export class SocketService {
 
   startCall(params, callback: (data: any) => void) {
     this.socket.emit('start-call', params, callback);
-  }  
+  }
 
   hangUpCall(params, callback: (data: any) => void) {
     this.socket.emit('decline-call', params, callback);
-  }  
+  }
 
   pickUpCall(params, callback: (data: any) => void) {
     this.socket.emit('pick-up-call', params, callback);
@@ -168,8 +168,12 @@ export class SocketService {
   getGroupData(params, callback: (data: any) => void) {
     this.socket.emit('get-group', params, callback);
   }
-  
+
   removeGroupMember(params, callback: (data: any) => void) {
     this.socket.emit('remove-member', params, callback);
+  }
+
+  startTyping(params, callback: (data: any) => any) {
+    this.socket.emit('start-typing', params, callback);
   }
 }

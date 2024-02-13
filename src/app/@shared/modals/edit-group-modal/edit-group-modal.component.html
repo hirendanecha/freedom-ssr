@@ -166,6 +166,7 @@
           </div>
         </div>
         <fa-icon
+          *ngIf="item.profileId !== this.profileId"
           [icon]="['fas', 'xmark']"
           class="font-20-px"
           role="button"
@@ -177,7 +178,11 @@
 </div>
 
 <div class="modal-footer justify-content-between gap-2">
-  <button type="button" class="btn btn-sm btn-danger" (click)="removeGroupUser(profileId)">
+  <button
+    type="button"
+    class="btn btn-sm btn-danger"
+    (click)="removeGroupUser(profileId)"
+  >
     {{ cancelButtonLabel }}
   </button>
   <!-- (click)="activateModal.close('cancel')" -->
