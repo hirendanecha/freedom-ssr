@@ -181,6 +181,13 @@
             userChat.isAccepted === 'Y'
           "
         >
+          <div class="d-center m-3 text-white c-pointer" (click)="loadMoreChats()" *ngIf="hasMoreData">
+            <fa-icon
+              [icon]="['fas', 'refresh']"
+              class="font-24-px me-2"
+            ></fa-icon>
+            Loadmore
+          </div>
           <ul
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
             *ngFor="let message of messageList"
@@ -386,9 +393,7 @@
                     </div>
                   </div>
                 </div>
-                <div
-                  class="message d-flex gap-3 flex-column"
-                  >
+                <div class="message d-flex gap-3 flex-column">
                   <!-- [title]="displayLocalTime(message?.createdDate)" -->
                   <!-- (contextmenu)="editPopup.toggle(); $event.preventDefault()" -->
                   <div class="d-flex flex-column">
@@ -623,7 +628,14 @@
             (userChat?.roomId || userChat?.groupId) &&
             userChat.isAccepted === 'Y'
           "
-        >
+        >   
+        <div class="d-center m-3 text-white c-pointer" (click)="loadMoreChats()" *ngIf="hasMoreData">
+          <fa-icon
+            [icon]="['fas', 'refresh']"
+            class="font-24-px me-2"
+          ></fa-icon>
+          Loadmore
+        </div>
           <ul
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
             *ngFor="let message of messageList"
