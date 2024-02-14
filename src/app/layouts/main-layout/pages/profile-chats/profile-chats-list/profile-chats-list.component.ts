@@ -607,21 +607,21 @@ export class ProfileChatsListComponent
       loop: true,
     });
     modalRef.componentInstance.calldata = data;
-    // modalRef.componentInstance.sound = callSound;
+    modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
     this.socketService?.startCall(data, (data: any) => {
       // console.log(data);
     });
     modalRef.result.then((res) => {
-      if (res === 'cancel') {
-        this.chatObj.msgText = 'Your call has been ended';
-        this.sendMessage();
-      }
-      // if (res === 'missCalled') {
-      //   this.chatObj.msgText = 'You have a missed call';
+      // if (res === 'cancel') {
+      //   this.chatObj.msgText = 'Your call has been ended';
       //   this.sendMessage();
       // }
+      if (res === 'missCalled') {
+        this.chatObj.msgText = 'You have a missed call';
+        this.sendMessage();
+      }
     });
   }
 

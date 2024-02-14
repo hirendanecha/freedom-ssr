@@ -17,11 +17,11 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
   @Input() sound: any;
   hangUpTimeout: any;
   currentURL: any = [];
-  profileId: number
+  profileId: number;
   constructor(
     public activateModal: NgbActiveModal,
     private socketService: SocketService,
-    public encryptDecryptService: EncryptDecryptService,
+    public encryptDecryptService: EncryptDecryptService
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -37,7 +37,7 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
     }
     if (!this.hangUpTimeout) {
       this.hangUpTimeout = setTimeout(() => {
-        this.hangUpCall();
+        this.hangUpCall(false);
       }, 60000);
     }
     this.socketService.socket?.on('notification', (data: any) => {
@@ -48,56 +48,65 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   pickUpCall(): void {
     this.sound?.stop();
     clearTimeout(this.hangUpTimeout);
     if (!this.currentURL.includes(this.calldata?.link)) {
-      this.currentURL.push(this.calldata.link)
+      this.currentURL.push(this.calldata.link);
       window.open(this.calldata.link, '_blank');
       this.sound?.stop();
     }
     this.activateModal.close('success');
 
     const data = {
-      notificationToProfileId: this.calldata.notificationByProfileId || this.profileId,
+      notificationToProfileId:
+        this.calldata.notificationByProfileId || this.profileId,
       roomId: this.calldata?.roomId,
       groupId: this.calldata?.groupId,
-      notificationByProfileId: this.calldata.notificationToProfileId || this.profileId,
+      notificationByProfileId:
+        this.calldata.notificationToProfileId || this.profileId,
       link: this.calldata.link,
     };
-    console.log('pick-up-call', data)
+    console.log('pick-up-call', data);
     this.socketService?.pickUpCall(data, (data: any) => {
       console.log(data);
     });
   }
 
-  hangUpCall(): void {
+  hangUpCall(isCallCut): void {
     this.sound?.stop();
     clearTimeout(this.hangUpTimeout);
     const data = {
-      notificationToProfileId: this.calldata.notificationByProfileId || this.profileId,
+      notificationToProfileId:
+        this.calldata.notificationByProfileId || this.profileId,
       roomId: this.calldata?.roomId,
       groupId: this.calldata?.groupId,
-      notificationByProfileId: this.calldata.notificationToProfileId || this.profileId,
+      notificationByProfileId:
+        this.calldata.notificationToProfileId || this.profileId,
     };
     this.socketService?.hangUpCall(data, (data: any) => {
-      // console.log(data);
-      this.sendMessage()
+      if (isCallCut) {
+        const message = `I'll call you back.`;
+        this.sendMessage(message);
+      } else {
+        const message = `You have a missed call.`;
+        this.sendMessage(message);
+      }
       this.activateModal.close('cancel');
     });
   }
 
-  sendMessage() {
-    const message = this.encryptDecryptService?.encryptUsingAES256('You have a missed call.');
+  sendMessage(message: string) {
+    // const message = this.encryptDecryptService?.encryptUsingAES256(`I'll call you back.`);
     const data = {
-      messageText: message,
+      messageText: this.encryptDecryptService?.encryptUsingAES256(message),
       roomId: this.calldata?.roomId || null,
       groupId: this.calldata?.groupId || null,
       sentBy: this.calldata.notificationToProfileId || this.profileId,
       profileId: this.calldata.notificationByProfileId || this.profileId,
     };
-    this.socketService.sendMessage(data, async (data: any) => { })
+    this.socketService.sendMessage(data, async (data: any) => {});
   }
 }
