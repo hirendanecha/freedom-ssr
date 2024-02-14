@@ -142,7 +142,7 @@ export class ProfileChatsListComponent
       this.messageList = [];
       this.hasMoreData = false;
       this.getGroupDetails(this.userChat.groupId);
-      // this.resetData();
+      this.resetData();
     } else {
       // console.log('input', this.userChat);
       this.groupData = null;
@@ -433,8 +433,7 @@ export class ProfileChatsListComponent
   }
 
   resetData(): void {
-    console.log('in');
-
+    // console.log('in');
     // this.startTypingChat(false);
     this.chatObj['id'] = null;
     this.chatObj.msgMedia = null;
@@ -465,7 +464,16 @@ export class ProfileChatsListComponent
   }
 
   onCancel(): void {
-    this.userChat = {};
+    const data = {
+      roomId: this.userChat?.roomId,
+      createdBy: this.userChat.createdBy,
+      profileId: this.profileId,
+    };
+    this.socketService?.deleteRoom(data, (data: any) => {
+      // console.log(data);
+      this.userChat = {};
+      this.newRoomCreated.emit(true);
+    });
   }
 
   isGif(src: string): boolean {
@@ -711,19 +719,17 @@ export class ProfileChatsListComponent
   }
 
   startTypingChat(isTyping) {
-    console.log(isTyping);
-
-    this.socketService?.startTyping(
-      {
-        groupId: this.userChat?.groupId,
-        roomId: this.userChat?.roomId,
-        profileId: this.profileId,
-        isTyping: isTyping,
-      },
-      (data: any) => {
-        console.log(data);
-      }
-    );
+    // console.log(isTyping);
+    const data = {
+      groupId: this.userChat?.groupId,
+      roomId: this.userChat?.roomId,
+      profileId: this.userChat?.roomId
+        ? this.userChat.profileId
+        : this.profileId,
+      isTyping: isTyping,
+    };
+    this.socketService?.startTyping(data, (data: any) => {
+    });
   }
 
   delayedStartTypingChat() {

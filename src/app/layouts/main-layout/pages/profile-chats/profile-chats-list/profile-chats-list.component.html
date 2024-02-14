@@ -70,7 +70,7 @@
                   : ""
               }}</span>
             </ng-container>
-            <ng-container *ngIf="typingData?.isTyping && typingData.profileId !== profileId">
+            <ng-container *ngIf="typingData?.isTyping">
               <span class="mdtxt" *ngIf="!userChat?.groupId">{{
                 "typing..."
               }}</span>
@@ -863,7 +863,7 @@
                       >
                         <a class="droplist d-flex align-items-center gap-2">
                           <fa-icon [icon]="['fas', 'pen-to-square']" />
-                          <span>Edit</span>
+                          <span class="data-text-color">Edit</span>
                         </a>
                       </button>
                       <button ngbDropdownItem (click)="deleteMsg(message)">

@@ -28,6 +28,9 @@
             <div ngbDropdownMenu class="dropdown-menu">
               <div class="dropdown-preferences">
                 <div class="d-flex flex-column">
+                  <div class="c-pointer">
+                    <!-- <h6 class="d-flex" (click)="createNewGroup()">New Group Chat</h6> -->
+                  </div>
                   <label class="d-flex form-label">Sound Preferences</label>
                   <div class="d-flex align-items-baseline">
                     <p class="m-1">
@@ -308,41 +311,46 @@
       <span class="m-1">Pending Invites:</span>
     </div>
     <div class="header-menu cus-scrollbar-pending overflow-auto">
-      <div
-        class="single-item messages-area"
-        *ngFor="let item of pendingChatList"
-      >
+      <ng-container *ngIf="pendingChatList.length; else noPendingRequest">
         <div
-          class="text-start d-flex justify-content-between chat-single p-5"
-          (click)="onChat(item)"
-          [ngClass]="{ active: item === selectedChatUser }"
+          class="single-item messages-area"
+          *ngFor="let item of pendingChatList"
         >
-          <div class="d-flex gap-2">
-            <div class="avatar">
-              <img
-                class="avatar-img h-40-px w-40-px max-un"
-                src="{{ item?.ProfilePicName }}"
-                [alt]="item?.Username || item?.FirstName"
-                onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-              />
-            </div>
-            <div
-              class="text-area d-flex justify-content-between sidebar-items align-items-center"
-            >
+          <div
+            class="text-start d-flex justify-content-between chat-single p-5"
+            (click)="onChat(item)"
+            [ngClass]="{ active: item === selectedChatUser }"
+          >
+            <div class="d-flex gap-2">
+              <div class="avatar">
+                <img
+                  class="avatar-img h-40-px w-40-px max-un"
+                  src="{{ item?.ProfilePicName }}"
+                  [alt]="item?.Username || item?.FirstName"
+                  onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                />
+              </div>
               <div
-                class="title-area position-relative d-flex justify-content-between w-100"
+                class="text-area d-flex justify-content-between sidebar-items align-items-center"
               >
-                <h6 class="m-0 d-inline-flex sidebar-head-text">
-                  {{ item?.Username || item?.FirstName }}
-                </h6>
-                <span class="font-12-px last-message">{{
-                  item?.createdDate | messageTime
-                }}</span>
+                <div
+                  class="title-area position-relative d-flex justify-content-between w-100"
+                >
+                  <h6 class="m-0 d-inline-flex sidebar-head-text">
+                    {{ item?.Username || item?.FirstName }}
+                  </h6>
+                  <span class="font-12-px last-message">{{
+                    item?.createdDate | messageTime
+                  }}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </ng-container>
+      <ng-template #noPendingRequest>
+        <h5 class="text-center">No Pending Invites</h5>
+      </ng-template>
     </div>
   </aside>
 </div>
