@@ -70,7 +70,7 @@
                   : ""
               }}</span>
             </ng-container>
-            <ng-container *ngIf="typingData?.isTyping && typingData.profileId !== profileId">
+            <ng-container *ngIf="typingData?.isTyping">
               <span class="mdtxt" *ngIf="!userChat?.groupId">{{
                 "typing..."
               }}</span>
