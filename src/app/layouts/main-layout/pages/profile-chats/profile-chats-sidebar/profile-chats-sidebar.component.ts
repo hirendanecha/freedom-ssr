@@ -10,11 +10,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
-import { NgbActiveOffcanvas, NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbActiveOffcanvas,
+  NgbDropdown,
+  NgbModal,
+} from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { Router } from '@angular/router';
 import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
+import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-modal/create-group-modal.component';
 
 @Component({
   selector: 'app-profile-chats-sidebar',
@@ -22,7 +27,8 @@ import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.
   styleUrls: ['./profile-chats-sidebar.component.scss'],
 })
 export class ProfileChatsSidebarComponent
-  implements AfterViewInit, OnChanges, OnInit {
+  implements AfterViewInit, OnChanges, OnInit
+{
   chatList: any = [];
   pendingChatList: any = [];
   groupList: any = [];
@@ -40,7 +46,8 @@ export class ProfileChatsSidebarComponent
   selectedButton: string = 'chats';
   originalFavicon: HTMLLinkElement;
   newChatList = [];
-
+  @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
+    new EventEmitter<any>();
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
   constructor(
@@ -49,11 +56,12 @@ export class ProfileChatsSidebarComponent
     public sharedService: SharedService,
     private activeOffcanvas: NgbActiveOffcanvas,
     private router: Router,
-    public encryptDecryptService: EncryptDecryptService
+    public encryptDecryptService: EncryptDecryptService,
+    private modalService: NgbModal
   ) {
     this.profileId = +localStorage.getItem('profileId');
     const notificationSound =
-    JSON.parse(localStorage.getItem('soundPreferences')) || {};
+      JSON.parse(localStorage.getItem('soundPreferences')) || {};
     if (notificationSound?.messageSoundEnabled === 'N') {
       this.isMessageSoundEnabled = false;
     }
@@ -61,7 +69,7 @@ export class ProfileChatsSidebarComponent
       this.isCallSoundEnabled = false;
     }
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     this.originalFavicon = document.querySelector('link[rel="icon"]');
     this.sharedService
@@ -146,9 +154,9 @@ export class ProfileChatsSidebarComponent
       item.isAccepted = 'Y';
     }
     // console.log(item);
-    this.notificationNavigation()
+    this.notificationNavigation();
     this.onNewChat?.emit(item);
-    this.activeOffcanvas?.dismiss();
+    // this.activeOffcanvas?.dismiss();
     if (this.searchText) {
       this.searchText = null;
     }
@@ -170,7 +178,8 @@ export class ProfileChatsSidebarComponent
   }
 
   selectButton(buttonType: string): void {
-    this.selectedButton = this.selectedButton === buttonType ? buttonType : buttonType;
+    this.selectedButton =
+      this.selectedButton === buttonType ? buttonType : buttonType;
   }
 
   getGroupList() {
@@ -195,9 +204,54 @@ export class ProfileChatsSidebarComponent
     const chatList = this.chatList;
     const groupList = this.groupList;
     const mergeChatList = [...chatList, ...groupList];
-    mergeChatList.sort((a, b) => new Date(b.updatedDate).getTime() - new Date(a.updatedDate).getTime());
+    mergeChatList.sort(
+      (a, b) =>
+        new Date(b.updatedDate).getTime() - new Date(a.updatedDate).getTime()
+    );
     if (mergeChatList?.length) {
       this.newChatList = mergeChatList;
+    }
+  }
+
+  createNewGroup() {
+    const modalRef = this.modalService.open(CreateGroupModalComponent, {
+      centered: true,
+      size: 'md',
+    });
+    modalRef.componentInstance.title = 'Create Group';
+    modalRef.result.then((res) => {
+      if (res) {
+        // console.log(res);
+        this.socketService?.createGroup(res, (data: any) => {
+          this.getChatList();
+          this.getGroupList();
+        });
+      }
+    });
+  }
+
+  deleteOrLeaveChat(item) {
+    console.log(item);
+    if (item.roomId) {
+      const data = {
+        roomId: item.roomId,
+        profileId: item.profileId,
+      };
+      this.socketService?.deleteRoom(data, (data: any) => {
+        this.getChatList();
+        this.getGroupList();
+        this.onNewChat?.emit({});
+      });
+    } else if (item.groupId) {
+      const data = {
+        profileId: item.profileId,
+        groupId: item.groupId,
+      };
+      this.socketService.removeGroupMember(data, (res) => {
+        this.getChatList();
+        this.getGroupList();
+        this.onNewChat?.emit({});
+      });
     }
   }
 }

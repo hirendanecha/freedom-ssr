@@ -32,7 +32,7 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
     if (!this.hangUpTimeout) {
       this.hangUpTimeout = setTimeout(() => {
         this.hangUpCall();
-        this.activateModal.close('missCalled');
+        // this.activateModal.close('missCalled');
       }, 60000);
     }
 
@@ -55,6 +55,7 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
 
   hangUpCall(): void {
     this.sound?.stop();
+    clearTimeout(this.hangUpTimeout);
     const data = {
       notificationToProfileId: this.calldata.notificationToProfileId,
       roomId: this.calldata?.roomId,
@@ -63,7 +64,7 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
     };
     this.socketService?.hangUpCall(data, (data: any) => {
       // console.log(data);
-      this.activateModal.close('cancel');
     });
+    this.activateModal.close('missCalled');
   }
 }

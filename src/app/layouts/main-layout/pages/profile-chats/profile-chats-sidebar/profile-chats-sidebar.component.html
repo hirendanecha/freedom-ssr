@@ -28,57 +28,60 @@
             <div ngbDropdownMenu class="dropdown-menu">
               <div class="dropdown-preferences">
                 <div class="d-flex flex-column">
-                  <div class="c-pointer">
-                    <!-- <h6 class="d-flex" (click)="createNewGroup()">New Group Chat</h6> -->
+                  <div class="c-pointer d-flex align-items-baseline" (click)="createNewGroup()">
+                    <fa-icon [icon]="['fas', 'users']" class="font-20-px me-2"/>
+                    <h6 class="d-flex">New Group Chat</h6>
                   </div>
-                  <label class="d-flex form-label">Sound Preferences</label>
-                  <div class="d-flex align-items-baseline">
-                    <p class="m-1">
-                      Sound for new message
-                      <strong>{{
-                        isMessageSoundEnabled ? "On" : "Off"
-                      }}</strong>
-                    </p>
-                    <div class="form-switch">
-                      <input
-                        [(ngModel)]="isMessageSoundEnabled"
-                        class="form-check-input p-2"
-                        type="checkbox"
-                        role="switch"
-                        id="flexSwitchCheckChecked"
-                        (change)="
-                          toggleSoundPreference(
-                            'messageSoundEnabled',
-                            isMessageSoundEnabled
-                          )
-                        "
-                      />
+                  <div class="mt-6">
+                    <label class="d-flex form-label">Sound Preferences</label>
+                    <div class="d-flex align-items-baseline">
+                      <p class="m-1">
+                        Sound for new message
+                        <strong>{{
+                          isMessageSoundEnabled ? "On" : "Off"
+                        }}</strong>
+                      </p>
+                      <div class="form-switch">
+                        <input
+                          [(ngModel)]="isMessageSoundEnabled"
+                          class="form-check-input p-2"
+                          type="checkbox"
+                          role="switch"
+                          id="flexSwitchCheckChecked"
+                          (change)="
+                            toggleSoundPreference(
+                              'messageSoundEnabled',
+                              isMessageSoundEnabled
+                            )
+                          "
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="d-flex flex-column">
-                  <div class="d-flex align-items-baseline">
-                    <p class="m-1">
-                      Call ring tone
-                      <strong>{{ isCallSoundEnabled ? "On" : "Off" }}</strong>
-                    </p>
-                    <div class="form-switch">
-                      <input
-                        [(ngModel)]="isCallSoundEnabled"
-                        class="form-check-input p-2"
-                        type="checkbox"
-                        role="switch"
-                        id="flexSwitchCheckChecked"
-                        (change)="
-                          toggleSoundPreference(
-                            'callSoundEnabled',
-                            isCallSoundEnabled
-                          )
-                        "
-                      />
+                  <div class="d-flex flex-column">
+                    <div class="d-flex align-items-baseline">
+                      <p class="m-1">
+                        Call ring tone
+                        <strong>{{ isCallSoundEnabled ? "On" : "Off" }}</strong>
+                      </p>
+                      <div class="form-switch">
+                        <input
+                          [(ngModel)]="isCallSoundEnabled"
+                          class="form-check-input p-2"
+                          type="checkbox"
+                          role="switch"
+                          id="flexSwitchCheckChecked"
+                          (change)="
+                            toggleSoundPreference(
+                              'callSoundEnabled',
+                              isCallSoundEnabled
+                            )
+                          "
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -299,6 +302,32 @@
                 <span class="font-12-px">
                   {{ item?.updatedDate | messageTime }}
                 </span>
+              </div>
+            </div>
+          </div>
+          <div class="btn-group d-flex options ms-1">
+            <div
+              ngbDropdown
+              #editPopup="ngbDropdown"
+              class="d-inline-block"
+            >
+              <button class="dropdown-btn" ngbDropdownToggle>
+                <fa-icon
+                  [icon]="['fas', 'ellipsis-v']"
+                  class="font-20-px"
+                />
+              </button>
+              <div
+                ngbDropdownMenu
+                class="dropdown-menu"
+                (mouseleave)="editPopup.close()"
+              >
+                <button ngbDropdownItem (click)="deleteOrLeaveChat(item)">
+                  <a class="droplist d-flex align-items-center gap-2">
+                    <fa-icon [icon]="item?.groupId ? ['fas', 'right-from-bracket'] : ['fas', 'trash-can']" />
+                    <span class="data-text-color">{{ item?.groupId ? 'Leave' : 'Delete' }}</span>
+                  </a>
+                </button>                
               </div>
             </div>
           </div>

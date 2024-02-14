@@ -130,7 +130,7 @@ export class ProfileChatsListComponent
     });
     this.socketService.socket?.emit('online-users');
     this.socketService.socket?.on('typing', (data) => {
-      console.log(data);
+      // console.log(data);
       this.typingData = data;
     });
   }
@@ -464,16 +464,20 @@ export class ProfileChatsListComponent
   }
 
   onCancel(): void {
-    const data = {
-      roomId: this.userChat?.roomId,
-      createdBy: this.userChat.createdBy,
-      profileId: this.profileId,
-    };
-    this.socketService?.deleteRoom(data, (data: any) => {
-      // console.log(data);
+    if (this.userChat.roomId) {
+      const data = {
+        roomId: this.userChat?.roomId,
+        createdBy: this.userChat.createdBy,
+        profileId: this.profileId,
+      };
+      this.socketService?.deleteRoom(data, (data: any) => {
+        // console.log(data);
+        this.userChat = {};
+        this.newRoomCreated.emit(true);
+      });
+    } else {
       this.userChat = {};
-      this.newRoomCreated.emit(true);
-    });
+    }
   }
 
   isGif(src: string): boolean {
@@ -603,21 +607,21 @@ export class ProfileChatsListComponent
       loop: true,
     });
     modalRef.componentInstance.calldata = data;
-    // modalRef.componentInstance.sound = callSound;
+    modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
     this.socketService?.startCall(data, (data: any) => {
       // console.log(data);
     });
     modalRef.result.then((res) => {
-      if (res === 'cancel') {
-        this.chatObj.msgText = 'Your call has been ended';
-        this.sendMessage();
-      }
-      // if (res === 'missCalled') {
-      //   this.chatObj.msgText = 'You have a missed call';
+      // if (res === 'cancel') {
+      //   this.chatObj.msgText = 'Your call has been ended';
       //   this.sendMessage();
       // }
+      if (res === 'missCalled') {
+        this.chatObj.msgText = 'You have a missed call';
+        this.sendMessage();
+      }
     });
   }
 
@@ -728,13 +732,12 @@ export class ProfileChatsListComponent
         : this.profileId,
       isTyping: isTyping,
     };
-    this.socketService?.startTyping(data, (data: any) => {
-    });
+    this.socketService?.startTyping(data, (data: any) => {});
   }
 
   delayedStartTypingChat() {
     setTimeout(() => {
       this.startTypingChat(false);
-    }, 2000);
+    }, 3000);
   }
 }

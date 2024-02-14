@@ -63,18 +63,18 @@
             <h5 class="m-0">
               <a class="m-0">{{ userChat.groupName || userChat?.Username }}</a>
             </h5>
-            <ng-container *ngIf="!typingData?.isTyping">
+            <ng-container >
               <span class="mdtxt" *ngIf="!userChat?.groupId">{{
                 sharedService?.onlineUserList.includes(userChat?.profileId)
                   ? "online"
                   : ""
               }}</span>
             </ng-container>
-            <ng-container *ngIf="typingData?.isTyping">
+            <!-- <ng-container *ngIf="typingData?.isTyping">
               <span class="mdtxt" *ngIf="!userChat?.groupId">{{
                 "typing..."
               }}</span>
-            </ng-container>
+            </ng-container> -->
           </div>
         </div>
         <div class="d-flex gap-3 align-items-center" *ngIf="userChat.isAccepted === 'Y'">
@@ -475,6 +475,11 @@
             />
           </div>
         </ng-container>
+        <ng-container *ngIf="typingData?.isTyping && userChat.roomId === typingData.roomId">
+          <span class="mdtxt d-flex position-absolute bottom-100" *ngIf="!userChat?.groupId">{{
+            typingData.Username + " is typing..."
+          }}</span>
+        </ng-container>
         <form class="py-3 pt-2 px-3">
           <div
             class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
@@ -566,9 +571,9 @@
                   (onDataChange)="onTagUserInputChangeEvent($event)"
                   (keypress)="startTypingChat(true)"
                   (keydown)="delayedStartTypingChat()"
+                  (keydown.enter)="uploadPostFileAndCreatePost()"
+                  (keydown.shift.enter)="$event.stopPropagation()"
                   />
-                  <!-- (keydown.enter)="uploadPostFileAndCreatePost()"
-                  (keydown.shift.enter)="$event.stopPropagation()" -->
               </div>
               <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
               <div class="btn-area">
@@ -604,19 +609,19 @@
           />
           <div class="profile-status">
             <h5 class="m-0">
-              <a class="m-0">{{ groupData.groupName }}</a>
+              <a class="m-0">{{ groupData?.groupName }}</a>
             </h5>
             <!-- <span class="mdtxt" *ngIf="!userChat?.groupId">{{
               sharedService?.onlineUserList.includes(userChat?.profileId)
                 ? "online"
                 : ""
             }}</span> -->
-            <ng-container *ngIf="typingData?.isTyping && typingData.profileId !== profileId">
+            <!-- <ng-container *ngIf="typingData?.isTyping && typingData.profileId !== profileId">
               <span class="mdtxt" *ngIf="userChat?.groupId">{{
                typingData.Username + " is typing..."
               }}</span>
-            </ng-container>
-            <span *ngIf="!typingData?.isTyping">{{ groupData.members }} participants</span>
+            </ng-container> -->
+            <span>{{ groupData?.members }} participants</span>
           </div>
           <fa-icon [icon]="['fas', 'gear']" class="font-20-px m-1" />
         </div>
@@ -1110,6 +1115,11 @@
             />
           </div>
         </ng-container>
+        <ng-container *ngIf="typingData?.isTyping && typingData.profileId !== profileId && userChat.groupId === typingData.groupId">
+          <span class="mdtxt d-flex position-absolute bottom-100" *ngIf="userChat?.groupId">{{
+           typingData.Username + " is typing..."
+          }}</span>
+        </ng-container>
         <form class="py-3 pt-2 px-3">
           <div
             class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
@@ -1201,9 +1211,9 @@
                   [isCustomeSearch]="userChat?.groupId"
                   (keypress)="startTypingChat(true)"
                   (keydown)="delayedStartTypingChat()"
+                  (keydown.enter)="uploadPostFileAndCreatePost()"
+                  (keydown.shift.enter)="$event.stopPropagation()"
                   />
-                  <!-- (keydown.enter)="uploadPostFileAndCreatePost()"
-                  (keydown.shift.enter)="$event.stopPropagation()" -->
               </div>
               <!-- [isAllowTagUser]="false" -->
               <div class="btn-area">
