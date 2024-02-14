@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, Inject, OnDestroy, OnInit, Output, PLATFORM_ID } from '@angular/core';
 import { SharedService } from './@shared/services/shared.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { isPlatformBrowser } from '@angular/common';
@@ -15,6 +15,7 @@ import { ToastService } from './@shared/services/toast.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Output('newRoomCreated') newRoomCreated: EventEmitter<any> = new EventEmitter<any>();
   title = 'freedom-ssr';
   showButton = false;
   tab: any;
@@ -83,6 +84,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           }
           if (data?.actionType === 'M' && data?.notificationByProfileId !== this.profileId) {
+            if (data.isRoomDeleted) {
+              this.newRoomCreated.emit(true);
+            }
             this.sharedService.isNotify = true;
             var sound = new Howl({
               src: [

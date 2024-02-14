@@ -464,7 +464,16 @@ export class ProfileChatsListComponent
   }
 
   onCancel(): void {
-    this.userChat = {};
+    const data = {
+      roomId: this.userChat?.roomId,
+      createdBy: this.userChat.createdBy,
+      profileId: this.profileId,
+    };
+    this.socketService?.deleteRoom(data, (data: any) => {
+      // console.log(data);
+      this.userChat = {};
+      this.newRoomCreated.emit(true);
+    });
   }
 
   isGif(src: string): boolean {
@@ -714,14 +723,13 @@ export class ProfileChatsListComponent
     const data = {
       groupId: this.userChat?.groupId,
       roomId: this.userChat?.roomId,
-      profileId: this.userChat?.roomId ? this.userChat.profileId : this.profileId,
+      profileId: this.userChat?.roomId
+        ? this.userChat.profileId
+        : this.profileId,
       isTyping: isTyping,
     };
-    this.socketService?.startTyping(data,
-      (data: any) => {
-        // console.log(data);
-      }
-    );
+    this.socketService?.startTyping(data, (data: any) => {
+    });
   }
 
   delayedStartTypingChat() {
