@@ -44,12 +44,12 @@ export class ProfileChatsSidebarComponent
   isCallSoundEnabled: boolean = true;
   isChatLoader = false;
   selectedButton: string = 'chats';
-  originalFavicon: HTMLLinkElement;
   newChatList = [];
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
+  @Input('selectedRoomId') selectedRoomId: number = null;
   constructor(
     private customerService: CustomerService,
     private socketService: SocketService,
@@ -71,14 +71,15 @@ export class ProfileChatsSidebarComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.originalFavicon = document.querySelector('link[rel="icon"]');
     this.sharedService
       .getIsRoomCreatedObservable()
       .subscribe((isRoomCreated) => {
         this.isRoomCreated = isRoomCreated;
+        console.log(this.selectedChatUser)
         this.getChatList();
         this.getGroupList();
       });
+    this.selectedChatUser = this.selectedRoomId || null
   }
 
   ngOnInit(): void {
@@ -148,13 +149,13 @@ export class ProfileChatsSidebarComponent
   }
 
   onChat(item: any) {
-    this.selectedChatUser = item;
+    this.selectedChatUser = item.roomId || item.groupId;
     item.unReadMessage = 0;
     if (item.groupId) {
       item.isAccepted = 'Y';
     }
     // console.log(item);
-    this.notificationNavigation();
+    // this.notificationNavigation()
     this.onNewChat?.emit(item);
     // this.activeOffcanvas?.dismiss();
     if (this.searchText) {
@@ -189,15 +190,6 @@ export class ProfileChatsSidebarComponent
       this.groupList = data;
       this.mergeUserChatList();
     });
-  }
-
-  notificationNavigation() {
-    const isRead = localStorage.getItem('isRead');
-    if (isRead === 'N') {
-      this.originalFavicon.href = '/assets/images/icon.jpg';
-      localStorage.setItem('isRead', 'Y');
-      this.sharedService.isNotify = false;
-    }
   }
 
   mergeUserChatList(): void {

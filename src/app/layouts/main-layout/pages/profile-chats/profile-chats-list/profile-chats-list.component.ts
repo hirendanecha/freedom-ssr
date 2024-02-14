@@ -1,7 +1,5 @@
-import { DOCUMENT } from '@angular/common';
 import {
   AfterViewChecked,
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -34,10 +32,11 @@ import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
-{
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
+    new EventEmitter<any>();
+  @Output('selectedChat') selectedChat: EventEmitter<any> =
     new EventEmitter<any>();
   @ViewChild('chatContent') chatContent!: ElementRef;
 
@@ -81,6 +80,7 @@ export class ProfileChatsListComponent
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-UP.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-down.gif',
   ];
+  originalFavicon: HTMLLinkElement;
 
   // messageList: any = [];
   constructor(
@@ -103,6 +103,8 @@ export class ProfileChatsListComponent
     this.socketService.socket?.on('new-message', (data) => {
       console.log('new-message', data);
       this.newRoomCreated.emit(true);
+      this.selectedChat.emit(data.roomId || data.groupId);
+      this.notificationNavigation();
       if (
         data?.sentBy !== this.profileId &&
         (this.userChat?.roomId === data?.roomId ||
@@ -136,12 +138,14 @@ export class ProfileChatsListComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.originalFavicon = document.querySelector('link[rel="icon"]');
     if (this.userChat?.groupId) {
       // console.log('input', this.userChat);
       this.activePage = 1;
       this.messageList = [];
       this.hasMoreData = false;
       this.getGroupDetails(this.userChat.groupId);
+      this.notificationNavigation();
       this.resetData();
     } else {
       // console.log('input', this.userChat);
@@ -339,8 +343,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText != null
               ? this.encryptDecryptService?.decryptUsingAES256(
-                  element?.messageText
-                )
+                element?.messageText
+              )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -356,7 +360,7 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
@@ -739,5 +743,14 @@ export class ProfileChatsListComponent
     setTimeout(() => {
       this.startTypingChat(false);
     }, 3000);
+  }
+
+  notificationNavigation() {
+    const isRead = localStorage.getItem('isRead');
+    if (isRead === 'N') {
+      this.originalFavicon['href'] = '/assets/images/icon.jpg';
+      localStorage.setItem('isRead', 'Y');
+      this.sharedService.isNotify = false;
+    }
   }
 }

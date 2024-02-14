@@ -22,6 +22,7 @@ export class ProfileChartsComponent implements OnDestroy, OnInit {
   activeIdTab: string = 'local';
   pageList = [];
   profileId: number;
+  selectedRoomId: number;
   isPageLoader: boolean = false;
   isRoomCreated: boolean = false;
 
@@ -80,6 +81,10 @@ export class ProfileChartsComponent implements OnDestroy, OnInit {
   onNewChatRoom(isRoomCreated) {
     this.isRoomCreated = isRoomCreated;
     return this.sharedService.updateIsRoomCreated(this.isRoomCreated);
+  }
+
+  onSelectChat(id) {
+    this.selectedRoomId = id;
   }
 
   openChatListSidebar() {

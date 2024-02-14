@@ -253,8 +253,12 @@
       <div class="single-item messages-area" *ngFor="let item of newChatList">
         <div
           class="text-start d-flex justify-content-between chat-single p-5"
+          [ngClass]="{
+            active:
+              selectedChatUser === item?.roomId ||
+              selectedChatUser === item?.groupId
+          }"
           (click)="onChat(item)"
-          [ngClass]="{ active: item === selectedChatUser }"
         >
           <div class="d-flex gap-2">
             <div class="avatar position-relative online-status">
