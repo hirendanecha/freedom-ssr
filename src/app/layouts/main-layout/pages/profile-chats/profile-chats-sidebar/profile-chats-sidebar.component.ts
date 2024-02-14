@@ -156,7 +156,7 @@ export class ProfileChatsSidebarComponent
     // console.log(item);
     this.notificationNavigation();
     this.onNewChat?.emit(item);
-    this.activeOffcanvas?.dismiss();
+    // this.activeOffcanvas?.dismiss();
     if (this.searchText) {
       this.searchText = null;
     }
@@ -218,6 +218,7 @@ export class ProfileChatsSidebarComponent
       centered: true,
       size: 'md',
     });
+    modalRef.componentInstance.title = 'Create Group';
     modalRef.result.then((res) => {
       if (res) {
         // console.log(res);
@@ -227,5 +228,30 @@ export class ProfileChatsSidebarComponent
         });
       }
     });
+  }
+
+  deleteOrLeaveChat(item) {
+    console.log(item);
+    if (item.roomId) {
+      const data = {
+        roomId: item.roomId,
+        profileId: item.profileId,
+      };
+      this.socketService?.deleteRoom(data, (data: any) => {
+        this.getChatList();
+        this.getGroupList();
+        this.onNewChat?.emit({});
+      });
+    } else if (item.groupId) {
+      const data = {
+        profileId: item.profileId,
+        groupId: item.groupId,
+      };
+      this.socketService.removeGroupMember(data, (res) => {
+        this.getChatList();
+        this.getGroupList();
+        this.onNewChat?.emit({});
+      });
+    }
   }
 }

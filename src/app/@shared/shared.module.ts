@@ -250,7 +250,8 @@ export class SharedModule {
       faLayerGroup,
       faGear,
       faPencil,
-      faRefresh
+      faRefresh,
+      faRightFromBracket
     );
   }
 }
