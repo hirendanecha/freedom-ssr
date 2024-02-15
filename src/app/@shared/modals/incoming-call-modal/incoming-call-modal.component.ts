@@ -1,15 +1,26 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Howl } from 'howler';
 import { SocketService } from '../../services/socket.service';
 import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
+import { SoundControlService } from '../../services/sound-control.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-incoming-call-modal',
   templateUrl: './incoming-call-modal.component.html',
   styleUrls: ['./incoming-call-modal.component.scss'],
 })
-export class IncomingcallModalComponent implements OnInit, AfterViewInit {
+export class IncomingcallModalComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @Input() cancelButtonLabel: string = 'Hangup';
   @Input() confirmButtonLabel: string = 'Join';
   @Input() title: string = 'Incoming call...';
@@ -18,15 +29,27 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
   hangUpTimeout: any;
   currentURL: any = [];
   profileId: number;
+  soundEnabledSubscription: Subscription;
+
   constructor(
     public activateModal: NgbActiveModal,
     private socketService: SocketService,
-    public encryptDecryptService: EncryptDecryptService
+    public encryptDecryptService: EncryptDecryptService,
+    private soundControlService: SoundControlService
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
 
   ngAfterViewInit(): void {
+    this.soundControlService.initStorageListener();
+    // this.sound?.close();
+    this.soundEnabledSubscription =
+      this.soundControlService.soundEnabled$.subscribe((soundEnabled) => {
+        if (soundEnabled === false) {
+          // console.log(soundEnabled);
+          this.sound?.stop();
+        }
+      });
     const SoundOct = JSON.parse(
       localStorage.getItem('soundPreferences')
     )?.callSoundEnabled;
@@ -108,5 +131,9 @@ export class IncomingcallModalComponent implements OnInit, AfterViewInit {
       profileId: this.calldata.notificationByProfileId || this.profileId,
     };
     this.socketService.sendMessage(data, async (data: any) => {});
+  }
+
+  ngOnDestroy(): void {
+    this.soundEnabledSubscription.unsubscribe();
   }
 }
