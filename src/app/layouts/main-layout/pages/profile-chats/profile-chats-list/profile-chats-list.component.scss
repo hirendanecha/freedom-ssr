@@ -1,8 +1,8 @@
 :host {
   .main {
     background: var(--section-1st-color);
-    height: 70vh;
-    max-height: calc(100vh - 250px);
+    height: 78vh;
+    max-height: calc(100vh - 220px);
 
     .chat-content {
       overflow-y: auto;
@@ -22,8 +22,21 @@
       cursor: pointer;
     }
 
-    .data-text-color{
+    .data-text-color {
       color: var(--para-1st-color);
+    }
+
+    .chat-footer {
+      .message-content {
+        position: absolute;
+        width: 100%;
+        max-width: calc(100% - 40px);
+        top: 0px;
+
+        @media (max-width: 575px) {
+          max-width: 100%;
+        }
+      }
     }
   }
 
@@ -33,7 +46,7 @@
   }
 
   .preview-chat-media {
-    bottom: 82px;
+    bottom: 12px;
     left: 15px;
     background: var(--box-1st-color);
     border-radius: 16px;

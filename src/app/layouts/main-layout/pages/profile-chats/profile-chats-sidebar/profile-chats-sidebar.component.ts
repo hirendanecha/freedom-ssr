@@ -148,6 +148,10 @@ export class ProfileChatsSidebarComponent
     return this.chatList;
   }
 
+  dismissSidebar(){
+    this.activeOffcanvas?.dismiss();
+  }
+
   onChat(item: any) {
     this.selectedChatUser = item.roomId || item.groupId;
     item.unReadMessage = 0;
@@ -157,7 +161,6 @@ export class ProfileChatsSidebarComponent
     // console.log(item);
     // this.notificationNavigation()
     this.onNewChat?.emit(item);
-    // this.activeOffcanvas?.dismiss();
     if (this.searchText) {
       this.searchText = null;
     }

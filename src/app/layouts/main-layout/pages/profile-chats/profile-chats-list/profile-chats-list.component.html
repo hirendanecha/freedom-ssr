@@ -434,7 +434,7 @@
       </div>
 
       <div
-        class="text-end chat-footer position-absolute w-100 px-sm-6 bg-color"
+        class="text-end chat-footer position-relative w-100 px-sm-6 bg-color"
         *ngIf="userChat.isAccepted === 'Y'"
       >
         <ng-container *ngIf="viewUrl && !pdfName">
@@ -480,7 +480,7 @@
             typingData.Username + " is typing..."
           }}</span>
         </ng-container>
-        <form class="py-3 pt-2 px-3">
+        <form class="py-3 pt-2 px-3 message-content">
           <div
             class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
           >
@@ -582,7 +582,8 @@
                   (click)="uploadPostFileAndCreatePost()"
                   [disabled]="!chatObj.msgText && !selectedFile"
                 >
-                  Send
+                <fa-icon class="c-icon-color d-sm-none" [icon]="['fas', 'paper-plane']"></fa-icon>
+                <div class="d-none d-sm-flex">Send</div>
                 </button>
               </div>
             </div>
@@ -1074,7 +1075,7 @@
       </div>
 
       <div
-        class="text-end chat-footer position-absolute w-100 px-sm-6 bg-color"
+        class="text-end chat-footer position-relative w-100 px-sm-6 bg-color"
         *ngIf="userChat.isAccepted === 'Y'"
       >
         <ng-container *ngIf="viewUrl && !pdfName">
@@ -1120,7 +1121,7 @@
            typingData.Username + " is typing..."
           }}</span>
         </ng-container>
-        <form class="py-3 pt-2 px-3">
+        <form class="py-3 pt-2 px-3 message-content">
           <div
             class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
           >
@@ -1222,7 +1223,10 @@
                   (click)="uploadPostFileAndCreatePost()"
                   [disabled]="!chatObj.msgText && !selectedFile"
                 >
+                <fa-icon class="c-icon-color d-sm-none" [icon]="['fas', 'paper-plane']"></fa-icon>
+                <div class="d-none d-sm-flex">
                   Send
+                </div>
                 </button>
               </div>
             </div>
