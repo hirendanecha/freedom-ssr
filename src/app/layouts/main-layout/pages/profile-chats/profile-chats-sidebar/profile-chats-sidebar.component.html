@@ -352,7 +352,7 @@
           <div
             class="text-start d-flex justify-content-between chat-single p-5"
             (click)="onChat(item)"
-            [ngClass]="{ active: item === selectedChatUser }"
+            [ngClass]="{ active: item.roomId === selectedChatUser }"
           >
             <div class="d-flex gap-2">
               <div class="avatar">

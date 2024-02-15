@@ -1,13 +1,23 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from '../../services/socket.service';
+import { SoundControlService } from '../../services/sound-control.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-outgoing-call-modal',
   templateUrl: './outgoing-call-modal.component.html',
   styleUrls: ['./outgoing-call-modal.component.scss'],
 })
-export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
+export class OutGoingCallModalComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @Input() cancelButtonLabel: string = 'Hangup';
   @Input() confirmButtonLabel: string = 'Join';
   @Input() title: string = 'Outgoing call...';
@@ -15,10 +25,13 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
   @Input() sound: any;
 
   hangUpTimeout: any;
+  soundEnabledSubscription: Subscription;
+
   constructor(
     public activateModal: NgbActiveModal,
-    private socketService: SocketService
-  ) { }
+    private socketService: SocketService,
+    private soundControlService: SoundControlService
+  ) {}
 
   ngAfterViewInit(): void {
     const SoundOct = JSON.parse(
@@ -29,6 +42,13 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
         this.sound?.play();
       }
     }
+    this.soundEnabledSubscription =
+      this.soundControlService.soundEnabled$.subscribe((soundEnabled) => {
+        console.log(soundEnabled);
+        if (soundEnabled === false) {
+          this.sound?.stop();
+        }
+      });
     if (!this.hangUpTimeout) {
       this.hangUpTimeout = setTimeout(() => {
         this.hangUpCall();
@@ -44,7 +64,7 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   pickUpCall(): void {
     this.sound?.stop();
@@ -66,5 +86,9 @@ export class OutGoingCallModalComponent implements OnInit, AfterViewInit {
       // console.log(data);
     });
     this.activateModal.close('missCalled');
+  }
+
+  ngOnDestroy(): void {
+    this.soundEnabledSubscription.unsubscribe();
   }
 }
