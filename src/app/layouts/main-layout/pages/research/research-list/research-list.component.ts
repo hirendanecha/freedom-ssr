@@ -115,17 +115,9 @@ export class ResearchListComponent {
   onTagUserInputChangeEvent(data: any, ctrlName: string): void {
     this.researchForm.get(ctrlName).setValue(data?.html);
     this.researchForm.get('meta').setValue(data?.meta || {});
-    // console.log('data : ', data);
-    // this.postData.postdescription = data?.html;
-    // this.postMessageTags = data?.tags;
   }
   onTagUserInputDescription(data: any, ctrlName: string): void {
     this.researchForm.get(ctrlName).setValue(data?.html);
-    // this.researchForm.get('meta').setValue(data?.meta || {});
-    // console.log('data : ', data);
-
-    // this.postData.postdescription = data?.html;
-    // this.postMessageTags = data?.tags;
   }
 
   groupsAndPosts(): void {
@@ -202,33 +194,6 @@ export class ResearchListComponent {
       this.socketService?.createOrEditPost(reqObj);
       this.toastService.success('Research added successfully.');
       this.resetPost()
-      // this.postService
-      //   .createPost(reqObj)
-      //   .subscribe({
-      //     next: (res) => {
-      //       if (res) {
-      //         console.log('res : ', res);
-      //         this.toastService.success('Research added successfully.');
-      //         this.groupsAndPosts();
-      //       } else {
-      //         this.toastService.danger(res['message']);
-      //       }
-      //     },
-      //     error: (error: any) => {
-      //       this.toastService.danger(error.message);
-      //     },
-      //   })
-      //   .add(() => {
-      //     this.researchForm.reset();
-      //     this.tagInputDefaultData = 'reset';
-      //     this.postImage = null;
-      //     this.postFile = null;
-      //     setTimeout(() => {
-      //       this.tagInputDefaultData = '';
-      //     }, 100);
-      //     this.formIsClicked.setValue(false);
-      //     this.formIsSubmitted.setValue(false);
-      //   });
     }
     this.removeImgFile();
     this.removePostSelectedFile();
@@ -291,26 +256,10 @@ export class ResearchListComponent {
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
-    console.log(file)
     if (file) {
       this.postFileUrl = URL.createObjectURL(event.target.files[0]);
       this.selectedpdfFile = file;
     }
-    // if (file.type.includes("application/pdf")) {
-    //   this.postData['file'] = file;
-    //   this.pdfName = file?.name
-    //   this.postData['imageUrl'] = null;
-    //   this.postData['streamname'] = null;
-    // } else {
-    //   this.postData['file'] = file;
-    //   this.postData['imageUrl'] = URL.createObjectURL(file);
-    //   this.pdfName = null;
-    //   this.postData['pdfUrl'] = null;
-    // }
-    // if (file?.size < 5120000) {
-    // } else {
-    //   this.toastService.warring('Image is too large!');
-    // }
   }
 
   removePostSelectedFile(): void {
@@ -328,13 +277,11 @@ export class ResearchListComponent {
     setTimeout(() => {
       this.tagInputDefaultData = null;
     }, 100);
-    // console.log(this.tagInputDefaultData)
     Object.keys(this.researchForm.controls).forEach((key) => {
       this.researchForm.get(key).setErrors(null);
     });
     this.formIsClicked.setValue(false);
     this.formIsSubmitted.setValue(false);
-    // console.log(this.researchForm.value);
   }
 
   onChangeTag(event) {

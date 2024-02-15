@@ -24,7 +24,6 @@ export class ResearchPostComponent {
     private seoService: SeoService,
   ) {
     this.postId = this.route.snapshot.paramMap.get('id');
-    console.log('route', this.postId)
   }
 
   ngOnInit(): void {

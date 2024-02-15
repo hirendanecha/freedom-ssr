@@ -40,7 +40,6 @@ export class UploadFilesService {
     const url = environment.serverUrl
     const formData: FormData = new FormData();
     formData.append('file', files);
-    console.log(formData);
     const req =
       new HttpRequest(
         'POST',

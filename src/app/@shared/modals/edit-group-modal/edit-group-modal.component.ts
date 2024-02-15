@@ -61,12 +61,9 @@ export class EditGroupModalComponent implements OnInit {
     this.customerService.getProfileList(this.searchText).subscribe({
       next: (res: any) => {
         if (res?.data?.length > 0) {
-          // this.userList = res.data;
           this.userList = res.data.filter((user: any) => {
             return user.Id !== this.sharedService?.userData?.Id && !this.addedInvitesList.some(invite => invite.Id === user.Id) && !this.data.memberList.some(member => member.profileId === user.Id);
-        });
-        console.log(this.data.memberList);
-        
+          });
           this.userSearchNgbDropdown.open();
         } else {
           this.userList = [];
@@ -132,7 +129,6 @@ export class EditGroupModalComponent implements OnInit {
       profileIds: groupMembers,
       groupId: this.groupId,
     };
-    // console.log(groupData);
     this.activateModal.close(groupData);
   }
 
@@ -141,16 +137,13 @@ export class EditGroupModalComponent implements OnInit {
       centered: true,
       backdrop: 'static',
     });
-    modalRef.componentInstance.title = `${
-      id === this.profileId ? 'Leave' : 'Remove user'
-    } from conversation`;
-    modalRef.componentInstance.confirmButtonLabel = `${
-      id === this.profileId ? 'Leave' : 'Remove'
-    }`;
+    modalRef.componentInstance.title = `${id === this.profileId ? 'Leave' : 'Remove user'
+      } from conversation`;
+    modalRef.componentInstance.confirmButtonLabel = `${id === this.profileId ? 'Leave' : 'Remove'
+      }`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-    modalRef.componentInstance.message = `Are you sure want to ${
-      id === this.profileId ? 'leave' : 'remove'
-    }?`;
+    modalRef.componentInstance.message = `Are you sure want to ${id === this.profileId ? 'leave' : 'remove'
+      }?`;
     modalRef.result.then((res) => {
       if (res === 'success') {
         const data = {
@@ -159,7 +152,6 @@ export class EditGroupModalComponent implements OnInit {
         };
         this.socketService.removeGroupMember(data, (res) => {
           this.data = res;
-          console.log(res);
         })
         if (id === this.profileId) {
           this.activateModal.close('cancel')

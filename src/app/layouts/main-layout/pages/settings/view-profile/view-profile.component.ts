@@ -143,7 +143,6 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
               e.pdfName = e.pdfUrl.split('/')[3].replaceAll('%', ' ')
             })
             this.pdfList = res;
-            console.log(this.pdfList);
           }
         },
         error:
@@ -168,7 +167,6 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   deletePost(postId): void {
-    console.log(postId);
     
     const modalRef = this.modal.open(ConfirmationModalComponent, {
       centered: true,

@@ -62,9 +62,7 @@ export class ProfileMenusModalComponent {
 
   logout(): void {
     // this.isCollapsed = true;
-    this.socketService?.socket?.emit('offline', (data) => {
-      console.log('user=>', data)
-    })
+    this.socketService?.socket?.emit('offline', (data) => { return })
     this.socketService?.socket?.on('get-users', (data) => {
       data.map(ele => {
         if (!this.sharedService.onlineUserList.includes(ele.userId)) {
@@ -76,7 +74,7 @@ export class ProfileMenusModalComponent {
     this.customerService.logout().subscribe({
       next: (res => {
         this.tokenStorageService.signOut();
-        console.log(res)
+        return;
       })
     });
     // this.toastService.success('Logout successfully');

@@ -114,7 +114,6 @@ export class SharedService {
       this.communityService.getLinkById(id).subscribe({
         next: ((res: any) => {
           if (res.data) {
-            console.log(res.data)
             if (res.data[0]?.link1 || res.data[0]?.link2) {
               this.advertizementLink = [];
               this.getMetaDataFromUrlStr(res.data[0]?.link1);

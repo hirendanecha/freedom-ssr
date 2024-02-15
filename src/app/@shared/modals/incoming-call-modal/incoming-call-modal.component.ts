@@ -71,7 +71,7 @@ export class IncomingcallModalComponent
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   pickUpCall(): void {
     this.sound?.stop();
@@ -92,9 +92,8 @@ export class IncomingcallModalComponent
         this.calldata.notificationToProfileId || this.profileId,
       link: this.calldata.link,
     };
-    console.log('pick-up-call', data);
     this.socketService?.pickUpCall(data, (data: any) => {
-      console.log(data);
+      return;
     });
   }
 
@@ -130,7 +129,7 @@ export class IncomingcallModalComponent
       sentBy: this.calldata.notificationToProfileId || this.profileId,
       profileId: this.calldata.notificationByProfileId || this.profileId,
     };
-    this.socketService.sendMessage(data, async (data: any) => {});
+    this.socketService.sendMessage(data, async (data: any) => { });
   }
 
   ngOnDestroy(): void {

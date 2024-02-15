@@ -61,7 +61,6 @@ export class RightSidebarComponent implements OnInit {
     this.isCommunitiesLoader = true;
     this.communityService.getLocalCommunities(profileId).subscribe({
       next: (res: any) => {
-        // console.log(res)
         if (res) {
           this.communities = res;
         }

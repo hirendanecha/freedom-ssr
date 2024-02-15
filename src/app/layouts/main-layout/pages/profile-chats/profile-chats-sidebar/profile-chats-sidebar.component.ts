@@ -27,8 +27,7 @@ import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-m
   styleUrls: ['./profile-chats-sidebar.component.scss'],
 })
 export class ProfileChatsSidebarComponent
-  implements AfterViewInit, OnChanges, OnInit
-{
+  implements AfterViewInit, OnChanges, OnInit {
   chatList: any = [];
   pendingChatList: any = [];
   groupList: any = [];
@@ -74,8 +73,7 @@ export class ProfileChatsSidebarComponent
     this.sharedService
       .getIsRoomCreatedObservable()
       .subscribe((isRoomCreated) => {
-        this.isRoomCreated = isRoomCreated;
-        console.log(this.selectedChatUser)
+        this.isRoomCreated = isRoomCreated
         this.getChatList();
         this.getGroupList();
       });
@@ -154,9 +152,7 @@ export class ProfileChatsSidebarComponent
     if (item.groupId) {
       item.isAccepted = 'Y';
     }
-    // console.log(item);
-    // this.notificationNavigation()
-    this.onNewChat?.emit(item);
+    this.onNewChat?.emit(item)
     // this.activeOffcanvas?.dismiss();
     if (this.searchText) {
       this.searchText = null;
@@ -213,7 +209,6 @@ export class ProfileChatsSidebarComponent
     modalRef.componentInstance.title = 'Create Group';
     modalRef.result.then((res) => {
       if (res) {
-        // console.log(res);
         this.socketService?.createGroup(res, (data: any) => {
           this.getChatList();
           this.getGroupList();
@@ -223,7 +218,6 @@ export class ProfileChatsSidebarComponent
   }
 
   deleteOrLeaveChat(item) {
-    console.log(item);
     if (item.roomId) {
       const data = {
         roomId: item.roomId,
@@ -236,7 +230,7 @@ export class ProfileChatsSidebarComponent
       });
     } else if (item.groupId) {
       const data = {
-        profileId: item.profileId,
+        profileId: this.profileId,
         groupId: item.groupId,
       };
       this.socketService.removeGroupMember(data, (res) => {

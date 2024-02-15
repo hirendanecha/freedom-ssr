@@ -26,7 +26,6 @@ export class RePostCardComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
-    console.log('id ===>', this.post)
     this.getPostById();
   }
 

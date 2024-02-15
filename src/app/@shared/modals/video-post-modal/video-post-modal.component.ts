@@ -62,10 +62,8 @@ export class VideoPostModalComponent implements AfterViewInit {
     private cdr: ChangeDetectorRef
   ) {
     this.postData.profileid = localStorage.getItem('profileId');
-    // console.log('profileId', this.postData.profileid);
   }
   ngAfterViewInit(): void {
-    // console.log('editPreview', this.post);
     if (this.post) {
       this.postData.id = this.post.id;
       this.postData.profileid = this.post.profileid;
@@ -159,7 +157,6 @@ export class VideoPostModalComponent implements AfterViewInit {
                     );
                     this.cdr.markForCheck();
                     this.progressValue = this.streamnameProgress;
-                    // console.log(`Streamname Progress: ${this.streamnameProgress}%`);
                   } else if (event.type === HttpEventType.Response) {
                     if (event.body?.url) {
                       this.postData['file1'] = null;
@@ -182,9 +179,6 @@ export class VideoPostModalComponent implements AfterViewInit {
                     this.thumbfilenameProgress = Math.round(
                       (100 * event.loaded) / event.total
                     );
-                    // console.log(
-                    //   `Thumbfilename Progress: ${this.thumbfilenameProgress}%`
-                    // );
                   } else if (event.type === HttpEventType.Response) {
                     if (event.body?.url) {
                       this.postData['file2'] = null;
@@ -257,36 +251,16 @@ export class VideoPostModalComponent implements AfterViewInit {
       this.postData.keywords &&
       this.postData.albumname
     ) {
-      console.log('post-data', this.postData);
       this.spinner.hide();
       this.activeModal.close();
-      this.socketService.createOrEditPost(this.postData
-      //   , (data) => {
-      //   this.spinner.hide();
-      //   this.toastService.success('Post created successfully.');
-      //   this.postData = null;
-      //   return data;
-      // }
-      );
-      // this.postService.createVideoPost(this.postData).subscribe({
-      //   next: (res: any) => {
-      // this.spinner.hide()
-      //   }, error: (error) => {
-      //     this.spinner.hide()
-      //     console.log(error);
-      //   }
-      // })
-    } else {
-      // this.toastService.danger('Please enter mandatory fields(*) data.');
-    }
+      this.socketService.createOrEditPost(this.postData);
+    } 
   }
 
   onSelectedVideo(event: any) {
     if (event.target?.files?.[0].type.includes('video/mp4')) {
       this.postData.file1 = event.target?.files?.[0];
       this.selectedVideoFile = URL.createObjectURL(event.target.files[0]);
-    } else {
-      // this.toastService.warring('please upload only mp4 files');
     }
   }
   onFileSelected(event: any) {
@@ -303,7 +277,6 @@ export class VideoPostModalComponent implements AfterViewInit {
 
   onvideoPlay(e: any): void {
     this.postData.videoduration = e?.target?.duration;
-    // console.log('videoduration', e?.target?.duration);
   }
 
   onChangeTag(event) {
@@ -311,7 +284,6 @@ export class VideoPostModalComponent implements AfterViewInit {
   }
 
   stopUploadVideo(){
-    // this.postData = null
     this.activeModal.close()
     location.reload();
   }

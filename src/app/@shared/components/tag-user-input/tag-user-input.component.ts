@@ -153,14 +153,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     }
 
     const text = htmlText.replace(/<[^>]*>/g, '');
-    // const matches = text.match(/(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?(.*)/gi);
-    // const matches = text.match(/((ftp|http|https):\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/);
     const matches = text.match(/(?:https?:\/\/|www\.)[^\s]+/g);
     const url = matches?.[0];
-    // console.log(url, matches);
     if (url) {
       if (url !== this.metaData?.url) {
-        //   // this.spinner.show();
         this.isMetaLoader = true;
         const unsubscribe$ = new Subject<void>();
         this.postService
@@ -208,40 +204,6 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
               unsubscribe$.complete();
             },
           });
-        // this.socketService.getMeta({ url: url });
-        // if (this.socketService.socket.connect()) {
-        //   this.socketService.socket.on('get-meta', (data: any) => {
-        //     this.isMetaLoader = false;
-        //     console.log('meta-data', data);
-        //     this.isMetaLoader = false;
-        //     if (data?.image) {
-        //       const urls = data.image?.url;
-        //       const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
-
-        //       const metatitles = data?.title;
-        //       const metatitle = Array.isArray(metatitles)
-        //         ? metatitles?.[0]
-        //         : metatitles;
-
-        //       const metaurls = data?.url || url;
-        //       const metaursl = Array.isArray(metaurls)
-        //         ? metaurls?.[0]
-        //         : metaurls;
-
-        //       this.metaData = {
-        //         title: metatitle,
-        //         metadescription: data?.description,
-        //         metaimage: imgUrl,
-        //         metalink: metaursl,
-        //         url: url,
-        //       };
-
-        //       this.emitChangeEvent();
-        //     } else {
-        //       this.metaData.metalink = url
-        //     }
-        //   })
-        // }
       }
     } else {
       this.clearMetaData();
@@ -273,7 +235,6 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         ' '
       ).join('')}</a>`
     );
-    console.log(text);
     this.setTagInputDivValue(text);
     this.emitChangeEvent();
     this.moveCursorToEnd();
@@ -294,8 +255,6 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
           next: (res: any) => {
             if (res?.data?.length > 0) {
               this.userList = res.data.map((e) => e);
-              // console.log(this.userList);
-              // this.userSearchNgbDropdown.open();
             } else {
               this.clearUserSearchData();
             }
@@ -345,15 +304,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   emitChangeEvent(): void {
     if (this.tagInputDiv) {
       const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
-
-      // this.value = `${htmlText}`.replace(/\<div\>\<br\>\<\/div\>/gi, '');
       this.value = `${htmlText}`.replace(
         /(?:<div><br><\/div>\s*)+/gi,
         '<div><br></div>'
       );
-      // this.moveCursorToEnd();
-      // console.log('htmlText', `${htmlText}`.replace(/\<div\>\<br\>\<\/div\>/ig, ''))
-      // console.log('htmlText', this.value);
       this.onDataChange?.emit({
         html: this.value,
         tags: this.tagInputDiv?.nativeElement?.children,

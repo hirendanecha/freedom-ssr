@@ -74,13 +74,10 @@ export class ReplyCommentModalComponent implements AfterViewInit {
 
   onChangeComment(): void {
     this.commentData.tags = getTagUsersFromAnchorTags(this.commentMessageTags);
-    console.log(this.commentData.tags)
     this.activeModal.close(this.commentData);
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    // console.log('comments-data', data)
-    // this.commentData.comment = data?.html;
     this.extractLargeImageFromContent(data.html)
     this.commentMessageTags = data?.tags;
   }

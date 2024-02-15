@@ -53,7 +53,6 @@ export class CreateGroupModalComponent implements OnInit {
               (invite) => invite.Id === user.Id
             );
           });
-          // console.log(this.userList);
           this.userSearchNgbDropdown.open();
         } else {
           this.userList = [];

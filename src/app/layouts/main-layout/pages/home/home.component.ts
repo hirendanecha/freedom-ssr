@@ -112,58 +112,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (!this.socketService.socket?.connected) {
-      this.socketService.socket?.connect();
-    }
-    if (!this.socketService.socket?.connected) {
-      this.socketService.socket?.connect();
-    }
-
-    // this.socketService.socket?.emit('join', { room: this.profileId });
-    this.socketService.socket?.on('notification', (data: any) => {
-      if (data) {
-        // console.log('new-notification', data);
-        this.notificationId = data.id;
-        this.sharedService.isNotify = true;
-        this.originalFavicon.href = '/assets/images/icon-unread.jpg';
-        if (data?.actionType === 'T') {
-          var sound = new Howl({
-            src: [
-              'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
-            ],
-          });
-          const notificationSoundOct = JSON.parse(localStorage.getItem('soundPreferences'))?.notificationSoundEnabled;
-          if (notificationSoundOct !== 'N') {
-            if (sound) {
-              sound?.play();
-            }
-          }
-        }
-        if (data?.actionType === 'M') {
-          var sound = new Howl({
-            src: [
-              'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
-            ],
-          });
-          const messageSoundOct = JSON.parse(localStorage.getItem('soundPreferences'))?.messageSoundEnabled;
-          if (messageSoundOct !== 'N') {
-            if (sound) {
-              sound?.play();
-            }
-          }
-        }
-        if (this.notificationId) {
-          this.customerService.getNotification(this.notificationId).subscribe({
-            next: (res) => {
-              localStorage.setItem('isRead', res.data[0]?.isRead);
-            },
-            error: (error) => {
-              console.log(error);
-            },
-          });
-        }
-      }
-    });
     const isRead = localStorage.getItem('isRead');
     if (isRead === 'N') {
       this.sharedService.isNotify = true;
@@ -181,11 +129,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
-    // console.log(file)
     if (file.type.includes('application/pdf')) {
       this.postData['file'] = file;
       this.pdfName = file?.name;
@@ -294,7 +241,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             if (res?.body?.url) {
               if (this.postData?.file.type.includes('application/pdf')) {
                 this.postData['pdfUrl'] = res?.body?.url;
-                console.log('pdfUrl', res?.body?.url);
                 this.postData['imageUrl'] = null;
                 this.createOrEditPost();
               } else {
@@ -332,30 +278,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.postData.title = null;
         this.postData.metaimage = null;
         this.postData.metadescription = null;
-        console.log(this.postData);
       }
-      // this.spinner.show();
-      console.log(
-        'postData',
-        this.postData,
-        this.socketService.socket?.connected
-      );
       this.toastService.success('Post created successfully.');
       this.socketService?.createOrEditPost(this.postData);
       this.buttonClicked = false;
       this.resetPost();
-      // , (data) => {
-      //   this.spinner.hide();
-      //   console.log(data)
-      //   return data;
-      // });
     }
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    // this.postMessageInputValue = data?.html
     this.extractImageUrlFromContent(data.html);
-    // this.postData.postdescription = data?.html;
     this.postData.meta = data?.meta;
     this.postMessageTags = data?.tags;
   }
@@ -377,26 +309,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onEditPost(post: any): void {
-    // console.log('edit-post', post)
     if (post.posttype === 'V') {
       this.openUploadVideoModal(post);
     }
-    //  else if (post.pdfUrl) {
-    //   this.pdfName = post.pdfUrl.split('/')[3];
-    //   console.log(this.pdfName);
-    //   this.postData = { ...post };
-    //   this.postMessageInputValue = this.postData?.postdescription;
-    // }
     else {
       this.openUploadEditPostModal(post);
-      // this.postData = { ...post };
-      // this.postMessageInputValue = this.postData?.postdescription;
     }
-    // window.scroll({
-    //   top: 0,
-    //   left: 0,
-    //   behavior: 'smooth',
-    // });
   }
 
   editCommunity(data): void {
@@ -444,7 +362,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         isAdmin: 'N',
       };
       this.searchText = '';
-      console.log(data);
       this.communityService.joinCommunity(data).subscribe(
         (res: any) => {
           if (res) {
@@ -510,10 +427,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.toastService.success(res.message);
                 // this.getCommunityDetailsBySlug();
                 this.router.navigate([
-                  `${
-                    this.communityDetails.pageType === 'community'
-                      ? 'communities'
-                      : 'pages'
+                  `${this.communityDetails.pageType === 'community'
+                    ? 'communities'
+                    : 'pages'
                   }`,
                 ]);
               }
@@ -577,7 +493,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     modalRef.result.then((res) => {
       if (res.id) {
         this.postData = res;
-        console.log(this.postData);
         this.uploadPostFileAndCreatePost();
       }
     });

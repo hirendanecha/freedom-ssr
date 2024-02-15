@@ -95,9 +95,6 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
       this.pageForm.get('State').enable();
       this.pageForm.get('City').enable();
       this.pageForm.get('County').enable();
-
-
-      console.log(this.inputLinkValue1, this.inputLinkValue2);
     }
   }
 
@@ -250,7 +247,7 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
       this.advertizement.communityId = id
       this.communityService.createAdvertizeMentLink(this.advertizement).subscribe({
         next: (res => {
-          console.log(res);
+          return;
         }),
         error: (err => {
           console.log(err)
@@ -268,7 +265,7 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
       }
       this.communityService.editAdvertizeMentLink(data).subscribe({
         next: (res => {
-          console.log(res);
+          return;
         }),
         error: (err => {
           console.log(err)
@@ -400,10 +397,8 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
 
   onTagUserInputChangeEvent(data: any): void {
     this.advertizement.link1 = data?.meta?.url
-    console.log(data)
   }
   onTagUserInputChangeEvent1(data): void {
     this.advertizement.link2 = data?.meta?.url
-    console.log(data)
   }
 }

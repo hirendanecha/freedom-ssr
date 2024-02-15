@@ -83,7 +83,7 @@ export class OutGoingCallModalComponent
       notificationByProfileId: this.calldata.notificationByProfileId,
     };
     this.socketService?.hangUpCall(data, (data: any) => {
-      // console.log(data);
+      return;
     });
     this.activateModal.close('missCalled');
   }

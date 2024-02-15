@@ -64,18 +64,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.socketService.socket?.on('notification', (data: any) => {
         if (data) {
-          console.log('new-notification', data);
+          this.sharedService.isNotify = true;
           this.notificationId = data.id;
           this.originalFavicon.href = '/assets/images/icon-unread.jpg';
           if (data?.actionType === 'T') {
-            this.sharedService.isNotify = true;
             var sound = new Howl({
               src: [
                 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
               ],
             });
-            // const soundPrefs = JSON.parse(localStorage.getItem('soundPreferences'));
-            // const notificationSoundOct = soundPrefs ? soundPrefs.notificationSoundEnabled : null;
             const notificationSoundOct = JSON.parse(
               localStorage.getItem('soundPreferences')
             )?.notificationSoundEnabled;
@@ -86,10 +83,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           }
           if (data?.actionType === 'M' && data?.notificationByProfileId !== this.profileId) {
-            if (data.isRoomDeleted) {
-              this.newRoomCreated.emit(true);
-            }
-            this.sharedService.isNotify = true;
+            this.newRoomCreated.emit(true);
             var sound = new Howl({
               src: [
                 'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
@@ -121,11 +115,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             modalRef.componentInstance.calldata = data;
             modalRef.componentInstance.sound = callSound;
             modalRef.result.then((res) => {
-              console.log(res);
+              return;
             });
           }
           if (data?.actionType === 'SC' && data?.notificationByProfileId !== this.profileId) {
-            console.log(this.currentURL)
             if (!this.currentURL.includes(data?.link)) {
               this.currentURL.push(data.link)
               this.modalService.dismissAll();

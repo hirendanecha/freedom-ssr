@@ -63,7 +63,6 @@ export class ProfileChatsListComponent
   firstTimeScroll = false;
   activePage = 1;
   hasMoreData = false;
-
   typingData: any = {};
   isTyping = false;
   emojiPaths = [
@@ -101,7 +100,6 @@ export class ProfileChatsListComponent
       this.getMessageList();
     }
     this.socketService.socket?.on('new-message', (data) => {
-      console.log('new-message', data);
       this.newRoomCreated.emit(true);
       this.selectedChat.emit(data.roomId || data.groupId);
       this.notificationNavigation();
@@ -132,7 +130,6 @@ export class ProfileChatsListComponent
     });
     this.socketService.socket?.emit('online-users');
     this.socketService.socket?.on('typing', (data) => {
-      // console.log(data);
       this.typingData = data;
     });
   }
@@ -140,7 +137,6 @@ export class ProfileChatsListComponent
   ngOnChanges(changes: SimpleChanges): void {
     this.originalFavicon = document.querySelector('link[rel="icon"]');
     if (this.userChat?.groupId) {
-      // console.log('input', this.userChat);
       this.activePage = 1;
       this.messageList = [];
       this.hasMoreData = false;
@@ -148,7 +144,6 @@ export class ProfileChatsListComponent
       this.notificationNavigation();
       this.resetData();
     } else {
-      // console.log('input', this.userChat);
       this.groupData = null;
     }
     if (this.userChat?.roomId || this.userChat?.groupId) {
@@ -168,9 +163,6 @@ export class ProfileChatsListComponent
 
   // scroller down
   ngAfterViewChecked() {
-    // if (this.userChat?.roomId) {
-    //   this.scrollToBottom();
-    // }
   }
 
   ngOnDestroy(): void {
@@ -178,7 +170,6 @@ export class ProfileChatsListComponent
     this.ngUnsubscribe.complete();
   }
 
-  // invite btn
   createChatRoom(): void {
     this.socketService.createChatRoom(
       {
@@ -186,8 +177,8 @@ export class ProfileChatsListComponent
         profileId2: this.userChat?.Id || this.userChat?.profileId,
       },
       (data: any) => {
+        console.log(data)
         this.userChat = { ...data?.room };
-        // console.log(data);
         this.newRoomCreated.emit(true);
       }
     );
@@ -201,9 +192,7 @@ export class ProfileChatsListComponent
         profileId: this.profileId,
       },
       (data: any) => {
-        console.log(data);
         this.userChat.isAccepted = data.isAccepted;
-        // this.userChat = { ...data };
         this.newRoomCreated.emit(true);
       }
     );
@@ -211,7 +200,6 @@ export class ProfileChatsListComponent
 
   // send btn
   sendMessage(): void {
-    // console.log(this.chatObj);
     if (this.chatObj.id) {
       const message =
         this.chatObj.msgText !== null
@@ -227,8 +215,6 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
       };
       this.socketService?.editMessage(data, (data: any) => {
-        // this.userChat = data;
-        // console.log('edit-message', data);
         this.isFileUploadInProgress = false;
         if (data) {
           let index = this.messageList?.findIndex(
@@ -237,16 +223,14 @@ export class ProfileChatsListComponent
           if (this.messageList[index]) {
             this.messageList[index] = data;
           }
-        }
-        // this.messageList[data.id] = data;
-        this.resetData();
+        } this.resetData();
       });
     } else {
       const message =
         this.chatObj.msgText !== null
           ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
           : null;
-      // console.log('encrypted-message', message);
+
       const data = {
         messageText: message,
         roomId: this.userChat?.roomId || null,
@@ -256,10 +240,8 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
       };
 
-      console.log(data);
 
       this.socketService.sendMessage(data, async (data: any) => {
-        // console.log(data);
         this.isFileUploadInProgress = false;
         this.scrollToBottom();
         this.newRoomCreated?.emit(true);
@@ -274,7 +256,6 @@ export class ProfileChatsListComponent
         );
         if (matches?.[0]) {
           data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
-          // console.log(data);
         } else {
           this.messageList.push(data);
           this.resetData();
@@ -306,7 +287,6 @@ export class ProfileChatsListComponent
         if (this.activePage === 1) {
           this.scrollToBottom();
         }
-        // this.messageList = data.data;
         if (data?.data.length > 0) {
           this.messageList = [...this.messageList, ...data.data];
 
@@ -315,7 +295,6 @@ export class ProfileChatsListComponent
               new Date(a.createdDate).getTime() -
               new Date(b.createdDate).getTime()
           );
-          // console.log(this.messageList);
         } else {
           this.hasMoreData = false;
         }
@@ -330,13 +309,12 @@ export class ProfileChatsListComponent
             return e;
           }
         });
-        // console.log(ids);
         if (ids.length) {
           const data = {
             ids: ids,
           };
           this.socketService.readMessage(data, (res) => {
-            console.log(res);
+            return;
           });
         }
         this.messageList.map(async (element: any) => {
@@ -354,7 +332,6 @@ export class ProfileChatsListComponent
             element['metaData'] = await this.getMetaDataFromUrlStr(
               matches?.[0]
             );
-            // console.log(element);
           } else {
             return element;
           }
@@ -374,9 +351,7 @@ export class ProfileChatsListComponent
   }
 
   onPostFileSelect(event: any): void {
-    console.log('event  : ', event);
     const file = event.target?.files?.[0] || {};
-    // console.log(file)
     if (file.type.includes('application/pdf')) {
       this.selectedFile = file;
       this.pdfName = file?.name;
@@ -389,7 +364,6 @@ export class ProfileChatsListComponent
       this.selectedFile = file;
       this.viewUrl = URL.createObjectURL(file);
     }
-    // console.log(this.selectedFile);
   }
 
   removePostSelectedFile(): void {
@@ -437,8 +411,6 @@ export class ProfileChatsListComponent
   }
 
   resetData(): void {
-    // console.log('in');
-    // this.startTypingChat(false);
     this.chatObj['id'] = null;
     this.chatObj.msgMedia = null;
     this.chatObj.msgText = null;
@@ -475,7 +447,6 @@ export class ProfileChatsListComponent
         profileId: this.profileId,
       };
       this.socketService?.deleteRoom(data, (data: any) => {
-        // console.log(data);
         this.userChat = {};
         this.newRoomCreated.emit(true);
       });
@@ -511,16 +482,10 @@ export class ProfileChatsListComponent
         profileId: this.userChat?.profileId,
       },
       (data: any) => {
-        // console.log(data);
         this.newRoomCreated.emit(true);
         this.messageList = this.messageList.filter(
           (obj) => obj?.id !== data?.id
         );
-
-        // let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
-        // if (this.messageList[index]) {
-        //   this.messageList.splice(index);
-        // }
       }
     );
   }
@@ -603,7 +568,6 @@ export class ProfileChatsListComponent
     if (!data?.groupId) {
       data['notificationToProfileId'] = this.userChat.profileId;
     }
-    console.log('outgoing-data', data);
     var callSound = new Howl({
       src: [
         'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
@@ -615,13 +579,8 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.title = 'RINGING...';
 
     this.socketService?.startCall(data, (data: any) => {
-      // console.log(data);
     });
     modalRef.result.then((res) => {
-      // if (res === 'cancel') {
-      //   this.chatObj.msgText = 'Your call has been ended';
-      //   this.sendMessage();
-      // }
       if (res === 'missCalled') {
         this.chatObj.msgText = 'You have a missed call';
         this.sendMessage();
@@ -690,7 +649,6 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.groupId = this.userChat?.groupId;
     modalRef.result.then((res) => {
       if (res) {
-        // console.log(res);
         this.socketService?.createGroup(res, (data: any) => {
           this.newRoomCreated.emit(true);
         });
@@ -713,9 +671,7 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.groupId = this.userChat?.groupId;
     modalRef.result.then((res) => {
       if (res !== 'cancel') {
-        // console.log(res);
         this.socketService?.createGroup(res, (data: any) => {
-          // console.log(data);
           this.groupData = data;
           this.newRoomCreated.emit(true);
         });
@@ -727,7 +683,6 @@ export class ProfileChatsListComponent
   }
 
   startTypingChat(isTyping) {
-    // console.log(isTyping);
     const data = {
       groupId: this.userChat?.groupId,
       roomId: this.userChat?.roomId,
@@ -736,7 +691,7 @@ export class ProfileChatsListComponent
         : this.profileId,
       isTyping: isTyping,
     };
-    this.socketService?.startTyping(data, (data: any) => {});
+    this.socketService?.startTyping(data, (data: any) => { });
   }
 
   delayedStartTypingChat() {
