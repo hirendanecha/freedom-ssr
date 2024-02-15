@@ -8,6 +8,7 @@ import { Howl } from 'howler';
 import { IncomingcallModalComponent } from './@shared/modals/incoming-call-modal/incoming-call-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from './@shared/services/toast.service';
+import { SoundControlService } from './@shared/services/sound-control.service';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +32,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private customerService: CustomerService,
     private modalService: NgbModal,
     private toasterService: ToastService,
+    private soundControlService: SoundControlService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.checkDocumentFocus();
@@ -110,6 +112,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               ],
               loop: true,
             });
+            this.soundControlService.initTabId();
             const modalRef = this.modalService.open(IncomingcallModalComponent, {
               centered: true,
               size: 'sm',

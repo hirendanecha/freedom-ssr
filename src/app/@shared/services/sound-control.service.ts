@@ -29,7 +29,7 @@ export class SoundControlService {
     }
   }
 
-  private initTabId(): void {
+   initTabId(): void {
     this.activeTabId = 'tab_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('activeTabId', this.activeTabId);
     this.enableSound();
