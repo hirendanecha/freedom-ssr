@@ -146,14 +146,19 @@ export class ProfileChatsSidebarComponent
     return this.chatList;
   }
 
+  dismissSidebar(){
+    this.activeOffcanvas?.dismiss();
+  }
+
   onChat(item: any) {
     this.selectedChatUser = item.roomId || item.groupId;
     item.unReadMessage = 0;
     if (item.groupId) {
       item.isAccepted = 'Y';
     }
-    this.onNewChat?.emit(item)
-    // this.activeOffcanvas?.dismiss();
+    // console.log(item);
+    // this.notificationNavigation()
+    this.onNewChat?.emit(item);
     if (this.searchText) {
       this.searchText = null;
     }
