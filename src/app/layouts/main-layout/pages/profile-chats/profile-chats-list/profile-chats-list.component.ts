@@ -352,7 +352,7 @@ export class ProfileChatsListComponent
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
-    if (file.type.includes('application/pdf')) {
+    if (file.type.includes('application/')) {
       this.selectedFile = file;
       this.pdfName = file?.name;
       this.chatObj.msgText = null;
@@ -432,7 +432,9 @@ export class ProfileChatsListComponent
 
   isPdf(media: string): boolean {
     this.pdfmsg = media?.split('/')[3]?.replaceAll('%', '-');
-    return media && media.endsWith('.pdf');
+    const fileType = media.endsWith('.pdf') || media.endsWith('.doc') || media.endsWith('.docx') || media.endsWith('.xls') || media.endsWith('.xlsx') || media.endsWith('.zip')
+    return media && fileType;
+    // return media && media.endsWith('.pdf');
   }
 
   pdfView(pdfUrl) {

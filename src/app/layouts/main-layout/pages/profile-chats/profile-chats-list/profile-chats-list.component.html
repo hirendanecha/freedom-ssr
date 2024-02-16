@@ -212,13 +212,13 @@
               <div class="d-flex flex-column">
                 <div class="d-flex">
                   <ng-container *ngIf="message?.messageMedia">
-                    <div class="message mb-3">
+                    <div class="mb-3">
                       <ng-container
                         *ngIf="isPdf(message?.messageMedia); else imageMsg"
                       >
-                        <div (click)="pdfView(message?.messageMedia)">
+                        <div class="message" (click)="pdfView(message?.messageMedia)">
                           <fa-icon
-                            [icon]="['fas', 'file-pdf']"
+                            [icon]="['fas', 'file']"
                             class="c-pointer close-icon font-44-px"
                           ></fa-icon>
                           <p
@@ -232,7 +232,7 @@
                       <ng-template #imageMsg>
                         <ng-container
                           *ngIf="isGif(message?.messageMedia); else notGif"
-                        >
+                        ><div class="message">
                           <img
                             data-src="{{ message?.messageMedia }}"
                             loading="eager"
@@ -240,13 +240,16 @@
                             alt="Emoji"
                             draggable="false"
                           />
+                        </div>
                         </ng-container>
                         <ng-template #notGif>
-                          <app-img-preview
-                            class="msgImage"
-                            classes="h-180-px"
-                            [src]="message?.messageMedia"
-                          ></app-img-preview>
+                          <div class="replay-message-media">
+                            <app-img-preview
+                              class="msgImage"
+                              classes="h-180-px"
+                              [src]="message?.messageMedia"
+                            ></app-img-preview>
+                          </div>
                         </ng-template>
                       </ng-template>
                     </div>
@@ -326,13 +329,13 @@
                       </div>
                     </div>
                   </div>
-                  <div class="message">
+                  <div>
                     <ng-container
                       *ngIf="isPdf(message?.messageMedia); else imageMsg"
                     >
-                      <div (click)="pdfView(message?.messageMedia)">
+                      <div class="message" (click)="pdfView(message?.messageMedia)">
                         <fa-icon
-                          [icon]="['fas', 'file-pdf']"
+                          [icon]="['fas', 'file']"
                           class="c-pointer close-icon font-44-px"
                         ></fa-icon>
                         <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
@@ -344,6 +347,7 @@
                       <ng-container
                         *ngIf="isGif(message?.messageMedia); else notGif"
                       >
+                      <div class="message">
                         <img
                           data-src="{{ message?.messageMedia }}"
                           loading="eager"
@@ -351,13 +355,16 @@
                           alt="Emoji"
                           draggable="false"
                         />
+                      </div>
                       </ng-container>
                       <ng-template #notGif>
-                        <app-img-preview
-                          class="msgImage"
-                          classes="h-180-px"
-                          [src]="message?.messageMedia"
-                        ></app-img-preview>
+                        <div class="message-media">
+                          <app-img-preview
+                            class="msgImage"
+                            classes="h-180-px"
+                            [src]="message?.messageMedia"
+                          ></app-img-preview>
+                        </div>
                       </ng-template>
                     </ng-template>
                   </div>
@@ -461,7 +468,7 @@
             class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
           >
             <fa-icon
-              [icon]="['fas', 'file-pdf']"
+              [icon]="['fas', 'file']"
               class="c-pointer close-icon font-40-px"
             />
             <span class="c-pdf-show" [title]="pdfName.replaceAll('%', ' ')">{{
@@ -492,9 +499,9 @@
                       type="file"
                       [(ngModel)]="chatObj.msgMedia"
                       name="doc"
-                      accept="application/pdf"
+                      accept="application/*"
                       (change)="onPostFileSelect($event)"
-                    />
+                      />
                     <span class="file-custom border-0 m-1 d-grid text-center">
                       <fa-icon
                         [icon]="['fas', 'paperclip']"
@@ -685,13 +692,13 @@
               <div class="d-flex flex-column">
                 <div class="d-flex">
                   <ng-container *ngIf="message?.messageMedia">
-                    <div class="message mb-3">
+                    <div class="mb-3">
                       <ng-container
                         *ngIf="isPdf(message?.messageMedia); else imageMsg"
                       >
-                        <div (click)="pdfView(message?.messageMedia)">
+                        <div class="message" (click)="pdfView(message?.messageMedia)">
                           <fa-icon
-                            [icon]="['fas', 'file-pdf']"
+                            [icon]="['fas', 'file']"
                             class="c-pointer close-icon font-44-px"
                           ></fa-icon>
                           <p
@@ -706,6 +713,7 @@
                         <ng-container
                           *ngIf="isGif(message?.messageMedia); else notGif"
                         >
+                        <div class="message">
                           <img
                             data-src="{{ message?.messageMedia }}"
                             loading="eager"
@@ -713,13 +721,16 @@
                             alt="Emoji"
                             draggable="false"
                           />
+                        </div>
                         </ng-container>
                         <ng-template #notGif>
-                          <app-img-preview
-                            class="msgImage"
-                            classes="h-180-px"
-                            [src]="message?.messageMedia"
-                          ></app-img-preview>
+                          <div class="replay-message-media">
+                            <app-img-preview
+                              class="msgImage"
+                              classes="h-180-px"
+                              [src]="message?.messageMedia"
+                            ></app-img-preview>
+                          </div>
                         </ng-template>
                       </ng-template>
                     </div>
@@ -803,13 +814,13 @@
                       </div>
                     </div>
                   </div>
-                  <div class="message">
+                  <div>
                     <ng-container
                       *ngIf="isPdf(message?.messageMedia); else imageMsg"
                     >
-                      <div (click)="pdfView(message?.messageMedia)">
+                      <div class="message" (click)="pdfView(message?.messageMedia)">
                         <fa-icon
-                          [icon]="['fas', 'file-pdf']"
+                          [icon]="['fas', 'file']"
                           class="c-pointer close-icon font-44-px"
                         ></fa-icon>
                         <p class="pdf-name text-truncate mb-0" [title]="pdfmsg">
@@ -821,6 +832,7 @@
                       <ng-container
                         *ngIf="isGif(message?.messageMedia); else notGif"
                       >
+                      <div class="message">
                         <img
                           data-src="{{ message?.messageMedia }}"
                           loading="eager"
@@ -828,13 +840,16 @@
                           alt="Emoji"
                           draggable="false"
                         />
+                      </div>
                       </ng-container>
                       <ng-template #notGif>
-                        <app-img-preview
+                        <div class="message-media">
+                          <app-img-preview
                           class="msgImage"
                           classes="h-180-px"
                           [src]="message?.messageMedia"
-                        ></app-img-preview>
+                          ></app-img-preview>
+                        </div>
                       </ng-template>
                     </ng-template>
                   </div>
@@ -1102,7 +1117,7 @@
             class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
           >
             <fa-icon
-              [icon]="['fas', 'file-pdf']"
+              [icon]="['fas', 'file']"
               class="c-pointer close-icon font-40-px"
             />
             <span class="c-pdf-show" [title]="pdfName.replaceAll('%', ' ')">{{
@@ -1133,7 +1148,7 @@
                       type="file"
                       [(ngModel)]="chatObj.msgMedia"
                       name="doc"
-                      accept="application/pdf"
+                      accept="application/*"
                       (change)="onPostFileSelect($event)"
                     />
                     <span class="file-custom border-0 m-1 d-grid text-center">

@@ -38,6 +38,15 @@
         }
       }
     }
+
+    .message-media{
+      border: 1px solid #00a3ff;
+      border-radius: 7px;
+    }
+    .replay-message-media{
+      border: 1px solid var(--box-1st-color);
+      border-radius: 7px;
+    }
   }
 
   .header-image {
