@@ -46,6 +46,11 @@ export class ProfileChatsListComponent
     msgText: null,
     msgMedia: null,
     id: null,
+    parentMessageId: null,
+  };
+  replyMessage = {
+    msgText: null,
+    msgMedia: null,
   };
   isFileUploadInProgress: boolean = false;
   selectedFile: any;
@@ -214,6 +219,7 @@ export class ProfileChatsListComponent
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
+        parentMessageId: this.userChat.parentMessageId || null,
       };
       this.socketService?.editMessage(data, (data: any) => {
         this.isFileUploadInProgress = false;
@@ -240,6 +246,7 @@ export class ProfileChatsListComponent
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
+        parentMessageId: this.chatObj?.parentMessageId || null,
       };
 
       this.socketService.sendMessage(data, async (data: any) => {
@@ -290,12 +297,11 @@ export class ProfileChatsListComponent
         }
         if (data?.data.length > 0) {
           this.messageList = [...this.messageList, ...data.data];
-
           this.messageList.sort(
             (a, b) =>
-              new Date(a.createdDate).getTime() -
-              new Date(b.createdDate).getTime()
-          );
+            new Date(a.createdDate).getTime() -
+            new Date(b.createdDate).getTime()
+            );
         } else {
           this.hasMoreData = false;
         }
@@ -374,6 +380,12 @@ export class ProfileChatsListComponent
     this.resetData();
   }
 
+  removeReplay(): void {
+    this.replyMessage.msgText = null;
+    this.replyMessage.msgMedia = null;
+    this.chatObj.parentMessageId = null;
+  }
+
   onTagUserInputChangeEvent(data: any): void {
     this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
     if (data.html === '') {
@@ -413,6 +425,8 @@ export class ProfileChatsListComponent
 
   resetData(): void {
     this.chatObj['id'] = null;
+    this.chatObj.parentMessageId = null;
+    this.replyMessage.msgText = null;
     this.chatObj.msgMedia = null;
     this.chatObj.msgText = null;
     this.viewUrl = null;
@@ -471,6 +485,24 @@ export class ProfileChatsListComponent
   selectEmoji(emoji: any): void {
     this.chatObj.msgMedia = emoji;
     // this.sendMessage();
+  }
+
+  replyMsg(msgObj): void {
+    this.chatObj.parentMessageId = msgObj?.id;
+    this.replyMessage.msgText = msgObj.messageText;
+    const file = msgObj.messageMedia;
+    const fileType =
+      file.endsWith('.pdf') ||
+      file.endsWith('.doc') ||
+      file.endsWith('.docx') ||
+      file.endsWith('.xls') ||
+      file.endsWith('.xlsx') ||
+      file.endsWith('.zip');
+    if (fileType) {
+      this.pdfName = msgObj.messageMedia;
+    } else {
+      this.viewUrl = msgObj.messageMedia;
+    }
   }
 
   editMsg(msgObj): void {

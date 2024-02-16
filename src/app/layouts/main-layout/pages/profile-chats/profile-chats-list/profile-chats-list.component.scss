@@ -93,6 +93,19 @@
     background-color: var(--box-1st-color);
   }
 
+  .replay-chat{
+    bottom: 12px;
+    left: 15px;
+    background: var(--box-1st-color);
+    border-radius: 16px;
+    padding: 5px;
+    // max-width: 70%;
+    // min-width: 40%;
+    width: 60%;
+    text-align: left;
+    padding: 5px;
+  }
+
   ::-webkit-scrollbar {
     width: 4px !important;
   }
