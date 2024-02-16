@@ -130,6 +130,7 @@ export class ProfileChatsListComponent
     });
     this.socketService.socket?.emit('online-users');
     this.socketService.socket?.on('typing', (data) => {
+      console.log('typingData', data)
       this.typingData = data;
     });
   }
@@ -688,9 +689,7 @@ export class ProfileChatsListComponent
     const data = {
       groupId: this.userChat?.groupId,
       roomId: this.userChat?.roomId,
-      profileId: this.userChat?.roomId
-        ? this.userChat.profileId
-        : this.profileId,
+      profileId: this.profileId,
       isTyping: isTyping,
     };
     this.socketService?.startTyping(data, (data: any) => { });
