@@ -63,7 +63,7 @@
             <h5 class="m-0">
               <a class="m-0">{{ userChat.groupName || userChat?.Username }}</a>
             </h5>
-            <ng-container >
+            <ng-container>
               <span class="mdtxt" *ngIf="!userChat?.groupId">{{
                 sharedService?.onlineUserList.includes(userChat?.profileId)
                   ? "online"
@@ -77,7 +77,10 @@
             </ng-container> -->
           </div>
         </div>
-        <div class="d-flex gap-3 align-items-center" *ngIf="userChat.isAccepted === 'Y'">
+        <div
+          class="d-flex gap-3 align-items-center"
+          *ngIf="userChat.isAccepted === 'Y'"
+        >
           <a
             class="nav-icon cursor"
             data-toggle="tooltip"
@@ -475,10 +478,18 @@
             />
           </div>
         </ng-container>
-        <ng-container *ngIf="typingData?.isTyping && userChat.roomId === typingData.roomId">
-          <span class="mdtxt d-flex position-absolute bottom-100" *ngIf="!userChat?.groupId">{{
-            typingData.Username + " is typing..."
-          }}</span>
+        <ng-container
+          *ngIf="
+            typingData?.isTyping &&
+            userChat.roomId === typingData.roomId &&
+            typingData.profileId !== profileId
+          "
+        >
+          <span
+            class="mdtxt d-flex position-absolute bottom-100"
+            *ngIf="!userChat?.groupId"
+            >{{ typingData.Username + " is typing..." }}</span
+          >
         </ng-container>
         <form class="py-3 pt-2 px-3 message-content">
           <div
@@ -573,7 +584,7 @@
                   (keydown)="delayedStartTypingChat()"
                   (keydown.enter)="uploadPostFileAndCreatePost()"
                   (keydown.shift.enter)="$event.stopPropagation()"
-                  />
+                />
               </div>
               <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
               <div class="btn-area">
@@ -582,8 +593,11 @@
                   (click)="uploadPostFileAndCreatePost()"
                   [disabled]="!chatObj.msgText && !selectedFile"
                 >
-                <fa-icon class="c-icon-color d-sm-none" [icon]="['fas', 'paper-plane']"></fa-icon>
-                <div class="d-none d-sm-flex">Send</div>
+                  <fa-icon
+                    class="c-icon-color d-sm-none"
+                    [icon]="['fas', 'paper-plane']"
+                  ></fa-icon>
+                  <div class="d-none d-sm-flex">Send</div>
                 </button>
               </div>
             </div>
@@ -1116,10 +1130,18 @@
             />
           </div>
         </ng-container>
-        <ng-container *ngIf="typingData?.isTyping && typingData.profileId !== profileId && userChat.groupId === typingData.groupId">
-          <span class="mdtxt d-flex position-absolute bottom-100" *ngIf="userChat?.groupId">{{
-           typingData.Username + " is typing..."
-          }}</span>
+        <ng-container
+          *ngIf="
+            typingData?.isTyping &&
+            typingData.profileId !== profileId &&
+            userChat.groupId === typingData.groupId
+          "
+        >
+          <span
+            class="mdtxt d-flex position-absolute bottom-100"
+            *ngIf="userChat?.groupId"
+            >{{ typingData.Username + " is typing..." }}</span
+          >
         </ng-container>
         <form class="py-3 pt-2 px-3 message-content">
           <div
@@ -1214,7 +1236,7 @@
                   (keydown)="delayedStartTypingChat()"
                   (keydown.enter)="uploadPostFileAndCreatePost()"
                   (keydown.shift.enter)="$event.stopPropagation()"
-                  />
+                />
               </div>
               <!-- [isAllowTagUser]="false" -->
               <div class="btn-area">
@@ -1223,10 +1245,11 @@
                   (click)="uploadPostFileAndCreatePost()"
                   [disabled]="!chatObj.msgText && !selectedFile"
                 >
-                <fa-icon class="c-icon-color d-sm-none" [icon]="['fas', 'paper-plane']"></fa-icon>
-                <div class="d-none d-sm-flex">
-                  Send
-                </div>
+                  <fa-icon
+                    class="c-icon-color d-sm-none"
+                    [icon]="['fas', 'paper-plane']"
+                  ></fa-icon>
+                  <div class="d-none d-sm-flex">Send</div>
                 </button>
               </div>
             </div>
