@@ -32,7 +32,8 @@ import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -130,7 +131,7 @@ export class ProfileChatsListComponent
     });
     this.socketService.socket?.emit('online-users');
     this.socketService.socket?.on('typing', (data) => {
-      console.log('typingData', data)
+      // console.log('typingData', data)
       this.typingData = data;
     });
   }
@@ -163,8 +164,7 @@ export class ProfileChatsListComponent
   }
 
   // scroller down
-  ngAfterViewChecked() {
-  }
+  ngAfterViewChecked() {}
 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
@@ -178,7 +178,7 @@ export class ProfileChatsListComponent
         profileId2: this.userChat?.Id || this.userChat?.profileId,
       },
       (data: any) => {
-        console.log(data)
+        console.log(data);
         this.userChat = { ...data?.room };
         this.newRoomCreated.emit(true);
       }
@@ -224,7 +224,8 @@ export class ProfileChatsListComponent
           if (this.messageList[index]) {
             this.messageList[index] = data;
           }
-        } this.resetData();
+        }
+        this.resetData();
       });
     } else {
       const message =
@@ -240,7 +241,6 @@ export class ProfileChatsListComponent
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
       };
-
 
       this.socketService.sendMessage(data, async (data: any) => {
         this.isFileUploadInProgress = false;
@@ -322,8 +322,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText != null
               ? this.encryptDecryptService?.decryptUsingAES256(
-                element?.messageText
-              )
+                  element?.messageText
+                )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -338,7 +338,7 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
@@ -433,7 +433,13 @@ export class ProfileChatsListComponent
 
   isPdf(media: string): boolean {
     this.pdfmsg = media?.split('/')[3]?.replaceAll('%', '-');
-    const fileType = media.endsWith('.pdf') || media.endsWith('.doc') || media.endsWith('.docx') || media.endsWith('.xls') || media.endsWith('.xlsx') || media.endsWith('.zip')
+    const fileType =
+      media.endsWith('.pdf') ||
+      media.endsWith('.doc') ||
+      media.endsWith('.docx') ||
+      media.endsWith('.xls') ||
+      media.endsWith('.xlsx') ||
+      media.endsWith('.zip');
     return media && fileType;
     // return media && media.endsWith('.pdf');
   }
@@ -464,7 +470,7 @@ export class ProfileChatsListComponent
 
   selectEmoji(emoji: any): void {
     this.chatObj.msgMedia = emoji;
-    this.sendMessage();
+    // this.sendMessage();
   }
 
   editMsg(msgObj): void {
@@ -581,8 +587,7 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
-    this.socketService?.startCall(data, (data: any) => {
-    });
+    this.socketService?.startCall(data, (data: any) => {});
     modalRef.result.then((res) => {
       if (res === 'missCalled') {
         this.chatObj.msgText = 'You have a missed call';
@@ -629,6 +634,8 @@ export class ProfileChatsListComponent
         if (messageText !== '<div></div>') {
           return messageText;
         }
+      } else if (imageGif) {
+        return content;
       }
     } else {
       return content;
@@ -692,7 +699,7 @@ export class ProfileChatsListComponent
       profileId: this.profileId,
       isTyping: isTyping,
     };
-    this.socketService?.startTyping(data, (data: any) => { });
+    this.socketService?.startTyping(data, (data: any) => {});
   }
 
   delayedStartTypingChat() {

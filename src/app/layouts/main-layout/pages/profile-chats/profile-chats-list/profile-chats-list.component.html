@@ -535,7 +535,7 @@
                     </span>
                   </label>
                 </div>
-                <div class="file-upload">
+                <!-- <div class="file-upload">
                   <div
                     ngbDropdown
                     placement="top-start"
@@ -574,7 +574,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
               <div class="chat-input-field position-relative w-100">
                 <app-tag-user-input
@@ -585,7 +585,8 @@
                   [isAllowTagUser]="false"
                   [isShowMetaPreview]="false"
                   [isCopyImagePreview]="false"
-                  [isShowEmojis]="false"
+                  [isShowEmojis]="true"
+                  [placement]="'top-start'"
                   (onDataChange)="onTagUserInputChangeEvent($event)"
                   (keypress)="startTypingChat(true)"
                   (keydown)="delayedStartTypingChat()"
@@ -598,8 +599,8 @@
                 <button
                   class="cmn-btn message px-2 px-sm-5 px-lg-6 lh-lg"
                   (click)="uploadPostFileAndCreatePost()"
-                  [disabled]="!chatObj.msgText && !selectedFile"
-                >
+                  >
+                  <!-- [disabled]="!chatObj.msgText && !selectedFile" -->
                   <fa-icon
                     class="c-icon-color d-sm-none"
                     [icon]="['fas', 'paper-plane']"
@@ -1195,7 +1196,7 @@
                     </span>
                   </label>
                 </div>
-                <div class="file-upload">
+                <!-- <div class="file-upload">
                   <div
                     ngbDropdown
                     placement="top-start"
@@ -1234,7 +1235,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
               <div class="group-input-field w-100 position-relative">
                 <app-tag-user-input
@@ -1244,9 +1245,10 @@
                   [isShowMetaLoader]="false"
                   [isShowMetaPreview]="false"
                   [isCopyImagePreview]="false"
-                  [isShowEmojis]="false"
+                  [isShowEmojis]="true"
                   (onDataChange)="onTagUserInputChangeEvent($event)"
                   [isCustomeSearch]="userChat?.groupId"
+                  [placement]="'top-start'"
                   (keypress)="startTypingChat(true)"
                   (keydown)="delayedStartTypingChat()"
                   (keydown.enter)="uploadPostFileAndCreatePost()"

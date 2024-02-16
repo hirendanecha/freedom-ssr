@@ -196,6 +196,7 @@
       bottom: -20px;
 
       .tag-input-div {
+        margin-left: 50px;
         background-color: var(--body-color);
         max-width: calc(100% - 5px) !important;
         width: 100% !important;
@@ -204,6 +205,12 @@
         overflow-y: auto !important;
         // height: 44px;
         padding: 9px;
+      }
+      .select-emaojies {
+        top: unset !important;
+        right: unset !important;
+        left: -7px;
+        bottom: 0px;
       }
     }
   }
