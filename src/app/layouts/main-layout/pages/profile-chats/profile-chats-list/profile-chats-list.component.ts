@@ -32,7 +32,8 @@ import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -45,6 +46,11 @@ export class ProfileChatsListComponent
     msgText: null,
     msgMedia: null,
     id: null,
+    parentMessageId: null,
+  };
+  replyMessage = {
+    msgText: null,
+    msgMedia: null,
   };
   isFileUploadInProgress: boolean = false;
   selectedFile: any;
@@ -130,7 +136,7 @@ export class ProfileChatsListComponent
     });
     this.socketService.socket?.emit('online-users');
     this.socketService.socket?.on('typing', (data) => {
-      console.log('typingData', data)
+      // console.log('typingData', data)
       this.typingData = data;
     });
   }
@@ -163,8 +169,7 @@ export class ProfileChatsListComponent
   }
 
   // scroller down
-  ngAfterViewChecked() {
-  }
+  ngAfterViewChecked() {}
 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
@@ -178,7 +183,7 @@ export class ProfileChatsListComponent
         profileId2: this.userChat?.Id || this.userChat?.profileId,
       },
       (data: any) => {
-        console.log(data)
+        console.log(data);
         this.userChat = { ...data?.room };
         this.newRoomCreated.emit(true);
       }
@@ -214,6 +219,7 @@ export class ProfileChatsListComponent
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
+        parentMessageId: this.userChat.parentMessageId || null,
       };
       this.socketService?.editMessage(data, (data: any) => {
         this.isFileUploadInProgress = false;
@@ -224,7 +230,8 @@ export class ProfileChatsListComponent
           if (this.messageList[index]) {
             this.messageList[index] = data;
           }
-        } this.resetData();
+        }
+        this.resetData();
       });
     } else {
       const message =
@@ -239,8 +246,8 @@ export class ProfileChatsListComponent
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
+        parentMessageId: this.chatObj?.parentMessageId || null,
       };
-
 
       this.socketService.sendMessage(data, async (data: any) => {
         this.isFileUploadInProgress = false;
@@ -290,12 +297,11 @@ export class ProfileChatsListComponent
         }
         if (data?.data.length > 0) {
           this.messageList = [...this.messageList, ...data.data];
-
           this.messageList.sort(
             (a, b) =>
-              new Date(a.createdDate).getTime() -
-              new Date(b.createdDate).getTime()
-          );
+            new Date(a.createdDate).getTime() -
+            new Date(b.createdDate).getTime()
+            );
         } else {
           this.hasMoreData = false;
         }
@@ -322,8 +328,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText != null
               ? this.encryptDecryptService?.decryptUsingAES256(
-                element?.messageText
-              )
+                  element?.messageText
+                )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -338,7 +344,7 @@ export class ProfileChatsListComponent
           }
         });
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
@@ -353,7 +359,7 @@ export class ProfileChatsListComponent
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
-    if (file.type.includes('application/pdf')) {
+    if (file.type.includes('application/')) {
       this.selectedFile = file;
       this.pdfName = file?.name;
       this.chatObj.msgText = null;
@@ -372,6 +378,12 @@ export class ProfileChatsListComponent
     this.pdfName = null;
     this.viewUrl = null;
     this.resetData();
+  }
+
+  removeReplay(): void {
+    this.replyMessage.msgText = null;
+    this.replyMessage.msgMedia = null;
+    this.chatObj.parentMessageId = null;
   }
 
   onTagUserInputChangeEvent(data: any): void {
@@ -413,6 +425,8 @@ export class ProfileChatsListComponent
 
   resetData(): void {
     this.chatObj['id'] = null;
+    this.chatObj.parentMessageId = null;
+    this.replyMessage.msgText = null;
     this.chatObj.msgMedia = null;
     this.chatObj.msgText = null;
     this.viewUrl = null;
@@ -433,7 +447,15 @@ export class ProfileChatsListComponent
 
   isPdf(media: string): boolean {
     this.pdfmsg = media?.split('/')[3]?.replaceAll('%', '-');
-    return media && media.endsWith('.pdf');
+    const fileType =
+      media.endsWith('.pdf') ||
+      media.endsWith('.doc') ||
+      media.endsWith('.docx') ||
+      media.endsWith('.xls') ||
+      media.endsWith('.xlsx') ||
+      media.endsWith('.zip');
+    return media && fileType;
+    // return media && media.endsWith('.pdf');
   }
 
   pdfView(pdfUrl) {
@@ -462,7 +484,25 @@ export class ProfileChatsListComponent
 
   selectEmoji(emoji: any): void {
     this.chatObj.msgMedia = emoji;
-    this.sendMessage();
+    // this.sendMessage();
+  }
+
+  replyMsg(msgObj): void {
+    this.chatObj.parentMessageId = msgObj?.id;
+    this.replyMessage.msgText = msgObj.messageText;
+    const file = msgObj.messageMedia;
+    const fileType =
+      file.endsWith('.pdf') ||
+      file.endsWith('.doc') ||
+      file.endsWith('.docx') ||
+      file.endsWith('.xls') ||
+      file.endsWith('.xlsx') ||
+      file.endsWith('.zip');
+    if (fileType) {
+      this.pdfName = msgObj.messageMedia;
+    } else {
+      this.viewUrl = msgObj.messageMedia;
+    }
   }
 
   editMsg(msgObj): void {
@@ -579,8 +619,7 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
-    this.socketService?.startCall(data, (data: any) => {
-    });
+    this.socketService?.startCall(data, (data: any) => {});
     modalRef.result.then((res) => {
       if (res === 'missCalled') {
         this.chatObj.msgText = 'You have a missed call';
@@ -627,6 +666,8 @@ export class ProfileChatsListComponent
         if (messageText !== '<div></div>') {
           return messageText;
         }
+      } else if (imageGif) {
+        return content;
       }
     } else {
       return content;
@@ -690,7 +731,7 @@ export class ProfileChatsListComponent
       profileId: this.profileId,
       isTyping: isTyping,
     };
-    this.socketService?.startTyping(data, (data: any) => { });
+    this.socketService?.startTyping(data, (data: any) => {});
   }
 
   delayedStartTypingChat() {

@@ -38,7 +38,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   @ViewChild('tagInputDiv', { static: false }) tagInputDiv: ElementRef;
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
-
+  @Input() placement: string = 'bottom-end';
   metaDataSubject: Subject<void> = new Subject<void>();
 
   userList = [];
