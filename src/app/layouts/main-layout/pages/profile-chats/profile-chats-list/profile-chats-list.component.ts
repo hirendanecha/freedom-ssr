@@ -462,6 +462,11 @@ export class ProfileChatsListComponent
     window.open(pdfUrl);
   }
 
+  isFile(media: string): boolean {
+    const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip'];
+    return FILE_EXTENSIONS.some(ext => media.endsWith(ext));
+  }
+
   onCancel(): void {
     if (this.userChat.roomId) {
       const data = {
