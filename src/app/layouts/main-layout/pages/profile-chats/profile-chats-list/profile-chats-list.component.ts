@@ -51,6 +51,8 @@ export class ProfileChatsListComponent
   replyMessage = {
     msgText: null,
     msgMedia: null,
+    createdDate: null,
+    Username: null,
   };
   isFileUploadInProgress: boolean = false;
   selectedFile: any;
@@ -238,7 +240,7 @@ export class ProfileChatsListComponent
           if (this.messageList[index]) {
             this.messageList[index] = data;
             const array = new MessageDatePipe().transform(this.messageList);
-            console.log(array);
+            // console.log(array);
             this.filteredMessageList = array;
             this.resetData();
           }
@@ -279,7 +281,7 @@ export class ProfileChatsListComponent
         }
         this.messageList.push(data);
         const array = new MessageDatePipe().transform(this.messageList);
-        console.log(array);
+        // console.log(array);
         this.filteredMessageList = array;
         this.resetData();
       });
@@ -356,7 +358,7 @@ export class ProfileChatsListComponent
         });
 
         const array = new MessageDatePipe().transform(this.messageList);
-        console.log(array);
+        // console.log(array);
         this.filteredMessageList = array;
 
       },
@@ -399,6 +401,8 @@ export class ProfileChatsListComponent
   removeReplay(): void {
     this.replyMessage.msgText = null;
     this.replyMessage.msgMedia = null;
+    this.replyMessage.Username = null;
+    this.replyMessage.createdDate = null;
     this.chatObj.parentMessageId = null;
   }
 
@@ -443,6 +447,8 @@ export class ProfileChatsListComponent
     this.chatObj['id'] = null;
     this.chatObj.parentMessageId = null;
     this.replyMessage.msgText = null;
+    this.replyMessage.Username = null;
+    this.replyMessage.createdDate = null;
     this.chatObj.msgMedia = null;
     this.chatObj.msgText = null;
     this.viewUrl = null;
@@ -507,18 +513,21 @@ export class ProfileChatsListComponent
     this.chatObj.msgMedia = emoji;
     // this.sendMessage();
   }
-
+  
   replyMsg(msgObj): void {
+    console.log(msgObj);
     this.chatObj.parentMessageId = msgObj?.id;
     this.replyMessage.msgText = msgObj.messageText;
+    this.replyMessage.createdDate = msgObj.createdDate;
+    this.replyMessage.Username = msgObj.Username;
     const file = msgObj.messageMedia;
     const fileType =
-      file.endsWith('.pdf') ||
-      file.endsWith('.doc') ||
-      file.endsWith('.docx') ||
-      file.endsWith('.xls') ||
-      file.endsWith('.xlsx') ||
-      file.endsWith('.zip');
+    file.endsWith('.pdf') ||
+    file.endsWith('.doc') ||
+    file.endsWith('.docx') ||
+    file.endsWith('.xls') ||
+    file.endsWith('.xlsx') ||
+    file.endsWith('.zip');
     if (fileType) {
       this.pdfName = msgObj.messageMedia;
     } else {

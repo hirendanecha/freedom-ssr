@@ -10,6 +10,7 @@ import { SocketService } from '../../services/socket.service';
 import { PostService } from '../../services/post.service';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { SharedService } from '../../services/shared.service';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-group-modal',
@@ -37,7 +38,7 @@ export class EditGroupModalComponent implements OnInit {
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
   isOpenUserMenu = false;
-
+  chanageGroupNameFormControl = new FormControl('', [Validators.required, Validators.pattern(/^\S.*\S$/)]);
   constructor(
     public activateModal: NgbActiveModal,
     private customerService: CustomerService,
@@ -106,6 +107,9 @@ export class EditGroupModalComponent implements OnInit {
   }
 
   upload() {
+    if (this.chanageGroupNameFormControl.invalid) {
+      return;
+    }
     if (this.profileImg.file) {
       this.postService.uploadFile(this.profileImg.file).subscribe({
         next: (res: any) => {

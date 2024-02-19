@@ -31,7 +31,7 @@ export class MessageDatePipe implements PipeTransform {
         groupedMessages[groupedMessages.length - 1].messages.push(message);
       }
     });
-    console.log(groupedMessages);
+    // console.log(groupedMessages);
     return groupedMessages;
   }
 }
