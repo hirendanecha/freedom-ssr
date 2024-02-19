@@ -28,8 +28,14 @@
             <div ngbDropdownMenu class="dropdown-menu">
               <div class="dropdown-preferences">
                 <div class="d-flex flex-column">
-                  <div class="c-pointer d-flex align-items-baseline" (click)="createNewGroup()">
-                    <fa-icon [icon]="['fas', 'users']" class="font-20-px me-2"/>
+                  <div
+                    class="c-pointer d-flex align-items-baseline"
+                    (click)="createNewGroup()"
+                  >
+                    <fa-icon
+                      [icon]="['fas', 'users']"
+                      class="font-20-px me-2"
+                    />
                     <h6 class="d-flex">New Group Chat</h6>
                   </div>
                   <div class="mt-6">
@@ -81,7 +87,7 @@
                       </div>
                     </div>
                   </div>
-                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -301,7 +307,11 @@
               <div class="d-flex align-items-center">
                 <span
                   class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
-                  *ngIf="item?.unReadMessage > 0 && (selectedChatUser !== item.roomId && selectedChatUser !== item.groupId)"
+                  *ngIf="
+                    item?.unReadMessage > 0 &&
+                    (selectedChatUser !== item.roomId ||
+                      selectedChatUser !== item.groupId)
+                  "
                   >{{ item?.unReadMessage }}</span
                 >
                 <span class="font-12-px">
@@ -311,16 +321,9 @@
             </div>
           </div>
           <div class="btn-group d-flex options ms-1">
-            <div
-              ngbDropdown
-              #editPopup="ngbDropdown"
-              class="d-inline-block"
-            >
+            <div ngbDropdown #editPopup="ngbDropdown" class="d-inline-block">
               <button class="dropdown-btn" ngbDropdownToggle>
-                <fa-icon
-                  [icon]="['fas', 'ellipsis-v']"
-                  class="font-20-px"
-                />
+                <fa-icon [icon]="['fas', 'ellipsis-v']" class="font-20-px" />
               </button>
               <div
                 ngbDropdownMenu
@@ -329,10 +332,18 @@
               >
                 <button ngbDropdownItem (click)="deleteOrLeaveChat(item)">
                   <a class="droplist d-flex align-items-center gap-2">
-                    <fa-icon [icon]="item?.groupId ? ['fas', 'right-from-bracket'] : ['fas', 'trash-can']" />
-                    <span class="data-text-color">{{ item?.groupId ? 'Leave' : 'Delete' }}</span>
+                    <fa-icon
+                      [icon]="
+                        item?.groupId
+                          ? ['fas', 'right-from-bracket']
+                          : ['fas', 'trash-can']
+                      "
+                    />
+                    <span class="data-text-color">{{
+                      item?.groupId ? "Leave" : "Delete"
+                    }}</span>
                   </a>
-                </button>                
+                </button>
               </div>
             </div>
           </div>
