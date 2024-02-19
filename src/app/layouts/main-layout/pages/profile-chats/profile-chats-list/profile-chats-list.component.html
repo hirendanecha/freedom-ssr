@@ -206,7 +206,7 @@
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
             *ngFor="let msg of filteredMessageList"
           >
-            <span class="d-flex w-100 justify-content-center">
+            <span class="d-flex w-100 justify-content-center custom-border">
               {{ msg?.date }}</span
             >
             <ng-container *ngFor="let message of msg?.messages">
@@ -239,7 +239,7 @@
                         <button ngbDropdownItem (click)="replyMsg(message)">
                           <a class="droplist d-flex align-items-center gap-2">
                             <fa-icon [icon]="['fas', 'reply']" />
-                            <span class="data-text-color">Replay</span>
+                            <span class="data-text-color">Reply</span>
                           </a>
                         </button>
                       </div>
@@ -419,7 +419,7 @@
                           <button ngbDropdownItem (click)="replyMsg(message)">
                             <a class="droplist d-flex align-items-center gap-2">
                               <fa-icon [icon]="['fas', 'reply']" />
-                              <span class="data-text-color">Replay</span>
+                              <span class="data-text-color">Reply</span>
                             </a>
                           </button>
                           <button
@@ -513,7 +513,7 @@
                         <button ngbDropdownItem (click)="replyMsg(message)">
                           <a class="droplist d-flex align-items-center gap-2">
                             <fa-icon [icon]="['fas', 'reply']" />
-                            <span class="data-text-color">Replay</span>
+                            <span class="data-text-color">Reply</span>
                           </a>
                         </button>
                         <button
@@ -691,19 +691,24 @@
         <ng-container *ngIf="replyMessage?.msgText">
           <div class="position-absolute replay-chat">
             <fa-icon class="float-end" [icon]="['fas', 'reply']" />
-            <p
-              *ngIf="replyMessage.msgText !== null"
-              class="m-0"
-              [innerHTML]="
-                encryptDecryptService.decryptUsingAES256(replyMessage.msgText)
-              "
-            ></p>
+            <div class="replay-message-box">
+              <p
+                *ngIf="replyMessage.msgText !== null"
+                class="m-0"
+                [innerHTML]="
+                  encryptDecryptService.decryptUsingAES256(replyMessage.msgText)
+                "
+              ></p>
+            </div>
             <fa-icon
               [icon]="['fas', 'xmark']"
               class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
               role="button"
               (click)="removeReplay()"
             />
+            <div class="d-flex">
+              <span class="font-12-px replay-border">{{replyMessage.Username}}, {{replyMessage.createdDate | date : "dd-MM-yyyy"}}</span>
+            </div>
           </div>
         </ng-container>
         <!-- <ng-container *ngIf="replyMessage?.msgText">
@@ -906,7 +911,7 @@
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
             *ngFor="let msg of filteredMessageList"
           >
-            <span class="d-flex w-100 justify-content-center">
+            <span class="d-flex w-100 justify-content-center custom-border">
               {{ msg?.date }}</span
             >
             <ng-container *ngFor="let message of msg.messages">
@@ -945,7 +950,7 @@
                         <button ngbDropdownItem (click)="replyMsg(message)">
                           <a class="droplist d-flex align-items-center gap-2">
                             <fa-icon [icon]="['fas', 'reply']" />
-                            <span class="data-text-color">Replay</span>
+                            <span class="data-text-color">Reply</span>
                           </a>
                         </button>
                       </div>
@@ -1130,7 +1135,7 @@
                           <button ngbDropdownItem (click)="replyMsg(message)">
                             <a class="droplist d-flex align-items-center gap-2">
                               <fa-icon [icon]="['fas', 'reply']" />
-                              <span class="data-text-color">Replay</span>
+                              <span class="data-text-color">Reply</span>
                             </a>
                           </button>
                           <button
@@ -1224,7 +1229,7 @@
                         <button ngbDropdownItem (click)="replyMsg(message)">
                           <a class="droplist d-flex align-items-center gap-2">
                             <fa-icon [icon]="['fas', 'reply']" />
-                            <span class="data-text-color">Replay</span>
+                            <span class="data-text-color">Reply</span>
                           </a>
                         </button>
                         <button
@@ -1564,19 +1569,24 @@
         <ng-container *ngIf="replyMessage?.msgText">
           <div class="position-absolute replay-chat">
             <fa-icon class="float-end" [icon]="['fas', 'reply']" />
-            <p
-              *ngIf="replyMessage.msgText !== null"
-              class="m-0"
-              [innerHTML]="
-                encryptDecryptService.decryptUsingAES256(replyMessage.msgText)
-              "
-            ></p>
+            <div class="replay-message-box">
+              <p
+                *ngIf="replyMessage.msgText !== null"
+                class="m-0"
+                [innerHTML]="
+                  encryptDecryptService.decryptUsingAES256(replyMessage.msgText)
+                "
+              ></p>
+            </div>
             <fa-icon
               [icon]="['fas', 'xmark']"
               class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
               role="button"
               (click)="removeReplay()"
             />
+            <div class="d-flex">
+              <span class="font-12-px replay-border">{{replyMessage.Username}}, {{replyMessage.createdDate | date : "dd-MM-yyyy"}}</span>
+            </div>
           </div>
         </ng-container>
         <form class="py-3 pt-2 px-3 message-content">
