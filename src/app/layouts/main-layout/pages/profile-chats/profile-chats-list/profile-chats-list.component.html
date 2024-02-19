@@ -200,7 +200,7 @@
               [icon]="['fas', 'refresh']"
               class="font-24-px me-2"
             ></fa-icon>
-            Loadmore
+            <span>Loadmore</span>
           </div>
           <ul
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
@@ -844,7 +844,7 @@
               [icon]="['fas', 'refresh']"
               class="font-24-px me-2"
             ></fa-icon>
-            Loadmore
+            <span>Loadmore</span>
           </div>
           <ul
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
@@ -1450,6 +1450,24 @@
             *ngIf="userChat?.groupId"
             >{{ typingData.Username + " is typing..." }}</span
           >
+        </ng-container>
+        <ng-container *ngIf="replyMessage?.msgText">
+          <div class="position-absolute replay-chat">
+            <fa-icon class="float-end" [icon]="['fas', 'reply']" />
+            <p
+              *ngIf="replyMessage.msgText !== null"
+              class="m-0"
+              [innerHTML]="
+                encryptDecryptService.decryptUsingAES256(replyMessage.msgText)
+              "
+            ></p>
+            <fa-icon
+              [icon]="['fas', 'xmark']"
+              class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
+              role="button"
+              (click)="removeReplay()"
+            />
+          </div>
         </ng-container>
         <form class="py-3 pt-2 px-3 message-content">
           <div
