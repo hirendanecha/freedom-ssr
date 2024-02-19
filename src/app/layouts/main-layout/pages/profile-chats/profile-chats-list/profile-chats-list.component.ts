@@ -118,7 +118,7 @@ export class ProfileChatsListComponent
         let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
         if (data?.isDeleted) {
           this.messageList = this.messageList.filter(
-            (obj) => obj?.id !== data?.id
+            (obj) => obj?.id !== data?.id && obj?.parentMessageId !== data.id
           );
           const array = new MessageDatePipe().transform(this.messageList);
           this.filteredMessageList = array;
@@ -546,7 +546,7 @@ export class ProfileChatsListComponent
       (data: any) => {
         this.newRoomCreated.emit(true);
         this.messageList = this.messageList.filter(
-          (obj) => obj?.id !== data?.id
+          (obj) => obj?.id !== data?.id && obj?.parentMessageId !== data.id
         );
         const array = new MessageDatePipe().transform(this.messageList);
         this.filteredMessageList = array;
