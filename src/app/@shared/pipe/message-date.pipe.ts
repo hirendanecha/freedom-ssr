@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import * as moment from 'moment';
 
 @Pipe({
   name: 'messageDate'
@@ -20,7 +21,8 @@ export class MessageDatePipe implements PipeTransform {
       } else if (messageDate.toDateString() === yesterday.toDateString()) {
         groupHeader = 'Yesterday';
       } else {
-        groupHeader = messageDate.toLocaleDateString(); // or any other desired date format
+        const date = moment.utc(messageDate).local().toLocaleString();
+        groupHeader = moment(date).format('DD-MMM-YYYY');
       }
 
       if (index === 0 || messageDate.toDateString() !== new Date(messages[index - 1].createdDate).toDateString()) {
@@ -29,6 +31,7 @@ export class MessageDatePipe implements PipeTransform {
         groupedMessages[groupedMessages.length - 1].messages.push(message);
       }
     });
+    console.log(groupedMessages);
     return groupedMessages;
   }
 }

@@ -25,6 +25,7 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
 import { Howl } from 'howler';
 import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-modal/create-group-modal.component';
 import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal/edit-group-modal.component';
+import { MessageDatePipe } from 'src/app/@shared/pipe/message-date.pipe';
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -32,8 +33,7 @@ import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
-{
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -57,6 +57,7 @@ export class ProfileChatsListComponent
 
   groupData: any = [];
   messageList: any = [];
+  filteredMessageList: any = [];
   metaURL: any = [];
   metaData: any = {};
   ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -119,11 +120,18 @@ export class ProfileChatsListComponent
           this.messageList = this.messageList.filter(
             (obj) => obj?.id !== data?.id
           );
+          const array = new MessageDatePipe().transform(this.messageList);
+          this.filteredMessageList = array;
         } else if (this.messageList[index]) {
           this.messageList[index] = data;
+          const array = new MessageDatePipe().transform(this.messageList);
+          this.filteredMessageList = array;
         } else {
+          console.log(this.messageList);
           this.scrollToBottom();
           this.messageList.push(data);
+          const array = new MessageDatePipe().transform(this.messageList);
+          this.filteredMessageList = array;
         }
       }
     });
@@ -169,7 +177,7 @@ export class ProfileChatsListComponent
   }
 
   // scroller down
-  ngAfterViewChecked() {}
+  ngAfterViewChecked() { }
 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
@@ -229,6 +237,10 @@ export class ProfileChatsListComponent
           );
           if (this.messageList[index]) {
             this.messageList[index] = data;
+            const array = new MessageDatePipe().transform(this.messageList);
+            console.log(array);
+            this.filteredMessageList = array;
+            this.resetData();
           }
         }
         this.resetData();
@@ -264,12 +276,11 @@ export class ProfileChatsListComponent
         );
         if (matches?.[0]) {
           data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
-        } else {
-          this.messageList.push(data);
-          this.resetData();
-          return data;
         }
         this.messageList.push(data);
+        const array = new MessageDatePipe().transform(this.messageList);
+        console.log(array);
+        this.filteredMessageList = array;
         this.resetData();
       });
     }
@@ -299,9 +310,9 @@ export class ProfileChatsListComponent
           this.messageList = [...this.messageList, ...data.data];
           this.messageList.sort(
             (a, b) =>
-            new Date(a.createdDate).getTime() -
-            new Date(b.createdDate).getTime()
-            );
+              new Date(a.createdDate).getTime() -
+              new Date(b.createdDate).getTime()
+          );
         } else {
           this.hasMoreData = false;
         }
@@ -328,8 +339,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText != null
               ? this.encryptDecryptService?.decryptUsingAES256(
-                  element?.messageText
-                )
+                element?.messageText
+              )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -343,8 +354,13 @@ export class ProfileChatsListComponent
             return element;
           }
         });
+
+        const array = new MessageDatePipe().transform(this.messageList);
+        console.log(array);
+        this.filteredMessageList = array;
+
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
@@ -532,6 +548,8 @@ export class ProfileChatsListComponent
         this.messageList = this.messageList.filter(
           (obj) => obj?.id !== data?.id
         );
+        const array = new MessageDatePipe().transform(this.messageList);
+        this.filteredMessageList = array;
       }
     );
   }
@@ -624,7 +642,7 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
-    this.socketService?.startCall(data, (data: any) => {});
+    this.socketService?.startCall(data, (data: any) => { });
     modalRef.result.then((res) => {
       if (res === 'missCalled') {
         this.chatObj.msgText = 'You have a missed call';
@@ -736,7 +754,7 @@ export class ProfileChatsListComponent
       profileId: this.profileId,
       isTyping: isTyping,
     };
-    this.socketService?.startTyping(data, (data: any) => {});
+    this.socketService?.startTyping(data, (data: any) => { });
   }
 
   delayedStartTypingChat() {
