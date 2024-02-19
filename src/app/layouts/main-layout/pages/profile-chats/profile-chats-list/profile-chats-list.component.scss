@@ -47,6 +47,17 @@
       border: 1px solid var(--box-1st-color);
       border-radius: 7px;
     }
+
+    .parent-replay{
+      border: 1px solid var(--box-1st-color);
+      border-radius: 7px;
+      padding: 5px;
+    }
+    .parent-replay-alt{
+      border: 1px solid var(--para-6th-color);
+      border-radius: 7px;
+      padding: 5px;
+    }
   }
 
   .header-image {
@@ -160,6 +171,7 @@
     .chat-area {
       box-shadow: none;
       .main-chat-box {
+        max-height: fit-content;
         li img {
           max-width: unset;
           max-height: unset;
