@@ -9,6 +9,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from '../../services/socket.service';
 import { SoundControlService } from '../../services/sound-control.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-outgoing-call-modal',
@@ -30,7 +31,8 @@ export class OutGoingCallModalComponent
   constructor(
     public activateModal: NgbActiveModal,
     private socketService: SocketService,
-    private soundControlService: SoundControlService
+    private soundControlService: SoundControlService,
+    private router: Router,
   ) {}
 
   ngAfterViewInit(): void {
@@ -69,7 +71,10 @@ export class OutGoingCallModalComponent
   pickUpCall(): void {
     this.sound?.stop();
     clearTimeout(this.hangUpTimeout);
-    window.open(this.calldata.link, '_blank');
+    // this.router.navigate([`/appointment-call/${this.calldata.link}`]);
+    const callId = this.calldata.link.replace('https://facetime.tube/', '');
+    this.router.navigate([`/freedom-call/${callId}`]);
+    // window.open(this.calldata.link, '_blank');    
     this.activateModal.close('success');
   }
 

@@ -110,7 +110,7 @@ export class ProfileChatsListComponent
     }
     this.socketService.socket?.on('new-message', (data) => {
       this.newRoomCreated.emit(true);
-      this.selectedChat.emit(data.roomId || data.groupId);
+      this.selectedChat.emit(data?.roomId || data?.groupId);
       this.notificationNavigation();
       if (
         data?.sentBy !== this.profileId &&
@@ -626,9 +626,9 @@ export class ProfileChatsListComponent
       size: 'sm',
       backdrop: 'static',
     });
-    const originUrl =
-      'https://facetime.tube/' + `callId-${new Date().getTime()}`;
-
+    // const originUrl =
+    //   'https://facetime.tube/' + `callId-${new Date().getTime()}`;
+    const originUrl =`callId-${new Date().getTime()}`;
     const data = {
       ProfilePicName:
         this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
@@ -648,7 +648,7 @@ export class ProfileChatsListComponent
       loop: true,
     });
     modalRef.componentInstance.calldata = data;
-    modalRef.componentInstance.sound = callSound;
+    // modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
     this.socketService?.startCall(data, (data: any) => { });
