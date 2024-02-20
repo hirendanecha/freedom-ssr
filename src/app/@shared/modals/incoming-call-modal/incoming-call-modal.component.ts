@@ -12,6 +12,7 @@ import { SocketService } from '../../services/socket.service';
 import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
 import { SoundControlService } from '../../services/sound-control.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-incoming-call-modal',
@@ -35,7 +36,8 @@ export class IncomingcallModalComponent
     public activateModal: NgbActiveModal,
     private socketService: SocketService,
     public encryptDecryptService: EncryptDecryptService,
-    private soundControlService: SoundControlService
+    private soundControlService: SoundControlService,
+    private router: Router,
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -78,7 +80,8 @@ export class IncomingcallModalComponent
     clearTimeout(this.hangUpTimeout);
     if (!this.currentURL.includes(this.calldata?.link)) {
       this.currentURL.push(this.calldata.link);
-      window.open(this.calldata.link, '_blank');
+      // window.open(this.calldata.link, '_blank');
+      this.router.navigate([`appointment-call/${this.calldata.link}`]);  
       this.sound?.stop();
     }
     this.activateModal.close('success');

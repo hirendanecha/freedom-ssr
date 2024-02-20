@@ -626,9 +626,9 @@ export class ProfileChatsListComponent
       size: 'sm',
       backdrop: 'static',
     });
-    const originUrl =
-      'https://facetime.tube/' + `callId-${new Date().getTime()}`;
-
+    // const originUrl =
+    //   'https://facetime.tube/' + `callId-${new Date().getTime()}`;
+    const originUrl =`callId-${new Date().getTime()}`;
     const data = {
       ProfilePicName:
         this.groupData?.ProfileImage || this.userChat?.ProfilePicName,

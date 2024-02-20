@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './layouts/auth-layout/pages/landing-page/landing-page.component';
+import { AppointmentCallComponent } from './@shared/components/appointment-call/appointment-call.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
     path: 'logout',
     component: LandingPageComponent,
     pathMatch: 'full',
+  },
+  {
+    path: 'appointment-call/:callId',
+    component: AppointmentCallComponent,
   },
   {
     path: '',
