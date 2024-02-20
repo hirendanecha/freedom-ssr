@@ -124,7 +124,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             if (!this.currentURL.includes(data?.link)) {
               this.currentURL.push(data.link)
               this.modalService.dismissAll();
-              this.router.navigate([`appointment-call/${data.link}`]);
+              this.router.navigate([`/freedom-call/${data.link}`]);
               // window.open(`appointment-call/${data.link}`, '_blank');
               // window?.open(data?.link, '_blank');
             }

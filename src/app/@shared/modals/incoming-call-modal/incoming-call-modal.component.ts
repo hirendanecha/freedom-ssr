@@ -81,7 +81,11 @@ export class IncomingcallModalComponent
     if (!this.currentURL.includes(this.calldata?.link)) {
       this.currentURL.push(this.calldata.link);
       // window.open(this.calldata.link, '_blank');
-      this.router.navigate([`appointment-call/${this.calldata.link}`]);  
+
+      console.log('incomin',this.calldata.link);
+      // this.router.navigate([`/appointment-call/${this.calldata.link}`]);  
+      const callId = this.calldata.link.replace('https://facetime.tube/', '');
+      this.router.navigate([`/freedom-call/${callId}`]);
       this.sound?.stop();
     }
     this.activateModal.close('success');

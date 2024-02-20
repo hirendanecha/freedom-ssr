@@ -15,7 +15,7 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'appointment-call/:callId',
+    path: 'freedom-call/:callId',
     component: AppointmentCallComponent,
   },
   {
