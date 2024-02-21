@@ -586,11 +586,10 @@ export class ProfileChatsListComponent
                   ? metatitles?.[0]
                   : metatitles;
 
-                const metaurls = res?.meta?.url || url;
-                const metaursl = Array.isArray(metaurls)
-                  ? metaurls?.[0]
-                  : metaurls;
-
+                  // const metaurls = res?.meta?.url || url;
+                  // const metaursl = Array.isArray(metaurls) ? metaurls?.[0] : metaurls;
+                  
+                const metaursl = Array.isArray(url) ? url?.[0] : url;
                 this.metaData = {
                   title: metatitle,
                   metadescription: res?.meta?.description,
