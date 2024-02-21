@@ -40,7 +40,7 @@
                   alt="logo"
                   onerror="this.onerror=null;"
                 />
-              </div>              
+              </div>
               <div
                 class="icon-area d-center position-relative ms-7"
                 (click)="openNotificationsMobileModal()"
@@ -97,7 +97,7 @@
                     [alt]="user.Username"
                     onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                   />
-                  <span>{{ ((user.Username).split(" ")).join("")   }}</span>
+                  <span>{{ user.Username.split(" ").join("") }}</span>
                 </div>
               </ng-container>
             </div>
@@ -161,18 +161,22 @@
         class="right-area d-lg-flex d-none justify-content-end align-items-center gap-6 cus-z p-0"
         *ngIf="tokenService.getCredentials()"
       >
-      <div class="single-item">
-        <div
-          class="icon-area d-center position-relative"
-          [routerLink]="['/profile-chats']"
-        >
-          <!-- <span
+        <div class="single-item">
+          <div class="icon-area d-center position-relative">
+            <!-- [routerLink]="['/profile-chats']" -->
+            <a
+              target="_blank"
+              routerLinkActive="active"
+              [routerLink]="['/profile-chats']"
+            >
+              <fa-icon [icon]="['fas', 'envelope']" class="font-20-px" />
+            </a>
+            <!-- <span
             *ngIf="sharedService.isNotify"
             class="abs-area position-absolute d-center smtxt"
           ></span> -->
-          <fa-icon [icon]="['fas', 'envelope']" class="font-20-px" />
+          </div>
         </div>
-      </div>      
 
         <div class="single-item">
           <div
