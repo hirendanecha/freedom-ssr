@@ -66,7 +66,13 @@ export class OutGoingCallModalComponent
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.socketService.socket?.on('notification', (data: any) => {
+      if (data?.actionType === 'SC') {
+        this.sound?.stop();
+      }
+    })
+  }
 
   pickUpCall(): void {
     this.sound?.stop();

@@ -11,6 +11,7 @@ import { PostService } from '../../services/post.service';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { SharedService } from '../../services/shared.service';
 import { FormControl, Validators } from '@angular/forms';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-edit-group-modal',
@@ -38,7 +39,7 @@ export class EditGroupModalComponent implements OnInit {
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
   isOpenUserMenu = false;
-  chanageGroupNameFormControl = new FormControl('', [Validators.required, Validators.pattern(/^\S.*\S$/)]);
+  chanageGroupNameFormControl = new FormControl('', [Validators.pattern(/^\S.*\S$/)]);
   constructor(
     public activateModal: NgbActiveModal,
     private customerService: CustomerService,
@@ -46,7 +47,8 @@ export class EditGroupModalComponent implements OnInit {
     private socketService: SocketService,
     private modalService: NgbModal,
     private router: Router,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private toastService: ToastService
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -107,20 +109,21 @@ export class EditGroupModalComponent implements OnInit {
   }
 
   upload() {
-    if (this.chanageGroupNameFormControl.invalid) {
-      return;
-    }
-    if (this.profileImg.file) {
-      this.postService.uploadFile(this.profileImg.file).subscribe({
-        next: (res: any) => {
-          if (res?.body?.url) {
-            this.profileImg.url = res?.body?.url;
-            this.editGroup();
-          }
-        },
-      });
+    if (this.chanageGroupNameFormControl.valid) {
+      if (this.profileImg.file) {
+        this.postService.uploadFile(this.profileImg.file).subscribe({
+          next: (res: any) => {
+            if (res?.body?.url) {
+              this.profileImg.url = res?.body?.url;
+              this.editGroup();
+            }
+          },
+        });
+      } else {
+        this.editGroup();
+      }
     } else {
-      this.editGroup();
+      this.toastService.danger('Something went wrong please try again!');
     }
   }
 
