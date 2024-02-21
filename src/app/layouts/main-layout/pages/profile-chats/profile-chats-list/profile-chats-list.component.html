@@ -211,7 +211,7 @@
             >
             <ng-container *ngFor="let message of msg?.messages">
               <span
-                class="font-12-px data-text-color"
+                class="font-12-px data-text-color ms-3"
                 *ngIf="
                   message?.sentBy !== this.profileId && message?.createdDate
                 "
@@ -394,7 +394,7 @@
                 class="me d-flex flex-column gap-1"
                 *ngIf="message?.sentBy === this.profileId"
               >
-                <span class="font-12-px data-text-color">{{
+                <span class="font-12-px data-text-color me-3">{{
                   displayLocalTime(message?.createdDate)
                 }}</span>
                 <ng-container *ngIf="message?.messageMedia">
@@ -923,10 +923,7 @@
                   message?.Username
                 "
               >
-                <span class="font-12-px">{{ message?.Username }},</span>
-                <span class="font-12-px data-text-color">{{
-                  displayLocalTime(message?.createdDate)
-                }}</span>
+                <span class="font-12-px data-text-color ms-3">{{ message?.Username }}, {{displayLocalTime(message?.createdDate)}}</span>
               </div>
               <li class="you" *ngIf="message?.sentBy !== this.profileId">
                 <div class="d-flex drop-options">
@@ -1109,7 +1106,7 @@
                 *ngIf="message?.sentBy === this.profileId"
               >
                 <span
-                  class="font-12-px data-text-color"
+                  class="font-12-px data-text-color me-3"
                   *ngIf="message?.createdDate"
                   >{{ displayLocalTime(message?.createdDate) }}</span
                 >
