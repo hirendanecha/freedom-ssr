@@ -9,7 +9,9 @@
     // line-break: anywhere;
     text-align: start;
     max-width: 541px;
+    width: calc(100% - 60px);
     overflow: hidden;
+    overflow-wrap: anywhere;
 
     @media (max-width: 767px) {
       max-width: 395px;
@@ -46,6 +48,33 @@
       max-height: 300px;
     }
   }
+  .select-emaojies {
+    position: absolute;
+    right: 0;
+    top: 5px;
+
+    @media (max-width: 575px) {
+      right: 52px;
+    }
+
+    .dropdown-toggle {
+      &::after {
+        display: none;
+      }
+    }
+    .emoji-select {
+      max-width: 60px;
+      min-width: 60px;
+    }
+    .emojiModelStyle {
+      width: 282px;
+      // height: 225px;
+
+      .emoji-style {
+        width: 70px;
+      }
+    }
+  }
 }
 
 ::ng-deep {
@@ -65,7 +94,8 @@
       font-size: 16px !important;
       line-height: unset !important;
       color: var(--para-2nd-color) !important;
-      font-weight: 500 !important;
+      font-weight: 400 !important;
+      overflow-wrap: anywhere;
     }
     // br {
     //   display: none;
@@ -86,8 +116,8 @@
     }
   }
 
-  .tag-image-preview{
-    img{
+  .tag-image-preview {
+    img {
       display: none !important;
     }
   }

@@ -294,7 +294,6 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       IsActive: 'N',
       ProfilePicName: this.profilePic,
     };
-    console.log(profile);
 
     this.customerService.createProfile(profile).subscribe({
       next: (data: any) => {

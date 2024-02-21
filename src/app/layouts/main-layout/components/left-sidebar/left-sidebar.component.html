@@ -73,7 +73,7 @@
 
       <li class="ms-1">
         <a
-          class="d-flex gap-4"
+          class="d-flex gap-4 position-relative"
           routerLink="/notifications"
           routerLinkActive="active"
           (click)="notificationNavigation()"
@@ -95,6 +95,16 @@
         >
           <fa-icon [icon]="['fas', 'gear']" class="font-20-px" />
           <span>View Profile</span>
+        </a>
+      </li>
+      <li class="ms-1">
+        <a
+          class="d-flex gap-4"
+          [routerLink]="'/profile-chats'"
+          routerLinkActive="active"
+        >
+          <fa-icon [icon]="['fas', 'envelope']" class="font-20-px" />
+          <span>Messaging</span>
         </a>
       </li>
       <li>

@@ -4,6 +4,7 @@ import { NgbActiveModal, NgbActiveOffcanvas, NgbModal } from '@ng-bootstrap/ng-b
 import { CookieService } from 'ngx-cookie-service';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
+import { SocketService } from 'src/app/@shared/services/socket.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 import { ForgotPasswordComponent } from 'src/app/layouts/auth-layout/pages/forgot-password/forgot-password.component';
@@ -27,6 +28,7 @@ export class ProfileMenusModalComponent {
     private router: Router,
     private customerService: CustomerService,
     private cookieService: CookieService,
+    private socketService: SocketService
   ) {
     this.userId = +localStorage.getItem('user_id');
     this.profileId = +localStorage.getItem('profileId');
@@ -60,12 +62,21 @@ export class ProfileMenusModalComponent {
 
   logout(): void {
     // this.isCollapsed = true;
+    this.socketService?.socket?.emit('offline', (data) => { return })
+    this.socketService?.socket?.on('get-users', (data) => {
+      data.map(ele => {
+        if (!this.sharedService.onlineUserList.includes(ele.userId)) {
+          this.sharedService.onlineUserList.push(ele.userId)
+        }
+      })
+      // this.onlineUserList = data;
+    })
     this.customerService.logout().subscribe({
       next: (res => {
         this.tokenStorageService.signOut();
-        console.log(res)
+        return;
       })
-    })
+    });
     // this.toastService.success('Logout successfully');
     // this.router.navigate(['/auth']);
     // this.isDomain = false;

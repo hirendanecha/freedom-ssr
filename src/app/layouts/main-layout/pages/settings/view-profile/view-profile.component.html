@@ -223,15 +223,6 @@
                   </button>
                   <div ngbDropdownMenu class="dropdown-menu">
                     <button ngbDropdownItem>
-                      <a
-                        class="droplist d-flex align-items-center gap-2"
-                        [appCopyClipboard]="item.pdfUrl"
-                      >
-                        <fa-icon [icon]="['fas', 'link']" />
-                        <span>Copy URL</span>
-                      </a>
-                    </button>
-                    <button ngbDropdownItem>
                       <!-- (click)="readUnreadNotification(notification.id, 'N')" -->
                       <a
                         class="droplist d-flex align-items-center gap-2"
@@ -239,6 +230,24 @@
                       >
                         <fa-icon [icon]="['fas', 'download']" />
                         <span>Download</span>
+                      </a>
+                    </button>
+                    <button ngbDropdownItem>
+                      <a
+                        class="droplist d-flex align-items-center gap-2"
+                        (click)="deletePost(item.id)"
+                      >
+                        <fa-icon [icon]="['fas', 'trash-can']" />
+                        <span>Delete</span>
+                      </a>
+                    </button>
+                    <button ngbDropdownItem>
+                      <a
+                        class="droplist d-flex align-items-center gap-2"
+                        [appCopyClipboard]="item.pdfUrl"
+                      >
+                        <fa-icon [icon]="['fas', 'link']" />
+                        <span>Copy URL</span>
                       </a>
                     </button>
                   </div>

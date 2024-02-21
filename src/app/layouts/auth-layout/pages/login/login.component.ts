@@ -12,6 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
+import { SocketService } from 'src/app/@shared/services/socket.service';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +43,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private sharedService: SharedService,
     private customerService: CustomerService,
     private tokenStorageService: TokenStorageService,
-    private seoService: SeoService
+    private seoService: SeoService,
+    private socketService: SocketService
   ) {
     const isVerify = this.route.snapshot.queryParams.isVerify;
     if (isVerify === 'false') {
@@ -98,7 +100,22 @@ export class LoginComponent implements OnInit, AfterViewInit {
           this.sharedService.getUserDetails();
           this.isLoginFailed = false;
           this.isLoggedIn = true;
+          if (this.socketService.socket?.connected) {
+            this.socketService.socket.close()
+          }
+          this.socketService.connect();
+          this.socketService.socket?.emit('online-users');
+          this.socketService?.socket?.on('get-users', (data) => {
+            data.map(ele => {
+              if (!this.sharedService.onlineUserList.includes(ele.userId)) {
+                this.sharedService.onlineUserList.push(ele.userId)
+              }
+            })
+            // this.onlineUserList = data;
+          })
+          // Redirect to a new page after reload
           this.toastService.success('Logged in successfully');
+          window.location.reload();
           this.router.navigate([`/home`]);
         } else {
           this.loginMessage = data.mesaage;

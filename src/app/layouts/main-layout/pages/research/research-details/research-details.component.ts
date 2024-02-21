@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ProfileService } from 'src/app/@shared/services/profile.service';
+import { SeoService } from 'src/app/@shared/services/seo.service';
 
 @Component({
   selector: 'app-research-details',
@@ -22,7 +23,8 @@ export class ResearchDetailsComponent {
   constructor(
     private profileService: ProfileService,
     private spinner: NgxSpinnerService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private seoService: SeoService
   ) {
     this.GetGroupBasicDetails();
   }
@@ -35,6 +37,13 @@ export class ResearchDetailsComponent {
       next: (res: any) => {
         if (res?.ID) {
           this.groupDetails = res;
+          const data = {
+            title: `Freedom.Buzz Research ${this.groupDetails?.PageTitle}`,
+            url: `${location.href}`,
+            description: this.groupDetails?.PageDescription,
+            image: this.groupDetails?.CoverPicName || this.groupDetails?.ProfilePicName
+          };
+          this.seoService.updateSeoMetaData(data);
           this.GetGroupPostById();
         }
         this.spinner.hide();

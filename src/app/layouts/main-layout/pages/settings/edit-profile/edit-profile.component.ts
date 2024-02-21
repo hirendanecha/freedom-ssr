@@ -76,7 +76,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       this.router.navigate([`/login`]);
     }
     this.modalService.dismissAll();
-    const notificationSound = localStorage.getItem('notificationSoundEnabled');
+    const notificationSound = JSON.parse(localStorage.getItem('soundPreferences'))?.notificationSoundEnabled;
     if (notificationSound === 'N') {
       this.isNotificationSoundEnabled = false
     }
@@ -90,13 +90,14 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       });
   }
 
-  notificationSound(){
-    const soundOct = localStorage.getItem('notificationSoundEnabled');
-    if (soundOct === 'Y') {
-      localStorage.setItem('notificationSoundEnabled', 'N');
+  notificationSound() {
+    const soundOct = JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    if (soundOct.notificationSoundEnabled === 'Y') {
+      soundOct.notificationSoundEnabled = 'N';
     } else {
-      localStorage.setItem('notificationSoundEnabled', this.isNotificationSoundEnabled ? 'Y' : 'N');
+      soundOct.notificationSoundEnabled = this.isNotificationSoundEnabled ? 'Y' : 'N';
     }
+    localStorage.setItem('soundPreferences', JSON.stringify(soundOct));
   }
 
   getUserDetails(id): void {
@@ -106,7 +107,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
         if (data) {
           this.spinner.hide();
           this.customer = data;
-          console.log(data);
           this.getAllCountries();
         }
       },
@@ -209,7 +209,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
 
       forkJoin(uploadObs).subscribe({
         next: (res: any) => {
-          console.log(res);
           if (res?.profileImg?.body?.url) {
             this.profileImg['file'] = null;
             this.profileImg['url'] = res?.profileImg?.body?.url;
@@ -241,7 +240,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       this.customer.CoverPicName = this.profileCoverImg?.url || this.customer.CoverPicName;
       this.customer.IsActive = 'Y';
       this.customer.UserID = +this.userId;
-      console.log('update', this.customer)
       this.customerService.updateProfile(this.profileId, this.customer).subscribe({
         next: (res: any) => {
           this.spinner.hide();
@@ -268,7 +266,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
         this.spinner.hide();
         if (res.data) {
           this.customer = res.data[0];
-          console.log(this.customer)
           this.getAllCountries();
         }
       },
@@ -317,6 +314,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   }
   onChangeTag(event) {
     this.customer.Username = event.target.value.replaceAll(' ', '').replaceAll(/\s*,+\s*/g, ',');
-    console.log(this.customer.Username);
+
   }
 }

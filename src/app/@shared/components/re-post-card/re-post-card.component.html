@@ -1,6 +1,6 @@
 <div class="mt-2 border rounded">
   <ng-container *ngIf="post; else noPost">
-    <div class="d-flex p-2">
+    <div class="d-flex p-2" (click)="redirectToParentProfile(post)">
       <img
         class="w-24-px h-24-px rounded"
         loading="lazy"
@@ -15,10 +15,7 @@
         <div
           class="d-flex align-items-center cursor c-padding posted-wrap-text"
         >
-          <div
-            class="d-flex align-items-center"
-            (click)="redirectToParentProfile(post)"
-          >
+          <div class="d-flex align-items-center">
             {{ post?.Username || post?.FirstName }}
             <div>
               <fa-icon
@@ -51,15 +48,27 @@
           </span>
         </div>
       </ng-container>
+      <ng-container *ngIf="post?.streamname">
+        <!-- <div class="video-albumname mb-3">
+          {{ post.albumname }}
+        </div> -->
+        <!-- <app-img-preview [src]="post?.thumbfilename" classes="w-100" /> -->
+        <video
+          [src]="post?.streamname"
+          controls
+          class="w-100 mt-1 rounded"
+          [autoplay]="false"
+        ></video>
+      </ng-container>
 
       <app-post-meta-data-card [post]="post" />
 
       <ng-container *ngIf="post?.imageUrl">
         <app-img-preview [src]="post?.imageUrl" classes="w-100" />
       </ng-container>
-      <ng-container *ngIf="post?.streamname">
+      <!-- <ng-container *ngIf="post?.streamname">
         <app-img-preview [src]="post?.thumbfilename" classes="w-100" />
-      </ng-container>
+      </ng-container> -->
     </div>
   </ng-container>
   <ng-template #noPost>

@@ -36,7 +36,6 @@ export class PostService {
     formData.append('file', files);
     formData.append('id', id);
     formData.append('default', defaultType);
-    console.log(formData)
     const req = new HttpRequest(
       'POST',
       `${this.baseUrl}/upload-post`,
@@ -87,7 +86,7 @@ export class PostService {
   }
 
   getPdfsFile(id): Observable<Object> {
-    return this.http.get<Object>(`${this.baseUrl}/get-pdfs/${id}`);
+    return this.http.get<Object>(`${this.baseUrl}/get-pdfs/${id}?q=${Date.now()}`);
   }
 
 
@@ -97,7 +96,6 @@ export class PostService {
     const url = environment.serverUrl
     const formData: FormData = new FormData();
     formData.append('file', files);
-    console.log(formData);
     const req =
       new HttpRequest(
         'POST',

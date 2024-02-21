@@ -33,6 +33,8 @@ export class LeftSidebarComponent implements OnInit, AfterViewInit {
   profileId: number
   linkMetaData: {}
   communitySlug = ''
+  originalFavicon: HTMLLinkElement;
+
   constructor(
     private modalService: NgbModal,
     public sharedService: SharedService,
@@ -51,6 +53,7 @@ export class LeftSidebarComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getUserDetails();
+    this.originalFavicon = document.querySelector('link[rel="icon"]');
   }
 
   ngAfterViewInit(): void {
@@ -100,6 +103,7 @@ export class LeftSidebarComponent implements OnInit, AfterViewInit {
 
   notificationNavigation() {
     this.closeSidebar();
+    // this.originalFavicon.href = '/assets/images/icon-unread.jpg';
     if (this.isRead === 'N') {
       localStorage.setItem('isRead', 'Y');
       this.sharedService.isNotify = false;

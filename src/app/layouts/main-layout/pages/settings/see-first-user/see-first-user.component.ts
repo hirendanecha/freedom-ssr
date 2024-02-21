@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { SeeFirstUserService } from 'src/app/@shared/services/see-first-user.service';
+import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 
 @Component({
@@ -14,12 +15,18 @@ export class SeeFirstUserComponent implements OnInit {
   constructor(
     private seeFirstUserService: SeeFirstUserService,
     private toastService: ToastService,
+    private seoService:SeoService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
+    const data = {
+      title: 'Freedom.Buzz See First User',
+      url: `${location.href}`,
+      description: '',
+    };
+    this.seoService.updateSeoMetaData(data);
   }
 
   ngOnInit(): void {
-    console.log(isPlatformBrowser(this.platformId))
     if (isPlatformBrowser(this.platformId)) {
       this.getSeeFirstUsers();
     }

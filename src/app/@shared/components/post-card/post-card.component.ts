@@ -71,6 +71,7 @@ export class PostCardComponent implements OnInit {
   isExpand = false;
   commentCount = 0;
   commentMessageInputValue: string = '';
+  replaycommentMessageInputValue: string = '';
   commentMessageTags: any[];
   showHoverBox = false;
   unSubscribeProfileIds: any = [];
@@ -79,30 +80,32 @@ export class PostCardComponent implements OnInit {
   commentDescriptionimageUrl: string;
   replayCommentDescriptionimageUrl: string;
   shareButton = false;
+  isViewProfile = false;
 
   emojiPaths = [
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cry.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif'
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cry.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cool.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Anger.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Crazy.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Crazy.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Censorship.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Doctor.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Doctor.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Hug.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/In-Love.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/In-Love.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Kiss.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/LOL.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Party.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Poop.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sad.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Scholar.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Shock.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sick.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Think.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Scholar.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Shock.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sick.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Think.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sleep.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-UP.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-down.gif',
   ];
-  // "/assets/Emogi-Buzz/Sleep.gif",
 
   constructor(
     private seeFirstUserService: SeeFirstUserService,
@@ -128,11 +131,7 @@ export class PostCardComponent implements OnInit {
         this.playVideo(this.post?.id);
       }
       this.socketListner();
-      this.viewComments(this.post?.id);
-
-      this.descriptionimageUrl = this.extractImageUrlFromContent(
-        this.post.postdescription
-      );
+      // this.viewComments(this.post?.id);
       // const contentContainer = document.createElement('div');
       // contentContainer.innerHTML = this.post.postdescription;
       // const imgTag = contentContainer.querySelector('img');
@@ -147,17 +146,21 @@ export class PostCardComponent implements OnInit {
 
   ngOnInit(): void {
     // this.socketListner();
-    // this.viewComments(this.post?.id);
+    this.viewComments(this.post?.id);
   }
 
   ngAfterViewInit(): void {
     // if (this.post?.posttype === 'V') {
     //   this.playVideo(this.post?.id);
     // }
+    this.descriptionimageUrl = this.extractImageUrlFromContent(
+      this.post.postdescription
+    );
     const path = this.route.snapshot.routeConfig.path;
     if (path === 'view-profile/:id' || path === 'post/:id') {
       this.shareButton = true;
     }
+    this.isViewProfile = path.includes('view-profile') || false;
   }
   getPostUrl(post: any) {
     // if (post.streamname) {
@@ -188,7 +191,6 @@ export class PostCardComponent implements OnInit {
     this.seeFirstUserService.remove(Number(this.profileId), id).subscribe({
       next: (res) => {
         this.seeFirstList.pop(id);
-        console.log(this.seeFirstList);
         this.toastService.warring('See First Stopped');
         this.getPostList?.emit();
       },
@@ -266,9 +268,10 @@ export class PostCardComponent implements OnInit {
   }
 
   editComment(comment): void {
-    if (comment.parentCommentId) {
+    if (comment) {
       const modalRef = this.modalService.open(ReplyCommentModalComponent, {
         centered: true,
+
       });
       modalRef.componentInstance.title = 'Edit Comment';
       modalRef.componentInstance.confirmButtonLabel = 'Comment';
@@ -281,9 +284,11 @@ export class PostCardComponent implements OnInit {
           this.commentData.postId = res?.postId;
           this.commentData.profileId = res?.profileId;
           this.commentData['id'] = res?.id;
-          this.commentData.parentCommentId = res?.parentCommentId;
+          if (res?.parentCommentId) {
+            this.commentData.parentCommentId = res?.parentCommentId;
+          }
           this.commentData['file'] = res?.file;
-          this.commentData['imageUrl'] = res?.url;
+          this.commentData['imageUrl'] = res?.imageUrl;
           this.uploadCommentFileAndAddComment();
         }
       });
@@ -301,12 +306,12 @@ export class PostCardComponent implements OnInit {
         this.isParent = true;
       }
     }
-    console.log(comment);
   }
 
   deletePost(post): void {
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
+      backdrop: 'static',
     });
     modalRef.componentInstance.title = 'Delete Post';
     modalRef.componentInstance.confirmButtonLabel = 'Delete';
@@ -315,12 +320,6 @@ export class PostCardComponent implements OnInit {
       'Are you sure want to delete this post?';
     modalRef.result.then((res) => {
       if (res === 'success') {
-        // this.socketService.deletePost({ id: post?.id }, data => {
-        //   console.log('post-data', data)
-        // });
-        // this.getPostList.emit();
-        // this.toastService.success('Post deleted successfully');
-        // post['hide'] = true;
         this.postService.deletePost(post.id).subscribe({
           next: (res: any) => {
             if (res) {
@@ -369,7 +368,6 @@ export class PostCardComponent implements OnInit {
 
   likeDisLikePost(data): void {
     this.socketService.likeFeedPost(data, (res) => {
-      console.log('likeOrDislike', res);
       return;
     });
   }
@@ -390,8 +388,6 @@ export class PostCardComponent implements OnInit {
             res.data.commmentsList.filter((ele: any) => {
               ele.descImg = this.extractImageUrlFromContent(ele.comment);
             });
-
-            console.log(res.data.commmentsList);
             this.commentList = res.data.commmentsList.map((ele: any) => ({
               ...ele,
               replyCommnetsList: res.data.replyCommnetsList.filter(
@@ -492,7 +488,6 @@ export class PostCardComponent implements OnInit {
 
   commentOnPost(postId, commentId = null): void {
     this.commentData.tags = getTagUsersFromAnchorTags(this.commentMessageTags);
-    console.log(this.commentData);
     if (this.isPostComment === false) {
       if (this.commentData.comment || this.commentData?.file?.name) {
         this.isPostComment = true;
@@ -523,6 +518,7 @@ export class PostCardComponent implements OnInit {
                 this.commentData['imageUrl'] = res?.body?.url;
                 this.addComment();
                 this.commentMessageInputValue = null;
+                this.replaycommentMessageInputValue = null;
               }
             },
             error: (err) => {
@@ -532,6 +528,7 @@ export class PostCardComponent implements OnInit {
       } else {
         this.addComment();
         this.commentMessageInputValue = null;
+        this.replaycommentMessageInputValue = null;
       }
     }
   }
@@ -622,11 +619,14 @@ export class PostCardComponent implements OnInit {
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.commentData.comment = data?.html;
-    this.commentMessageInputValue = data?.html;
+    this.extractLargeImageFromContent(data.html);
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
-    // console.log(this.commentData)
+  }
+  onTagUserReplayInputChangeEvent(data: any): void {
+    this.extractLargeImageFromContent(data.html);
+    this.commentData.meta = data?.meta;
+    this.commentMessageTags = data?.tags;
   }
 
   socketListner(): void {
@@ -639,14 +639,8 @@ export class PostCardComponent implements OnInit {
     });
 
     this.socketService.socket?.on('likeOrDislikeComments', (res) => {
-      // console.log('likeOrDislikeComments', res);
       if (res[0]) {
         if (res[0].parentCommentId) {
-          // let index = this.commentList.findIndex(obj => obj.id === res[0].parentCommentId);
-          // let index1 = this.commentList.findIndex(obj => obj.replyCommnetsList.findIndex(ele => ele.id === res[0].id));
-          // if (index1 !== -1 && index !== -1) {
-          //   this.commentList[index].replyCommnetsList[index1].likeCount = res[0]?.likeCount;
-          // }
           this.commentList.map((ele: any) =>
             res.filter((ele1) => {
               if (ele.id === ele1.parentCommentId) {
@@ -678,7 +672,6 @@ export class PostCardComponent implements OnInit {
 
     this.socketService.socket?.on('comments-on-post', (data: any) => {
       this.isPostComment = false;
-      console.log('comments-on-post', data);
       if (data[0]?.parentCommentId) {
         this.commentList.map((ele: any) =>
           data.filter((ele1) => {
@@ -749,9 +742,9 @@ export class PostCardComponent implements OnInit {
 
   selectedEmoji(emoji) {
     this.commentMessageInputValue =
-        this.commentMessageInputValue +
-        `<img src=${emoji} width="60" height="60">`;
-  
+      this.commentMessageInputValue +
+      `<img src=${emoji} width="60" height="60">`;
+
     // if (this.commentMessageInputValue) {
     //   this.commentMessageInputValue =
     //     this.commentMessageInputValue +
@@ -759,5 +752,52 @@ export class PostCardComponent implements OnInit {
     // } else {
     //   this.commentMessageInputValue = `<img src=${emoji} width="60" height="60">`;
     // }
+  }
+
+  extractLargeImageFromContent(content: string): void {
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = content;
+    const imgTag = contentContainer.querySelector('img');
+
+    if (imgTag) {
+      const imgTitle = imgTag.getAttribute('title');
+      const imgStyle = imgTag.getAttribute('style');
+      const imageGif = imgTag
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
+      if (!imgTitle && !imgStyle && !imageGif) {
+        const copyImage = imgTag.getAttribute('src');
+        const bytes = copyImage.length;
+        const megabytes = bytes / (1024 * 1024);
+        if (megabytes > 1) {
+          // this.commentData.comment = content.replace(copyImage, '');
+          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">'
+          this.commentData.comment = `<div>${content.replace(copyImage, '').replace(/\<br\>/ig, '').replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+          const base64Image = copyImage
+            .trim()
+            .replace(/^data:image\/\w+;base64,/, '');
+          try {
+            const binaryString = window.atob(base64Image);
+            const uint8Array = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              uint8Array[i] = binaryString.charCodeAt(i);
+            }
+            const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+            const fileName = `copyImage-${new Date().getTime()}.jpg`;
+            const file = new File([blob], fileName, { type: 'image/jpeg' });
+            this.commentData['file'] = file;
+          } catch (error) {
+            console.error('Base64 decoding error:', error);
+          }
+        } else {
+          this.commentData.comment = content;
+        }
+      } else {
+        this.commentData.comment = content;
+      }
+    } else {
+      this.commentData.comment = content;
+    }
   }
 }

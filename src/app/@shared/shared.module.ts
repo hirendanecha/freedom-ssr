@@ -74,6 +74,22 @@ import {
   faFilePdf,
   faShareNodes,
   faShare,
+  faEnvelope,
+  faPaperclip,
+  faPhone,
+  faEllipsisH,
+  faSearch,
+  faBan,
+  faFileVideo,
+  faSliders,
+  faCopy,
+  faPhoneSlash,
+  faEllipsisV,
+  faUsers,
+  faCommentAlt,
+  faPencil,
+  faRefresh,
+  faReply
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -96,6 +112,14 @@ import { PostDetailComponent } from '../layouts/main-layout/pages/home/post-deta
 import { EditResearchModalComponent } from './modals/edit-research-modal/edit-research-modal.component';
 import { SharePostModalComponent } from './modals/share-post-modal/share-post-modal.component';
 import { RePostCardComponent } from './components/re-post-card/re-post-card.component';
+import { EditPostModalComponent } from './modals/edit-post-modal/edit-post-modal.component';
+import { ConferenceLinkComponent } from './modals/create-conference-link/conference-link-modal.component';
+import { IncomingcallModalComponent } from './modals/incoming-call-modal/incoming-call-modal.component';
+import { AppointmentCallComponent } from './components/appointment-call/appointment-call.component';
+import { OutGoingCallModalComponent } from './modals/outgoing-call-modal/outgoing-call-modal.component';
+import { CreateGroupModalComponent } from './modals/create-group-modal/create-group-modal.component';
+import { EditGroupModalComponent } from './modals/edit-group-modal/edit-group-modal.component';
+// import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -118,7 +142,14 @@ const sharedComponents = [
   PostDetailComponent,
   EditResearchModalComponent,
   SharePostModalComponent,
-  RePostCardComponent
+  RePostCardComponent,
+  EditPostModalComponent,
+  ConferenceLinkComponent,
+  IncomingcallModalComponent,
+  OutGoingCallModalComponent,
+  AppointmentCallComponent,
+  CreateGroupModalComponent,
+  EditGroupModalComponent
 ];
 
 const sharedModules = [
@@ -135,6 +166,7 @@ const sharedModules = [
   FontAwesomeModule,
   PipeModule,
   MentionModule,
+  // ProfileChartsModule
   // PdfViewerModule
 ];
 
@@ -202,7 +234,26 @@ export class SharedModule {
       faFile,
       faFilePdf,
       faDownload,
-      faShare
+      faShare,
+      faEnvelope,
+      faPaperclip,
+      faPhone,
+      faEllipsisH,
+      faSearch,
+      faBan,
+      faFileVideo,
+      faSliders,
+      faCopy,
+      faPhoneSlash,
+      faEllipsisV,
+      faUsers,
+      faCommentAlt,
+      faLayerGroup,
+      faGear,
+      faPencil,
+      faRefresh,
+      faRightFromBracket,
+      faReply
     );
   }
 }

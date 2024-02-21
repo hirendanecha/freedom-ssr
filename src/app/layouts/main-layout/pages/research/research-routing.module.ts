@@ -10,7 +10,7 @@ const routes: Routes = [
     component: ResearchListComponent,
   },
   {
-    path: 'detail/:tag/:uniqueLink',
+    path: ':uniqueLink',
     component: ResearchDetailsComponent,
   },
   {

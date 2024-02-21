@@ -3,7 +3,8 @@
     position: sticky;
     top: 92px;
     width: 100%;
-    max-height: calc(100vh - 112px);
+    // max-height: calc(100vh - 112px);
+    margin-bottom: 50px;
     overflow-x: auto;
     cursor: pointer;
 
@@ -27,17 +28,17 @@
 
   .abs-area {
     right: initial;
-    top: 305px;
+    top: 0px;
     // top: 153px;
-    left: 32px;
+    left: 8px;
     width: 15px;
     height: 15px;
     background: var(--highlight-color);
     border-radius: 50%;
 
-    @media (max-width: 991px) {
-      top: 236px;
-    }
+    // @media (max-width: 991px) {
+    //   top: 236px;
+    // }
   }
 
   .profile-link {

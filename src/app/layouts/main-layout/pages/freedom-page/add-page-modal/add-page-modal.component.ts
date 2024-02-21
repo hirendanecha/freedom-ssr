@@ -95,15 +95,12 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
       this.pageForm.get('State').enable();
       this.pageForm.get('City').enable();
       this.pageForm.get('County').enable();
-
-
-      console.log(this.inputLinkValue1, this.inputLinkValue2);
     }
   }
 
   ngAfterViewInit(): void {
-    this.inputLinkValue1 = this.data?.link1;
-    this.inputLinkValue2 = this.data?.link2;
+    this.inputLinkValue1 = this.data?.link1 || null;
+    this.inputLinkValue2 = this.data?.link2 || null;
     fromEvent(this.zipCode.nativeElement, 'input')
       .pipe(debounceTime(1000))
       .subscribe((event) => {
@@ -236,7 +233,11 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
                 this.spinner.hide();
               }
           });
-        this.editAdvertizeMentLink(this.data.Id);
+        if (this.data.link1 || this.data.link2) {
+          this.editAdvertizeMentLink(this.data.Id);
+        } else {
+          this.createAdvertizeMentLink(this.data.Id);
+        }
         this.sharedService.advertizementLink = [];
       }
     }
@@ -246,7 +247,7 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
       this.advertizement.communityId = id
       this.communityService.createAdvertizeMentLink(this.advertizement).subscribe({
         next: (res => {
-          console.log(res);
+          return;
         }),
         error: (err => {
           console.log(err)
@@ -264,7 +265,7 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
       }
       this.communityService.editAdvertizeMentLink(data).subscribe({
         next: (res => {
-          console.log(res);
+          return;
         }),
         error: (err => {
           console.log(err)
@@ -396,10 +397,8 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
 
   onTagUserInputChangeEvent(data: any): void {
     this.advertizement.link1 = data?.meta?.url
-    console.log(data)
   }
   onTagUserInputChangeEvent1(data): void {
     this.advertizement.link2 = data?.meta?.url
-    console.log(data)
   }
 }

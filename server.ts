@@ -9,7 +9,7 @@ import fetch from 'node-fetch';
 import { AppServerModule } from './src/main.server';
 import 'localstorage-polyfill';
 import 'reflect-metadata';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 
 // SEO
 // const url = 'https://freedom-api.opash.in';
@@ -99,16 +99,7 @@ export function app(): express.Express {
         ) {
           let id = params.split('/');
           id = id[id.length - 1];
-          // id = params[params.length - 1];
-          // id = Number(id);
-          // let id = 'local-organic-food-sources';
-          console.log({ id });
-
-          // if (!isNaN(id) || Math.sign(id) > 0) {
           const community: any = await getCommunity(id);
-
-          console.log({ params }, { id }, { community });
-
           const talent = {
             name: community?.CommunityName,
             description: community?.CommunityDescription,
@@ -121,15 +112,7 @@ export function app(): express.Express {
         } else if (params.indexOf('settings/view-profile/') > -1) {
           let id = params.split('/');
           id = +id[id.length - 1];
-          // id = params[params.length - 1];
-          // id = Number(id);
-          // let id = 'local-organic-food-sources';
-          // console.log({ id });
-
-          // if (!isNaN(id) || Math.sign(id) > 0) {
           const { data: profile }: any = await getProfile(id);
-
-          console.log({ params }, { id }, { profile: JSON.stringify(profile) });
           const talent = {
             name: profile[0]?.Username,
             description: profile[0].FirstName + ' ' + profile[0].LastName,
@@ -141,15 +124,7 @@ export function app(): express.Express {
         } else if (params.indexOf('post/') > -1) {
           let id = params.split('/');
           id = id[id.length - 1];
-          // id = params[params.length - 1];
-          // id = Number(id);
-          // let id = 'local-organic-food-sources';
-          console.log({ id });
-
-          // if (!isNaN(id) || Math.sign(id) > 0) {
           const [post]: any = await getPost(+id);
-
-          console.log('post===>', post);
           const pdhtml = document.createElement('div');
           pdhtml.innerHTML = post?.postdescription || post?.metadescription;
           const talent = {
@@ -160,7 +135,18 @@ export function app(): express.Express {
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
           seo.image = talent.image;
-          // }
+        } else if (params.indexOf('research/') > -1) {
+          let id = params.split('/');
+          id = id[id.length - 1];
+          const group: any = await getResearchGroup(id);
+          const talent = {
+            name: `Freedom.Buzz Research ${group?.PageTitle}`,
+            description: group?.PageDescription,
+            image: group?.CoverPicName || group?.ProfilePicName
+          };
+          seo.title = talent.name;
+          seo.description = talent.description;
+          seo.image = talent.image;
         }
 
         html = html.replace(/\$TITLE/g, seo.title);
@@ -192,11 +178,16 @@ async function getCommunity(id: any) {
 }
 
 async function getPost(id: any) {
-  console.log(api_url);
   return fetch(api_url + 'posts/get/' + id).then((resp) => resp.json());
 }
 async function getProfile(id: any) {
   return fetch(api_url + 'customers/profile/' + id).then((resp: any) =>
+    resp.json()
+  );
+}
+
+async function getResearchGroup(id: any) {
+  return fetch(api_url + 'profile/getGroupBasicDetails/' + id).then((resp: any) =>
     resp.json()
   );
 }

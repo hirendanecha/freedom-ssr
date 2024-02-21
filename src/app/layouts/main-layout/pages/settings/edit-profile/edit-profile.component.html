@@ -40,7 +40,7 @@
             <label class="d-flex form-label">Country</label>
             <select id="country" name="country" class="input-area w-100" [(ngModel)]="customer.Country"
               (change)="changeCountry()">
-              <option value="">Select Country</option>
+              <!-- <option value="">Select Country</option> -->
               <option [value]="item.country_code" *ngFor="let item of allCountryData">
                 {{ item.country }}
               </option>

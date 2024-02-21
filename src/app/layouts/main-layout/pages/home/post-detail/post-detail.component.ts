@@ -6,8 +6,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { MetafrenzyService } from 'ngx-metafrenzy';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
@@ -18,11 +17,8 @@ import { environment } from 'src/environments/environment';
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',
   styleUrls: ['./post-detail.component.scss'],
-  providers: [MetafrenzyService]
 })
 export class PostDetailComponent implements OnInit {
-
-  postId: string = '';
   post: any = {};
 
   constructor(
@@ -30,27 +26,26 @@ export class PostDetailComponent implements OnInit {
     private postService: PostService,
     public sharedService: SharedService,
     private route: ActivatedRoute,
+    private router: Router,
     private seoService: SeoService,
-    private metafrenzyService: MetafrenzyService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    if (isPlatformBrowser(this.platformId)) {
-      this.postId = this.route.snapshot.paramMap.get('id');
-      // console.log('route', this.route);
-      if (this.postId) {
-        this.getPostsByPostId();
+    this.router.events.subscribe((event: any) => {
+      const id = event?.routerEvent?.url.split('/')[2];
+      if (id) {
+        this.getPostsByPostId(id);
       }
-    }
+    });
   }
 
   ngOnInit(): void {
 
   }
 
-  getPostsByPostId(): void {
+  getPostsByPostId(id): void {
     this.spinner.show();
 
-    this.postService.getPostsByPostId(this.postId).subscribe(
+    this.postService.getPostsByPostId(id).subscribe(
       {
         next: (res: any) => {
           this.spinner.hide();
@@ -61,21 +56,12 @@ export class PostDetailComponent implements OnInit {
               this.post?.postdescription || this.post?.metadescription;
             const data = {
               title: this.post?.title,
-              url: `${environment.webUrl}post/${this.postId}`,
+              url: `${environment.webUrl}post/${this.post?.id}`,
               description: html.textContent,
               image: this.post?.imageUrl,
               video: this.post?.streamname,
             };
-            this.metafrenzyService.setTitle(data.title);
-            this.metafrenzyService.setOpenGraph({
-              title: data.title,
-              //description: post.postToProfileIdName === '' ? post.profileName: post.postToProfileIdName,
-              description: html.textContent,
-              url: data.url,
-              image: data.image,
-              site_name: 'Freedom.Buzz'
-            });
-            // this.seoService.updateSeoMetaData(data, true);
+            this.seoService.updateSeoMetaData(data);
           }
         },
         error:

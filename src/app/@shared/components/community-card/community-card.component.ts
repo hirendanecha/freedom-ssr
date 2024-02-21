@@ -64,7 +64,6 @@ export class CommunityCardComponent {
 
     let actionType = '';
     let actionObs = null;
-    console.log(type);
     const modalRef = this.modalService.open(ConfirmationModalComponent);
     if (type === 'my') {
       actionType = 'Delete';

@@ -1,0 +1,311 @@
+:host {
+  .main {
+    background: var(--section-1st-color);
+    height: 78vh;
+    max-height: calc(100vh - 220px);
+
+    .chat-content {
+      overflow-y: auto;
+      height: calc(100vh - 310px);
+      // min-height: calc(100vh - 350px);
+      @media (max-width: 991px) {
+        height: calc(90vh - 310px) !important;
+      }
+    }
+    .c-pdf-show {
+      overflow: hidden;
+      display: -webkit-inline-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      word-break: break-word;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+
+    .data-text-color {
+      color: var(--para-1st-color);
+    }
+
+    .chat-footer {
+      .message-content {
+        position: absolute;
+        width: 100%;
+        max-width: calc(100% - 40px);
+        top: 0px;
+
+        @media (max-width: 575px) {
+          max-width: 100%;
+        }
+      }
+    }
+
+    .message-media {
+      border: 1px solid #00a3ff;
+      border-radius: 7px;
+    }
+    .replay-message-media {
+      border: 1px solid var(--box-1st-color);
+      border-radius: 7px;
+    }
+
+    .parent-replay {
+      border: 1px solid var(--box-1st-color);
+      border-radius: 7px;
+      padding: 5px;
+    }
+    .parent-replay-alt {
+      border: 1px solid var(--para-6th-color);
+      border-radius: 7px;
+      padding: 5px;
+    }
+
+    .custom-border {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 0 15px;
+      height: 100%;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: calc(50% - 50px);
+        height: 1px;
+        background-color: var(--para-1st-color);
+      }
+
+      &::before {
+        left: 0;
+      }
+      &::after {
+        right: 0;
+      }
+    }
+  }
+
+  .header-image {
+    height: 52px !important;
+    width: 52px !important;
+  }
+
+  .preview-chat-media {
+    bottom: 12px;
+    left: 15px;
+    background: var(--box-1st-color);
+    border-radius: 16px;
+    padding: 5px;
+  }
+
+  button:disabled {
+    background-color: var(--primary-color);
+    opacity: 0.8;
+  }
+
+  .message {
+    cursor: pointer;
+    .msgImage {
+      // height: 150px;
+      // border-radius: 6px;
+    }
+    .pdf-name {
+      max-width: 150px;
+    }
+
+    .dropdown-toggle {
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  .bg-color {
+    background: var(--section-1st-color);
+    box-shadow: var(--box-shadow);
+  }
+
+  .box-bg {
+    background-color: var(--box-1st-color);
+  }
+
+  .replay-chat {
+    bottom: 12px;
+    left: 15px;
+    background: var(--box-1st-color);
+    border-radius: 16px;
+    padding: 5px;
+    // max-width: 70%;
+    // min-width: 40%;
+    width: 60%;
+    text-align: left;
+    padding: 5px;
+  }
+
+  .replay-message-box {
+    max-height: 210px;
+    overflow: auto;
+  }
+
+  .replay-border {
+    border-top: 1px solid var(--para-1st-color);
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px !important;
+    background-color: var(--primary-color) !important;
+  }
+
+  .select-emaojies {
+    // position: absolute;
+    // right: 0;
+    // top: 5px;
+
+    // @media (max-width: 575px) {
+    //   right: 52px;
+    // }
+
+    .dropdown-toggle {
+      &::after {
+        display: none;
+      }
+    }
+
+    .emoji-select {
+      max-width: 60px;
+      min-width: 60px;
+    }
+    .emojiModelStyle {
+      width: 282px;
+      // height: 225px;
+
+      .emoji-style {
+        width: 70px;
+      }
+    }
+
+    .emoji-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .emoji-container div {
+      flex: 1 0 60px;
+    }
+  }
+}
+
+::ng-deep {
+  .main-content {
+    // box-shadow: var(--box-shadow);
+    .chat-area {
+      box-shadow: none;
+      .main-chat-box {
+        max-height: fit-content;
+        li img {
+          max-width: unset;
+          max-height: unset;
+
+          @media (max-width: 991px) {
+            max-width: 100%;
+            max-height: 100%;
+            position: unset !important;
+          }
+        }
+        li.me {
+          text-align: start;
+          .message {
+            // background: var(--box-1st-color);
+          }
+          p {
+            // color: var(--heading-1st-color);
+          }
+          span {
+            // color: var(--heading-1st-color);
+          }
+        }
+      }
+      .drop-options {
+        .options {
+          visibility: hidden !important;
+        }
+        &:hover {
+          .options {
+            visibility: visible !important;
+          }
+        }
+      }
+    }
+    .dropdown-toggle::after {
+      display: none;
+    }
+    .message {
+      .dropdown-menu.show {
+        // bottom: 10px;
+        right: -20px;
+      }
+    }
+
+    .message-input-field {
+      position: absolute;
+      bottom: -20px;
+
+      .tag-input-div {
+        margin-left: 50px;
+        background-color: var(--body-color);
+        max-width: calc(100% - 5px) !important;
+        width: 100% !important;
+        min-height: 44px !important;
+        max-height: 170px;
+        overflow-y: auto !important;
+        // height: 44px;
+        padding: 9px;
+      }
+      .select-emaojies {
+        top: unset !important;
+        right: unset !important;
+        left: -7px;
+        bottom: 0px;
+      }
+    }
+  }
+
+  .chat-meta {
+    max-width: 250px;
+    app-post-meta-data-card {
+      .post-meta-description {
+        display: none !important;
+      }
+    }
+    .post-description {
+      display: -webkit-box;
+      flex-wrap: wrap;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+  }
+  .group-input-field {
+    mention-list {
+      top: unset !important;
+      bottom: 225px;
+
+      .mention-menu {
+        max-height: 162px !important;
+        min-height: 162px;
+      }
+    }
+  }
+}
+// .chat-footer {
+//   top: 100% !important;
+//   @media (max-width: 991px) {
+//     top: 83% !important;
+//   }
+// }
