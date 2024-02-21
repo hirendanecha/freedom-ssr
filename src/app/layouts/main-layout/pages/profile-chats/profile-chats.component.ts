@@ -126,8 +126,8 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isRoomCreated = false;
-    if (this.socketService?.socket) {
-      this.socketService.socket?.disconnect();
-    }
+    // if (this.socketService?.socket) {
+    //   this.socketService.socket?.disconnect();
+    // }
   }
 }
