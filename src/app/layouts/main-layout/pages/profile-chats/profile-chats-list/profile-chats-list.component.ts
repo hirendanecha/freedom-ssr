@@ -33,7 +33,8 @@ import { MessageDatePipe } from 'src/app/@shared/pipe/message-date.pipe';
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy {
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
+{
   @Input('userChat') userChat: any = {};
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
@@ -179,7 +180,7 @@ export class ProfileChatsListComponent
   }
 
   // scroller down
-  ngAfterViewChecked() { }
+  ngAfterViewChecked() {}
 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
@@ -229,7 +230,7 @@ export class ProfileChatsListComponent
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
-        parentMessageId: this.userChat.parentMessageId || null,
+        parentMessageId: this.chatObj.parentMessageId || null,
       };
       this.socketService?.editMessage(data, (data: any) => {
         this.isFileUploadInProgress = false;
@@ -341,8 +342,8 @@ export class ProfileChatsListComponent
           const url =
             element.messageText != null
               ? this.encryptDecryptService?.decryptUsingAES256(
-                element?.messageText
-              )
+                  element?.messageText
+                )
               : null;
           const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
           const matches = text?.match(
@@ -360,9 +361,8 @@ export class ProfileChatsListComponent
         const array = new MessageDatePipe().transform(this.messageList);
         // console.log(array);
         this.filteredMessageList = array;
-
       },
-      error: (err) => { },
+      error: (err) => {},
     });
   }
 
@@ -486,7 +486,7 @@ export class ProfileChatsListComponent
 
   isFile(media: string): boolean {
     const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip'];
-    return FILE_EXTENSIONS.some(ext => media.endsWith(ext));
+    return FILE_EXTENSIONS.some((ext) => media.endsWith(ext));
   }
 
   onCancel(): void {
@@ -513,7 +513,7 @@ export class ProfileChatsListComponent
     this.chatObj.msgMedia = emoji;
     // this.sendMessage();
   }
-  
+
   replyMsg(msgObj): void {
     console.log(msgObj);
     this.chatObj.parentMessageId = msgObj?.id;
@@ -522,12 +522,12 @@ export class ProfileChatsListComponent
     this.replyMessage.Username = msgObj.Username;
     const file = msgObj.messageMedia;
     const fileType =
-    file.endsWith('.pdf') ||
-    file.endsWith('.doc') ||
-    file.endsWith('.docx') ||
-    file.endsWith('.xls') ||
-    file.endsWith('.xlsx') ||
-    file.endsWith('.zip');
+      file.endsWith('.pdf') ||
+      file.endsWith('.doc') ||
+      file.endsWith('.docx') ||
+      file.endsWith('.xls') ||
+      file.endsWith('.xlsx') ||
+      file.endsWith('.zip');
     if (fileType) {
       this.pdfName = msgObj.messageMedia;
     } else {
@@ -541,6 +541,7 @@ export class ProfileChatsListComponent
       msgObj.messageText
     );
     this.chatObj.msgMedia = msgObj.messageMedia;
+    this.chatObj.parentMessageId = msgObj?.parentMessageId || null;
   }
 
   deleteMsg(msg): void {
@@ -628,7 +629,7 @@ export class ProfileChatsListComponent
     });
     // const originUrl =
     //   'https://facetime.tube/' + `callId-${new Date().getTime()}`;
-    const originUrl =`callId-${new Date().getTime()}`;
+    const originUrl = `callId-${new Date().getTime()}`;
     const data = {
       ProfilePicName:
         this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
@@ -651,7 +652,7 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
-    this.socketService?.startCall(data, (data: any) => { });
+    this.socketService?.startCall(data, (data: any) => {});
     modalRef.result.then((res) => {
       if (res === 'missCalled') {
         this.chatObj.msgText = 'You have a missed call';
@@ -763,7 +764,7 @@ export class ProfileChatsListComponent
       profileId: this.profileId,
       isTyping: isTyping,
     };
-    this.socketService?.startTyping(data, (data: any) => { });
+    this.socketService?.startTyping(data, (data: any) => {});
   }
 
   delayedStartTypingChat() {
