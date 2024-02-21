@@ -41,8 +41,8 @@ export class AppointmentCallComponent implements OnInit {
     // console.log(numberOfParticipants);
 
     api.on('readyToClose', () => {
-      this.router.navigate(['/home']).then(() => {
-        api.dispose();
+      this.router.navigate(['/profile-chats']).then(() => {
+        // api.dispose();
         // console.log('opaaaaa');
       });
     });

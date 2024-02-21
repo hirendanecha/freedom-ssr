@@ -18,7 +18,7 @@ import { take } from 'rxjs';
   templateUrl: './profile-chats.component.html',
   styleUrls: ['./profile-chats.component.scss'],
 })
-export class ProfileChartsComponent implements OnDestroy, OnInit {
+export class ProfileChartsComponent implements OnInit, OnDestroy {
   activeIdTab: string = 'local';
   pageList = [];
   profileId: number;
@@ -96,13 +96,6 @@ export class ProfileChartsComponent implements OnDestroy, OnInit {
     });
   }
 
-  ngOnDestroy(): void {
-    this.isRoomCreated = false;
-    if (this.socketService?.socket) {
-      this.socketService.socket?.disconnect();
-    }
-  }
-
   mobileShortCutPopup() {
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
@@ -129,5 +122,12 @@ export class ProfileChartsComponent implements OnDestroy, OnInit {
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.isRoomCreated = false;
+    if (this.socketService?.socket) {
+      this.socketService.socket?.disconnect();
+    }
   }
 }
