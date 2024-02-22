@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, EventEmitter, HostListener, Inject, OnDestroy, OnInit, Output, PLATFORM_ID } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  HostListener,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Output,
+  PLATFORM_ID,
+} from '@angular/core';
 import { SharedService } from './@shared/services/shared.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { isPlatformBrowser } from '@angular/common';
@@ -17,7 +27,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Output('newRoomCreated') newRoomCreated: EventEmitter<any> = new EventEmitter<any>();
+  @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
+    new EventEmitter<any>();
   title = 'freedom-ssr';
   showButton = false;
   tab: any;
@@ -39,9 +50,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this.checkDocumentFocus();
     this.profileId = +localStorage.getItem('profileId');
-
   }
-
 
   ngOnInit(): void {
     this.socketService.socket?.emit('join', { room: this.profileId });
@@ -53,7 +62,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sharedService.getUserDetails();
       this.spinner.hide();
       setTimeout(() => {
-        const splashScreenLoader = document.getElementById('splashScreenLoader');
+        const splashScreenLoader =
+          document.getElementById('splashScreenLoader');
         if (splashScreenLoader) {
           splashScreenLoader.style.display = 'none';
         }
@@ -84,7 +94,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               }
             }
           }
-          if (data?.actionType === 'M' && data?.notificationByProfileId !== this.profileId) {
+          if (
+            data?.actionType === 'M' &&
+            data?.notificationByProfileId !== this.profileId
+          ) {
             this.newRoomCreated.emit(true);
             var sound = new Howl({
               src: [
@@ -99,9 +112,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 sound?.play();
               }
             }
-            this.toasterService.success(data?.notificationDesc)
+            this.toasterService.success(data?.notificationDesc);
           }
-          if (data?.actionType === 'VC' && data?.notificationByProfileId !== this.profileId) {
+          if (
+            data?.actionType === 'VC' &&
+            data?.notificationByProfileId !== this.profileId
+          ) {
             var callSound = new Howl({
               src: [
                 'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
@@ -109,35 +125,45 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               loop: true,
             });
             this.soundControlService.initTabId();
-            const modalRef = this.modalService.open(IncomingcallModalComponent, {
-              centered: true,
-              size: 'sm',
-              backdrop: 'static',
-            });
+            const modalRef = this.modalService.open(
+              IncomingcallModalComponent,
+              {
+                centered: true,
+                size: 'sm',
+                backdrop: 'static',
+              }
+            );
             modalRef.componentInstance.calldata = data;
             modalRef.componentInstance.sound = callSound;
             modalRef.result.then((res) => {
               return;
             });
           }
-          if (data?.actionType === 'SC' && data?.notificationByProfileId !== this.profileId) {
+          if (
+            data?.actionType === 'SC' &&
+            data?.notificationByProfileId !== this.profileId
+          ) {
             if (!this.currentURL.includes(data?.link)) {
-              this.currentURL.push(data.link)
+              this.currentURL.push(data.link);
               this.modalService.dismissAll();
-              this.router.navigate([`/freedom-call/${data.link}`]);
+              if (!window.document.hidden) {
+                this.router.navigate([`/freedom-call/${data.link}`]);
+              }
               // window.open(`appointment-call/${data.link}`, '_blank');
               // window?.open(data?.link, '_blank');
             }
           }
           if (this.notificationId) {
-            this.customerService.getNotification(this.notificationId).subscribe({
-              next: (res) => {
-                localStorage.setItem('isRead', res.data[0]?.isRead);
-              },
-              error: (error) => {
-                console.log(error);
-              },
-            });
+            this.customerService
+              .getNotification(this.notificationId)
+              .subscribe({
+                next: (res) => {
+                  localStorage.setItem('isRead', res.data[0]?.isRead);
+                },
+                error: (error) => {
+                  console.log(error);
+                },
+              });
           }
         }
       });
@@ -189,5 +215,4 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.currentURL = [];
   }
-
 }
