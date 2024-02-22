@@ -167,6 +167,7 @@ export class ProfileChatsListComponent
     if (this.userChat?.roomId || this.userChat?.groupId) {
       this.activePage = 1;
       this.messageList = [];
+      this.resetData();
       this.getMessageList();
       this.hasMoreData = false;
       this.socketService.socket.on('get-users', (data) => {
