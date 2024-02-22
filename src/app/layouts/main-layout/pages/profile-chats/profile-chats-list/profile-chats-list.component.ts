@@ -75,6 +75,7 @@ export class ProfileChatsListComponent
   hasMoreData = false;
   typingData: any = {};
   isTyping = false;
+  typingTimeout: any;
   emojiPaths = [
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cool.gif',
@@ -167,6 +168,7 @@ export class ProfileChatsListComponent
     if (this.userChat?.roomId || this.userChat?.groupId) {
       this.activePage = 1;
       this.messageList = [];
+      this.resetData();
       this.getMessageList();
       this.hasMoreData = false;
       this.socketService.socket.on('get-users', (data) => {
@@ -586,9 +588,9 @@ export class ProfileChatsListComponent
                   ? metatitles?.[0]
                   : metatitles;
 
-                  // const metaurls = res?.meta?.url || url;
-                  // const metaursl = Array.isArray(metaurls) ? metaurls?.[0] : metaurls;
-                  
+                // const metaurls = res?.meta?.url || url;
+                // const metaursl = Array.isArray(metaurls) ? metaurls?.[0] : metaurls;
+
                 const metaursl = Array.isArray(url) ? url?.[0] : url;
                 this.metaData = {
                   title: metatitle,
@@ -756,14 +758,28 @@ export class ProfileChatsListComponent
     });
   }
 
-  startTypingChat(isTyping) {
+  // startTypingChat(isTyping) {
+  //   const data = {
+  //     groupId: this.userChat?.groupId,
+  //     roomId: this.userChat?.roomId,
+  //     profileId: this.profileId,
+  //     isTyping: isTyping,
+  //   };
+  //   this.socketService?.startTyping(data, (data: any) => {});
+  // }
+
+  startTypingChat(isTyping: boolean) {
+    clearTimeout(this.typingTimeout);
     const data = {
       groupId: this.userChat?.groupId,
       roomId: this.userChat?.roomId,
       profileId: this.profileId,
       isTyping: isTyping,
     };
-    this.socketService?.startTyping(data, (data: any) => {});
+    this.socketService?.startTyping(data, () => {});
+    if (isTyping) {
+      this.typingTimeout = setTimeout(() => this.startTypingChat(false), 3000);
+    }
   }
 
   delayedStartTypingChat() {
