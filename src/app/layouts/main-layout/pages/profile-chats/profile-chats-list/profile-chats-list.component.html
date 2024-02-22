@@ -52,7 +52,10 @@
         class="chat-head py-2 px-3 d-center justify-content-between h-72-px"
         *ngIf="userChat?.createdBy"
       >
-        <div class="d-flex gap-4 align-items-center" (click)="userChat.groupId ? groupEditDetails(groupData) : ''">
+        <div
+          class="d-flex gap-4 align-items-center"
+          (click)="userChat.groupId ? groupEditDetails(groupData) : ''"
+        >
           <img
             [src]="userChat?.profileImage || userChat?.ProfilePicName"
             class="rounded-circle header-image"
@@ -62,7 +65,9 @@
           <div class="d-flex align-items-baseline">
             <div class="profile-status">
               <h5 class="m-0">
-                <a class="m-0">{{ userChat.groupName || userChat?.Username }}</a>
+                <a class="m-0">{{
+                  userChat.groupName || userChat?.Username
+                }}</a>
               </h5>
               <ng-container *ngIf="userChat.roomId">
                 <span class="mdtxt">{{
@@ -80,7 +85,11 @@
                 }}</span>
               </ng-container> -->
             </div>
-            <fa-icon [icon]="['fas', 'gear']" class="font-20-px m-1 ms-3" *ngIf="userChat.groupId" />
+            <fa-icon
+              [icon]="['fas', 'gear']"
+              class="font-20-px m-1 ms-3"
+              *ngIf="userChat.groupId"
+            />
           </div>
         </div>
         <div
@@ -685,14 +694,13 @@
           *ngIf="
             typingData?.isTyping &&
             userChat.roomId === typingData.roomId &&
+              userChat.groupId === typingData.groupId &&
             typingData.profileId !== profileId
           "
         >
-          <span
-            class="mdtxt d-flex position-absolute bottom-100"
-            *ngIf="!userChat?.groupId"
-            >{{ typingData.Username + " is typing..." }}</span
-          >
+          <span class="mdtxt d-flex position-absolute bottom-100">{{
+            typingData.Username + " is typing..."
+          }}</span>
         </ng-container>
 
         <ng-container *ngIf="replyMessage?.msgText">
@@ -811,10 +819,10 @@
                   [isCustomeSearch]="userChat?.groupId ? userChat?.groupId : null"
                   (onDataChange)="onTagUserInputChangeEvent($event)"
                   (keypress)="startTypingChat(true)"
-                  (keydown)="delayedStartTypingChat()"
                   (keydown.enter)="uploadPostFileAndCreatePost()"
                   (keydown.shift.enter)="$event.stopPropagation()"
                 />
+                <!-- (keydown)="delayedStartTypingChat()" -->
               </div>
               <!-- (keyup.enter)="uploadPostFileAndCreatePost()" -->
               <div class="btn-area">
