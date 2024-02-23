@@ -89,7 +89,8 @@ import {
   faCommentAlt,
   faPencil,
   faRefresh,
-  faReply
+  faReply,
+  faUserTimes
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -115,7 +116,6 @@ import { RePostCardComponent } from './components/re-post-card/re-post-card.comp
 import { EditPostModalComponent } from './modals/edit-post-modal/edit-post-modal.component';
 import { ConferenceLinkComponent } from './modals/create-conference-link/conference-link-modal.component';
 import { IncomingcallModalComponent } from './modals/incoming-call-modal/incoming-call-modal.component';
-import { AppointmentCallComponent } from './components/appointment-call/appointment-call.component';
 import { OutGoingCallModalComponent } from './modals/outgoing-call-modal/outgoing-call-modal.component';
 import { CreateGroupModalComponent } from './modals/create-group-modal/create-group-modal.component';
 import { EditGroupModalComponent } from './modals/edit-group-modal/edit-group-modal.component';
@@ -147,7 +147,6 @@ const sharedComponents = [
   ConferenceLinkComponent,
   IncomingcallModalComponent,
   OutGoingCallModalComponent,
-  AppointmentCallComponent,
   CreateGroupModalComponent,
   EditGroupModalComponent
 ];
@@ -253,7 +252,8 @@ export class SharedModule {
       faPencil,
       faRefresh,
       faRightFromBracket,
-      faReply
+      faReply,
+      faUserTimes
     );
   }
 }

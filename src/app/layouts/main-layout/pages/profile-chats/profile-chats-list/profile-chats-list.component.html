@@ -226,13 +226,23 @@
               {{ msg?.date }}</span
             >
             <ng-container *ngFor="let message of msg?.messages">
-              <span
+              <!-- <span
                 class="font-12-px data-text-color ms-3"
                 *ngIf="
                   message?.sentBy !== this.profileId && message?.createdDate
                 "
                 >{{ displayLocalTime(message?.createdDate) }}</span
-              >
+              > -->
+              <div
+              class="d-flex"
+              *ngIf="
+                message?.sentBy !== this.profileId &&
+                message?.createdDate &&
+                message?.Username
+              "
+            >
+              <span class="font-12-px data-text-color ms-3">{{ message?.Username }}, {{displayLocalTime(message?.createdDate)}}</span>
+            </div>
               <li class="you" *ngIf="message?.sentBy !== this.profileId">
                 <div class="d-flex drop-options">
                   <div class="btn-group d-flex options me-2">

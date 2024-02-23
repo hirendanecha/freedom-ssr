@@ -7,5 +7,28 @@
   ></iframe>
 </div> -->
 <div class="bg-black">
-  <div id="meet" class="iframe-model"></div>
+  <div class="d-flex justify-content-between">
+    <button
+      class="button profile-active mb-4 mb-lg-0 d-flex align-items-center gap-2 ms-5"
+      (click)="openChatListSidebar()"
+    >
+      <fa-icon [icon]="['fas', 'sliders']" class="font-20-px" />
+      <span>Chat List</span>
+    </button>
+    <button
+      class="button profile-active mb-4 mb-lg-0 d-flex align-items-center gap-2 me-5"
+      (click)="openRightSidebar()"
+    >
+      <fa-icon [icon]="['fas', 'message']" class="font-20-px" />
+      <span>Chat</span>
+    </button>
+  </div>
+  <div
+    [ngClass]="{
+      isLeftSidebarOpen: isLeftSidebarOpen,
+      isRightSidebarOpen: isRightSidebarOpen
+    }"
+  >
+    <div id="meet" class="iframe-model"></div>
+  </div>
 </div>
