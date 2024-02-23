@@ -245,4 +245,18 @@ export class ProfileChatsSidebarComponent
       });
     }
   }
+
+  // removeRequest(item){
+  //   if (item.roomId) {
+  //     const data = {
+  //       roomId: item.roomId,
+  //       profileId: item.profileId,
+  //     };
+  //     this.socketService?.cancelRequest(data, (data: any) => {
+  //       this.getChatList();
+  //       this.getGroupList();
+  //       this.onNewChat?.emit({});
+  //     });
+  //   }
+  // }
 }
