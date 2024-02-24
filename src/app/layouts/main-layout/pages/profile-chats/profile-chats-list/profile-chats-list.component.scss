@@ -302,6 +302,37 @@
       }
     }
   }
+  .message-text-custom{
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    span,
+    b,
+    p,
+    em,
+    div,
+    strong,
+    li {
+      font-size: 16px !important;
+      line-height: 22px !important;
+      margin: unset !important;
+      letter-spacing: unset !important;
+      background-color: unset !important;
+      font-weight: 500 !important;
+      color: unset !important;
+      text-wrap: unset !important;
+    }
+    a {
+      font-size: 16px !important;
+      line-height: 22px !important;
+      margin: unset !important;
+      background-color: unset !important;
+      font-weight: 500 !important;
+    }
+  }
 }
 // .chat-footer {
 //   top: 100% !important;

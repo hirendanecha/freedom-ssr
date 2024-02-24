@@ -4,7 +4,7 @@
 //   overflow-y: hidden;
 // }
 .iframe-model {
-  height: calc(86vh - 6px);
+  height: calc(89vh - 8px);
   // width: 100vw;
 }
 
@@ -201,6 +201,12 @@
         max-height: 162px !important;
         min-height: 162px;
       }
+    }
+  }
+
+  .profile-active{
+    fa-icon svg path {
+      fill: #ffff;
     }
   }
 }

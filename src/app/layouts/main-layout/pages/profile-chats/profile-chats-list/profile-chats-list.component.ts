@@ -113,7 +113,7 @@ export class ProfileChatsListComponent
     this.socketService.socket?.on('new-message', (data) => {
       this.newRoomCreated.emit(true);
       this.selectedChat.emit(data?.roomId || data?.groupId);
-      this.notificationNavigation();
+      // this.notificationNavigation();
       if (
         data?.sentBy !== this.profileId &&
         (this.userChat?.roomId === data?.roomId ||
