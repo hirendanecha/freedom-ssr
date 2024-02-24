@@ -394,7 +394,7 @@
                       <div class="d-flex flex-column">
                         <p
                           *ngIf="message?.messageText !== null"
-                          class="m-0"
+                          class="m-0 message-text-custom"
                           [innerHTML]="
                             encryptDecryptService.decryptUsingAES256(
                               message?.messageText
@@ -634,7 +634,7 @@
                     <div class="d-flex flex-column">
                       <p
                         *ngIf="message?.messageText !== null"
-                        class="m-0"
+                        class="m-0 message-text-custom"
                         [innerHTML]="
                           encryptDecryptService.decryptUsingAES256(
                             message?.messageText
