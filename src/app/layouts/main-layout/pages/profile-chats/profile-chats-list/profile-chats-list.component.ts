@@ -267,7 +267,9 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
         parentMessageId: this.chatObj?.parentMessageId || null,
       };
-      data.roomId ? (data['isRead'] = 'N') : null;
+      this.userChat?.roomId ? (data['isRead'] = 'N') : null;
+      console.log(data);
+      
       this.socketService.sendMessage(data, async (data: any) => {
         this.isFileUploadInProgress = false;
         this.scrollToBottom();
