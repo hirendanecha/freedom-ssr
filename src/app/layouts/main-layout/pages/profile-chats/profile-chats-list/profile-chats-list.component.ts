@@ -61,6 +61,8 @@ export class ProfileChatsListComponent
   groupData: any = [];
   messageList: any = [];
   filteredMessageList: any = [];
+  readMessagesBy: any = [];
+  readMessageRoom: string = '';
   metaURL: any = [];
   metaData: any = {};
   ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -318,6 +320,8 @@ export class ProfileChatsListComponent
               new Date(a.createdDate).getTime() -
               new Date(b.createdDate).getTime()
           );
+          this.readMessagesBy = data?.readUsers.filter(item => item.ID !== this.profileId);
+          this.readMessageRoom = this.messageList[0].isRead
         } else {
           this.hasMoreData = false;
         }
