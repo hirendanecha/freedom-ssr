@@ -12,6 +12,7 @@ import { SocketService } from 'src/app/@shared/services/socket.service';
 import { ConfirmationModalComponent } from 'src/app/@shared/modals/confirmation-modal/confirmation-modal.component';
 import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { take } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-profile-chat-list',
@@ -37,6 +38,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     isShowResearchLeftSideBar: false,
     isShowChatListSideBar: true,
   };
+  oldChat: any = {};
 
   constructor(
     private renderer: Renderer2,
@@ -47,6 +49,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     public breakpointService: BreakpointService
   ) {
+    this.profileId = +localStorage.getItem('profileId');
     if (this.sharedService.isNotify) {
       this.sharedService.isNotify = false;
     }
@@ -74,7 +77,21 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
   }
 
   onChatPost(userName: any) {
+    console.log('old-user-chat', this.userChat);
+    if (this.userChat?.groupId) {
+      const date = moment(new Date()).utc();
+      this.oldChat = {
+        profileId: this.profileId,
+        groupId: this.userChat.groupId,
+        date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+      };
+      this.socketService.switchChat(this.oldChat, (data) => {
+        console.log(data);
+      });
+    }
+
     this.userChat = userName;
+    console.log('new-user-chat', this.userChat);
   }
 
   onNewChatRoom(isRoomCreated) {

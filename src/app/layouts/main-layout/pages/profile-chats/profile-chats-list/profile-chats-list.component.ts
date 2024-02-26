@@ -265,7 +265,7 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
         parentMessageId: this.chatObj?.parentMessageId || null,
       };
-
+      data.roomId ? (data['isRead'] = 'N') : null;
       this.socketService.sendMessage(data, async (data: any) => {
         this.isFileUploadInProgress = false;
         this.scrollToBottom();
@@ -324,21 +324,33 @@ export class ProfileChatsListComponent
         if (this.activePage < data.pagination.totalPages) {
           this.hasMoreData = true;
         }
-        const ids = [];
-        this.messageList.map((e: any) => {
-          if (e.isRead === 'N' && e.sentBy !== this.profileId) {
-            return ids.push(e.id);
-          } else {
-            return e;
-          }
-        });
-        if (ids.length) {
-          const data = {
-            ids: ids,
+        if (this.userChat?.groupId) {
+          const date = moment(new Date()).utc();
+          const oldChat = {
+            profileId: this.profileId,
+            groupId: this.userChat.groupId,
+            date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
           };
-          this.socketService.readMessage(data, (res) => {
-            return;
+          this.socketService.switchChat(oldChat, (data) => {
+            console.log(data);
           });
+        } else {
+          const ids = [];
+          this.messageList.map((e: any) => {
+            if (e.isRead === 'N' && e.sentBy !== this.profileId) {
+              return ids.push(e.id);
+            } else {
+              return e;
+            }
+          });
+          if (ids.length) {
+            const data = {
+              ids: ids,
+            };
+            this.socketService.readMessage(data, (res) => {
+              return;
+            });
+          }
         }
         this.messageList.map(async (element: any) => {
           const url =

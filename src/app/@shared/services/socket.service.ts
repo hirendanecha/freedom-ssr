@@ -137,6 +137,10 @@ export class SocketService {
     this.socket.emit('read-message', params, callback);
   }
 
+  readGroupMessage(params, callback: (data: any) => void) {
+    this.socket.emit('read-group-message', params, callback);
+  }
+
   editMessage(params, callback: (data: any) => void) {
     this.socket.emit('edit-message', params, callback);
   }
@@ -179,5 +183,9 @@ export class SocketService {
 
   deleteRoom(params, callback: (data: any) => void) {
     this.socket.emit('delete-room', params, callback);
+  }
+
+  switchChat(params, callback: (data: any) => void) {
+    this.socket.emit('switch-group', params, callback);
   }
 }
