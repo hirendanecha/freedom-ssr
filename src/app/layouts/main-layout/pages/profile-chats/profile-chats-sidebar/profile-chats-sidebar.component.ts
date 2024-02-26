@@ -77,7 +77,7 @@ export class ProfileChatsSidebarComponent
         this.getChatList();
         this.getGroupList();
       });
-    this.selectedChatUser = this.selectedRoomId || null
+    this.selectedChatUser = this.selectedRoomId || null;
   }
 
   ngOnInit(): void {

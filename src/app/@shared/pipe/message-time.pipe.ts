@@ -48,11 +48,11 @@ export class MessageTimePipe implements PipeTransform {
     // For older dates, return the actual date
     const formattedDate = targetDate.toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
+      // hour: 'numeric',
+      // minute: 'numeric',
+      // hour12: true
     });
 
     return formattedDate;
