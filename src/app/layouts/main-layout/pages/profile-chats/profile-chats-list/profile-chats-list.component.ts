@@ -325,8 +325,8 @@ export class ProfileChatsListComponent
               new Date(a.createdDate).getTime() -
               new Date(b.createdDate).getTime()
           );
-          this.readMessagesBy = data?.readUsers.filter(item => item.ID !== this.profileId);
-          this.readMessageRoom = this.messageList[0].isRead
+          this.readMessagesBy = data?.readUsers?.filter(item => item.ID !== this.profileId);
+          this.readMessageRoom = this.messageList[0]?.isRead
         } else {
           this.hasMoreData = false;
         }

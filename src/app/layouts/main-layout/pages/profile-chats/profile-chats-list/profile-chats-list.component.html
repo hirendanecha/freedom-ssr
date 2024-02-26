@@ -344,7 +344,7 @@
                                   }}"
                                   class="w-100 h-100 rounded-4"
                                   alt="icon"
-                                  onerror="this.onerror=null;"
+                                  onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                                 />
                               </div>
                             </ng-container>
@@ -583,7 +583,7 @@
                                 }}"
                                 class="w-100 h-100 rounded-4"
                                 alt="icon"
-                                onerror="this.onerror=null;"
+                                onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                               />
                             </div>
                           </ng-container>
@@ -655,21 +655,21 @@
               </li>
             </ng-container>
           </ul>
-          <ng-container *ngIf="userChat.groupId || (userChat.roomId && readMessageRoom === 'Y')">
+          <ng-container *ngIf="userChat?.groupId || (userChat?.roomId && readMessageRoom === 'Y')">
             <div class="d-flex flex-row-reverse pb-2 pe-6 gap-1" ngbDropdown>
-              <ng-container *ngFor="let item of (userChat.groupId ? readMessagesBy : [userChat])">
+              <ng-container *ngFor="let item of (userChat?.groupId ? readMessagesBy : [userChat])">
                 <div class="c-pointer" [title]="item.Username || item.FirstName" ngbDropdownToggle>
-                  <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-20-px w-20-px" draggable="false" onerror="this.onerror=null;">
+                  <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-20-px w-20-px" draggable="false" onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';">
                 </div>
               </ng-container>
               <div ngbDropdownMenu class="w-228-px">
                 <div class="h6 ms-3 btn-link">
-                  READ BY {{ userChat.groupId ? readMessagesBy.length : '' }}
+                  READ BY {{ userChat?.groupId ? readMessagesBy.length : '' }}
                 </div>
                 <ng-container *ngFor="let item of (userChat.groupId ? readMessagesBy : [userChat])">
                   <button ngbDropdownItem>
                     <div class="d-flex align-items-center gap-2">
-                      <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-28-px w-28-px" draggable="false" onerror="this.onerror=null;">
+                      <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-28-px w-28-px" draggable="false" onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';">
                       <div class="replay-text">
                         {{ item.Username || item.FirstName }}
                       </div>
