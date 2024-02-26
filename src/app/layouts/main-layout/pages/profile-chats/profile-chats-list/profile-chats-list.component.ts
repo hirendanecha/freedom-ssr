@@ -61,6 +61,8 @@ export class ProfileChatsListComponent
   groupData: any = [];
   messageList: any = [];
   filteredMessageList: any = [];
+  readMessagesBy: any = [];
+  readMessageRoom: string = '';
   metaURL: any = [];
   metaData: any = {};
   ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -265,7 +267,9 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
         parentMessageId: this.chatObj?.parentMessageId || null,
       };
-      data.roomId ? (data['isRead'] = 'N') : null;
+      this.userChat?.roomId ? (data['isRead'] = 'N') : null;
+      console.log(data);
+      
       this.socketService.sendMessage(data, async (data: any) => {
         this.isFileUploadInProgress = false;
         this.scrollToBottom();
@@ -283,6 +287,11 @@ export class ProfileChatsListComponent
           data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
         }
         this.messageList.push(data);
+        if (this.userChat.groupId) {
+          this.socketService.readGroupMessage(data, (readUsers)=> {
+            this.readMessagesBy = readUsers.filter(item => item.ID !== this.profileId);
+          })
+        }
         const array = new MessageDatePipe().transform(this.messageList);
         // console.log(array);
         this.filteredMessageList = array;
@@ -318,6 +327,8 @@ export class ProfileChatsListComponent
               new Date(a.createdDate).getTime() -
               new Date(b.createdDate).getTime()
           );
+          this.readMessagesBy = data?.readUsers?.filter(item => item.ID !== this.profileId);
+          this.readMessageRoom = this.messageList[0]?.isRead
         } else {
           this.hasMoreData = false;
         }
