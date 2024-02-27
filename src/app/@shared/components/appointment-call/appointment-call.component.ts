@@ -23,14 +23,14 @@ export class AppointmentCallComponent implements OnInit {
   isRightSidebarOpen: boolean = false;
   selectedRoomId: number;
   isRoomCreated: boolean = false;
-  
+
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private router: Router,
     private offcanvasService: NgbOffcanvas,
     private activeOffcanvas: NgbActiveOffcanvas,
-    private sharedService: SharedService,
+    private sharedService: SharedService
   ) {}
 
   ngOnInit() {
@@ -47,6 +47,7 @@ export class AppointmentCallComponent implements OnInit {
         SHOW_JITSI_WATERMARK: false,
       },
       disableModeratorIndicator: true,
+      lang: 'en',
     };
 
     const api = new JitsiMeetExternalAPI(this.domain, this.options);

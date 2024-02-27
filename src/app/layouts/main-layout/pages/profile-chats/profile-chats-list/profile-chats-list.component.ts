@@ -704,12 +704,12 @@ export class ProfileChatsListComponent
 
     this.socketService?.startCall(data, (data: any) => {});
     modalRef.result.then((res) => {
-      if (!window.document.hidden) {
-        if (res === 'missCalled') {
-          this.chatObj.msgText = 'You have a missed call';
-          this.sendMessage();
-        }
+      if (res === 'missCalled') {
+        this.chatObj.msgText = 'You have a missed call';
+        this.sendMessage();
       }
+      // if (!window.document.hidden) {
+      // }
     });
   }
 

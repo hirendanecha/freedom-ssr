@@ -37,7 +37,7 @@ export class IncomingcallModalComponent
     private socketService: SocketService,
     public encryptDecryptService: EncryptDecryptService,
     private soundControlService: SoundControlService,
-    private router: Router,
+    private router: Router
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -73,7 +73,7 @@ export class IncomingcallModalComponent
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   pickUpCall(): void {
     this.sound?.stop();
@@ -82,8 +82,8 @@ export class IncomingcallModalComponent
       this.currentURL.push(this.calldata.link);
       // window.open(this.calldata.link, '_blank');
 
-      console.log('incomin',this.calldata.link);
-      // this.router.navigate([`/appointment-call/${this.calldata.link}`]);  
+      console.log('incomin', this.calldata.link);
+      // this.router.navigate([`/appointment-call/${this.calldata.link}`]);
       const callId = this.calldata.link.replace('https://facetime.tube/', '');
       this.router.navigate([`/freedom-call/${callId}`]);
       this.sound?.stop();
@@ -136,9 +136,9 @@ export class IncomingcallModalComponent
       sentBy: this.calldata.notificationToProfileId || this.profileId,
       profileId: this.calldata.notificationByProfileId || this.profileId,
     };
-    if (!window.document.hidden) {
-      this.socketService.sendMessage(data, async (data: any) => { });
-    }
+    // if (!window.document.hidden) {
+    // }
+    this.socketService.sendMessage(data, async (data: any) => {});
   }
 
   ngOnDestroy(): void {
