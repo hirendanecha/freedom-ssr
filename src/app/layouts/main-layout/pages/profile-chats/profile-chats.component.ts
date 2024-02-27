@@ -77,7 +77,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
   }
 
   onChatPost(userName: any) {
-    console.log('old-user-chat', this.userChat);
+    // console.log('old-user-chat', this.userChat);
     if (this.userChat?.groupId) {
       const date = moment(new Date()).utc();
       this.oldChat = {
@@ -91,7 +91,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     }
 
     this.userChat = userName;
-    console.log('new-user-chat', this.userChat);
+    // console.log('new-user-chat', this.userChat);
   }
 
   onNewChatRoom(isRoomCreated) {

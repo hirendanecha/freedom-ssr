@@ -44,13 +44,14 @@ export class OutGoingCallModalComponent
         this.sound?.play();
       }
     }
-    this.soundEnabledSubscription =
-      this.soundControlService.soundEnabled$.subscribe((soundEnabled) => {
-        console.log(soundEnabled);
-        if (soundEnabled === false) {
-          this.sound?.stop();
-        }
-      });
+    if (window.document.hidden) {
+      this.soundEnabledSubscription = this.soundControlService.soundEnabled$.subscribe((soundEnabled) => {
+          console.log(soundEnabled);
+          if (soundEnabled === false) {
+            this.sound?.stop();
+          }
+        });
+    }
     if (!this.hangUpTimeout) {
       this.hangUpTimeout = setTimeout(() => {
         this.hangUpCall();

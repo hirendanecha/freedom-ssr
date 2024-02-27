@@ -136,7 +136,9 @@ export class IncomingcallModalComponent
       sentBy: this.calldata.notificationToProfileId || this.profileId,
       profileId: this.calldata.notificationByProfileId || this.profileId,
     };
-    this.socketService.sendMessage(data, async (data: any) => { });
+    if (!window.document.hidden) {
+      this.socketService.sendMessage(data, async (data: any) => { });
+    }
   }
 
   ngOnDestroy(): void {
