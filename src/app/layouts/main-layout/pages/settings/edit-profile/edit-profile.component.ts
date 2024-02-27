@@ -39,11 +39,11 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   uploadListSubject: Subject<void> = new Subject<void>();
   profileImg: any = {
     file: null,
-    url: ''
+    url: '',
   };
   profileCoverImg: any = {
     file: null,
-    url: ''
+    url: '',
   };
   isNotificationSoundEnabled: boolean = true;
 
@@ -57,7 +57,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     private postService: PostService,
     public sharedService: SharedService,
     private toastService: ToastService,
-    private uploadService: UploadFilesService,
+    private uploadService: UploadFilesService
   ) {
     this.userlocalId = +localStorage.getItem('user_id');
     this.userId = this.route.snapshot.paramMap.get('id');
@@ -76,9 +76,11 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       this.router.navigate([`/login`]);
     }
     this.modalService.dismissAll();
-    const notificationSound = JSON.parse(localStorage.getItem('soundPreferences'))?.notificationSoundEnabled;
+    const notificationSound = JSON.parse(
+      localStorage.getItem('soundPreferences')
+    )?.notificationSoundEnabled;
     if (notificationSound === 'N') {
-      this.isNotificationSoundEnabled = false
+      this.isNotificationSoundEnabled = false;
     }
   }
 
@@ -95,7 +97,9 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     if (soundOct.notificationSoundEnabled === 'Y') {
       soundOct.notificationSoundEnabled = 'N';
     } else {
-      soundOct.notificationSoundEnabled = this.isNotificationSoundEnabled ? 'Y' : 'N';
+      soundOct.notificationSoundEnabled = this.isNotificationSoundEnabled
+        ? 'Y'
+        : 'N';
     }
     localStorage.setItem('soundPreferences', JSON.stringify(soundOct));
   }
@@ -146,33 +150,29 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   }
 
   getAllCountries() {
-    this.customerService.getCountriesData().subscribe(
-      {
-        next: (result) => {
-          this.allCountryData = result;
-        },
-        error:
-          (error) => {
-            console.log(error);
-          }
-      });
+    this.customerService.getCountriesData().subscribe({
+      next: (result) => {
+        this.allCountryData = result;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 
   onZipChange(event) {
-    this.customerService.getZipData(event, this.customer?.Country).subscribe(
-      {
-        next: (data) => {
-          let zip_data = data[0];
-          this.customer.State = zip_data ? zip_data.state : '';
-          this.customer.City = zip_data ? zip_data.city : '';
-          this.customer.County = zip_data ? zip_data.places : '';
-          // this.customer.Place = zip_data ? zip_data.places : '';
-        },
-        error:
-          (err) => {
-            console.log(err);
-          }
-      });
+    this.customerService.getZipData(event, this.customer?.Country).subscribe({
+      next: (data) => {
+        let zip_data = data[0];
+        this.customer.State = zip_data ? zip_data.state : '';
+        this.customer.City = zip_data ? zip_data.city : '';
+        this.customer.County = zip_data ? zip_data.places : '';
+        // this.customer.Place = zip_data ? zip_data.places : '';
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   confirmAndUpdateCustomer(): void {
@@ -183,7 +183,8 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       modalRef.componentInstance.title = 'Update Profile';
       modalRef.componentInstance.confirmButtonLabel = 'Update';
       modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-      modalRef.componentInstance.message = 'Are you sure want to update profile details?';
+      modalRef.componentInstance.message =
+        'Are you sure want to update profile details?';
 
       modalRef.result.then((res) => {
         if (res === 'success') {
@@ -191,17 +192,20 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
         }
       });
     }
-
   }
 
   uploadImgAndUpdateCustomer(): void {
     let uploadObs = {};
     if (this.profileImg?.file?.name) {
-      uploadObs['profileImg'] = this.uploadService.uploadFile(this.profileImg?.file);
+      uploadObs['profileImg'] = this.uploadService.uploadFile(
+        this.profileImg?.file
+      );
     }
 
     if (this.profileCoverImg?.file?.name) {
-      uploadObs['profileCoverImg'] = this.uploadService.uploadFile(this.profileCoverImg?.file);
+      uploadObs['profileCoverImg'] = this.uploadService.uploadFile(
+        this.profileCoverImg?.file
+      );
     }
 
     if (Object.keys(uploadObs)?.length > 0) {
@@ -212,13 +216,15 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
           if (res?.profileImg?.body?.url) {
             this.profileImg['file'] = null;
             this.profileImg['url'] = res?.profileImg?.body?.url;
-            this.sharedService['userData']['ProfilePicName'] = this.profileImg['url'];
+            this.sharedService['userData']['ProfilePicName'] =
+              this.profileImg['url'];
           }
 
           if (res?.profileCoverImg?.body?.url) {
             this.profileCoverImg['file'] = null;
             this.profileCoverImg['url'] = res?.profileCoverImg?.body?.url;
-            this.sharedService['userData']['CoverPicName'] = this.profileCoverImg['url'];
+            this.sharedService['userData']['CoverPicName'] =
+              this.profileCoverImg['url'];
           }
 
           this.updateCustomer();
@@ -236,26 +242,30 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   updateCustomer(): void {
     if (this.profileId) {
       this.spinner.show();
-      this.customer.ProfilePicName = this.profileImg?.url || this.customer.ProfilePicName;
-      this.customer.CoverPicName = this.profileCoverImg?.url || this.customer.CoverPicName;
+      this.customer.ProfilePicName =
+        this.profileImg?.url || this.customer.ProfilePicName;
+      this.customer.CoverPicName =
+        this.profileCoverImg?.url || this.customer.CoverPicName;
       this.customer.IsActive = 'Y';
       this.customer.UserID = +this.userId;
-      this.customerService.updateProfile(this.profileId, this.customer).subscribe({
-        next: (res: any) => {
-          this.spinner.hide();
-          if (!res.error) {
-            this.toastService.success(res.message);
-            this.sharedService.getUserDetails();
-          } else {
-            this.toastService.danger(res?.message);
-          }
-        },
-        error: (error) => {
-          console.log(error.error.message);
-          this.spinner.hide();
-          this.toastService.danger(error.error.message);
-        }
-      });
+      this.customerService
+        .updateProfile(this.profileId, this.customer)
+        .subscribe({
+          next: (res: any) => {
+            this.spinner.hide();
+            if (!res.error) {
+              this.toastService.success(res.message);
+              this.sharedService.getUserDetails();
+            } else {
+              this.toastService.danger(res?.message);
+            }
+          },
+          error: (error) => {
+            console.log(error.error.message);
+            this.spinner.hide();
+            this.toastService.danger(error.error.message);
+          },
+        });
     }
   }
 
@@ -269,11 +279,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
           this.getAllCountries();
         }
       },
-      error:
-        (error) => {
-          this.spinner.hide();
-          console.log(error);
-        }
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
     });
   }
 
@@ -296,28 +305,35 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       'Are you sure want to delete your account?';
     modalRef.result.then((res) => {
       if (res === 'success') {
-        this.customerService.deleteCustomer(this.userlocalId, this.profileId).subscribe({
-          next: (res: any) => {
-            if (res) {
-              this.toastService.success(res.message || 'Account deleted successfully');
-              this.tokenStorage.signOut();
-              this.router.navigateByUrl('register');
-            }
-          },
-          error: (error) => {
-            console.log(error);
-            this.toastService.success(error.message);
-          },
-        });
+        this.customerService
+          .deleteCustomer(this.userlocalId, this.profileId)
+          .subscribe({
+            next: (res: any) => {
+              if (res) {
+                this.toastService.success(
+                  res.message || 'Account deleted successfully'
+                );
+                this.tokenStorage.signOut();
+                this.router.navigateByUrl('register');
+              }
+            },
+            error: (error) => {
+              console.log(error);
+              this.toastService.success(error.message);
+            },
+          });
       }
     });
   }
   onChangeTag(event) {
-    this.customer.Username = event.target.value.replaceAll(' ', '').replaceAll(/\s*,+\s*/g, ',');
+    this.customer.Username = event.target.value
+      .replaceAll(' ', '')
+      .replaceAll(/\s*,+\s*/g, ',');
   }
   convertToUppercase(event: any) {
     const inputElement = event.target as HTMLInputElement;
-    const inputValue = inputElement.value;
+    let inputValue = inputElement.value;
+    inputValue = inputValue.replace(/\s/g, '');
     inputElement.value = inputValue.toUpperCase();
   }
 }

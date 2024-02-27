@@ -72,7 +72,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`,
     };
     // this.seoService.updateSeoMetaData(data);
-  }  
+  }
 
   ngOnInit(): void {
     this.getAllCountries();
@@ -329,12 +329,17 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     });
   }
   onChangeTag(event) {
-    this.registerForm.get('Username').setValue(event.target.value.replaceAll(' ', '').replaceAll(/\s*,+\s*/g, ','));
+    this.registerForm
+      .get('Username')
+      .setValue(
+        event.target.value.replaceAll(' ', '').replaceAll(/\s*,+\s*/g, ',')
+      );
   }
 
   convertToUppercase(event: any) {
     const inputElement = event.target as HTMLInputElement;
-    const inputValue = inputElement.value;
+    let inputValue = inputElement.value;
+    inputValue = inputValue.replace(/\s/g, '');
     inputElement.value = inputValue.toUpperCase();
   }
 }

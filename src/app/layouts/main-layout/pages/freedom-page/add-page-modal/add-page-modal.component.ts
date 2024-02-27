@@ -404,7 +404,8 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
 
   convertToUppercase(event: any) {
     const inputElement = event.target as HTMLInputElement;
-    const inputValue = inputElement.value;
+    let inputValue = inputElement.value;
+    inputValue = inputValue.replace(/\s/g, '');
     inputElement.value = inputValue.toUpperCase();
   }
 }

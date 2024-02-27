@@ -309,7 +309,7 @@
                   class="abs-area d-center mdtxt top-0 start-100 translate-middle badge rounded-pill bg-danger mt-4"
                   *ngIf="
                     item?.unReadMessage > 0 &&
-                    (selectedChatUser !== item.roomId &&
+                    (selectedChatUser !== item.roomId ||
                       selectedChatUser !== item.groupId)
                   "
                   >{{ item?.unReadMessage }}</span

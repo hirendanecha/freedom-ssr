@@ -76,7 +76,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.socketService.socket?.on('notification', (data: any) => {
         if (data) {
-          this.sharedService.isNotify = true;
+          if (data?.notificationByProfileId !== this.profileId) {
+            this.sharedService.isNotify = true;
+          }
           this.notificationId = data.id;
           this.originalFavicon.href = '/assets/images/icon-unread.jpg';
           if (data?.actionType === 'T') {

@@ -128,13 +128,6 @@ export class ProfileChatsListComponent
           );
           const array = new MessageDatePipe().transform(this.messageList);
           this.filteredMessageList = array;
-          if (this.userChat.groupId) {
-            this.socketService.readGroupMessage(data, (readUsers) => {
-              this.readMessagesBy = readUsers.filter(
-                (item) => item.ID !== this.profileId
-              );
-            });
-          }
         } else if (this.messageList[index]) {
           this.messageList[index] = data;
           const array = new MessageDatePipe().transform(this.messageList);
@@ -145,6 +138,20 @@ export class ProfileChatsListComponent
           this.messageList.push(data);
           const array = new MessageDatePipe().transform(this.messageList);
           this.filteredMessageList = array;
+          if (this.userChat.groupId) {
+            this.socketService.readGroupMessage(data, (readUsers) => {
+              this.readMessagesBy = readUsers.filter(
+                (item) => item.ID !== this.profileId
+              );
+            });
+          }
+          if (this.userChat.groupId === data.groupId) {
+            this.socketService.socket.on('read-message-user', (data) => {
+              this.readMessagesBy = data?.filter(
+                (item) => item.ID !== this.profileId
+              );
+            });
+          }
         }
       }
     });
@@ -159,9 +166,6 @@ export class ProfileChatsListComponent
     this.socketService.socket?.on('typing', (data) => {
       // console.log('typingData', data)
       this.typingData = data;
-    });
-    this.socketService.socket.on('read-message-user', (data) => {
-      this.readMessagesBy = data?.filter(item => item.ID !== this.profileId);
     });
   }
 
@@ -278,7 +282,7 @@ export class ProfileChatsListComponent
         parentMessageId: this.chatObj?.parentMessageId || null,
       };
       this.userChat?.roomId ? (data['isRead'] = 'N') : null;
-      
+
       this.socketService.sendMessage(data, async (data: any) => {
         this.isFileUploadInProgress = false;
         this.scrollToBottom();
@@ -298,9 +302,11 @@ export class ProfileChatsListComponent
         this.messageList.push(data);
         this.readMessageRoom = data?.isRead;
         if (this.userChat.groupId) {
-          this.socketService.readGroupMessage(data, (readUsers)=> {
-            this.readMessagesBy = readUsers.filter(item => item.ID !== this.profileId);
-          })
+          this.socketService.readGroupMessage(data, (readUsers) => {
+            this.readMessagesBy = readUsers.filter(
+              (item) => item.ID !== this.profileId
+            );
+          });
         }
         const array = new MessageDatePipe().transform(this.messageList);
         // console.log(array);
@@ -337,8 +343,13 @@ export class ProfileChatsListComponent
               new Date(a.createdDate).getTime() -
               new Date(b.createdDate).getTime()
           );
-          this.readMessagesBy = data?.readUsers?.filter(item => item.ID !== this.profileId);
-          this.readMessageRoom = this.messageList && this.messageList.length > 0 ? this.messageList[this.messageList.length - 1].isRead : undefined;
+          this.readMessagesBy = data?.readUsers?.filter(
+            (item) => item.ID !== this.profileId
+          );
+          this.readMessageRoom =
+            this.messageList && this.messageList.length > 0
+              ? this.messageList[this.messageList.length - 1].isRead
+              : undefined;
         } else {
           this.hasMoreData = false;
         }
@@ -346,6 +357,11 @@ export class ProfileChatsListComponent
           this.hasMoreData = true;
         }
         if (this.userChat?.groupId) {
+          this.socketService.socket.on('read-message-user', (data) => {
+            this.readMessagesBy = data?.filter(
+              (item) => item.ID !== this.profileId
+            );
+          });
           const date = moment(new Date()).utc();
           const oldChat = {
             profileId: this.profileId,
@@ -688,7 +704,7 @@ export class ProfileChatsListComponent
 
     this.socketService?.startCall(data, (data: any) => {});
     modalRef.result.then((res) => {
-      if (!window.document.hidden) {      
+      if (!window.document.hidden) {
         if (res === 'missCalled') {
           this.chatObj.msgText = 'You have a missed call';
           this.sendMessage();
