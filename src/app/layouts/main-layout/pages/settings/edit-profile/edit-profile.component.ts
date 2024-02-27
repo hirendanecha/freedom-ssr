@@ -314,6 +314,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   }
   onChangeTag(event) {
     this.customer.Username = event.target.value.replaceAll(' ', '').replaceAll(/\s*,+\s*/g, ',');
-
+  }
+  convertToUppercase(event: any) {
+    const inputElement = event.target as HTMLInputElement;
+    const inputValue = inputElement.value;
+    inputElement.value = inputValue.toUpperCase();
   }
 }

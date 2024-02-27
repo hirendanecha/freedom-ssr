@@ -51,9 +51,9 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     isApprove: new FormControl('N', [Validators.required]),
     Country: new FormControl('US', [Validators.required]),
     Zip: new FormControl('', Validators.required),
-    State: new FormControl({ value: '', disabled: true }, Validators.required),
-    City: new FormControl({ value: '', disabled: true }, Validators.required),
-    County: new FormControl({ value: '', disabled: true }, Validators.required),
+    State: new FormControl('', Validators.required),
+    City: new FormControl('', Validators.required),
+    County: new FormControl('', Validators.required),
     logoImg: new FormControl('', Validators.required),
     coverImg: new FormControl('', Validators.required),
   });
@@ -102,7 +102,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       .subscribe((event) => {
         const val = event['target'].value;
         if (val.length > 3) {
-          this.onZipChange(val);
+          // this.onZipChange(val);
         }
       });
   }
@@ -252,35 +252,41 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     // this.registerForm.get('Place').setValue('');
   }
 
-  onZipChange(event) {
-    this.spinner.show();
-    this.customerService
-      .getZipData(event, this.communityForm.get('Country').value)
-      .subscribe(
-        (data) => {
-          if (data[0]) {
-            const zipData = data[0];
-            this.communityForm.get('State').enable();
-            this.communityForm.get('City').enable();
-            this.communityForm.get('County').enable();
-            this.communityForm.patchValue({
-              State: zipData.state,
-              City: zipData.city,
-              County: zipData.places,
-            });
-          } else {
-            this.communityForm.get('State').disable();
-            this.communityForm.get('City').disable();
-            this.communityForm.get('County').disable();
-            this.toastService.danger(data?.message);
-          }
+  // onZipChange(event) {
+  //   this.spinner.show();
+  //   this.customerService
+  //     .getZipData(event, this.communityForm.get('Country').value)
+  //     .subscribe(
+  //       (data) => {
+  //         if (data[0]) {
+  //           const zipData = data[0];
+  //           this.communityForm.get('State').enable();
+  //           this.communityForm.get('City').enable();
+  //           this.communityForm.get('County').enable();
+  //           this.communityForm.patchValue({
+  //             State: zipData.state,
+  //             City: zipData.city,
+  //             County: zipData.places,
+  //           });
+  //         } else {
+  //           this.communityForm.get('State').disable();
+  //           this.communityForm.get('City').disable();
+  //           this.communityForm.get('County').disable();
+  //           this.toastService.danger(data?.message);
+  //         }
 
-          this.spinner.hide();
-        },
-        (err) => {
-          this.spinner.hide();
-          console.log(err);
-        }
-      );
+  //         this.spinner.hide();
+  //       },
+  //       (err) => {
+  //         this.spinner.hide();
+  //         console.log(err);
+  //       }
+  //     );
+  // }
+
+  convertToUppercase(event: any) {
+    const inputElement = event.target as HTMLInputElement;
+    const inputValue = inputElement.value;
+    inputElement.value = inputValue.toUpperCase();
   }
 }
