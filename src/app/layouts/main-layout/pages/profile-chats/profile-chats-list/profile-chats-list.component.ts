@@ -340,8 +340,8 @@ export class ProfileChatsListComponent
           this.messageList = [...this.messageList, ...data.data];
           this.messageList.sort(
             (a, b) =>
-              new Date(a.createdDate).getTime() -
-              new Date(b.createdDate).getTime()
+              new Date(a?.createdDate).getTime() -
+              new Date(b?.createdDate).getTime()
           );
           this.readMessagesBy = data?.readUsers?.filter(
             (item) => item.ID !== this.profileId
@@ -569,7 +569,7 @@ export class ProfileChatsListComponent
     console.log(msgObj);
     this.chatObj.parentMessageId = msgObj?.id;
     this.replyMessage.msgText = msgObj.messageText;
-    this.replyMessage.createdDate = msgObj.createdDate;
+    this.replyMessage.createdDate = msgObj?.createdDate;
     this.replyMessage.Username = msgObj.Username;
     const file = msgObj.messageMedia;
     const fileType =
@@ -704,12 +704,12 @@ export class ProfileChatsListComponent
 
     this.socketService?.startCall(data, (data: any) => {});
     modalRef.result.then((res) => {
-      if (res === 'missCalled') {
-        this.chatObj.msgText = 'You have a missed call';
-        this.sendMessage();
+      if (!window.document.hidden) {
+        if (res === 'missCalled') {
+          this.chatObj.msgText = 'You have a missed call';
+          this.sendMessage();
+        }
       }
-      // if (!window.document.hidden) {
-      // }
     });
   }
 

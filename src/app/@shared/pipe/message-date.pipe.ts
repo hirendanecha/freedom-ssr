@@ -9,7 +9,7 @@ export class MessageDatePipe implements PipeTransform {
     const groupedMessages: any[] = [];
 
     messages.forEach((message, index) => {
-      const messageDate = new Date(message.createdDate);
+      const messageDate = new Date(message?.createdDate);
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(today.getDate() - 1);
@@ -25,7 +25,7 @@ export class MessageDatePipe implements PipeTransform {
         groupHeader = moment(date).format('DD-MMM-YYYY');
       }
 
-      if (index === 0 || messageDate.toDateString() !== new Date(messages[index - 1].createdDate).toDateString()) {
+      if (index === 0 || messageDate.toDateString() !== new Date(messages[index - 1]?.createdDate).toDateString()) {
         groupedMessages.push({ date: groupHeader, messages: [message] });
       } else {
         groupedMessages[groupedMessages.length - 1].messages.push(message);
