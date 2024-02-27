@@ -128,6 +128,13 @@ export class ProfileChatsListComponent
           );
           const array = new MessageDatePipe().transform(this.messageList);
           this.filteredMessageList = array;
+          if (this.userChat.groupId) {
+            this.socketService.readGroupMessage(data, (readUsers) => {
+              this.readMessagesBy = readUsers.filter(
+                (item) => item.ID !== this.profileId
+              );
+            });
+          }
         } else if (this.messageList[index]) {
           this.messageList[index] = data;
           const array = new MessageDatePipe().transform(this.messageList);
