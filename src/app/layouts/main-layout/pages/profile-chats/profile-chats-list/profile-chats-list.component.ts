@@ -140,7 +140,7 @@ export class ProfileChatsListComponent
           }
           const array = new MessageDatePipe().transform(this.messageList);
           this.filteredMessageList = array;
-          if (this.userChat.groupId === data.groupId) {
+          if (this.userChat.groupId === data?.groupId) {
             this.socketService.readGroupMessage(data, (readUsers) => {
               this.readMessagesBy = readUsers.filter(
                 (item) => item.ID !== this.profileId
@@ -148,7 +148,7 @@ export class ProfileChatsListComponent
             });
           }
         }
-        if (this.userChat.roomId === data.roomId) {
+        if (this.userChat.roomId === data?.roomId) {
           const readData = {
             ids: [data.id],
             profileId: this.userChat.profileId,

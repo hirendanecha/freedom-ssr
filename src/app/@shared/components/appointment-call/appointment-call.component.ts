@@ -23,6 +23,7 @@ export class AppointmentCallComponent implements OnInit {
   isRightSidebarOpen: boolean = false;
   selectedRoomId: number;
   isRoomCreated: boolean = false;
+  openChatId: any = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +35,13 @@ export class AppointmentCallComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const stateData = window.history.state.chatDataPass;
+    if (stateData) {
+      this.openChatId = {
+        roomId: stateData.roomId,
+        groupId: stateData.groupId,
+      }
+    }
     const appointmentURLCall =
       this.route.snapshot['_routerState'].url.split('/freedom-call/')[1];
     this.options = {
@@ -74,6 +82,7 @@ export class AppointmentCallComponent implements OnInit {
       ProfileChatsSidebarComponent,
       this.userChat
     );
+    // offcanvasRef.componentInstance.openChatIdData = this.openChatId;
     offcanvasRef.result
       .then((result) => {})
       .catch((reason) => {
@@ -90,6 +99,7 @@ export class AppointmentCallComponent implements OnInit {
       position: 'end',
       panelClass: 'w-400-px',
     });
+    console.log('opendChat', this.openChatId);
     offcanvasRef.componentInstance.userChat = this.userChat;
     offcanvasRef.result
       .then((result) => {})

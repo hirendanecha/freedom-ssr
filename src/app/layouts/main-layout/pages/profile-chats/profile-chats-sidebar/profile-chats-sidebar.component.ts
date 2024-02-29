@@ -77,7 +77,7 @@ export class ProfileChatsSidebarComponent
         this.getChatList();
         this.getGroupList();
       });
-    this.selectedChatUser = this.selectedRoomId || null;
+    this.selectedChatUser = null;
   }
 
   ngOnInit(): void {
@@ -156,7 +156,6 @@ export class ProfileChatsSidebarComponent
     if (item.groupId) {
       item.isAccepted = 'Y';
     }
-    // console.log(item);
     // this.notificationNavigation()
     this.onNewChat?.emit(item);
     if (this.searchText) {
