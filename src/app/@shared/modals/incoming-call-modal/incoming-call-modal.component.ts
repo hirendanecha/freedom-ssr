@@ -74,18 +74,23 @@ export class IncomingcallModalComponent
   }
 
   ngOnInit(): void {}
-
+  
   pickUpCall(): void {
     this.sound?.stop();
     clearTimeout(this.hangUpTimeout);
     if (!this.currentURL.includes(this.calldata?.link)) {
       this.currentURL.push(this.calldata.link);
       // window.open(this.calldata.link, '_blank');
-
-      console.log('incomin', this.calldata.link);
+      
+      // console.log('incomin', this.calldata.link);
       // this.router.navigate([`/appointment-call/${this.calldata.link}`]);
       const callId = this.calldata.link.replace('https://facetime.tube/', '');
-      this.router.navigate([`/freedom-call/${callId}`]);
+      const chatDataPass = {
+        roomId: this.calldata.roomId || null,
+        groupId: this.calldata.groupId || null
+      };
+      this.router.navigate([`/freedom-call/${callId}`], { state: { chatDataPass } });      
+      // this.router.navigate([`/freedom-call/${callId}`]);
       this.sound?.stop();
     }
     this.activateModal.close('success');
