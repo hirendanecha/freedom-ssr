@@ -20,6 +20,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from './@shared/services/toast.service';
 import { SoundControlService } from './@shared/services/sound-control.service';
 import { Router } from '@angular/router';
+import { TokenStorageService } from './@shared/services/token-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -46,6 +47,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private toasterService: ToastService,
     private soundControlService: SoundControlService,
     private router: Router,
+    private tokenService: TokenStorageService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.checkDocumentFocus();
@@ -54,6 +56,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.socketService.socket?.emit('join', { room: this.profileId });
+
+    if (this.tokenService.getToken()) {
+      this.customerService.verifyToken(this.tokenService.getToken()).subscribe({
+        next: (res: any) => {
+          if (!res?.verifiedToken) {
+            this.tokenService.signOut();
+          }
+        },
+        error: (err) => {
+          this.toasterService.danger(err.message);
+          this.tokenService.signOut();
+        },
+      });
+    }
   }
 
   ngAfterViewInit(): void {
