@@ -351,7 +351,7 @@ export class ProfileChatsListComponent
     const messageObj = {
       // page: 1,
       page: this.activePage,
-      size: 30,
+      size: 25,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
     };
