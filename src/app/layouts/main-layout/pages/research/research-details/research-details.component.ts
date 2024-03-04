@@ -31,19 +31,21 @@ export class ResearchDetailsComponent {
 
   GetGroupBasicDetails(): void {
     this.spinner.show();
-    const uniqueLink = this.route.snapshot.paramMap.get('uniqueLink');
-
+    // const uniqueLink = this.route.snapshot.paramMap.get('uniqueLink');
+    this.route.paramMap.subscribe((param: any) => {
+      const uniqueLink = param.get('uniqueLink');
     this.profileService.getGroupBasicDetails(uniqueLink).subscribe({
       next: (res: any) => {
         if (res?.ID) {
           this.groupDetails = res;
           const data = {
-            title: `Freedom.Buzz Research ${this.groupDetails?.PageTitle}`,
+            title: `ConscienceExplorers.com Research ${this.groupDetails?.PageTitle}`,
             url: `${location.href}`,
             description: this.groupDetails?.PageDescription,
             image: this.groupDetails?.CoverPicName || this.groupDetails?.ProfilePicName
           };
           this.seoService.updateSeoMetaData(data);
+          console.log(this.groupDetails)
           this.GetGroupPostById();
         }
         this.spinner.hide();
@@ -52,6 +54,8 @@ export class ResearchDetailsComponent {
         this.spinner.hide();
       }
     });
+  })
+
   }
 
   GetGroupPostById(): void {
