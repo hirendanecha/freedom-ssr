@@ -39,7 +39,7 @@ export class ResearchDetailsComponent {
         if (res?.ID) {
           this.groupDetails = res;
           const data = {
-            title: `ConscienceExplorers.com Research ${this.groupDetails?.PageTitle}`,
+            title: `Freedom.Buzz Research ${this.groupDetails?.PageTitle}`,
             url: `${location.href}`,
             description: this.groupDetails?.PageDescription,
             image: this.groupDetails?.CoverPicName || this.groupDetails?.ProfilePicName

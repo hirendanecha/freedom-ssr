@@ -141,6 +141,17 @@ export class ProfileChatsListComponent
           const array = new MessageDatePipe().transform(this.messageList);
           this.filteredMessageList = array;
           if (this.userChat.groupId === data?.groupId) {
+            if (this.userChat?.groupId) {
+              const date = moment(new Date()).utc();
+              const oldChat = {
+                profileId: this.profileId,
+                groupId: data?.groupId,
+                date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+              };
+              this.socketService.switchChat(oldChat, (data) => {
+                console.log(data);
+              });
+            }
             this.socketService.readGroupMessage(data, (readUsers) => {
               this.readMessagesBy = readUsers.filter(
                 (item) => item.ID !== this.profileId
@@ -316,11 +327,11 @@ export class ProfileChatsListComponent
         this.readMessageRoom = data?.isRead;
         if (this.userChat.groupId === data.groupId) {
           this.readMessagesBy = [];
-          // this.socketService.readGroupMessage(data, (readUsers) => {
-          //   this.readMessagesBy = readUsers.filter(
-          //     (item) => item.ID !== this.profileId
-          //   );
-          // });
+          this.socketService.readGroupMessage(data, (readUsers) => {
+            this.readMessagesBy = readUsers.filter(
+              (item) => item.ID !== this.profileId
+            );
+          });
         }
         const array = new MessageDatePipe().transform(this.messageList);
         this.filteredMessageList = array;
