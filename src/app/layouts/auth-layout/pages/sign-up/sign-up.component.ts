@@ -32,7 +32,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   allCountryData: any;
   type = 'danger';
   defaultCountry = 'US';
-  profilePic = '';
+  profilePic : string;
   profileImg: any = {
     file: null,
     url: '',
