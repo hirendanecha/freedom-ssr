@@ -5,6 +5,7 @@ import { NgbActiveOffcanvas, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileChatsListComponent } from 'src/app/layouts/main-layout/pages/profile-chats/profile-chats-list/profile-chats-list.component';
 import { ProfileChatsSidebarComponent } from 'src/app/layouts/main-layout/pages/profile-chats/profile-chats-sidebar/profile-chats-sidebar.component';
 import { SharedService } from '../../services/shared.service';
+import { MessageService } from '../../services/message.service';
 
 declare var JitsiMeetExternalAPI: any;
 @Component({
@@ -31,7 +32,8 @@ export class AppointmentCallComponent implements OnInit {
     private router: Router,
     private offcanvasService: NgbOffcanvas,
     private activeOffcanvas: NgbActiveOffcanvas,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -40,7 +42,7 @@ export class AppointmentCallComponent implements OnInit {
       this.openChatId = {
         roomId: stateData.roomId,
         groupId: stateData.groupId,
-      }
+      };
     }
     const appointmentURLCall =
       this.route.snapshot['_routerState'].url.split('/freedom-call/')[1];
@@ -69,6 +71,31 @@ export class AppointmentCallComponent implements OnInit {
         // console.log('opaaaaa');
       });
     });
+
+    this.initialChat();
+  }
+
+  initialChat() {
+    // console.log('opendChat', this.openChatId);
+    if (this.openChatId.roomId) {
+      this.messageService.getRoomById(this.openChatId.roomId).subscribe({
+        next: (res: any) => {
+          this.userChat = res.data[0];
+          // console.log(this.userChat);
+        },
+        error: () => {},
+      });
+    }
+    if (this.openChatId.groupId) {
+      this.messageService.getGroupById(this.openChatId.groupId).subscribe({
+        next: (res: any) => {
+          this.userChat = res.data;
+          this.userChat['isAccepted'] = 'Y';
+          // console.log(this.userChat);
+        },
+        error: () => {},
+      });
+    }
   }
 
   onChatPost(userName: any) {
@@ -82,7 +109,6 @@ export class AppointmentCallComponent implements OnInit {
       ProfileChatsSidebarComponent,
       this.userChat
     );
-    // offcanvasRef.componentInstance.openChatIdData = this.openChatId;
     offcanvasRef.result
       .then((result) => {})
       .catch((reason) => {
@@ -99,7 +125,6 @@ export class AppointmentCallComponent implements OnInit {
       position: 'end',
       panelClass: 'w-400-px',
     });
-    console.log('opendChat', this.openChatId);
     offcanvasRef.componentInstance.userChat = this.userChat;
     offcanvasRef.result
       .then((result) => {})
