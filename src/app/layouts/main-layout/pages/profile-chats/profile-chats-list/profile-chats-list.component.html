@@ -28,7 +28,7 @@
     </div>
   </ng-container>
   <!-- ui fourth -->
-  <ng-container *ngIf="!userChat.Username && !userChat?.groupId">
+  <ng-container *ngIf="!userChat?.Username && !userChat?.groupId">
     <div class="d-flex flex-column align-items-center mt-5">
       <div
         class="d-flex flex-row justify-content-center align-items-center gap-5 my-8 p-6 w-75 rounded-3 box-bg"
@@ -167,7 +167,7 @@
                 class="w-60-px h-60-px"
                 alt="image"
               />
-              <h5>{{ userChat.Username }} wants to connect with you</h5>
+              <h5>{{ userChat?.Username }} wants to connect with you</h5>
               <div>
                 <button class="btn btn-danger mx-3" (click)="onCancel()">
                   Cancel
@@ -196,7 +196,7 @@
                 alt="image"
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png'"
               />
-              <h5>{{ userChat.Username }} has not yet accepted the invite</h5>
+              <h5>{{ userChat?.Username }} has not yet accepted the invite</h5>
             </div>
           </div>
         </ng-container>

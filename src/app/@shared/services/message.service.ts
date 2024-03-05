@@ -21,4 +21,12 @@ export class MessageService {
         `${this.baseUrl}/get-members/${id}?searchText=${searchText}`
       );
     }
+
+    getGroupById(id: any): Observable<any> {
+      return this.http.get(`${this.baseUrl}/get-group/${id}`);
+    }
+
+    getRoomById(id: any): Observable<any> {
+      return this.http.get(`${this.baseUrl}/get-room/${id}`);
+    }
 }
