@@ -65,7 +65,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         error: (err) => {
-          this.toasterService.danger(err.message);
+          this.toasterService.danger(err.error.message);
           this.tokenService.signOut();
         },
       });
