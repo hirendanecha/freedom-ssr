@@ -655,6 +655,7 @@
               </li>
             </ng-container>
           </ul>
+          <app-inline-loader *ngIf="isFileUploadInProgress" />
           <ng-container *ngIf="userChat?.groupId || (userChat?.roomId && readMessageRoom === 'Y')">
             <div class="d-flex flex-row-reverse pb-2 pe-6 gap-1" ngbDropdown>
               <ng-container *ngFor="let item of (userChat?.groupId ? readMessagesBy : [userChat])">
