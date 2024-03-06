@@ -281,13 +281,16 @@
   }
 
   .chat-meta {
-    max-width: 250px;
     app-post-meta-data-card {
-      .post-meta-description {
+      .chat-meta-link {
         display: none !important;
+      }
+      .chat-meta-card{
+        max-width: 250px;
       }
     }
     .post-description {
+      max-width: unset !important;
       display: -webkit-box;
       flex-wrap: wrap;
       overflow: hidden;

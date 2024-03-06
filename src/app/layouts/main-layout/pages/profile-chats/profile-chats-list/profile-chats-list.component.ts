@@ -673,8 +673,20 @@ export class ProfileChatsListComponent
                 };
                 resolve(this.metaData);
               } else {
-                this.metaData.metalink = url;
-                resolve(this.metaData);
+                // this.metaData.metalink = url;
+                // resolve(this.metaData);
+                const metatitles = res?.meta?.title;
+                const metatitle = Array.isArray(metatitles)
+                  ? metatitles?.[0]
+                  : metatitles;
+                const metaursl = Array.isArray(url) ? url?.[0] : url;
+                const metaLinkData = {
+                  title: metatitle,
+                  metadescription: res?.meta?.description,
+                  metalink: metaursl,
+                  url: url,
+                }
+                resolve(metaLinkData);
               }
             },
             error: (err) => {
