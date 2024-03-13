@@ -15,5 +15,7 @@ export const environment = {
   tubeUrl: tubeUrl,
   domain: '.freedom.buzz',
   EncryptIV: 8625401029409790,
-  EncryptKey: 8625401029409790
+  EncryptKey: 8625401029409790,
+  siteKey: '0x4AAAAAAAUtBoxdqH7NpIaT',
+  secretKey: '0x4AAAAAAAUtBtTrRf7EnMn-dmdmAXPcngo',
 };

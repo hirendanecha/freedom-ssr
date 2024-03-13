@@ -27,7 +27,7 @@
         (ngSubmit)="signInForm.form.valid && onSubmit()"
         novalidate
         autocomplete="none"
-        >
+      >
         <!-- *ngIf="!isLoggedIn" -->
         <div
           class="alert alert-{{ type }}"
@@ -87,15 +87,19 @@
           </div>
         </div>
 
-        <button class="btn btn-primary my-2 ms-auto" type="submit">
-          Log in
-        </button>
+        <div class="d-flex justify-content-between">
+          <div id="captcha"></div>
+          <button class="btn btn-primary my-2 ms-auto h-40-px" type="submit">
+            Log in
+          </button>
+        </div>
       </form>
     </div>
   </div>
   <div class="text-center mt-3">
     <p class="text-danger">
-      If you are having technical issues, email <a href="mailto:support@Freedom.Buzz">{{'support@Freedom.Buzz'}}</a>
+      If you are having technical issues, email
+      <a href="mailto:support@Freedom.Buzz">{{ "support@Freedom.Buzz" }}</a>
     </p>
   </div>
 </div>

@@ -15,6 +15,9 @@ import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 import { environment } from 'src/environments/environment';
+
+declare var turnstile: any;
+
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -32,11 +35,12 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   allCountryData: any;
   type = 'danger';
   defaultCountry = 'US';
-  profilePic : string;
+  profilePic: string;
   profileImg: any = {
     file: null,
     url: '',
   };
+  theme = '';
 
   @ViewChild('zipCode') zipCode: ElementRef;
 
@@ -71,6 +75,8 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       description: 'Registration page',
       image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`,
     };
+    this.theme = localStorage.getItem('theme');
+
     // this.seoService.updateSeoMetaData(data);
   }
 
@@ -87,6 +93,22 @@ export class SignUpComponent implements OnInit, AfterViewInit {
           // this.onZipChange(val);
         }
       });
+    this.loadCloudFlareWidget();
+  }
+
+  loadCloudFlareWidget() {
+    turnstile?.render('#captcha', {
+      sitekey: environment.siteKey,
+      theme: this.theme === 'dark' ? 'light' : 'dark',
+      callback: function (token) {
+        localStorage.setItem('captcha-token', token);
+        console.log(`Challenge Success ${token}`);
+        if (!token) {
+          this.msg = 'invalid captcha kindly try again!';
+          this.type = 'danger';
+        }
+      },
+    });
   }
 
   selectFiles(event) {

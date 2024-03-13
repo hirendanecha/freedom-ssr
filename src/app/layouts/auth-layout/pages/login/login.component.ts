@@ -14,6 +14,8 @@ import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 
+declare var turnstile: any;
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -30,6 +32,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   loginMessage = '';
   msg = '';
   type = 'danger';
+  theme = '';
 
   constructor(
     private modalService: NgbModal,
@@ -63,6 +66,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`,
     };
     // this.seoService.updateSeoMetaData(data);
+    this.theme = localStorage.getItem('theme');
   }
 
   ngOnInit(): void {
@@ -78,6 +82,22 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.loadCloudFlareWidget();
+  }
+
+  loadCloudFlareWidget() {
+    turnstile?.render('#captcha', {
+      sitekey: environment.siteKey,
+      theme: this.theme === 'dark' ? 'light' : 'dark',
+      callback: function (token) {
+        localStorage.setItem('captcha-token', token);
+        console.log(`Challenge Success ${token}`);
+        if (!token) {
+          this.msg = 'invalid captcha kindly try again!';
+          this.type = 'danger';
+        }
+      },
+    });
   }
 
   onSubmit(): void {
@@ -101,18 +121,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
           this.isLoginFailed = false;
           this.isLoggedIn = true;
           if (this.socketService.socket?.connected) {
-            this.socketService.socket.close()
+            this.socketService.socket.close();
           }
           this.socketService.connect();
           this.socketService.socket?.emit('online-users');
           this.socketService?.socket?.on('get-users', (data) => {
-            data.map(ele => {
+            data.map((ele) => {
               if (!this.sharedService.onlineUserList.includes(ele.userId)) {
-                this.sharedService.onlineUserList.push(ele.userId)
+                this.sharedService.onlineUserList.push(ele.userId);
               }
-            })
+            });
             // this.onlineUserList = data;
-          })
+          });
           // Redirect to a new page after reload
           this.toastService.success('Logged in successfully');
           window.location.reload();
@@ -133,27 +153,25 @@ export class LoginComponent implements OnInit, AfterViewInit {
         // this.toastService.danger(this.errorMessage);
         this.isLoginFailed = true;
         this.errorCode = err.error.errorCode;
-      }
+      },
     });
   }
 
   resend() {
     this.authService
       .userVerificationResend({ username: this.loginForm.value.login_email })
-      .subscribe(
-        {
-          next: (result: any) => {
-            this.msg = result.message;
-            // this.toastService.success(this.msg);
-            this.type = 'success';
-          },
-          error:
-            (error) => {
-              this.msg = error.message;
-              // this.toastService.danger(this.msg);
-              this.type = 'danger';
-            }
-        });
+      .subscribe({
+        next: (result: any) => {
+          this.msg = result.message;
+          // this.toastService.success(this.msg);
+          this.type = 'success';
+        },
+        error: (error) => {
+          this.msg = error.message;
+          // this.toastService.danger(this.msg);
+          this.type = 'danger';
+        },
+      });
   }
 
   forgotPasswordOpen() {
@@ -165,10 +183,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.confirmButtonLabel = 'Submit';
     modalRef.componentInstance.closeIcon = true;
-    modalRef.result.then(res => {
+    modalRef.result.then((res) => {
       if (res === 'success') {
-        this.msg = 'If the entered email exists you will receive a email to change your password.'
-        this.type = 'success'
+        this.msg =
+          'If the entered email exists you will receive a email to change your password.';
+        this.type = 'success';
       }
     });
   }
