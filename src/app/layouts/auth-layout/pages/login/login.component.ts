@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,7 +39,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   msg = '';
   type = 'danger';
   theme = '';
-
+  @ViewChild('captcha', { static: false }) captchaElement: ElementRef;
   constructor(
     private modalService: NgbModal,
     private router: Router,
@@ -86,7 +92,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   loadCloudFlareWidget() {
-    turnstile?.render('#captcha', {
+    turnstile?.render(this.captchaElement.nativeElement, {
       sitekey: environment.siteKey,
       theme: this.theme === 'dark' ? 'light' : 'dark',
       callback: function (token) {
@@ -101,60 +107,68 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit(): void {
-    this.spinner.show();
-    this.authService.customerlogin(this.loginForm.value).subscribe({
-      next: (data: any) => {
-        this.spinner.hide();
-        if (!data.error) {
-          // this.cookieService.set('token', data?.accessToken);
-          // this.cookieService.set('auth-user', JSON.stringify(data?.user));
-          this.tokenStorage.saveToken(data?.accessToken);
-          this.tokenStorage.saveUser(data.user);
-          localStorage.setItem('profileId', data.user.profileId);
-          localStorage.setItem('communityId', data.user.communityId);
-          localStorage.setItem('channelId', data.user?.channelId);
-          window.localStorage.user_level_id = 2;
-          window.localStorage.user_id = data.user.Id;
-          window.localStorage.user_country = data.user.Country;
-          window.localStorage.user_zip = data.user.ZipCode;
-          this.sharedService.getUserDetails();
-          this.isLoginFailed = false;
-          this.isLoggedIn = true;
-          if (this.socketService.socket?.connected) {
-            this.socketService.socket.close();
-          }
-          this.socketService.connect();
-          this.socketService.socket?.emit('online-users');
-          this.socketService?.socket?.on('get-users', (data) => {
-            data.map((ele) => {
-              if (!this.sharedService.onlineUserList.includes(ele.userId)) {
-                this.sharedService.onlineUserList.push(ele.userId);
-              }
-            });
-            // this.onlineUserList = data;
-          });
-          // Redirect to a new page after reload
-          this.toastService.success('Logged in successfully');
-          window.location.reload();
-          this.router.navigate([`/home`]);
-        } else {
-          this.loginMessage = data.mesaage;
+    const token = localStorage.getItem('captcha-token');
+    if (!token) {
+      this.msg = 'Invalid captcha kindly try again!';
+      this.type = 'danger';
+      return;
+    }
+    if (this.loginForm.valid) {
+      this.spinner.show();
+      this.authService.customerlogin(this.loginForm.value).subscribe({
+        next: (data: any) => {
           this.spinner.hide();
-          this.errorMessage =
-            'Invalid Email and Password. Kindly try again !!!!';
-          this.isLoginFailed = true;
+          if (!data.error) {
+            // this.cookieService.set('token', data?.accessToken);
+            // this.cookieService.set('auth-user', JSON.stringify(data?.user));
+            this.tokenStorage.saveToken(data?.accessToken);
+            this.tokenStorage.saveUser(data.user);
+            localStorage.setItem('profileId', data.user.profileId);
+            localStorage.setItem('communityId', data.user.communityId);
+            localStorage.setItem('channelId', data.user?.channelId);
+            window.localStorage.user_level_id = 2;
+            window.localStorage.user_id = data.user.Id;
+            window.localStorage.user_country = data.user.Country;
+            window.localStorage.user_zip = data.user.ZipCode;
+            this.sharedService.getUserDetails();
+            this.isLoginFailed = false;
+            this.isLoggedIn = true;
+            if (this.socketService.socket?.connected) {
+              this.socketService.socket.close();
+            }
+            this.socketService.connect();
+            this.socketService.socket?.emit('online-users');
+            this.socketService?.socket?.on('get-users', (data) => {
+              data.map((ele) => {
+                if (!this.sharedService.onlineUserList.includes(ele.userId)) {
+                  this.sharedService.onlineUserList.push(ele.userId);
+                }
+              });
+              // this.onlineUserList = data;
+            });
+            // Redirect to a new page after reload
+            this.toastService.success('Logged in successfully');
+            window.location.reload();
+            this.router.navigate([`/home`]);
+          } else {
+            this.loginMessage = data.mesaage;
+            this.spinner.hide();
+            this.errorMessage =
+              'Invalid Email and Password. Kindly try again !!!!';
+            this.isLoginFailed = true;
+            // this.toastService.danger(this.errorMessage);
+          }
+        },
+        error: (err) => {
+          this.spinner.hide();
+          console.log(err.error);
+          this.errorMessage = err.error.message; //err.error.message;
           // this.toastService.danger(this.errorMessage);
-        }
-      },
-      error: (err) => {
-        this.spinner.hide();
-        console.log(err.error);
-        this.errorMessage = err.error.message; //err.error.message;
-        // this.toastService.danger(this.errorMessage);
-        this.isLoginFailed = true;
-        this.errorCode = err.error.errorCode;
-      },
-    });
+          this.isLoginFailed = true;
+          this.errorCode = err.error.errorCode;
+        },
+      });
+    }
   }
 
   resend() {

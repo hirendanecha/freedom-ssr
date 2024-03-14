@@ -59,7 +59,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     County: new FormControl('', [Validators.required]),
     TermAndPolicy: new FormControl(false, Validators.required),
   });
-
+  @ViewChild('captcha', { static: false }) captchaElement: ElementRef;
   constructor(
     private spinner: NgxSpinnerService,
     private route: ActivatedRoute,
@@ -97,7 +97,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   }
 
   loadCloudFlareWidget() {
-    turnstile?.render('#captcha', {
+    turnstile?.render(this.captchaElement.nativeElement, {
       sitekey: environment.siteKey,
       theme: this.theme === 'dark' ? 'light' : 'dark',
       callback: function (token) {
@@ -149,33 +149,41 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   }
 
   save() {
-    this.spinner.show();
-
-    this.customerService.createCustomer(this.registerForm.value).subscribe({
-      next: (data: any) => {
-        this.spinner.hide();
-        if (!data.error) {
-          this.submitted = true;
-          window.sessionStorage.user_id = data.data;
-          this.registrationMessage =
-            'Your account has registered successfully. Kindly login with your email and password !!!';
-          this.scrollTop();
-          this.isragister = true;
-          const id = data.data;
-          if (id) {
-            this.upload(this.profileImg?.file);
-            localStorage.setItem('register', String(this.isragister));
-            this.router.navigateByUrl('/login?isVerify=false');
+    const token = localStorage.getItem('captcha-token');
+    if (!token) {
+      this.msg = 'Invalid captcha kindly try again!';
+      this.type = 'danger';
+      this.scrollTop();
+      return;
+    }
+    if (this.registerForm.valid) {
+      this.spinner.show();
+      this.customerService.createCustomer(this.registerForm.value).subscribe({
+        next: (data: any) => {
+          this.spinner.hide();
+          if (!data.error) {
+            this.submitted = true;
+            window.sessionStorage.user_id = data.data;
+            this.registrationMessage =
+              'Your account has registered successfully. Kindly login with your email and password !!!';
+            this.scrollTop();
+            this.isragister = true;
+            const id = data.data;
+            if (id) {
+              this.upload(this.profileImg?.file);
+              localStorage.setItem('register', String(this.isragister));
+              this.router.navigateByUrl('/login?isVerify=false');
+            }
           }
-        }
-      },
-      error: (err) => {
-        this.registrationMessage = err.error.message;
-        this.type = 'danger';
-        this.spinner.hide();
-        this.scrollTop();
-      },
-    });
+        },
+        error: (err) => {
+          this.registrationMessage = err.error.message;
+          this.type = 'danger';
+          this.spinner.hide();
+          this.scrollTop();
+        },
+      });
+    }
   }
 
   validatepassword(): boolean {
