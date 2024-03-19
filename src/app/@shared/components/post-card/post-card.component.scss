@@ -490,13 +490,19 @@
           right: 126px !important;
         }
         @media (min-width:515px) and (max-width:544px) {
-          right: 90px !important;
+          right: 80px !important;
+        }
+        @media (min-width:436px) and (max-width:514px) {
+          right: 50px !important;
         }
         @media (min-width:420px) and (max-width:435px) {
           right: 100px !important;
         }
         @media (min-width:400px) and (max-width:419px) {
-          right: 70px !important;
+          right: 75px !important;
+        }
+        @media (min-width:280px) and (max-width:400px) {
+          right: 50px !important;
         }
       }
     }

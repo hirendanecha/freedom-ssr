@@ -235,6 +235,7 @@
                     <button ngbDropdownItem>
                       <a
                         class="droplist d-flex align-items-center gap-2"
+                        *ngIf="profileId == customer?.Id"
                         (click)="deletePost(item.id)"
                       >
                         <fa-icon [icon]="['fas', 'trash-can']" />
