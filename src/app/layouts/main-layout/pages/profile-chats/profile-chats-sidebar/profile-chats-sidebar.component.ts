@@ -74,11 +74,14 @@ export class ProfileChatsSidebarComponent
     this.sharedService
       .getIsRoomCreatedObservable()
       .subscribe((isRoomCreated) => {
-        this.isRoomCreated = isRoomCreated;
-        this.getChatList();
-        this.getGroupList();
+        if (isRoomCreated) {
+          this.isRoomCreated = isRoomCreated;
+          this.getChatList();
+          this.getGroupList();
+        } else {
+          this.selectedChatUser = null;
+        }
       });
-    // this.selectedChatUser = null;
   }
 
   ngOnInit(): void {

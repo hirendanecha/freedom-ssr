@@ -489,14 +489,21 @@ export class ProfileChatsListComponent
             return element;
           }
         });
-
-        const array = new MessageDatePipe(this.encryptDecryptService).transform(data.data);
+        if (this.filteredMessageList.length > 0) {
+          this.chatContent.nativeElement.scrollTop = 48;
+        }
+        const array = new MessageDatePipe(this.encryptDecryptService).transform(
+          data.data
+        );
         const uniqueDates = array.filter((dateObj) => {
           return !this.filteredMessageList.some(
             (existingDateObj) => existingDateObj.date === dateObj.date
           );
         });
-        this.filteredMessageList = [...uniqueDates, ...this.filteredMessageList,];
+        this.filteredMessageList = [
+          ...uniqueDates,
+          ...this.filteredMessageList,
+        ];
       },
       error: (err) => {},
     });
@@ -759,7 +766,7 @@ export class ProfileChatsListComponent
                   metadescription: res?.meta?.description,
                   metalink: metaursl,
                   url: url,
-                }
+                };
                 resolve(metaLinkData);
               }
             },
