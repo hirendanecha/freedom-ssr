@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/@shared/services/auth.service';
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
 })
-export class ResetPasswordComponent {
+export class ResetPasswordComponent implements OnInit {
   @ViewChild('changePassword') changePassword: NgForm | any;
   showPassword = false;
   loading = false;
@@ -32,8 +32,11 @@ export class ResetPasswordComponent {
     this.route.queryParams.subscribe((params) => {
       this.userAccessToken = params['accesstoken'];
     });
-
     this.spinner.hide();
+  }
+
+  ngOnInit(): void {
+    // localStorage.setItem('auth-token', this.userAccessToken);
   }
 
   mustMatch() {
@@ -55,20 +58,20 @@ export class ResetPasswordComponent {
   }
 
   validatepassword(): boolean {
-    const pattern =
-      '[a-zA-Z0-9]{5,}';
+    const pattern = '[a-zA-Z0-9]{5,}';
     // const pattern =
     //   '(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[a-z])(?=.*[0-9].*[0-9]).{8}';
 
-    if (!this.changePassword.form.controls['newPassword'].value.match(pattern)) {
-      this.msg =
-        'Password must be a minimum of 5 characters';
-        this.type = 'danger'
+    if (
+      !this.changePassword.form.controls['newPassword'].value.match(pattern)
+    ) {
+      this.msg = 'Password must be a minimum of 5 characters';
+      this.type = 'danger';
       // this.msg =
       //   'Password must be a minimum of 8 characters and include one uppercase letter, one lowercase letter, and one special character';
       return false;
     }
-   return true;
+    return true;
   }
 
   forgotPasswordSubmit(form: NgForm) {
@@ -78,29 +81,28 @@ export class ResetPasswordComponent {
     }
     this.loading = true;
     this.authService
-      .setPassword({
-        token: this.userAccessToken,
-        password: this.changePassword.form.controls['confirmPassword'].value,
-      })
-      .subscribe(
+      .setPassword(
         {
-          next: (result) => {
-            this.submitted = false;
-            this.loading = false;
-            this.msg = 'New password set successfully!';
-            this.type = 'success';
-            this.changePassword.reset();
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 2300);
-          },
-          error:
-            (error) => {
-              this.loading = false;
-              this.submitted = false;
-              this.msg = 'Something went wrong please try again.';
-              this.type = 'danger';
-            }
-        });
+          token: this.userAccessToken,
+          password: this.changePassword.form.controls['confirmPassword'].value,
+        },
+        this.userAccessToken
+      )
+      .subscribe({
+        next: (result) => {
+          this.submitted = false;
+          this.loading = false;
+          this.msg = 'New password set successfully!';
+          this.type = 'success';
+          this.changePassword.reset();
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.submitted = false;
+          this.msg = 'Something went wrong please try again.';
+          this.type = 'danger';
+        },
+      });
   }
 }

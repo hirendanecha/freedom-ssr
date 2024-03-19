@@ -16,13 +16,13 @@ export class TokenStorageService {
   isUserAuthenticated: Subject<boolean> = new BehaviorSubject<boolean>(false);
   public _credentials: any = {};
 
-  constructor(private cookieService: CookieService,
+  constructor(
+    private cookieService: CookieService,
     private router: Router,
-    private toastService: ToastService,
-  ) { }
+    private toastService: ToastService
+  ) {}
 
   signOut(): void {
-    sessionStorage.clear();
     const theme = localStorage.getItem('theme');
     localStorage.clear();
     this.cookieService.delete('auth-user', '/', environment.domain);

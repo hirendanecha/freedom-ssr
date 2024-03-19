@@ -6,7 +6,7 @@ import { Login } from '../constant/login';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  withCredentials: true
+  withCredentials: true,
 };
 
 @Injectable({
@@ -27,10 +27,15 @@ export class AuthService {
     );
   }
 
-  setPassword(data: Object): any {
+  setPassword(data: Object, token: string): any {
     return this.http.post(
       `${environment.serverUrl}customers/set-password`,
-      data
+      data,
+      {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      }
     );
   }
 
