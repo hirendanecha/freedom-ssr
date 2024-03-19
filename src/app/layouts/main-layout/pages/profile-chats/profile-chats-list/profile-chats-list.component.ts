@@ -126,20 +126,52 @@ export class ProfileChatsListComponent
           this.messageList = this.messageList.filter(
             (obj) => obj?.id !== data?.id && obj?.parentMessageId !== data.id
           );
-          const array = new MessageDatePipe().transform(this.messageList);
-          this.filteredMessageList = array;
+          this.filteredMessageList?.forEach((ele: any) => {
+            ele.messages = ele.messages.filter(
+              (obj: any) =>
+                obj.id !== data.id && obj.parentMessageId !== data.id
+            );
+          });
+          // const array = new MessageDatePipe(
+          //   this.encryptDecryptService
+          // ).transform(this.messageList);
+          // this.filteredMessageList = array;
         } else if (this.messageList[index]) {
+          data.messageText = this.encryptDecryptService?.decryptUsingAES256(
+            data?.messageText
+          );
           this.messageList[index] = data;
-          const array = new MessageDatePipe().transform(this.messageList);
-          this.filteredMessageList = array;
+
+          // const array = new MessageDatePipe(
+          //   this.encryptDecryptService
+          // ).transform(this.messageList);
+          // this.filteredMessageList = array;
+
+          this.filteredMessageList?.forEach((ele: any) => {
+            const indext = ele.messages?.findIndex(
+              (obj) => obj?.id === data?.id
+            );
+            if (ele.messages[indext]) {
+              ele.messages[indext] = data;
+            }
+          });
         } else {
+          data.messageText = this.encryptDecryptService?.decryptUsingAES256(
+            data?.messageText
+          );
           // console.log(this.messageList);
           this.scrollToBottom();
           if (data !== null) {
             this.messageList.push(data);
           }
-          const array = new MessageDatePipe().transform(this.messageList);
-          this.filteredMessageList = array;
+          // const array = new MessageDatePipe(
+          //   this.encryptDecryptService
+          // ).transform(this.messageList);
+          // this.filteredMessageList = array;
+          const lastIndex = this.filteredMessageList.length - 1;
+          if (this.filteredMessageList[lastIndex]) {
+            this.filteredMessageList[lastIndex]?.messages.push(data);
+          }
           if (this.userChat.groupId === data?.groupId) {
             if (this.userChat?.groupId) {
               const date = moment(new Date()).utc();
@@ -199,6 +231,7 @@ export class ProfileChatsListComponent
     if (this.userChat?.groupId) {
       this.activePage = 1;
       this.messageList = [];
+      this.filteredMessageList = [];
       this.hasMoreData = false;
       this.getGroupDetails(this.userChat.groupId);
       this.notificationNavigation();
@@ -209,6 +242,7 @@ export class ProfileChatsListComponent
     if (this.userChat?.roomId || this.userChat?.groupId) {
       this.activePage = 1;
       this.messageList = [];
+      this.filteredMessageList = [];
       this.resetData();
       this.getMessageList();
       this.hasMoreData = false;
@@ -275,16 +309,29 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
         parentMessageId: this.chatObj.parentMessageId || null,
       };
-      this.socketService?.editMessage(data, (data: any) => {
+      this.socketService?.editMessage(data, (editMsg: any) => {
         this.isFileUploadInProgress = false;
-        if (data) {
+        if (editMsg) {
           let index = this.messageList?.findIndex(
-            (obj) => obj?.id === data?.id
+            (obj) => obj?.id === editMsg?.id
           );
           if (this.messageList[index]) {
-            this.messageList[index] = data;
-            const array = new MessageDatePipe().transform(this.messageList);
-            this.filteredMessageList = array;
+            this.messageList[index] = editMsg;
+            editMsg.messageText = this.encryptDecryptService.decryptUsingAES256(
+              editMsg?.messageText
+            );
+            this.filteredMessageList?.forEach((ele: any) => {
+              const indext = ele.messages?.findIndex(
+                (obj) => obj?.id === editMsg?.id
+              );
+              if (ele.messages[indext]) {
+                ele.messages[indext] = editMsg;
+              }
+            });
+            // const array = new MessageDatePipe(
+            //   this.encryptDecryptService
+            // ).transform(this.messageList);
+            // this.filteredMessageList = array;
             this.resetData();
           }
         }
@@ -312,11 +359,11 @@ export class ProfileChatsListComponent
         this.scrollToBottom();
         this.newRoomCreated?.emit(true);
 
-        const url =
+        data.messageText =
           data.messageText != null
             ? this.encryptDecryptService?.decryptUsingAES256(data.messageText)
             : null;
-        const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
+        const text = data.messageText?.replace(/<br\s*\/?>|<[^>]*>/g, '');
         const matches = text?.match(
           /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
         );
@@ -333,8 +380,14 @@ export class ProfileChatsListComponent
             );
           });
         }
-        const array = new MessageDatePipe().transform(this.messageList);
-        this.filteredMessageList = array;
+        const lastIndex = this.filteredMessageList.length - 1;
+        if (this.filteredMessageList[lastIndex]) {
+          this.filteredMessageList[lastIndex]?.messages.push(data);
+        }
+        // const array = new MessageDatePipe(this.encryptDecryptService).transform(
+        //   this.messageList
+        // );
+        // this.filteredMessageList = array;
         this.resetData();
       });
     }
@@ -363,6 +416,11 @@ export class ProfileChatsListComponent
         if (data?.data.length > 0) {
           this.messageList = [...this.messageList, ...data.data];
           this.messageList.sort(
+            (a, b) =>
+              new Date(a?.createdDate).getTime() -
+              new Date(b?.createdDate).getTime()
+          );
+          data.data.sort(
             (a, b) =>
               new Date(a?.createdDate).getTime() -
               new Date(b?.createdDate).getTime()
@@ -432,9 +490,13 @@ export class ProfileChatsListComponent
           }
         });
 
-        const array = new MessageDatePipe().transform(this.messageList);
-        // console.log(array);
-        this.filteredMessageList = array;
+        const array = new MessageDatePipe(this.encryptDecryptService).transform(data.data);
+        const uniqueDates = array.filter((dateObj) => {
+          return !this.filteredMessageList.some(
+            (existingDateObj) => existingDateObj.date === dateObj.date
+          );
+        });
+        this.filteredMessageList = [...uniqueDates, ...this.filteredMessageList,];
       },
       error: (err) => {},
     });
@@ -611,14 +673,15 @@ export class ProfileChatsListComponent
 
   editMsg(msgObj): void {
     this.chatObj['id'] = msgObj?.id;
-    this.messageInputValue = this.encryptDecryptService?.decryptUsingAES256(
-      msgObj.messageText
-    );
+    this.messageInputValue = msgObj.messageText;
+    // this.encryptDecryptService?.decryptUsingAES256(
+
+    // );
     this.chatObj.msgMedia = msgObj.messageMedia;
     this.chatObj.parentMessageId = msgObj?.parentMessageId || null;
   }
 
-  deleteMsg(msg): void {
+  deleteMsg(msg, date): void {
     this.socketService?.deleteMessage(
       {
         groupId: msg?.groupId,
@@ -632,8 +695,19 @@ export class ProfileChatsListComponent
         this.messageList = this.messageList.filter(
           (obj) => obj?.id !== data?.id && obj?.parentMessageId !== data.id
         );
-        const array = new MessageDatePipe().transform(this.messageList);
-        this.filteredMessageList = array;
+        // const array = new MessageDatePipe(this.encryptDecryptService).transform(
+        //   this.messageList
+        // );
+        // this.filteredMessageList = array;
+
+        this.filteredMessageList?.forEach((ele: any) => {
+          if (ele.date === date) {
+            ele.messages = ele.messages.filter(
+              (obj: any) =>
+                obj.id !== data.id && obj.parentMessageId !== data.id
+            );
+          }
+        });
       }
     );
   }

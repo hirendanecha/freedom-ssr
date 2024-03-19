@@ -234,15 +234,15 @@
                 >{{ displayLocalTime(message?.createdDate) }}</span
               > -->
               <div
-              class="d-flex"
-              *ngIf="
-                message?.sentBy !== this.profileId &&
-                message?.createdDate &&
-                message?.Username
-              "
-            >
-              <span class="font-12-px data-text-color ms-3">{{ message?.Username }}, {{displayLocalTime(message?.createdDate)}}</span>
-            </div>
+                class="d-flex"
+                *ngIf="
+                  message?.sentBy !== this.profileId &&
+                  message?.createdDate &&
+                  message?.Username
+                "
+              >
+                <span class="font-12-px data-text-color ms-3">{{ message?.Username }}, {{displayLocalTime(message?.createdDate)}}</span>
+              </div>
               <li class="you" *ngIf="message?.sentBy !== this.profileId">
                 <div class="d-flex drop-options">
                   <div class="btn-group d-flex options me-2">
@@ -375,12 +375,10 @@
                           <p
                             *ngIf="message.parentMessage.messageText !== null"
                             class="m-0"
-                            [innerHTML]="
-                              encryptDecryptService.decryptUsingAES256(
-                                message.parentMessage.messageText
-                              )
-                            "
+                            [innerHTML]="message.parentMessage.messageText"
                           ></p>
+                          <!-- encryptDecryptService.decryptUsingAES256(
+                          ) -->
                           <span class="font-12-px"
                             >{{ message.parentMessage.Username }},
                             {{
@@ -395,12 +393,10 @@
                         <p
                           *ngIf="message?.messageText !== null"
                           class="m-0 message-text-custom"
-                          [innerHTML]="
-                            encryptDecryptService.decryptUsingAES256(
-                              message?.messageText
-                            )
-                          "
+                          [innerHTML]="message?.messageText"
                         ></p>
+                        <!-- encryptDecryptService.decryptUsingAES256(
+                          ) -->
 
                         <ng-container *ngIf="message?.metaData">
                           <div class="chat-meta">
@@ -458,7 +454,10 @@
                               <span>Edit</span>
                             </a>
                           </button>
-                          <button ngbDropdownItem (click)="deleteMsg(message)">
+                          <button
+                            ngbDropdownItem
+                            (click)="deleteMsg(message, msg?.date)"
+                          >
                             <a class="droplist d-flex align-items-center gap-2">
                               <fa-icon [icon]="['fas', 'trash-can']" />
                               <span class="data-text-color">Delete</span>
@@ -552,7 +551,10 @@
                             <span class="data-text-color">Edit</span>
                           </a>
                         </button>
-                        <button ngbDropdownItem (click)="deleteMsg(message)">
+                        <button
+                          ngbDropdownItem
+                          (click)="deleteMsg(message, msg.date)"
+                        >
                           <a class="droplist d-flex align-items-center gap-2">
                             <fa-icon [icon]="['fas', 'trash-can']" />
                             <span class="data-text-color">Delete</span>
@@ -614,12 +616,10 @@
                         <p
                           *ngIf="message.parentMessage.messageText !== null"
                           class="m-0"
-                          [innerHTML]="
-                            encryptDecryptService.decryptUsingAES256(
-                              message.parentMessage.messageText
-                            )
-                          "
+                          [innerHTML]="message.parentMessage.messageText"
                         ></p>
+                        <!-- encryptDecryptService.decryptUsingAES256(
+                          ) -->
                         <span class="font-12-px"
                           >{{ message.parentMessage.Username }},
                           {{
@@ -635,12 +635,10 @@
                       <p
                         *ngIf="message?.messageText !== null"
                         class="m-0 message-text-custom"
-                        [innerHTML]="
-                          encryptDecryptService.decryptUsingAES256(
-                            message?.messageText
-                          )
-                        "
+                        [innerHTML]="message?.messageText"
                       ></p>
+                      <!-- encryptDecryptService.decryptUsingAES256(
+                        ) -->
                       <ng-container *ngIf="message?.metaData">
                         <div class="chat-meta">
                           <app-post-meta-data-card
@@ -656,29 +654,31 @@
             </ng-container>
           </ul>
           <app-inline-loader *ngIf="isFileUploadInProgress" />
-          <ng-container *ngIf="userChat?.groupId || (userChat?.roomId && readMessageRoom === 'Y')">
-            <div class="d-flex flex-row-reverse pb-2 pe-6 gap-1" ngbDropdown>
-              <ng-container *ngFor="let item of (userChat?.groupId ? readMessagesBy : [userChat])">
-                <div class="c-pointer" [title]="item.Username || item.FirstName" ngbDropdownToggle>
-                  <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-20-px w-20-px" draggable="false" onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';">
-                </div>
-              </ng-container>
-              <div ngbDropdownMenu class="w-228-px">
-                <div class="h6 ms-3 btn-link">
-                  READ BY {{ userChat?.groupId ? readMessagesBy.length : '' }}
-                </div>
-                <ng-container *ngFor="let item of (userChat.groupId ? readMessagesBy : [userChat])">
-                  <button ngbDropdownItem>
-                    <div class="d-flex align-items-center gap-2">
-                      <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-28-px w-28-px" draggable="false" onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';">
-                      <div class="replay-text">
-                        {{ item.Username || item.FirstName }}
-                      </div>
-                    </div>
-                  </button>
+          <ng-container *ngIf="filteredMessageList.length">
+            <ng-container *ngIf="userChat?.groupId || (userChat?.roomId && readMessageRoom === 'Y')">
+              <div class="d-flex flex-row-reverse pb-2 pe-6 gap-1" ngbDropdown>
+                <ng-container *ngFor="let item of (userChat?.groupId ? readMessagesBy : [userChat])">
+                  <div class="c-pointer" [title]="item.Username || item.FirstName" ngbDropdownToggle>
+                    <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-20-px w-20-px" draggable="false" onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';">
+                  </div>
                 </ng-container>
+                <div ngbDropdownMenu class="w-228-px">
+                  <div class="h6 ms-3 btn-link">
+                    READ BY {{ userChat?.groupId ? readMessagesBy.length : '' }}
+                  </div>
+                  <ng-container *ngFor="let item of (userChat.groupId ? readMessagesBy : [userChat])">
+                    <button ngbDropdownItem>
+                      <div class="d-flex align-items-center gap-2">
+                        <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-28-px w-28-px" draggable="false" onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';">
+                        <div class="replay-text">
+                          {{ item.Username || item.FirstName }}
+                        </div>
+                      </div>
+                    </button>
+                  </ng-container>
+                </div>
               </div>
-            </div>
+            </ng-container>
           </ng-container>
         </ng-container>
       </div>
@@ -729,7 +729,7 @@
           *ngIf="
             typingData?.isTyping &&
             userChat.roomId === typingData.roomId &&
-              userChat.groupId === typingData.groupId &&
+            userChat.groupId === typingData.groupId &&
             typingData.profileId !== profileId
           "
         >
@@ -745,10 +745,10 @@
               <p
                 *ngIf="replyMessage.msgText !== null"
                 class="m-0"
-                [innerHTML]="
-                  encryptDecryptService.decryptUsingAES256(replyMessage.msgText)
-                "
+                [innerHTML]="replyMessage.msgText"
               ></p>
+              <!-- encryptDecryptService.decryptUsingAES256(
+                ) -->
             </div>
             <fa-icon
               [icon]="['fas', 'xmark']"
