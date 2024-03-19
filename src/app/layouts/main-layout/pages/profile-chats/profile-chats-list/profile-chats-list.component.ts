@@ -126,52 +126,20 @@ export class ProfileChatsListComponent
           this.messageList = this.messageList.filter(
             (obj) => obj?.id !== data?.id && obj?.parentMessageId !== data.id
           );
-          this.filteredMessageList?.forEach((ele: any) => {
-            ele.messages = ele.messages.filter(
-              (obj: any) =>
-                obj.id !== data.id && obj.parentMessageId !== data.id
-            );
-          });
-          // const array = new MessageDatePipe(
-          //   this.encryptDecryptService
-          // ).transform(this.messageList);
-          // this.filteredMessageList = array;
+          const array = new MessageDatePipe().transform(this.messageList);
+          this.filteredMessageList = array;
         } else if (this.messageList[index]) {
-          data.messageText = this.encryptDecryptService?.decryptUsingAES256(
-            data?.messageText
-          );
           this.messageList[index] = data;
-
-          // const array = new MessageDatePipe(
-          //   this.encryptDecryptService
-          // ).transform(this.messageList);
-          // this.filteredMessageList = array;
-
-          this.filteredMessageList?.forEach((ele: any) => {
-            const indext = ele.messages?.findIndex(
-              (obj) => obj?.id === data?.id
-            );
-            if (ele.messages[indext]) {
-              ele.messages[indext] = data;
-            }
-          });
+          const array = new MessageDatePipe().transform(this.messageList);
+          this.filteredMessageList = array;
         } else {
-          data.messageText = this.encryptDecryptService?.decryptUsingAES256(
-            data?.messageText
-          );
           // console.log(this.messageList);
           this.scrollToBottom();
           if (data !== null) {
             this.messageList.push(data);
           }
-          // const array = new MessageDatePipe(
-          //   this.encryptDecryptService
-          // ).transform(this.messageList);
-          // this.filteredMessageList = array;
-          const lastIndex = this.filteredMessageList.length - 1;
-          if (this.filteredMessageList[lastIndex]) {
-            this.filteredMessageList[lastIndex]?.messages.push(data);
-          }
+          const array = new MessageDatePipe().transform(this.messageList);
+          this.filteredMessageList = array;
           if (this.userChat.groupId === data?.groupId) {
             if (this.userChat?.groupId) {
               const date = moment(new Date()).utc();
@@ -307,29 +275,16 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
         parentMessageId: this.chatObj.parentMessageId || null,
       };
-      this.socketService?.editMessage(data, (editMsg: any) => {
+      this.socketService?.editMessage(data, (data: any) => {
         this.isFileUploadInProgress = false;
-        if (editMsg) {
+        if (data) {
           let index = this.messageList?.findIndex(
-            (obj) => obj?.id === editMsg?.id
+            (obj) => obj?.id === data?.id
           );
           if (this.messageList[index]) {
-            this.messageList[index] = editMsg;
-            editMsg.messageText = this.encryptDecryptService.decryptUsingAES256(
-              editMsg?.messageText
-            );
-            this.filteredMessageList?.forEach((ele: any) => {
-              const indext = ele.messages?.findIndex(
-                (obj) => obj?.id === editMsg?.id
-              );
-              if (ele.messages[indext]) {
-                ele.messages[indext] = editMsg;
-              }
-            });
-            // const array = new MessageDatePipe(
-            //   this.encryptDecryptService
-            // ).transform(this.messageList);
-            // this.filteredMessageList = array;
+            this.messageList[index] = data;
+            const array = new MessageDatePipe().transform(this.messageList);
+            this.filteredMessageList = array;
             this.resetData();
           }
         }
@@ -357,11 +312,11 @@ export class ProfileChatsListComponent
         this.scrollToBottom();
         this.newRoomCreated?.emit(true);
 
-        data.messageText =
+        const url =
           data.messageText != null
             ? this.encryptDecryptService?.decryptUsingAES256(data.messageText)
             : null;
-        const text = data.messageText?.replace(/<br\s*\/?>|<[^>]*>/g, '');
+        const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
         const matches = text?.match(
           /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
         );
@@ -378,14 +333,8 @@ export class ProfileChatsListComponent
             );
           });
         }
-        const lastIndex = this.filteredMessageList.length - 1;
-        if (this.filteredMessageList[lastIndex]) {
-          this.filteredMessageList[lastIndex]?.messages.push(data);
-        }
-        // const array = new MessageDatePipe(this.encryptDecryptService).transform(
-        //   this.messageList
-        // );
-        // this.filteredMessageList = array;
+        const array = new MessageDatePipe().transform(this.messageList);
+        this.filteredMessageList = array;
         this.resetData();
       });
     }
@@ -483,9 +432,7 @@ export class ProfileChatsListComponent
           }
         });
 
-        const array = new MessageDatePipe(this.encryptDecryptService).transform(
-          this.messageList
-        );
+        const array = new MessageDatePipe().transform(this.messageList);
         // console.log(array);
         this.filteredMessageList = array;
       },
@@ -664,15 +611,14 @@ export class ProfileChatsListComponent
 
   editMsg(msgObj): void {
     this.chatObj['id'] = msgObj?.id;
-    this.messageInputValue = msgObj.messageText;
-    // this.encryptDecryptService?.decryptUsingAES256(
-
-    // );
+    this.messageInputValue = this.encryptDecryptService?.decryptUsingAES256(
+      msgObj.messageText
+    );
     this.chatObj.msgMedia = msgObj.messageMedia;
     this.chatObj.parentMessageId = msgObj?.parentMessageId || null;
   }
 
-  deleteMsg(msg, date): void {
+  deleteMsg(msg): void {
     this.socketService?.deleteMessage(
       {
         groupId: msg?.groupId,
@@ -686,19 +632,8 @@ export class ProfileChatsListComponent
         this.messageList = this.messageList.filter(
           (obj) => obj?.id !== data?.id && obj?.parentMessageId !== data.id
         );
-        // const array = new MessageDatePipe(this.encryptDecryptService).transform(
-        //   this.messageList
-        // );
-        // this.filteredMessageList = array;
-
-        this.filteredMessageList?.forEach((ele: any) => {
-          if (ele.date === date) {
-            ele.messages = ele.messages.filter(
-              (obj: any) =>
-                obj.id !== data.id && obj.parentMessageId !== data.id
-            );
-          }
-        });
+        const array = new MessageDatePipe().transform(this.messageList);
+        this.filteredMessageList = array;
       }
     );
   }
