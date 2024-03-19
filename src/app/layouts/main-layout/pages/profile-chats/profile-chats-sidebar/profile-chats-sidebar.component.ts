@@ -27,7 +27,8 @@ import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-m
   styleUrls: ['./profile-chats-sidebar.component.scss'],
 })
 export class ProfileChatsSidebarComponent
-  implements AfterViewInit, OnChanges, OnInit {
+  implements AfterViewInit, OnChanges, OnInit
+{
   chatList: any = [];
   pendingChatList: any = [];
   groupList: any = [];
@@ -73,11 +74,11 @@ export class ProfileChatsSidebarComponent
     this.sharedService
       .getIsRoomCreatedObservable()
       .subscribe((isRoomCreated) => {
-        this.isRoomCreated = isRoomCreated
+        this.isRoomCreated = isRoomCreated;
         this.getChatList();
         this.getGroupList();
       });
-    this.selectedChatUser = null;
+    // this.selectedChatUser = null;
   }
 
   ngOnInit(): void {
@@ -146,7 +147,7 @@ export class ProfileChatsSidebarComponent
     return this.chatList;
   }
 
-  dismissSidebar(){
+  dismissSidebar() {
     this.activeOffcanvas?.dismiss();
   }
 
@@ -201,7 +202,16 @@ export class ProfileChatsSidebarComponent
         new Date(b.updatedDate).getTime() - new Date(a.updatedDate).getTime()
     );
     if (mergeChatList?.length) {
-      this.newChatList = mergeChatList;
+      this.newChatList = mergeChatList.filter((ele) => {
+        if (
+          ele?.roomId === this.selectedChatUser ||
+          ele?.groupId === this.selectedChatUser
+        ) {
+          ele.unReadMessage = 0;
+          this.selectedChatUser = ele?.roomId || ele?.groupId;
+          return ele;
+        } else return ele;
+      });
     }
   }
 
