@@ -157,7 +157,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     const url = matches?.[0];
     if (url) {
       if (url !== this.metaData?.url) {
-        this.isMetaLoader = true;
+        // this.isMetaLoader = true;
+        this.spinner.show();
         const unsubscribe$ = new Subject<void>();
         this.postService
           .getMetaData({ url })
@@ -165,6 +166,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
           .subscribe({
             next: (res: any) => {
               this.isMetaLoader = false;
+              this.spinner.hide();
               if (res?.meta?.image) {
                 const urls = res.meta?.image?.url;
                 const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
