@@ -15,11 +15,12 @@ export class SharedService {
   userData: any = {};
   notificationList: any = [];
   isNotify = false;
-  linkMetaData: {}
-  advertizementLink: any = []
-  onlineUserList: any = []
+  linkMetaData: {};
+  advertizementLink: any = [];
+  onlineUserList: any = [];
 
-  private isRoomCreatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private isRoomCreatedSubject: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
 
   constructor(
     public modalService: NgbModal,
@@ -87,7 +88,7 @@ export class SharedService {
         error: (error) => {
           this.spinner.hide();
           console.log(error);
-        }
+        },
       });
     }
   }
@@ -101,7 +102,11 @@ export class SharedService {
     this.customerService.getNotificationList(Number(id)).subscribe({
       next: (res: any) => {
         this.isNotify = false;
-        this.notificationList = res?.data;
+        this.notificationList = res.data.filter((ele) => {
+          ele.notificationToProfileId === id;
+          return ele;
+        });
+        // this.notificationList = res?.data;
       },
       error: (error) => {
         console.log(error);
@@ -112,7 +117,7 @@ export class SharedService {
   getAdvertizeMentLink(id): void {
     if (id) {
       this.communityService.getLinkById(id).subscribe({
-        next: ((res: any) => {
+        next: (res: any) => {
           if (res.data) {
             if (res.data[0]?.link1 || res.data[0]?.link2) {
               this.advertizementLink = [];
@@ -120,11 +125,11 @@ export class SharedService {
               this.getMetaDataFromUrlStr(res.data[0]?.link2);
             }
           }
-        }),
+        },
         error: (err) => {
           console.log(err);
-        }
-      })
+        },
+      });
     } else {
       this.advertizementLink = null;
     }

@@ -11,6 +11,10 @@
     word-break: break-word;
     text-overflow: ellipsis;
   }
+  .share-post {
+    max-width: 696px;
+    width: 100%;
+  }
 
   // .dropdown-toggle {
   //   &::after {
@@ -69,7 +73,7 @@
 
   .post-item {
     width: 100%;
-    max-width: 656px;
+    max-width: 696px;
     .post-single-box {
       .info-area {
         .username {

@@ -91,7 +91,7 @@ export class ProfileChatsSidebarComponent
   }
 
   ngAfterViewInit(): void {
-    this.getGroupList();
+    // this.getGroupList();
     if (this.isRoomCreated) {
       this.getChatList();
       this.getGroupList();

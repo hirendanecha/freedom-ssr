@@ -53,7 +53,7 @@
         *ngIf="userChat?.createdBy"
       >
         <div
-          class="d-flex gap-4 align-items-center"
+          class="d-flex gap-4 align-items-center c-pointer"
           (click)="userChat.groupId ? groupEditDetails(groupData) : ''"
         >
           <img
@@ -79,11 +79,6 @@
               <ng-container *ngIf="userChat.groupId">
                 <span>{{ groupData?.members }} participants</span>
               </ng-container>
-              <!-- <ng-container *ngIf="typingData?.isTyping">
-                <span class="mdtxt" *ngIf="!userChat?.groupId">{{
-                  "typing..."
-                }}</span>
-              </ng-container> -->
             </div>
             <fa-icon
               [icon]="['fas', 'gear']"
@@ -117,42 +112,6 @@
       </div>
 
       <div class="chat-content position-relative" #chatContent>
-        <!--
-        ui
-        first
-        --
-      >
-        <ng-container
-          *ngIf="
-            (!(userChat?.roomId || userChat.groupId) &&
-              userChat?.isAccepted === 'N') ||
-            (userChat?.Id && !(userChat?.roomId || userChat.groupId))
-          "
-        >
-          <div class="d-flex flex-column align-items-center mt-5">
-            <div
-              class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg"
-            >
-              <img
-                [src]="userChat.ProfilePicName"
-                class="w-60-px h-60-px"
-                alt="image"
-                onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-              />
-              <h5>send invite to {{ userChat?.Username }} for chat</h5>
-              <div>
-                <button class="btn btn-danger mx-3" (click)="onCancel()">
-                  Cancel
-                </button>
-                <button class="btn btn-primary mx-3" (click)="createChatRoom()">
-                  Invite
-                </button>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-  
-         ui second -->
         <ng-container
           *ngIf="
             userChat?.createdBy !== profileId && userChat.isAccepted === 'N'
@@ -226,13 +185,6 @@
               {{ msg?.date }}</span
             >
             <ng-container *ngFor="let message of msg?.messages">
-              <!-- <span
-                class="font-12-px data-text-color ms-3"
-                *ngIf="
-                  message?.sentBy !== this.profileId && message?.createdDate
-                "
-                >{{ displayLocalTime(message?.createdDate) }}</span
-              > -->
               <div
                 class="d-flex"
                 *ngIf="
@@ -241,7 +193,10 @@
                   message?.Username
                 "
               >
-                <span class="font-12-px data-text-color ms-3">{{ message?.Username }}, {{displayLocalTime(message?.createdDate)}}</span>
+                <span class="font-12-px data-text-color ms-3"
+                  >{{ message?.Username }},
+                  {{ displayLocalTime(message?.createdDate) }}</span
+                >
               </div>
               <li class="you" *ngIf="message?.sentBy !== this.profileId">
                 <div class="d-flex drop-options">
@@ -268,6 +223,34 @@
                             <span class="data-text-color">Reply</span>
                           </a>
                         </button>
+                        <ng-container
+                          *ngIf="
+                            message?.messageMedia || message?.metaData?.url
+                          "
+                        >
+                          <button ngbDropdownItem (click)="replyMsg(message)">
+                            <a
+                              class="droplist d-flex align-items-center gap-2"
+                              [appCopyClipboard]="
+                                message?.messageMedia || message?.metaData?.url
+                              "
+                            >
+                              <fa-icon [icon]="['fas', 'link']" />
+                              <span>Copy link</span>
+                            </a>
+                          </button>
+                        </ng-container>
+                        <ng-container *ngIf="message?.messageMedia">
+                          <button
+                            ngbDropdownItem
+                            (click)="downloadMedia(message?.messageMedia)"
+                          >
+                            <a class="droplist d-flex align-items-center gap-2">
+                              <fa-icon [icon]="['fas', 'download']" />
+                              <span class="data-text-color">Download</span>
+                            </a>
+                          </button>
+                        </ng-container>
                       </div>
                     </div>
                   </div>
@@ -463,6 +446,24 @@
                               <span class="data-text-color">Delete</span>
                             </a>
                           </button>
+                          <ng-container
+                            *ngIf="
+                              message?.messageMedia || message?.metaData?.url
+                            "
+                          >
+                            <button ngbDropdownItem>
+                              <a
+                                class="droplist d-flex align-items-center gap-2"
+                                [appCopyClipboard]="
+                                  message?.messageMedia ||
+                                  message?.metaData?.url
+                                "
+                              >
+                                <fa-icon [icon]="['fas', 'link']" />
+                                <span>Copy link</span>
+                              </a>
+                            </button>
+                          </ng-container>
                         </div>
                       </div>
                     </div>
@@ -655,21 +656,50 @@
           </ul>
           <app-inline-loader *ngIf="isFileUploadInProgress" />
           <ng-container *ngIf="filteredMessageList.length">
-            <ng-container *ngIf="userChat?.groupId || (userChat?.roomId && readMessageRoom === 'Y')">
+            <ng-container
+              *ngIf="
+                userChat?.groupId ||
+                (userChat?.roomId && readMessageRoom === 'Y')
+              "
+            >
               <div class="d-flex flex-row-reverse pb-2 pe-6 gap-1" ngbDropdown>
-                <ng-container *ngFor="let item of (userChat?.groupId ? readMessagesBy : [userChat])">
-                  <div class="c-pointer" [title]="item.Username || item.FirstName" ngbDropdownToggle>
-                    <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-20-px w-20-px" draggable="false" onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';">
+                <ng-container
+                  *ngFor="
+                    let item of userChat?.groupId ? readMessagesBy : [userChat]
+                  "
+                >
+                  <div
+                    class="c-pointer"
+                    [title]="item.Username || item.FirstName"
+                    ngbDropdownToggle
+                  >
+                    <img
+                      loading="lazy"
+                      data-src="{{ item.ProfilePicName }}"
+                      class="rounded-circle h-20-px w-20-px"
+                      draggable="false"
+                      onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                    />
                   </div>
                 </ng-container>
                 <div ngbDropdownMenu class="w-228-px">
                   <div class="h6 ms-3 btn-link">
-                    READ BY {{ userChat?.groupId ? readMessagesBy.length : '' }}
+                    READ BY {{ userChat?.groupId ? readMessagesBy.length : "" }}
                   </div>
-                  <ng-container *ngFor="let item of (userChat.groupId ? readMessagesBy : [userChat])">
+                  <ng-container
+                    *ngFor="
+                      let item of userChat.groupId ? readMessagesBy : [userChat]
+                    "
+                  >
                     <button ngbDropdownItem>
                       <div class="d-flex align-items-center gap-2">
-                        <img loading="lazy" data-src="{{item.ProfilePicName}}" class="rounded-circle h-28-px w-28-px" draggable="false" onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';">
+                        <img
+                          loading="lazy"
+                          data-src="{{ item.ProfilePicName }}"
+                          class="rounded-circle h-28-px w-28-px"
+                          draggable="false"
+                          onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                        />
                         <div class="replay-text">
                           {{ item.Username || item.FirstName }}
                         </div>
@@ -758,7 +788,10 @@
               (click)="removeReplay()"
             />
             <div class="d-flex">
-              <span class="font-12-px replay-border">{{replyMessage.Username}}, {{replyMessage.createdDate | date : "dd-MM-yyyy"}}</span>
+              <span class="font-12-px replay-border"
+                >{{ replyMessage.Username }},
+                {{ replyMessage.createdDate | date : "dd-MM-yyyy" }}</span
+              >
             </div>
           </div>
         </ng-container>
@@ -852,7 +885,9 @@
                   [isCopyImagePreview]="false"
                   [isShowEmojis]="true"
                   [placement]="'top-start'"
-                  [isCustomeSearch]="userChat?.groupId ? userChat?.groupId : null"
+                  [isCustomeSearch]="
+                    userChat?.groupId ? userChat?.groupId : null
+                  "
                   (onDataChange)="onTagUserInputChangeEvent($event)"
                   (keypress)="startTypingChat(true)"
                   (keydown.enter)="uploadPostFileAndCreatePost()"

@@ -476,44 +476,44 @@
         width: 70px;
       }
     }
-    .comment-emoji{
+    .comment-emoji {
       .select-emaojies {
         right: 50px !important;
 
-        @media (min-width:768px) and (max-width:991px) {
+        @media (min-width: 768px) and (max-width: 991px) {
           right: 155px !important;
         }
-        @media (min-width:576px) and (max-width:767px) {
+        @media (min-width: 576px) and (max-width: 767px) {
           right: 80px !important;
         }
-        @media (min-width:545px) and (max-width:575px) {
+        @media (min-width: 545px) and (max-width: 575px) {
           right: 126px !important;
         }
-        @media (min-width:515px) and (max-width:544px) {
+        @media (min-width: 515px) and (max-width: 544px) {
           right: 95px !important;
         }
-        @media (min-width:436px) and (max-width:514px) {
+        @media (min-width: 436px) and (max-width: 514px) {
           right: 50px !important;
         }
-        @media (min-width:420px) and (max-width:435px) {
+        @media (min-width: 420px) and (max-width: 435px) {
           right: 100px !important;
         }
-        @media (min-width:400px) and (max-width:419px) {
+        @media (min-width: 400px) and (max-width: 419px) {
           right: 75px !important;
         }
-        @media (min-width:280px) and (max-width:400px) {
+        @media (min-width: 280px) and (max-width: 400px) {
           right: 50px !important;
         }
       }
     }
-    .replay-comment-emoji{
-      .tag-input-div{
+    .replay-comment-emoji {
+      .tag-input-div {
         max-width: 350px !important;
 
-        @media (max-width:510px) {
+        @media (max-width: 510px) {
           max-width: 274px !important;
         }
-        @media (max-width:431px) {
+        @media (max-width: 431px) {
           max-width: 220px !important;
         }
       }

@@ -115,7 +115,6 @@ export class ProfileChatsListComponent
     this.socketService.socket?.on('new-message', (data) => {
       this.newRoomCreated.emit(true);
       this.selectedChat.emit(data?.roomId || data?.groupId);
-      // this.notificationNavigation();
       if (
         data?.sentBy !== this.profileId &&
         (this.userChat?.roomId === data?.roomId ||
@@ -132,21 +131,11 @@ export class ProfileChatsListComponent
                 obj.id !== data.id && obj.parentMessageId !== data.id
             );
           });
-          // const array = new MessageDatePipe(
-          //   this.encryptDecryptService
-          // ).transform(this.messageList);
-          // this.filteredMessageList = array;
         } else if (this.messageList[index]) {
           data.messageText = this.encryptDecryptService?.decryptUsingAES256(
             data?.messageText
           );
           this.messageList[index] = data;
-
-          // const array = new MessageDatePipe(
-          //   this.encryptDecryptService
-          // ).transform(this.messageList);
-          // this.filteredMessageList = array;
-
           this.filteredMessageList?.forEach((ele: any) => {
             const indext = ele.messages?.findIndex(
               (obj) => obj?.id === data?.id
@@ -159,15 +148,10 @@ export class ProfileChatsListComponent
           data.messageText = this.encryptDecryptService?.decryptUsingAES256(
             data?.messageText
           );
-          // console.log(this.messageList);
           this.scrollToBottom();
           if (data !== null) {
             this.messageList.push(data);
           }
-          // const array = new MessageDatePipe(
-          //   this.encryptDecryptService
-          // ).transform(this.messageList);
-          // this.filteredMessageList = array;
           const lastIndex = this.filteredMessageList.length - 1;
           if (this.filteredMessageList[lastIndex]) {
             this.filteredMessageList[lastIndex]?.messages.push(data);
@@ -320,6 +304,12 @@ export class ProfileChatsListComponent
             editMsg.messageText = this.encryptDecryptService.decryptUsingAES256(
               editMsg?.messageText
             );
+            if (editMsg?.parentMessage?.messageText) {
+              editMsg.parentMessage.messageText =
+                this.encryptDecryptService?.decryptUsingAES256(
+                  editMsg?.parentMessage?.messageText
+                );
+            }
             this.filteredMessageList?.forEach((ele: any) => {
               const indext = ele.messages?.findIndex(
                 (obj) => obj?.id === editMsg?.id
@@ -328,10 +318,6 @@ export class ProfileChatsListComponent
                 ele.messages[indext] = editMsg;
               }
             });
-            // const array = new MessageDatePipe(
-            //   this.encryptDecryptService
-            // ).transform(this.messageList);
-            // this.filteredMessageList = array;
             this.resetData();
           }
         }
@@ -363,6 +349,13 @@ export class ProfileChatsListComponent
           data.messageText != null
             ? this.encryptDecryptService?.decryptUsingAES256(data.messageText)
             : null;
+        if (data.parentMessage?.messageText) {
+          data.parentMessage.messageText =
+            this.encryptDecryptService?.decryptUsingAES256(
+              data.parentMessage?.messageText
+            );
+        }
+
         const text = data.messageText?.replace(/<br\s*\/?>|<[^>]*>/g, '');
         const matches = text?.match(
           /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
@@ -384,10 +377,6 @@ export class ProfileChatsListComponent
         if (this.filteredMessageList[lastIndex]) {
           this.filteredMessageList[lastIndex]?.messages.push(data);
         }
-        // const array = new MessageDatePipe(this.encryptDecryptService).transform(
-        //   this.messageList
-        // );
-        // this.filteredMessageList = array;
         this.resetData();
       });
     }
@@ -415,11 +404,6 @@ export class ProfileChatsListComponent
         }
         if (data?.data.length > 0) {
           this.messageList = [...this.messageList, ...data.data];
-          this.messageList.sort(
-            (a, b) =>
-              new Date(a?.createdDate).getTime() -
-              new Date(b?.createdDate).getTime()
-          );
           data.data.sort(
             (a, b) =>
               new Date(a?.createdDate).getTime() -
@@ -428,67 +412,12 @@ export class ProfileChatsListComponent
           this.readMessagesBy = data?.readUsers?.filter(
             (item) => item.ID !== this.profileId
           );
-          this.readMessageRoom =
-            this.messageList[this.messageList.length - 1]?.isRead;
         } else {
           this.hasMoreData = false;
         }
         if (this.activePage < data.pagination.totalPages) {
           this.hasMoreData = true;
         }
-        if (this.userChat?.groupId) {
-          this.socketService.socket.on('read-message-user', (data) => {
-            this.readMessagesBy = data?.filter(
-              (item) => item.ID !== this.profileId
-            );
-          });
-          const date = moment(new Date()).utc();
-          const oldChat = {
-            profileId: this.profileId,
-            groupId: this.userChat.groupId,
-            date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
-          };
-          this.socketService.switchChat(oldChat, (data) => {
-            // console.log(data);
-          });
-        } else {
-          const ids = [];
-          this.messageList.map((e: any) => {
-            if (e.isRead === 'N' && e.sentBy !== this.profileId) {
-              return ids.push(e.id);
-            } else {
-              return e;
-            }
-          });
-          if (ids.length) {
-            const data = {
-              ids: ids,
-              profileId: this.userChat.profileId,
-            };
-            this.socketService.readMessage(data, (res) => {
-              return;
-            });
-          }
-        }
-        this.messageList.map(async (element: any) => {
-          const url =
-            element.messageText != null
-              ? this.encryptDecryptService?.decryptUsingAES256(
-                  element?.messageText
-                )
-              : null;
-          const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
-          const matches = text?.match(
-            /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
-          );
-          if (matches?.[0]) {
-            element['metaData'] = await this.getMetaDataFromUrlStr(
-              matches?.[0]
-            );
-          } else {
-            return element;
-          }
-        });
         if (this.filteredMessageList.length > 0) {
           this.chatContent.nativeElement.scrollTop = 48;
         }
@@ -504,6 +433,63 @@ export class ProfileChatsListComponent
           ...uniqueDates,
           ...this.filteredMessageList,
         ];
+        if (this.filteredMessageList[this.filteredMessageList.length - 1]) {
+          const lastMessageList =
+            this.filteredMessageList[this.filteredMessageList.length - 1]
+              .messages;
+          this.readMessageRoom =
+            lastMessageList[lastMessageList.length - 1].isRead;
+        }
+        if (this.userChat?.groupId) {
+          this.socketService.socket.on('read-message-user', (data) => {
+            this.readMessagesBy = data?.filter(
+              (item) => item.ID !== this.profileId
+            );
+          });
+          const date = moment(new Date()).utc();
+          const oldChat = {
+            profileId: this.profileId,
+            groupId: this.userChat.groupId,
+            date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+          };
+          this.socketService.switchChat(oldChat, (data) => {});
+        } else {
+          const ids = [];
+          this.filteredMessageList.map((element) => {
+            element.messages.map((e: any) => {
+              if (e.isRead === 'N' && e.sentBy !== this.profileId) {
+                return ids.push(e.id);
+              } else {
+                return e;
+              }
+            });
+          });
+          if (ids.length) {
+            const data = {
+              ids: ids,
+              profileId: this.userChat.profileId,
+            };
+            this.socketService.readMessage(data, (res) => {
+              return;
+            });
+          }
+        }
+        this.filteredMessageList.map((element) => {
+          return (element.messages = element?.messages.filter(
+            async (e: any) => {
+              const url = e?.messageText || null;
+              const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
+              const matches = text?.match(
+                /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
+              );
+              if (matches?.[0]) {
+                e['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
+              } else {
+                return e;
+              }
+            }
+          ));
+        });
       },
       error: (err) => {},
     });
@@ -563,7 +549,6 @@ export class ProfileChatsListComponent
           this.isFileUploadInProgress = true;
           this.postService.uploadFile(this.selectedFile).subscribe({
             next: (res: any) => {
-              // this.spinner.hide();
               if (res?.body?.url) {
                 this.isFileUploadInProgress = false;
                 this.chatObj.msgMedia = res?.body?.url;
@@ -620,7 +605,6 @@ export class ProfileChatsListComponent
       media.endsWith('.xlsx') ||
       media.endsWith('.zip');
     return media && fileType;
-    // return media && media.endsWith('.pdf');
   }
 
   pdfView(pdfUrl) {
@@ -654,7 +638,6 @@ export class ProfileChatsListComponent
 
   selectEmoji(emoji: any): void {
     this.chatObj.msgMedia = emoji;
-    // this.sendMessage();
   }
 
   replyMsg(msgObj): void {
@@ -681,9 +664,6 @@ export class ProfileChatsListComponent
   editMsg(msgObj): void {
     this.chatObj['id'] = msgObj?.id;
     this.messageInputValue = msgObj.messageText;
-    // this.encryptDecryptService?.decryptUsingAES256(
-
-    // );
     this.chatObj.msgMedia = msgObj.messageMedia;
     this.chatObj.parentMessageId = msgObj?.parentMessageId || null;
   }
@@ -702,11 +682,6 @@ export class ProfileChatsListComponent
         this.messageList = this.messageList.filter(
           (obj) => obj?.id !== data?.id && obj?.parentMessageId !== data.id
         );
-        // const array = new MessageDatePipe(this.encryptDecryptService).transform(
-        //   this.messageList
-        // );
-        // this.filteredMessageList = array;
-
         this.filteredMessageList?.forEach((ele: any) => {
           if (ele.date === date) {
             ele.messages = ele.messages.filter(
@@ -719,71 +694,112 @@ export class ProfileChatsListComponent
     );
   }
 
+  // getMetaDataFromUrlStr(url: string): Promise<any> {
+  //   return new Promise((resolve, reject) => {
+  //     if (url !== this.metaData?.url) {
+  //       this.isMetaLoader = true;
+  //       this.ngUnsubscribe.next();
+  //       const unsubscribe$ = new Subject<void>();
+
+  //       this.postService
+  //         .getMetaData({ url })
+  //         .pipe(takeUntil(unsubscribe$))
+  //         .subscribe({
+  //           next: (res: any) => {
+  //             this.isMetaLoader = false;
+  //             if (res?.meta?.image) {
+  //               const urls = res.meta?.image?.url;
+  //               const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+
+  //               const metatitles = res?.meta?.title;
+  //               const metatitle = Array.isArray(metatitles)
+  //                 ? metatitles?.[0]
+  //                 : metatitles;
+
+  //               const metaursl = Array.isArray(url) ? url?.[0] : url;
+  //               this.metaData = {
+  //                 title: metatitle,
+  //                 metadescription: res?.meta?.description,
+  //                 metaimage: imgUrl,
+  //                 metalink: metaursl,
+  //                 url: url,
+  //               };
+  //               resolve(this.metaData);
+  //             } else {
+  //               const metatitles = res?.meta?.title;
+  //               const metatitle = Array.isArray(metatitles)
+  //                 ? metatitles?.[0]
+  //                 : metatitles;
+  //               const metaursl = Array.isArray(url) ? url?.[0] : url;
+  //               const metaLinkData = {
+  //                 title: metatitle,
+  //                 metadescription: res?.meta?.description,
+  //                 metalink: metaursl,
+  //                 url: url,
+  //               };
+  //               resolve(metaLinkData);
+  //             }
+  //           },
+  //           error: (err) => {
+  //             this.metaData.metalink = url;
+  //             this.isMetaLoader = false;
+  //             this.spinner.hide();
+  //             reject(err);
+  //           },
+  //           complete: () => {
+  //             unsubscribe$.next();
+  //             unsubscribe$.complete();
+  //           },
+  //         });
+  //     } else {
+  //       resolve(this.metaData);
+  //     }
+  //   });
+  // }
+
   getMetaDataFromUrlStr(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (url !== this.metaData?.url) {
-        this.isMetaLoader = true;
-        this.ngUnsubscribe.next();
-        const unsubscribe$ = new Subject<void>();
-
-        this.postService
-          .getMetaData({ url })
-          .pipe(takeUntil(unsubscribe$))
-          .subscribe({
-            next: (res: any) => {
-              this.isMetaLoader = false;
-              if (res?.meta?.image) {
-                const urls = res.meta?.image?.url;
-                const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
-
-                const metatitles = res?.meta?.title;
-                const metatitle = Array.isArray(metatitles)
-                  ? metatitles?.[0]
-                  : metatitles;
-
-                // const metaurls = res?.meta?.url || url;
-                // const metaursl = Array.isArray(metaurls) ? metaurls?.[0] : metaurls;
-
-                const metaursl = Array.isArray(url) ? url?.[0] : url;
-                this.metaData = {
-                  title: metatitle,
-                  metadescription: res?.meta?.description,
-                  metaimage: imgUrl,
-                  metalink: metaursl,
-                  url: url,
-                };
-                resolve(this.metaData);
-              } else {
-                // this.metaData.metalink = url;
-                // resolve(this.metaData);
-                const metatitles = res?.meta?.title;
-                const metatitle = Array.isArray(metatitles)
-                  ? metatitles?.[0]
-                  : metatitles;
-                const metaursl = Array.isArray(url) ? url?.[0] : url;
-                const metaLinkData = {
-                  title: metatitle,
-                  metadescription: res?.meta?.description,
-                  metalink: metaursl,
-                  url: url,
-                };
-                resolve(metaLinkData);
-              }
-            },
-            error: (err) => {
-              this.metaData.metalink = url;
-              this.isMetaLoader = false;
-              this.spinner.hide();
-              reject(err);
-            },
-            complete: () => {
-              unsubscribe$.next();
-              unsubscribe$.complete();
-            },
-          });
-      } else {
+      if (url === this.metaData?.url) {
         resolve(this.metaData);
+        return;
       }
+      this.isMetaLoader = true;
+      this.ngUnsubscribe.next();
+      const unsubscribe$ = new Subject<void>();
+      this.postService
+        .getMetaData({ url })
+        .pipe(takeUntil(unsubscribe$))
+        .subscribe({
+          next: (res: any) => {
+            this.isMetaLoader = false;
+            const meta = res.meta || {};
+            const imageUrl = Array.isArray(meta.image?.url)
+              ? meta.image.url[0]
+              : meta.image?.url;
+            const metaTitle = Array.isArray(meta.title)
+              ? meta.title[0]
+              : meta.title;
+            const metaDescription = meta.description;
+
+            const metaData = {
+              title: metaTitle,
+              metadescription: metaDescription,
+              metaimage: imageUrl,
+              metalink: url,
+              url: url,
+            };
+            this.metaData = metaData;
+            resolve(metaData);
+          },
+          error: (err) => {
+            this.isMetaLoader = false;
+            reject(err);
+          },
+          complete: () => {
+            unsubscribe$.next();
+            unsubscribe$.complete();
+          },
+        });
     });
   }
 
@@ -793,8 +809,6 @@ export class ProfileChatsListComponent
       size: 'sm',
       backdrop: 'static',
     });
-    // const originUrl =
-    //   'https://facetime.tube/' + `callId-${new Date().getTime()}`;
     const originUrl = `callId-${new Date().getTime()}`;
     const data = {
       ProfilePicName:
@@ -925,16 +939,6 @@ export class ProfileChatsListComponent
     });
   }
 
-  // startTypingChat(isTyping) {
-  //   const data = {
-  //     groupId: this.userChat?.groupId,
-  //     roomId: this.userChat?.roomId,
-  //     profileId: this.profileId,
-  //     isTyping: isTyping,
-  //   };
-  //   this.socketService?.startTyping(data, (data: any) => {});
-  // }
-
   startTypingChat(isTyping: boolean) {
     clearTimeout(this.typingTimeout);
     const data = {
@@ -962,5 +966,11 @@ export class ProfileChatsListComponent
       localStorage.setItem('isRead', 'Y');
       this.sharedService.isNotify = false;
     }
+  }
+
+  downloadMedia(data): void {
+    const pdfLink = document.createElement('a');
+    pdfLink.href = data;
+    pdfLink.click();
   }
 }

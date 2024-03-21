@@ -60,7 +60,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.msg =
         'Please check your email and click the activation link to activate your account.';
       this.type = 'success';
-      // this.toastService.success(this.msg);
     } else if (isVerify === 'true') {
       this.msg = 'Account activated';
       this.type = 'success';
@@ -71,7 +70,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
       description: 'login page',
       image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`,
     };
-    // this.seoService.updateSeoMetaData(data);
     this.theme = localStorage.getItem('theme');
   }
 
@@ -111,7 +109,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     if (!token) {
       this.msg = 'Invalid captcha kindly try again!';
       this.type = 'danger';
-      return;
+      // return;
     }
     if (this.loginForm.valid) {
       this.spinner.show();
@@ -177,12 +175,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (result: any) => {
           this.msg = result.message;
-          // this.toastService.success(this.msg);
           this.type = 'success';
         },
         error: (error) => {
           this.msg = error.message;
-          // this.toastService.danger(this.msg);
           this.type = 'danger';
         },
       });
