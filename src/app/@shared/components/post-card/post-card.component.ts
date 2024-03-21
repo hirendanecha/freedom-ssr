@@ -283,6 +283,7 @@ export class PostCardComponent implements OnInit {
           this.commentData.comment = res?.comment;
           this.commentData.postId = res?.postId;
           this.commentData.profileId = res?.profileId;
+          this.commentData.meta = res?.meta;
           this.commentData['id'] = res?.id;
           if (res?.parentCommentId) {
             this.commentData.parentCommentId = res?.parentCommentId;
