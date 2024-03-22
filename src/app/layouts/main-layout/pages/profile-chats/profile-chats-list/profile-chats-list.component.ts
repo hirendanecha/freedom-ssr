@@ -132,6 +132,12 @@ export class ProfileChatsListComponent
             );
           });
         } else if (this.messageList[index]) {
+          if (data?.parentMessage) {
+            data.parentMessage.messageText =
+              this.encryptDecryptService?.decryptUsingAES256(
+                data?.parentMessage?.messageText
+              );
+          }
           data.messageText = this.encryptDecryptService?.decryptUsingAES256(
             data?.messageText
           );
@@ -145,6 +151,12 @@ export class ProfileChatsListComponent
             }
           });
         } else {
+          if (data?.parentMessage) {
+            data.parentMessage.messageText =
+              this.encryptDecryptService?.decryptUsingAES256(
+                data?.parentMessage?.messageText
+              );
+          }
           data.messageText = this.encryptDecryptService?.decryptUsingAES256(
             data?.messageText
           );
