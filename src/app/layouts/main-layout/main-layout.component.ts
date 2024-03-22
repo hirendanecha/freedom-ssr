@@ -52,14 +52,6 @@ export class MainLayoutComponent {
         this.sidebar = data;
       });
 
-    this.breakpointService.screen.subscribe((res) => {
-      if (res.xl.between || res.xl.lessThen) {
-        this.sidebar.isShowRightSideBar = false;
-      }
-    });
-    //  else {
-    //   this.sidebar.isShowRightSideBar = true;
-    // }
   }
 
   openLeftSidebar() {

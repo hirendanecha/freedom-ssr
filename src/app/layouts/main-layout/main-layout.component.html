@@ -2,7 +2,10 @@
 
 <div class="main-content d-flex justify-content-start align-items-start p-0">
   <div [ngClass]="!sidebar?.isShowChatModule ? 'container' : 'w-100'">
-    <div class="d-lg-flex d-block w-100 gap-5 main-layout" [ngClass]="!sidebar?.isShowChatModule ? 'pt-5' : 'pt-0'">
+    <div
+      class="d-lg-flex d-block w-100 gap-5 main-layout"
+      [ngClass]="!sidebar?.isShowChatModule ? 'pt-5' : 'pt-0'"
+    >
       <ng-container
         *ngIf="
           sidebar?.isShowLeftSideBar &&
@@ -27,7 +30,7 @@
       <ng-container
         *ngIf="
           sidebar?.isShowRightSideBar &&
-          (breakpointService?.screen | async).xl.gatherThen
+          (breakpointService?.screen | async).xxl.gatherThen
         "
       >
         <div class="my-list-sidebar min-vh-100">
