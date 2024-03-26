@@ -157,9 +157,11 @@ export class ProfileChatsListComponent
                 data?.parentMessage?.messageText
               );
           }
-          data.messageText = this.encryptDecryptService?.decryptUsingAES256(
-            data?.messageText
-          );
+          if (data?.messageText) {
+            data.messageText = this.encryptDecryptService?.decryptUsingAES256(
+              data?.messageText
+            );
+          }
           this.scrollToBottom();
           if (data !== null) {
             this.messageList.push(data);
