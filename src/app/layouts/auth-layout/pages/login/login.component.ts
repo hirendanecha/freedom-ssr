@@ -131,9 +131,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
             this.sharedService.getUserDetails();
             this.isLoginFailed = false;
             this.isLoggedIn = true;
-            if (this.socketService.socket?.connected) {
-              this.socketService.socket.close();
-            }
             this.socketService.connect();
             this.socketService.socket?.emit('online-users');
             this.socketService?.socket?.on('get-users', (data) => {

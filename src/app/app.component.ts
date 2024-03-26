@@ -66,9 +66,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         error: (err) => {
           this.tokenService.signOut();
-          this.toasterService.warring(
-            'your session is expire please login again!'
-          );
+          // this.toasterService.warring(
+          //   'your session is expire please login again!'
+          // );
         },
       });
     }
