@@ -338,11 +338,18 @@ export class ProfileChatsListComponent
         this.resetData();
       });
     } else {
+      // const message =
+      //   this.chatObj.msgText !== null
+      //     ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
+      //     : null;
+      const unwantedHTML = '<div><div></div></div>';
+      const filteredMsgText = this.chatObj.msgText ? this.chatObj.msgText.replace(unwantedHTML, '') : null;      
       const message =
-        this.chatObj.msgText !== null
-          ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
+        filteredMsgText &&
+        filteredMsgText.trim() !== ''
+          ? this.encryptDecryptService?.encryptUsingAES256(filteredMsgText)
           : null;
-
+      
       const data = {
         messageText: message,
         roomId: this.userChat?.roomId || null,
