@@ -438,10 +438,25 @@ export class ProfileChatsListComponent
         const array = new MessageDatePipe(this.encryptDecryptService).transform(
           data.data
         );
-        const uniqueDates = array.filter((dateObj) => {
-          return !this.filteredMessageList.some(
+        // const uniqueDates = array.filter((dateObj) => {
+        //   return !this.filteredMessageList.some(
+        //     (existingDateObj) => existingDateObj.date === dateObj.date
+        //   );
+        // });
+
+        let uniqueDates = [];
+        array.forEach((dateObj) => {
+          const existingDateObj = this.filteredMessageList.find(
             (existingDateObj) => existingDateObj.date === dateObj.date
           );
+          if (existingDateObj) {
+            existingDateObj.messages = existingDateObj.messages.concat(
+              dateObj.messages
+            );
+            existingDateObj.messages.sort((a, b) => a.id - b.id);
+          } else {
+            uniqueDates.push(dateObj);
+          }
         });
         this.filteredMessageList = [
           ...uniqueDates,
