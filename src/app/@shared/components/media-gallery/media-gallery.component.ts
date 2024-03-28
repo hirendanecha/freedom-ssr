@@ -1,0 +1,99 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { MessageService } from '../../services/message.service';
+import * as moment from 'moment';
+import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+@Component({
+  selector: 'app-media-gallery',
+  templateUrl: './media-gallery.component.html',
+  styleUrls: ['./media-gallery.component.scss'],
+})
+export class MediaGalleryComponent implements OnInit {
+  @Input('userChat') userChat: any = {};
+  mediaList: any = [];
+  fileName: string;
+  profileId: number;
+  activePage = 1;
+  hasMoreData = true;
+
+  constructor(
+    private messageService: MessageService,
+    public activeOffCanvas: NgbActiveOffcanvas
+  ) {
+    this.profileId = +localStorage.getItem('profileId');
+  }
+
+  ngOnInit() {
+    this.getMessageMedia();
+  }
+
+  loadMoreMedia() {
+    this.activePage = this.activePage + 1;
+    this.getMessageMedia();
+  }
+
+  getMessageMedia(): void {
+    const data = {
+      page: this.activePage,
+      size: 10,
+      roomId: this.userChat?.roomId || null,
+      groupId: this.userChat?.groupId || null,
+    };
+    this.messageService.getMessageMedia(data).subscribe({
+      next: (res) => {
+        if (this.activePage < res?.pagination.totalPages) {
+          this.hasMoreData = true;
+        } else {
+          this.hasMoreData = false;
+        }
+        let groupedMediaList = [];
+        res.data.forEach((ele) => {
+          const messageDate = new Date(ele?.createdDate);
+          const today = new Date();
+          const yesterday = new Date(today);
+          yesterday.setDate(today.getDate() - 1);
+          let groupHeader = '';
+          if (messageDate.toDateString() === today.toDateString()) {
+            groupHeader = 'Today';
+          } else if (messageDate.toDateString() === yesterday.toDateString()) {
+            groupHeader = 'Yesterday';
+          } else {
+            groupHeader = moment.utc(messageDate).local().format('DD-MMM-YYYY');
+          }
+          const existingGroupIndex = groupedMediaList.findIndex(
+            (group) => group.date === groupHeader
+          );
+
+          if (existingGroupIndex === -1) {
+            groupedMediaList.push({ date: groupHeader, messages: [ele] });
+          } else {
+            groupedMediaList[existingGroupIndex].messages.push(ele);
+          }
+        });
+        this.mediaList = [...this.mediaList, ...groupedMediaList];
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  isFile(media: string): boolean {
+    this.fileName = media?.split('/')[3]?.replaceAll('%', '-');
+    const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip'];
+    return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
+  }
+
+  isGif(src: string): boolean {
+    return !src?.toLowerCase()?.endsWith('.gif');
+  }
+
+  pdfView(pdfUrl: string) {
+    window.open(pdfUrl);
+  }
+
+  downloadPdf(data): void {
+    const pdfLink = document.createElement('a');
+    pdfLink.href = data;
+    pdfLink.click();
+  }
+}

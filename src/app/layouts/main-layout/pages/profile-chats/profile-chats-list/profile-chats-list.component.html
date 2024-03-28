@@ -92,6 +92,15 @@
           *ngIf="userChat.isAccepted === 'Y'"
         >
           <a
+            *ngIf="userChat.roomId || userChat.groupId"
+            class="nav-icon cursor"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Media Gallery"
+            (click)="openMediaGallery()"
+            ><fa-icon [icon]="['fas', 'photo-film']" class="font-20-px m-1"
+          /></a>
+          <a
             *ngIf="userChat.roomId"
             class="nav-icon cursor"
             data-toggle="tooltip"

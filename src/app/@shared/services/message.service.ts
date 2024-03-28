@@ -29,4 +29,8 @@ export class MessageService {
     getRoomById(id: any): Observable<any> {
       return this.http.get(`${this.baseUrl}/get-room/${id}`);
     }
+
+    getMessageMedia(data: any): Observable<any> {
+      return this.http.post(`${this.baseUrl}/get-media/`, data);
+    }
 }

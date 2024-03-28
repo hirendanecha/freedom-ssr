@@ -90,7 +90,8 @@ import {
   faPencil,
   faRefresh,
   faReply,
-  faUserTimes
+  faUserTimes,
+  faPhotoFilm
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -119,6 +120,7 @@ import { IncomingcallModalComponent } from './modals/incoming-call-modal/incomin
 import { OutGoingCallModalComponent } from './modals/outgoing-call-modal/outgoing-call-modal.component';
 import { CreateGroupModalComponent } from './modals/create-group-modal/create-group-modal.component';
 import { EditGroupModalComponent } from './modals/edit-group-modal/edit-group-modal.component';
+import { MediaGalleryComponent } from './components/media-gallery/media-gallery.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -148,7 +150,8 @@ const sharedComponents = [
   IncomingcallModalComponent,
   OutGoingCallModalComponent,
   CreateGroupModalComponent,
-  EditGroupModalComponent
+  EditGroupModalComponent,
+  MediaGalleryComponent,
 ];
 
 const sharedModules = [
@@ -253,7 +256,8 @@ export class SharedModule {
       faRefresh,
       faRightFromBracket,
       faReply,
-      faUserTimes
+      faUserTimes,
+      faPhotoFilm
     );
   }
 }

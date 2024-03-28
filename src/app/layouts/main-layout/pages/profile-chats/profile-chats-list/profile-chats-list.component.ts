@@ -11,7 +11,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, take, takeUntil } from 'rxjs';
@@ -26,6 +26,7 @@ import { Howl } from 'howler';
 import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-modal/create-group-modal.component';
 import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal/edit-group-modal.component';
 import { MessageDatePipe } from 'src/app/@shared/pipe/message-date.pipe';
+import { MediaGalleryComponent } from 'src/app/@shared/components/media-gallery/media-gallery.component';
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -93,6 +94,7 @@ export class ProfileChatsListComponent
     'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-down.gif',
   ];
   originalFavicon: HTMLLinkElement;
+  isGallerySidebarOpen: boolean = false;
 
   // messageList: any = [];
   constructor(
@@ -103,7 +105,8 @@ export class ProfileChatsListComponent
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
     public encryptDecryptService: EncryptDecryptService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private offcanvasService: NgbOffcanvas
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -642,7 +645,7 @@ export class ProfileChatsListComponent
 
   isFile(media: string): boolean {
     const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip'];
-    return FILE_EXTENSIONS.some((ext) => media.endsWith(ext));
+    return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
 
   onCancel(): void {
@@ -1001,5 +1004,14 @@ export class ProfileChatsListComponent
     const pdfLink = document.createElement('a');
     pdfLink.href = data;
     pdfLink.click();
+  }
+
+  openMediaGallery() {
+    this.isGallerySidebarOpen = true;
+    const offcanvasRef = this.offcanvasService.open(MediaGalleryComponent, {
+      position: 'end',
+      // panelClass: 'w-400-px',
+    });
+    offcanvasRef.componentInstance.userChat = this.userChat;
   }
 }
