@@ -686,10 +686,12 @@ export class ProfileChatsListComponent
       file.endsWith('.xls') ||
       file.endsWith('.xlsx') ||
       file.endsWith('.zip');
-    if (fileType) {
-      this.pdfName = msgObj.messageMedia;
-    } else {
-      this.viewUrl = msgObj.messageMedia;
+    if (!msgObj.messageText) {
+      if (fileType) {
+        this.pdfName = msgObj.messageMedia;
+      } else {
+        this.viewUrl = msgObj.messageMedia;
+      }
     }
   }
 
