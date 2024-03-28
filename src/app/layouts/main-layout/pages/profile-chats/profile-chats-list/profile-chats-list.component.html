@@ -245,7 +245,7 @@
                               "
                             >
                               <fa-icon [icon]="['fas', 'link']" />
-                              <span>Copy link</span>
+                              <span class="data-text-color">Copy link</span>
                             </a>
                           </button>
                         </ng-container>
@@ -469,7 +469,7 @@
                                 "
                               >
                                 <fa-icon [icon]="['fas', 'link']" />
-                                <span>Copy link</span>
+                                <span class="data-text-color">Copy link</span>
                               </a>
                             </button>
                           </ng-container>
@@ -728,12 +728,13 @@
       >
         <ng-container *ngIf="viewUrl && !pdfName">
           <div
-            class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
+            class="position-absolute mt-5 p-3 preview-chat-media"
           >
+          <fa-icon *ngIf="replyMessage.Username && replyMessage.createdDate" class="float-start me-2" [icon]="['fas', 'reply']" />
             <img
               loading="lazy"
               data-src="{{ viewUrl }}"
-              class="w-100 h-100 rounded-4"
+              class="w-100-px h-100-px rounded-4"
               alt="icon"
               onerror="this.onerror=null;"
             />
@@ -743,17 +744,26 @@
               role="button"
               (click)="removePostSelectedFile()"
             />
+            <ng-container *ngIf="replyMessage.Username && replyMessage.createdDate">
+              <div class="d-flex">
+                <span class="font-12-px mt-2 replay-border"
+                  >{{ replyMessage.Username }},
+                  {{ replyMessage.createdDate | date : "dd-MM-yyyy" }}</span
+                >
+              </div>
+            </ng-container>
           </div>
         </ng-container>
         <ng-container *ngIf="pdfName">
           <div
-            class="position-absolute w-100-px h-100-px mt-5 preview-chat-media"
+            class="position-absolute mt-5 p-3 preview-chat-media"
           >
+          <fa-icon *ngIf="replyMessage.Username && replyMessage.createdDate" class="float-start me-2" [icon]="['fas', 'reply']" />
             <fa-icon
               [icon]="['fas', 'file']"
               class="c-pointer close-icon font-40-px"
             />
-            <span class="c-pdf-show" [title]="pdfName.replaceAll('%', ' ')">{{
+            <span class="c-pdf-show w-100-px" [title]="pdfName.replaceAll('%', ' ')">{{
               pdfName.replaceAll("%", " ")
             }}</span>
             <fa-icon
@@ -762,6 +772,14 @@
               role="button"
               (click)="removePostSelectedFile()"
             />
+            <ng-container *ngIf="replyMessage.Username && replyMessage.createdDate">
+              <div class="d-flex">
+                <span class="font-12-px replay-border"
+                  >{{ replyMessage.Username }},
+                  {{ replyMessage.createdDate | date : "dd-MM-yyyy" }}</span
+                >
+              </div>
+            </ng-container>
           </div>
         </ng-container>
         <ng-container
