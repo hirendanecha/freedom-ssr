@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from '../../services/message.service';
 import * as moment from 'moment';
-import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { last } from 'rxjs';
+import { NgbActiveOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GalleryImgPreviewComponent } from '../gallery-img-preview/gallery-img-preview.component';
 @Component({
   selector: 'app-media-gallery',
   templateUrl: './media-gallery.component.html',
@@ -18,7 +18,8 @@ export class MediaGalleryComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    public activeOffCanvas: NgbActiveOffcanvas
+    public activeOffCanvas: NgbActiveOffcanvas,
+    private modalService: NgbModal
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -99,8 +100,12 @@ export class MediaGalleryComponent implements OnInit {
   }
 
   openImagePreview(src: string) {
-    console.log(src);
+    const modalRef = this.modalService.open(GalleryImgPreviewComponent, {
+      backdrop: 'static',
+    });
+    modalRef.componentInstance.src = src;
+    modalRef.componentInstance.roomId = this.userChat?.roomId;
+    modalRef.componentInstance.groupId = this.userChat?.groupId;
+    modalRef.componentInstance.activePage = this.activePage;
   }
-
-  imagePreview(index): void {}
 }

@@ -1,34 +1,4 @@
-:host {
-  .img-preview {
-    position: relative;
-    overflow: hidden;
-
-    .icon-eye {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-color: transparent;
-      left: 0;
-      top: 0;
-      cursor: pointer;
-      transition: 0.3s ease-in-out;
-
-      fa-icon {
-        transition: 0.3s ease-in-out;
-        color: transparent;
-      }
-
-      &:hover {
-        transition: 0.3s ease-in-out;
-        background-color: #00000075;
-
-        fa-icon {
-          color: #fff;
-        }
-      }
-    }
-  }
-
+::ng-deep {
   .img-preview-full-screen {
     position: fixed;
     top: 0px;
@@ -66,7 +36,7 @@
       }
     }
 
-    .image-preview{
+    .image-preview {
       bottom: 0px;
       height: 100%;
       // left: 0px;
@@ -78,18 +48,44 @@
       z-index: -1;
     }
   }
-}
+  .c-icon-color {
+    svg path {
+      fill: var(--secondary-color) !important;
+    }
+  }
+  .icon-container .font-28-px {
+    display: none;
+  }
 
-::ng-deep .c-icon-color{
-  svg path {
-    fill: var(--secondary-color) !important;
+  .icon-container:hover .font-28-px {
+    display: inline-block;
   }
 }
-
-.icon-container .font-28-px {
-  display: none;
+.carousel-control-next {
+  top: calc(100vh - 55%);
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  &:hover {
+    background: gray;
+  }
+  @media (max-width: 720px) {
+    background: gray;
+    height: 50px;
+    width: 50px;
+  }
 }
-
-.icon-container:hover .font-28-px {
-  display: inline-block;
+.carousel-control-prev {
+  top: calc(100vh - 55%);
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  &:hover {
+    background: gray;
+  }
+  @media (max-width: 720px) {
+    background: gray;
+    height: 50px;
+    width: 50px;
+  }
 }
