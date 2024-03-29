@@ -91,7 +91,7 @@ import {
   faRefresh,
   faReply,
   faUserTimes,
-  faPhotoFilm
+  faPhotoFilm,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -121,6 +121,7 @@ import { OutGoingCallModalComponent } from './modals/outgoing-call-modal/outgoin
 import { CreateGroupModalComponent } from './modals/create-group-modal/create-group-modal.component';
 import { EditGroupModalComponent } from './modals/edit-group-modal/edit-group-modal.component';
 import { MediaGalleryComponent } from './components/media-gallery/media-gallery.component';
+import { GalleryImgPreviewComponent } from './components/gallery-img-preview/gallery-img-preview.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -152,6 +153,7 @@ const sharedComponents = [
   CreateGroupModalComponent,
   EditGroupModalComponent,
   MediaGalleryComponent,
+  GalleryImgPreviewComponent,
 ];
 
 const sharedModules = [

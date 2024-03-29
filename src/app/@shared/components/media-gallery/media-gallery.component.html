@@ -18,7 +18,9 @@
     <div class="cus-scrollbar-pending overflow-y-auto">
       <div class="media-content p-2" *ngFor="let media of mediaList">
         <h4 class="mb-0">{{ media.date }}</h4>
-        <div *ngFor="let message of media.messages">
+        <div
+          *ngFor="let message of media.messages; let i = index; let l = last"
+        >
           <div class="btn-group d-flex options float-end">
             <div ngbDropdown #editPopup="ngbDropdown" class="d-inline-block">
               <button class="dropdown-btn" ngbDropdownToggle>
@@ -60,11 +62,27 @@
             </ng-container>
             <ng-template #imageMsg>
               <div class="replay-message-media">
-                <app-img-preview
+                <!-- <app-gallery-img-preview
                   class="msgImage"
                   classes="h-180-px"
                   [src]="message?.messageMedia"
-                ></app-img-preview>
+                ></app-gallery-img-preview> -->
+                <div class="img-preview rounded-3 h-180-px">
+                  <img
+                    loading="lazy"
+                    data-src="{{ message?.messageMedia }}"
+                    class="w-100 h-100 rounded-3"
+                    alt="preview-img"
+                    onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                  />
+
+                  <div
+                    class="icon-eye d-flex flex-column justify-content-center align-items-center c-icon-color icon-container"
+                    (click)="openImagePreview(message?.messageMedia)"
+                  >
+                    <fa-icon [icon]="['fas', 'eye']" class="font-28-px" />
+                  </div>
+                </div>
               </div>
             </ng-template>
           </div>
