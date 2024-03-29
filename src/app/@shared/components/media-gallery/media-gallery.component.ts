@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from '../../services/message.service';
 import * as moment from 'moment';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { last } from 'rxjs';
 @Component({
   selector: 'app-media-gallery',
   templateUrl: './media-gallery.component.html',
@@ -96,4 +97,10 @@ export class MediaGalleryComponent implements OnInit {
     pdfLink.href = data;
     pdfLink.click();
   }
+
+  openImagePreview(src: string) {
+    console.log(src);
+  }
+
+  imagePreview(index): void {}
 }
