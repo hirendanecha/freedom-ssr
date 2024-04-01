@@ -120,7 +120,7 @@
         </div>
       </div>
 
-      <div class="chat-content position-relative" #chatContent>
+      <div [ngClass]="sidebarClass ? 'chat-content-sidepanel' : 'chat-content'" class="position-relative" #chatContent>
         <ng-container
           *ngIf="
             userChat?.createdBy !== profileId && userChat.isAccepted === 'N'

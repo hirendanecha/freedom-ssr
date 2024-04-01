@@ -81,8 +81,9 @@
             color: var(--primary-color);
           }
         }
-        .chat-content {
+        .chat-content-sidepanel {
           height: calc(100vh - 160px) !important;
+          overflow-y: auto;
         }
       }
       .main-chat-box {

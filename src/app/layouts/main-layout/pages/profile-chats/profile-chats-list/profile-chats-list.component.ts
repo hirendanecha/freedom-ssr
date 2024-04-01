@@ -37,6 +37,7 @@ export class ProfileChatsListComponent
   implements OnInit, OnChanges, AfterViewChecked, OnDestroy
 {
   @Input('userChat') userChat: any = {};
+  @Input('sidebarClass') sidebarClass: boolean = false;
   @Output('newRoomCreated') newRoomCreated: EventEmitter<any> =
     new EventEmitter<any>();
   @Output('selectedChat') selectedChat: EventEmitter<any> =
