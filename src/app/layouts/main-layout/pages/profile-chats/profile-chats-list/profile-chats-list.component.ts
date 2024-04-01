@@ -679,21 +679,22 @@ export class ProfileChatsListComponent
   }
 
   replyMsg(msgObj): void {
-    console.log(msgObj);
     this.chatObj.parentMessageId = msgObj?.id;
     this.replyMessage.msgText = msgObj.messageText;
     this.replyMessage.createdDate = msgObj?.createdDate;
     this.replyMessage.Username = msgObj.Username;
-    const file = msgObj.messageMedia;
-    const fileType =
-      file.endsWith('.pdf') ||
-      file.endsWith('.doc') ||
-      file.endsWith('.docx') ||
-      file.endsWith('.xls') ||
-      file.endsWith('.xlsx') ||
-      file.endsWith('.zip');
+    // const file = msgObj.messageMedia;
+    // const fileType =
+    //   file.endsWith('.pdf') ||
+    //   file.endsWith('.doc') ||
+    //   file.endsWith('.docx') ||
+    //   file.endsWith('.xls') ||
+    //   file.endsWith('.xlsx') ||
+    //   file.endsWith('.zip');
     if (!msgObj.messageText) {
-      if (fileType) {
+      if (this.isFile(msgObj.messageMedia)) {
+        this.pdfName = msgObj.messageMedia;
+      } else if (this.isVideoFile(msgObj.messageMedia)) {
         this.pdfName = msgObj.messageMedia;
       } else {
         this.viewUrl = msgObj.messageMedia;
