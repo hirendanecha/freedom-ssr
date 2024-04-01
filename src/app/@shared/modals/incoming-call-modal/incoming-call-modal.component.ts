@@ -122,7 +122,7 @@ export class IncomingcallModalComponent
     };
     this.socketService?.hangUpCall(data, (data: any) => {
       if (isCallCut) {
-        const message = `I'll call you back.`;
+        const message = `Call declined`;
         this.sendMessage(message);
       } else {
         const message = `You have a missed call.`;
