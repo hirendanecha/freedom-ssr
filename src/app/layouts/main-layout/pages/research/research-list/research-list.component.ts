@@ -27,6 +27,7 @@ export class ResearchListComponent {
 
   selectedImgFile: any;
   selectedpdfFile: any;
+  selectedVideoFile: any;
 
   groupPosts: any = [];
   pagination: any = {
@@ -47,6 +48,10 @@ export class ResearchListComponent {
     isClicked: new FormControl(false),
     isSubmitted: new FormControl(false),
   });
+
+  postVideoUrl: string;
+  postVideo: any;
+  postThumbfilename: any;
 
   postImageUrl: string;
   postImage: any;
@@ -176,6 +181,10 @@ export class ResearchListComponent {
 
   createResearch(): void {
     this.formIsClicked.setValue(true);
+    if (this.selectedVideoFile && !this.selectedImgFile) {
+      this.toastService.danger('Please select image as thumbfile');
+      return;
+    }
     if (this.researchForm.invalid && this.formIsSubmitted.value === false) {
       this.toastService.danger('Please enter mandatory fields(*) data.');
       return;
@@ -191,9 +200,11 @@ export class ResearchListComponent {
       reqObj['metalink'] = meta?.metalink;
       reqObj['imageUrl'] = this.postImage;
       reqObj['pdfUrl'] = this.postFile;
+      reqObj['streamname'] = this.postVideo;
+      reqObj['thumbfilename'] = this.postThumbfilename;
       this.socketService?.createOrEditPost(reqObj);
       this.toastService.success('Research added successfully.');
-      this.resetPost()
+      this.resetPost();
     }
     this.removeImgFile();
     this.removePostSelectedFile();
@@ -215,7 +226,7 @@ export class ResearchListComponent {
 
   createImagePost(): void {
     const profileId = localStorage.getItem('profileId');
-    if (this.selectedImgFile) {
+    if (this.selectedImgFile && !this.selectedVideoFile) {
       this.postService.uploadFile(this.selectedImgFile).subscribe({
         next: (res: any) => {
           if (res?.body?.url) {
@@ -231,6 +242,27 @@ export class ResearchListComponent {
             this.postFile = res?.body?.url;
             this.createResearch();
           }
+        },
+      });
+    } else if (this.selectedVideoFile && this.selectedImgFile) {
+      this.spinner.show();
+      this.postService.uploadFile(this.selectedImgFile).subscribe({
+        next: (res: any) => {
+          if (res?.body?.url) {
+            this.postThumbfilename = res?.body?.url;
+          }
+        },
+      });
+      this.postService.uploadFile(this.selectedVideoFile).subscribe({
+        next: (res: any) => {
+          if (res?.body?.url) {
+            this.postVideo = res?.body?.url;
+            this.spinner.hide();
+            this.createResearch();
+          }
+        },
+        error: (err) => {
+          this.spinner.hide();
         },
       });
     } else {
@@ -272,6 +304,9 @@ export class ResearchListComponent {
     this.tagInputDefaultData = 'reset';
     this.selectedImgFile = null;
     this.selectedpdfFile = null;
+    this.selectedVideoFile = null;
+    this.postVideoUrl = null;
+    this.postVideo = null;
     this.postFile = null;
     this.postImage = null;
     setTimeout(() => {
@@ -286,6 +321,20 @@ export class ResearchListComponent {
 
   onChangeTag(event) {
     // this.researchForm.get('keywords').setValue(event.target.value.replaceAll(' ', ','));
-    this.researchForm.get('keywords').setValue(event.target.value.replaceAll(' ', ',').replaceAll(/\s*,+\s*/g, ','));
+    this.researchForm
+      .get('keywords')
+      .setValue(
+        event.target.value.replaceAll(' ', ',').replaceAll(/\s*,+\s*/g, ',')
+      );
+  }
+
+  onSelectedVideo(event: any) {
+    this.selectedVideoFile = event.target?.files?.[0];
+    this.postVideoUrl = URL.createObjectURL(event.target.files[0]);
+  }
+
+  removeVideoSelectedFile(): void {
+    this.selectedVideoFile = null;
+    this.postVideoUrl = null;
   }
 }
