@@ -13,7 +13,8 @@ import { SocketService } from 'src/app/@shared/services/socket.service';
 })
 export class NotificationsComponent {
   notificationList: any[] = [];
-
+  activePage = 1;
+  hasMoreData = false;
   constructor(
     private customerService: CustomerService,
     private spinner: NgxSpinnerService,
@@ -21,7 +22,6 @@ export class NotificationsComponent {
     private toastService: ToastService,
     private seoService: SeoService,
     private socketService: SocketService
-
   ) {
     const data = {
       title: 'Freedom.Buzz Notification',
@@ -30,8 +30,7 @@ export class NotificationsComponent {
     };
     this.seoService.updateSeoMetaData(data);
     const profileId = +localStorage.getItem('profileId');
-    this.socketService.readNotification({ profileId }, (data) => {
-    });
+    this.socketService.readNotification({ profileId }, (data) => {});
   }
 
   ngOnInit(): void {
@@ -41,18 +40,23 @@ export class NotificationsComponent {
   getNotificationList() {
     this.spinner.show();
     const id = localStorage.getItem('profileId');
-    this.customerService.getNotificationList(Number(id)).subscribe(
-      {
-        next: (res: any) => {
-          this.spinner.hide();
-          this.notificationList = res?.data;
-        },
-        error:
-          (error) => {
-            this.spinner.hide();
-            console.log(error);
-          }
-      });
+    const data = {
+      page: this.activePage,
+      size: 30,
+    };
+    this.customerService.getNotificationList(Number(id), data).subscribe({
+      next: (res: any) => {
+        this.spinner.hide();
+        if (this.activePage < res.pagination.totalPages) {
+          this.hasMoreData = true;
+        }
+        this.notificationList = [...this.notificationList, ...res?.data];
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
+    });
   }
 
   viewUserPost(id) {
@@ -62,7 +66,9 @@ export class NotificationsComponent {
   removeNotification(id: number): void {
     this.customerService.deleteNotification(id).subscribe({
       next: (res: any) => {
-        this.toastService.success(res.message || 'Notification delete successfully');
+        this.toastService.success(
+          res.message || 'Notification delete successfully'
+        );
         this.getNotificationList();
       },
     });
@@ -75,5 +81,10 @@ export class NotificationsComponent {
         this.getNotificationList();
       },
     });
+  }
+
+  loadMoreNotification(): void {
+    this.activePage = this.activePage + 1;
+    this.getNotificationList();
   }
 }
