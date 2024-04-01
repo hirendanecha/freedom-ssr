@@ -544,7 +544,7 @@ export class ProfileChatsListComponent
       this.pdfName = file?.name;
       this.chatObj.msgText = null;
       this.viewUrl = URL.createObjectURL(file);
-    } else if (file.type.includes('video/mp4*')) {
+    } else if (file.type.includes('video/')) {
       this.selectedFile = file;
       this.viewUrl = URL.createObjectURL(file);
     } else if (file.type.includes('image/')) {
@@ -646,6 +646,11 @@ export class ProfileChatsListComponent
 
   isFile(media: string): boolean {
     const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip'];
+    return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
+  }
+
+  isVideoFile(media: string): boolean {
+    const FILE_EXTENSIONS = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv', '.mpeg', '.rmvb', '.m4v', '.3gp', '.webm', '.ogg', '.vob', '.ts', '.mpg'];
     return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
 

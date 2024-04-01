@@ -100,6 +100,11 @@ export class GalleryImgPreviewComponent implements OnInit {
     return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
 
+  isVideoFile(media: string): boolean {
+    const FILE_EXTENSIONS = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv', '.mpeg', '.rmvb', '.m4v', '.3gp', '.webm', '.ogg', '.vob', '.ts', '.mpg'];
+    return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
+  }
+
   prev() {
     if (this.currentIndex > 0) {
       this.currentIndex--;

@@ -30,13 +30,23 @@
       <div class="carousel-inner">
         <ng-container *ngFor="let media of mediaList; let i = index">
           <div class="carousel-item" [ngClass]="{ active: currentIndex === i }">
-            <img
+            <ng-container *ngIf="isVideoFile(media.messageMedia); else imageMessage">
+              <video
+              class="w-100 h-300-px message-media"
+              [src]="media.messageMedia"
+              controls
+              ></video>
+              <!-- autoplay="autoplay" -->
+            </ng-container>
+            <ng-template #imageMessage>
+              <img
               loading="lazy"
               data-src="{{ media.messageMedia }}"
               class="w-80 h-80 rounded-3"
               alt="preview-img"
               onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
             />
+            </ng-template>
           </div>
           <!-- (click)="stopPropagation($event)" -->
         </ng-container>
