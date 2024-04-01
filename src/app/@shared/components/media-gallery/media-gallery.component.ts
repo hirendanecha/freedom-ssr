@@ -84,6 +84,11 @@ export class MediaGalleryComponent implements OnInit {
     const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip'];
     return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
+  
+  isVideoFile(media: string): boolean {
+    const FILE_EXTENSIONS = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv', '.mpeg', '.rmvb', '.m4v', '.3gp', '.webm', '.ogg', '.vob', '.ts', '.mpg'];
+    return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
+  }
 
   isGif(src: string): boolean {
     return !src?.toLowerCase()?.endsWith('.gif');

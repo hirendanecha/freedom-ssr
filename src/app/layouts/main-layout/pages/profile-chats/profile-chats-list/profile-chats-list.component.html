@@ -300,13 +300,23 @@
                               </div>
                             </ng-container>
                             <ng-template #notGif>
-                              <div class="replay-message-media">
-                                <app-img-preview
-                                  class="msgImage"
-                                  classes="h-180-px"
-                                  [src]="message?.messageMedia"
-                                ></app-img-preview>
-                              </div>
+                              <ng-container *ngIf="isVideoFile(message?.messageMedia); else imageMessage">
+                                <video
+                                class="w-100 h-200-px replay-message-media"
+                                [src]="message?.messageMedia"
+                                controls
+                                ></video>
+                                <!-- autoplay="autoplay" -->
+                              </ng-container>
+                              <ng-template #imageMessage>
+                                  <div class="replay-message-media">
+                                  <app-img-preview
+                                    class="msgImage"
+                                    classes="h-180-px"
+                                    [src]="message?.messageMedia"
+                                  ></app-img-preview>
+                                </div>
+                                </ng-template>
                             </ng-template>
                           </ng-template>
                         </div>
@@ -511,13 +521,23 @@
                           </div>
                         </ng-container>
                         <ng-template #notGif>
-                          <div class="message-media">
-                            <app-img-preview
-                              class="msgImage"
-                              classes="h-180-px"
-                              [src]="message?.messageMedia"
-                            ></app-img-preview>
-                          </div>
+                          <ng-container *ngIf="isVideoFile(message?.messageMedia); else imageMessage">
+                            <video
+                            class="w-100 h-200-px message-media"
+                            [src]="message?.messageMedia"
+                            controls
+                            ></video>
+                            <!-- autoplay="autoplay" -->
+                          </ng-container>
+                          <ng-template #imageMessage>
+                              <div class="message-media">
+                              <app-img-preview
+                                class="msgImage"
+                                classes="h-180-px"
+                                [src]="message?.messageMedia"
+                              ></app-img-preview>
+                            </div>
+                            </ng-template>
                         </ng-template>
                       </ng-template>
                     </div>
@@ -754,11 +774,45 @@
             </ng-container>
           </div>
         </ng-container>
+        <ng-container *ngIf="selectedFile?.type?.includes('video/')">
+          <div class="position-absolute mt-5 p-3 preview-chat-media">
+            <fa-icon
+              *ngIf="replyMessage.Username && replyMessage.createdDate"
+              class="float-start me-2"
+              [icon]="['fas', 'reply']"
+            />
+            <video
+            class="w-100 h-200-px"
+            src="{{ viewUrl }}"
+            controls
+            autoplay="autoplay"
+          ></video>
+            <fa-icon
+              [icon]="['fas', 'xmark']"
+              class="position-absolute top-0 start-100 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
+              role="button"
+              (click)="removePostSelectedFile()"
+            />
+            <ng-container
+              *ngIf="replyMessage.Username && replyMessage.createdDate"
+            >
+              <div class="d-flex">
+                <span class="font-12-px mt-2 replay-border"
+                  >{{ replyMessage.Username }},
+                  {{ replyMessage.createdDate | date : "dd-MM-yyyy" }}</span
+                >
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+       
         <ng-container *ngIf="pdfName">
-          <div
-            class="position-absolute mt-5 p-3 preview-chat-media"
-          >
-          <fa-icon *ngIf="replyMessage.Username && replyMessage.createdDate" class="float-start me-2" [icon]="['fas', 'reply']" />
+          <div class="position-absolute mt-5 p-3 preview-chat-media">
+            <fa-icon
+              *ngIf="replyMessage.Username && replyMessage.createdDate"
+              class="float-start me-2"
+              [icon]="['fas', 'reply']"
+            />
             <fa-icon
               [icon]="['fas', 'file']"
               class="c-pointer close-icon font-40-px"
@@ -857,6 +911,20 @@
                     />
                     <span class="file-custom border-0 m-1 d-grid text-center">
                       <fa-icon [icon]="['fas', 'image']" class="font-20-px" />
+                    </span>
+                  </label>
+                </div>
+                <div class="file-upload">
+                  <label class="file">
+                    <input
+                      type="file"
+                      [(ngModel)]="chatObj.msgMedia"
+                      id="fileInput"
+                      (change)="onPostFileSelect($event)"
+                      accept="video/*"
+                    />
+                    <span class="file-custom border-0 m-1 d-grid text-center">
+                      <fa-icon [icon]="['fas', 'video']" class="font-20-px" />
                     </span>
                   </label>
                 </div>
