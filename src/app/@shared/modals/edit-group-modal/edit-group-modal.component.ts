@@ -28,7 +28,7 @@ export class EditGroupModalComponent implements OnInit {
   profileId: number;
   searchText = '';
   userList: any = [];
-  chanageGroupName: string;
+  changeGroupName: string;
   addedInvitesList: any[] = [];
   showInputField: boolean = false;
   profileImg: any = {
@@ -39,7 +39,9 @@ export class EditGroupModalComponent implements OnInit {
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
   isOpenUserMenu = false;
-  chanageGroupNameFormControl = new FormControl('', [Validators.pattern(/^\S.*\S$/)]);
+  chanageGroupNameFormControl = new FormControl('', [
+    Validators.pattern(/^\S.*\S$/),
+  ]);
   constructor(
     public activateModal: NgbActiveModal,
     private customerService: CustomerService,
@@ -56,8 +58,9 @@ export class EditGroupModalComponent implements OnInit {
   ngOnInit(): void {
     if (this.data) {
       this.profileImg.url = this.data.profileImage;
-      this.chanageGroupName = this.data.groupName;
+      this.changeGroupName = this.data.groupName;
     }
+    console.log(this.data);
   }
 
   getUserList(): void {
@@ -65,7 +68,13 @@ export class EditGroupModalComponent implements OnInit {
       next: (res: any) => {
         if (res?.data?.length > 0) {
           this.userList = res.data.filter((user: any) => {
-            return user.Id !== this.sharedService?.userData?.Id && !this.addedInvitesList.some(invite => invite.Id === user.Id) && !this.data.memberList.some(member => member.profileId === user.Id);
+            return (
+              user.Id !== this.sharedService?.userData?.Id &&
+              !this.addedInvitesList.some((invite) => invite.Id === user.Id) &&
+              !this.data.memberList.some(
+                (member) => member.profileId === user.Id
+              )
+            );
           });
           this.userSearchNgbDropdown.open();
         } else {
@@ -128,13 +137,20 @@ export class EditGroupModalComponent implements OnInit {
   }
 
   editGroup() {
-    let groupMembers = this.addedInvitesList.map((item) => item.Id);
+    let groupMembers =
+      this.addedInvitesList?.length > 0
+        ? this.addedInvitesList.map((item) => item.Id)
+        : this.data?.memberList?.map((item) => {
+            return item.profileId;
+          });
+    console.log(groupMembers);
     const groupData = {
       profileId: this.profileId,
       profileImage: this.profileImg.url,
-      groupName: this.chanageGroupName,
+      groupName: this.changeGroupName,
       profileIds: groupMembers,
       groupId: this.groupId,
+      isUpdate: true,
     };
     this.activateModal.close(groupData);
   }
@@ -144,13 +160,16 @@ export class EditGroupModalComponent implements OnInit {
       centered: true,
       backdrop: 'static',
     });
-    modalRef.componentInstance.title = `${id === this.profileId ? 'Leave' : 'Remove user'
-      } from conversation`;
-    modalRef.componentInstance.confirmButtonLabel = `${id === this.profileId ? 'Leave' : 'Remove'
-      }`;
+    modalRef.componentInstance.title = `${
+      id === this.profileId ? 'Leave' : 'Remove user'
+    } from conversation`;
+    modalRef.componentInstance.confirmButtonLabel = `${
+      id === this.profileId ? 'Leave' : 'Remove'
+    }`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-    modalRef.componentInstance.message = `Are you sure want to ${id === this.profileId ? 'leave' : 'remove'
-      }?`;
+    modalRef.componentInstance.message = `Are you sure want to ${
+      id === this.profileId ? 'leave' : 'remove'
+    }?`;
     modalRef.result.then((res) => {
       if (res === 'success') {
         const data = {
@@ -159,9 +178,9 @@ export class EditGroupModalComponent implements OnInit {
         };
         this.socketService.removeGroupMember(data, (res) => {
           this.data = res;
-        })
+        });
         if (id === this.profileId) {
-          this.activateModal.close('cancel')
+          this.activateModal.close('cancel');
         }
       }
     });
