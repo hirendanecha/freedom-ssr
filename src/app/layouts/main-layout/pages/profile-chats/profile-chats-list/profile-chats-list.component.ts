@@ -363,23 +363,24 @@ export class ProfileChatsListComponent
         this.scrollToBottom();
         this.newRoomCreated?.emit(true);
 
-        data.messageText =
-          data.messageText != null
-            ? this.encryptDecryptService?.decryptUsingAES256(data.messageText)
-            : null;
-        if (data.parentMessage?.messageText) {
-          data.parentMessage.messageText =
-            this.encryptDecryptService?.decryptUsingAES256(
-              data.parentMessage?.messageText
-            );
-        }
-
-        const text = data.messageText?.replace(/<br\s*\/?>|<[^>]*>/g, '');
-        const matches = text?.match(
-          /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
-        );
-        if (matches?.[0]) {
-          data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
+        if (this.filteredMessageList.length > 0) {
+          data.messageText =
+            data.messageText != null
+              ? this.encryptDecryptService?.decryptUsingAES256(data.messageText)
+              : null;
+          if (data.parentMessage?.messageText) {
+            data.parentMessage.messageText =
+              this.encryptDecryptService?.decryptUsingAES256(
+                data.parentMessage?.messageText
+              );
+          }
+          const text = data.messageText?.replace(/<br\s*\/?>|<[^>]*>/g, '');
+          const matches = text?.match(
+            /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
+          );
+          if (matches?.[0]) {
+            data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
+          }
         }
         this.messageList.push(data);
         this.readMessageRoom = data?.isRead;
@@ -391,9 +392,16 @@ export class ProfileChatsListComponent
             );
           });
         }
-        const lastIndex = this.filteredMessageList.length - 1;
-        if (this.filteredMessageList[lastIndex]) {
-          this.filteredMessageList[lastIndex]?.messages.push(data);
+        if (this.filteredMessageList.length > 0) {
+          const lastIndex = this.filteredMessageList.length - 1;
+          if (this.filteredMessageList[lastIndex]) {
+            this.filteredMessageList[lastIndex]?.['messages'].push(data);
+          }
+        } else {
+          const array = new MessageDatePipe(
+            this.encryptDecryptService
+          ).transform([data]);
+          this.filteredMessageList = array;
         }
         this.resetData();
       });
@@ -417,6 +425,10 @@ export class ProfileChatsListComponent
     };
     this.messageService.getMessages(messageObj).subscribe({
       next: (data: any) => {
+        if (!data?.data?.length && data?.pagination?.totalItems === 0) {
+          this.filteredMessageList = [];
+          return;
+        }
         if (this.activePage === 1) {
           this.scrollToBottom();
         }
@@ -650,7 +662,23 @@ export class ProfileChatsListComponent
   }
 
   isVideoFile(media: string): boolean {
-    const FILE_EXTENSIONS = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv', '.mpeg', '.rmvb', '.m4v', '.3gp', '.webm', '.ogg', '.vob', '.ts', '.mpg'];
+    const FILE_EXTENSIONS = [
+      '.mp4',
+      '.avi',
+      '.mov',
+      '.wmv',
+      '.flv',
+      '.mkv',
+      '.mpeg',
+      '.rmvb',
+      '.m4v',
+      '.3gp',
+      '.webm',
+      '.ogg',
+      '.vob',
+      '.ts',
+      '.mpg',
+    ];
     return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
 
@@ -719,18 +747,22 @@ export class ProfileChatsListComponent
         profileId: this.userChat?.profileId,
       },
       (data: any) => {
-        this.newRoomCreated.emit(true);
-        this.messageList = this.messageList.filter(
-          (obj) => obj?.id !== data?.id && obj?.parentMessageId !== data.id
-        );
-        this.filteredMessageList?.forEach((ele: any) => {
-          if (ele.date === date) {
-            ele.messages = ele.messages.filter(
-              (obj: any) =>
-                obj.id !== data.id && obj.parentMessageId !== data.id
-            );
+        if (data) {
+          this.newRoomCreated.emit(true);
+          this.messageList = this.messageList.filter(
+            (obj) => obj?.id !== data?.id && obj?.parentMessageId !== data.id
+          );
+          if (this.filteredMessageList.length > 0) {
+            this.filteredMessageList?.forEach((ele: any) => {
+              if (ele.date === date) {
+                ele.messages = ele.messages.filter(
+                  (obj: any) =>
+                    obj.id !== data.id && obj.parentMessageId !== data.id
+                );
+              }
+            });
           }
-        });
+        }
       }
     );
   }
@@ -877,7 +909,7 @@ export class ProfileChatsListComponent
     modalRef.result.then((res) => {
       if (!window.document.hidden) {
         if (res === 'missCalled') {
-          this.chatObj.msgText = 'No answer';
+          this.chatObj.msgText = 'You have a missed call';
           this.sendMessage();
         }
       }
