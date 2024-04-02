@@ -330,11 +330,11 @@
                         <div class="parent-replay-alt">
                           <fa-icon [icon]="['fas', 'reply']" />
                           <ng-container
-                            *ngIf="message.parentMessage.messageMedia"
+                            *ngIf="message?.parentMessage?.messageMedia"
                           >
                             <ng-container
                               *ngIf="
-                                !isFile(message.parentMessage.messageMedia);
+                                !isFile(message?.parentMessage?.messageMedia);
                                 else fileReplay
                               "
                             >
@@ -342,7 +342,7 @@
                                 <img
                                   loading="lazy"
                                   data-src="{{
-                                    message.parentMessage.messageMedia
+                                    message?.parentMessage?.messageMedia
                                   }}"
                                   class="w-100 h-100 rounded-4"
                                   alt="icon"
@@ -359,13 +359,13 @@
                                 <span
                                   class="c-pdf-show"
                                   [title]="
-                                    message.parentMessage.messageMedia.replaceAll(
+                                    message?.parentMessage?.messageMedia?.replaceAll(
                                       '%',
                                       ' '
                                     )
                                   "
                                   >{{
-                                    message.parentMessage.messageMedia.replaceAll(
+                                    message?.parentMessage?.messageMedia?.replaceAll(
                                       "%",
                                       " "
                                     )
@@ -375,16 +375,16 @@
                             </ng-template>
                           </ng-container>
                           <p
-                            *ngIf="message.parentMessage.messageText !== null"
+                            *ngIf="message?.parentMessage?.messageText !== null"
                             class="m-0"
-                            [innerHTML]="message.parentMessage.messageText"
+                            [innerHTML]="message?.parentMessage?.messageText"
                           ></p>
                           <!-- encryptDecryptService.decryptUsingAES256(
                           ) -->
                           <span class="font-12-px"
-                            >{{ message.parentMessage.Username }},
+                            >{{ message?.parentMessage?.Username }},
                             {{
-                              message?.parentMessage.createdDate
+                              message?.parentMessage?.createdDate
                                 | date : "dd-MM-yyyy"
                             }}</span
                           >
@@ -393,7 +393,7 @@
                       <!-- [title]="displayLocalTime(message?.createdDate)" -->
                       <div class="d-flex flex-column">
                         <p
-                          *ngIf="message?.messageText !== null"
+                          *ngIf="message.messageText !== null"
                           class="m-0 message-text-custom"
                           [innerHTML]="message?.messageText"
                         ></p>
