@@ -123,5 +123,9 @@
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
     }
+    a {
+      color: var(--para-2nd-color)!important;
+      font-weight: 600 !important;
+    }
   }
 }
