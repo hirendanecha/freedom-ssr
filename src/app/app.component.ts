@@ -96,9 +96,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         if (data) {
           if (data?.notificationByProfileId !== this.profileId) {
             this.sharedService.isNotify = true;
+            this.originalFavicon.href = '/assets/images/icon-unread.jpg';
           }
           this.notificationId = data.id;
-          this.originalFavicon.href = '/assets/images/icon-unread.jpg';
           if (data?.actionType === 'T') {
             var sound = new Howl({
               src: [
