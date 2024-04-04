@@ -40,6 +40,11 @@
       width: 200px;
     }
   }
+  .info-area h6 {
+    max-width: 185px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   .messages-area {
     .last-message {
