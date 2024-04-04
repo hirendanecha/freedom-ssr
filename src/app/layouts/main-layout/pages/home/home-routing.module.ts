@@ -12,17 +12,17 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'communities/:name',
     component: HomeComponent,
-    canActivate: mapToCanActivate([AuthenticationGuard])
+    // canActivate: mapToCanActivate([AuthenticationGuard])
   },
   {
     path: 'pages/:name',
     component: HomeComponent,
-    canActivate: mapToCanActivate([AuthenticationGuard,])
+    // canActivate: mapToCanActivate([AuthenticationGuard]),
   },
   {
     path: 'post/:id',
@@ -34,4 +34,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class HomeRoutingModule { }
+export class HomeRoutingModule {}

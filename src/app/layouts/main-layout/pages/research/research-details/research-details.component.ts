@@ -3,14 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ProfileService } from 'src/app/@shared/services/profile.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
+import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 
 @Component({
   selector: 'app-research-details',
   templateUrl: './research-details.component.html',
-  styleUrls: ['./research-details.component.scss']
+  styleUrls: ['./research-details.component.scss'],
 })
 export class ResearchDetailsComponent {
-
   groupDetails: any = {};
   posts: any = [];
   resources: any = [];
@@ -18,13 +18,14 @@ export class ResearchDetailsComponent {
   pagination: any = {
     page: 1,
     limit: 12,
-  }
+  };
 
   constructor(
     private profileService: ProfileService,
     private spinner: NgxSpinnerService,
     private route: ActivatedRoute,
-    private seoService: SeoService
+    private seoService: SeoService,
+    public tokenService: TokenStorageService
   ) {
     this.GetGroupBasicDetails();
   }
@@ -34,45 +35,52 @@ export class ResearchDetailsComponent {
     // const uniqueLink = this.route.snapshot.paramMap.get('uniqueLink');
     this.route.paramMap.subscribe((param: any) => {
       const uniqueLink = param.get('uniqueLink');
-    this.profileService.getGroupBasicDetails(uniqueLink).subscribe({
-      next: (res: any) => {
-        if (res?.ID) {
-          this.groupDetails = res;
-          const data = {
-            title: `Freedom.Buzz Research ${this.groupDetails?.PageTitle}`,
-            url: `${location.href}`,
-            description: this.groupDetails?.PageDescription,
-            image: this.groupDetails?.CoverPicName || this.groupDetails?.ProfilePicName
-          };
-          this.seoService.updateSeoMetaData(data);
-          console.log(this.groupDetails)
-          this.GetGroupPostById();
-        }
-        this.spinner.hide();
-      },
-      error: () => {
-        this.spinner.hide();
-      }
+      this.profileService.getGroupBasicDetails(uniqueLink).subscribe({
+        next: (res: any) => {
+          if (res?.ID) {
+            this.groupDetails = res;
+            const data = {
+              title: `Freedom.Buzz Research ${this.groupDetails?.PageTitle}`,
+              url: `${location.href}`,
+              description: this.groupDetails?.PageDescription,
+              image:
+                this.groupDetails?.CoverPicName ||
+                this.groupDetails?.ProfilePicName,
+            };
+            this.seoService.updateSeoMetaData(data);
+            console.log(this.groupDetails);
+            this.GetGroupPostById();
+          }
+          this.spinner.hide();
+        },
+        error: () => {
+          this.spinner.hide();
+        },
+      });
     });
-  })
-
   }
 
   GetGroupPostById(): void {
     this.spinner.show();
 
-    this.profileService.getGroupPostById(this.groupDetails?.ID, this.pagination?.page, this.pagination?.limit).subscribe({
-      next: (res: any) => {
-        if (res?.length > 0) {
-          this.posts = [...this.posts, ...res];
-          this.isLoadMorePosts = res?.length === this.pagination?.limit;
-        }
-        this.spinner.hide();
-      },
-      error: () => {
-        this.spinner.hide();
-      }
-    });
+    this.profileService
+      .getGroupPostById(
+        this.groupDetails?.ID,
+        this.pagination?.page,
+        this.pagination?.limit
+      )
+      .subscribe({
+        next: (res: any) => {
+          if (res?.length > 0) {
+            this.posts = [...this.posts, ...res];
+            this.isLoadMorePosts = res?.length === this.pagination?.limit;
+          }
+          this.spinner.hide();
+        },
+        error: () => {
+          this.spinner.hide();
+        },
+      });
   }
 
   GetGroupFileResourcesById(id: string): void {
@@ -87,7 +95,7 @@ export class ResearchDetailsComponent {
       },
       error: () => {
         this.spinner.hide();
-      }
+      },
     });
   }
 

@@ -120,9 +120,9 @@ export class ProfileChatsListComponent
       this.newRoomCreated.emit(true);
       this.selectedChat.emit(data?.roomId || data?.groupId);
       if (
-        data?.sentBy !== this.profileId &&
         (this.userChat?.roomId === data?.roomId ||
-          this.userChat?.groupId === data?.groupId)
+          this.userChat?.groupId === data?.groupId) &&
+        data?.sentBy !== this.profileId
       ) {
         let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
         if (data?.isDeleted) {
