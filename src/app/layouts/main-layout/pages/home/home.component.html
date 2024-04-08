@@ -426,7 +426,7 @@
               >
                 <a
                   class="droplist d-flex align-items-center gap-2"
-                  (click)="deleteCommunity()"
+                  (click)="deleteOrLeaveCommunity('delete')"
                 >
                   <fa-icon [icon]="['fas', 'trash-can']" />
                   <span>Delete Community</span>
@@ -442,9 +442,17 @@
     <ng-container *ngIf="communityDetails?.profileId === +profileId">
       <button
         class="btn btn-sm btn-danger w-152-px float-end"
-        (click)="deleteCommunity()"
+        (click)="deleteOrLeaveCommunity('delete')"
       >
         Delete {{ communityDetails?.pageType }}
+      </button>
+    </ng-container>
+    <ng-container *ngIf="communityDetails?.profileId !== +profileId && communityDetails?.memberIds.includes(+profileId)">
+      <button
+        class="btn btn-sm btn-danger w-152-px float-end"
+        (click)="deleteOrLeaveCommunity('leave')"
+      >
+        Leave {{ communityDetails?.pageType }}
       </button>
     </ng-container>
   </div>
