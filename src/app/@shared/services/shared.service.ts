@@ -125,8 +125,12 @@ export class SharedService {
           if (res.data) {
             if (res.data[0]?.link1 || res.data[0]?.link2) {
               this.advertizementLink = [];
-              this.getMetaDataFromUrlStr(res.data[0]?.link1);
-              this.getMetaDataFromUrlStr(res.data[0]?.link2);
+              if (res.data[0]?.link1) {
+                this.getMetaDataFromUrlStr(res.data[0]?.link1);
+              }
+              if (res.data[0]?.link2) {
+                this.getMetaDataFromUrlStr(res.data[0]?.link2);
+              }
             }
           }
         },
@@ -142,18 +146,20 @@ export class SharedService {
   getMetaDataFromUrlStr(url): void {
     this.postService.getMetaData({ url }).subscribe({
       next: (res: any) => {
-        if (res?.meta?.image) {
-          const urls = res.meta?.image?.url;
-          const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
-          const linkMetaData = {
-            title: res?.meta?.title,
-            metadescription: res?.meta?.description,
-            metaimage: imgUrl,
-            metalink: res?.meta?.url || url,
-            url: url,
-          };
-          this.advertizementLink?.push(linkMetaData);
-        }
+        const meta = res?.meta;
+        const urls = meta?.image?.url;
+        const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+        const linkMetaData = {
+          title: meta?.title,
+          metadescription: meta?.description,
+          metaimage: imgUrl,
+          metalink: meta?.url || url,
+          url: url,
+        };
+        // if (res?.meta?.meta?.image) {
+        // }
+        this.advertizementLink.push(linkMetaData);
+        console.log(this.advertizementLink);
       },
       error: (err) => {
         console.log(err);
