@@ -409,18 +409,29 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  deleteCommunity(): void {
+  deleteOrLeaveCommunity(actionType: 'delete' | 'leave'): void {
+    const actionTitle = actionType === 'delete' ? 'Delete' : 'Leave';
+    const modalTitle = `${actionTitle} ${this.communityDetails.pageType}`;
+    const modalMessage = `Are you sure you want to ${actionType} this ${this.communityDetails.pageType}?`;
+    const confirmButtonLabel = actionTitle;
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
     });
-    modalRef.componentInstance.title = `Delete ${this.communityDetails.pageType}`;
-    modalRef.componentInstance.confirmButtonLabel = 'Delete';
+    modalRef.componentInstance.title = modalTitle;
+    modalRef.componentInstance.confirmButtonLabel = confirmButtonLabel;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-    modalRef.componentInstance.message = `Are you sure want to delete this ${this.communityDetails.pageType}?`;
+    modalRef.componentInstance.message = modalMessage;
     modalRef.result.then((res) => {
       if (res === 'success') {
-        this.communityService
-          .deleteCommunity(this.communityDetails?.Id)
+        const serviceFunction = actionType === 'delete' ? this.communityService.deleteCommunity : this.communityService.removeFromCommunity;
+        let serviceParams: any[];
+        if (actionType === 'delete') {
+          serviceParams = [this.communityDetails?.Id];
+        } else {
+          serviceParams = [this.communityDetails?.Id, this.profileId];
+        }
+  
+        serviceFunction.apply(this.communityService, serviceParams)
           .subscribe({
             next: (res: any) => {
               if (res) {
@@ -438,7 +449,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               console.log(error);
               this.toastService.success(error.message);
             },
-          });
+        });
       }
     });
   }
