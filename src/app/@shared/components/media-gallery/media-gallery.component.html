@@ -108,7 +108,7 @@
       </div>
     </div>
   </ng-container>
-
+  <app-inline-loader *ngIf="isFileLoad" />
   <ng-template #noMedia>
     <p class="text-center h5 mt-5">No media available</p>
   </ng-template>
