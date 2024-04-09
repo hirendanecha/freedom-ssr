@@ -563,7 +563,14 @@ export class ProfileChatsListComponent
       this.selectedFile = file;
       this.viewUrl = URL.createObjectURL(file);
     }
+    document.addEventListener('keyup', this.onKeyUp);
   }
+
+  onKeyUp = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      this.uploadPostFileAndCreatePost();
+    }
+  };
 
   removePostSelectedFile(): void {
     this.selectedFile = null;
@@ -617,6 +624,7 @@ export class ProfileChatsListComponent
   }
 
   resetData(): void {
+    document.removeEventListener('keyup', this.onKeyUp);
     this.chatObj['id'] = null;
     this.chatObj.parentMessageId = null;
     this.replyMessage.msgText = null;
