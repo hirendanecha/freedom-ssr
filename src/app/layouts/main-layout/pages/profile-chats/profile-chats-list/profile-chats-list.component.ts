@@ -567,7 +567,7 @@ export class ProfileChatsListComponent
   }
 
   onKeyUp = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !event.shiftKey) {
       this.uploadPostFileAndCreatePost();
     }
   };
@@ -588,7 +588,7 @@ export class ProfileChatsListComponent
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
+    this.chatObj.msgText = this.extractImageUrlFromContent(data?.html.replace(/<div>\s*<br\s*\/?>\s*<\/div>\s*$/, ''));
     if (data.html === '') {
       this.resetData();
     }
