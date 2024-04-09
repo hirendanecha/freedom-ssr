@@ -17,6 +17,7 @@ import { SharedService } from 'src/app/@shared/services/shared.service';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-edit-profile',
@@ -28,7 +29,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   allCountryData: any;
   confirm_password = '';
   msg = '';
-  userId = '';
+  userId: number;
   userMail: string;
   profilePic: any = {};
   coverPic: any = {};
@@ -46,6 +47,8 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     url: '',
   };
   isNotificationSoundEnabled: boolean = true;
+  authToken: string;
+  qrLink = '';
 
   constructor(
     private modalService: NgbModal,
@@ -54,23 +57,20 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     private customerService: CustomerService,
     private spinner: NgxSpinnerService,
     private tokenStorage: TokenStorageService,
-    private postService: PostService,
     public sharedService: SharedService,
     private toastService: ToastService,
     private uploadService: UploadFilesService
   ) {
     this.userlocalId = +localStorage.getItem('user_id');
-    this.userId = this.route.snapshot.paramMap.get('id');
+    this.userId = +this.route.snapshot.paramMap.get('id');
     this.profileId = +localStorage.getItem('profileId');
     this.userMail = JSON.parse(localStorage.getItem('auth-user'))?.Email;
     if (this.profileId) {
       this.getProfile(this.profileId);
+      this.authToken = localStorage.getItem('auth-token');
     }
-    // else {
-    //   this.getUserDetails(this.userId);
-    // }
+    this.qrLink = `${environment.qrLink}${this.userId}?token=${this.authToken}`;
   }
-
   ngOnInit(): void {
     if (!this.tokenStorage.getToken()) {
       this.router.navigate([`/login`]);

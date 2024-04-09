@@ -17,4 +17,5 @@ export const environment = {
   EncryptKey: 8625401029409790,
   siteKey: '0x4AAAAAAAUtBoxdqH7NpIaT',
   secretKey: '0x4AAAAAAAUtBtTrRf7EnMn-dmdmAXPcngo',
+  qrLink: `${webUrl}settings/edit-profile/`,
 };
