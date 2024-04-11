@@ -27,6 +27,7 @@ import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-m
 import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal/edit-group-modal.component';
 import { MessageDatePipe } from 'src/app/@shared/pipe/message-date.pipe';
 import { MediaGalleryComponent } from 'src/app/@shared/components/media-gallery/media-gallery.component';
+import { EmojiPaths } from 'src/app/@shared/constant/emoji';
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -80,20 +81,7 @@ export class ProfileChatsListComponent
   typingData: any = {};
   isTyping = false;
   typingTimeout: any;
-  emojiPaths = [
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cool.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Anger.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Censorship.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Hug.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Kiss.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/LOL.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Party.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Poop.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sad.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-UP.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-down.gif',
-  ];
+  emojiPaths = EmojiPaths;
   originalFavicon: HTMLLinkElement;
   isGallerySidebarOpen: boolean = false;
 
@@ -563,7 +551,14 @@ export class ProfileChatsListComponent
       this.selectedFile = file;
       this.viewUrl = URL.createObjectURL(file);
     }
+    document.addEventListener('keyup', this.onKeyUp);
   }
+
+  onKeyUp = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      this.uploadPostFileAndCreatePost();
+    }
+  };
 
   removePostSelectedFile(): void {
     this.selectedFile = null;
@@ -581,7 +576,7 @@ export class ProfileChatsListComponent
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.chatObj.msgText = this.extractImageUrlFromContent(data?.html);
+    this.chatObj.msgText = this.extractImageUrlFromContent(data?.html.replace(/<div>\s*<br\s*\/?>\s*<\/div>\s*$/, ''));
     if (data.html === '') {
       this.resetData();
     }
@@ -617,6 +612,7 @@ export class ProfileChatsListComponent
   }
 
   resetData(): void {
+    document.removeEventListener('keyup', this.onKeyUp);
     this.chatObj['id'] = null;
     this.chatObj.parentMessageId = null;
     this.replyMessage.msgText = null;

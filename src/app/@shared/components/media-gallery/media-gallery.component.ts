@@ -15,6 +15,7 @@ export class MediaGalleryComponent implements OnInit {
   profileId: number;
   activePage = 1;
   hasMoreData = true;
+  isFileLoad = false;
 
   constructor(
     private messageService: MessageService,
@@ -34,6 +35,7 @@ export class MediaGalleryComponent implements OnInit {
   }
 
   getMessageMedia(): void {
+    this.isFileLoad = true;
     const data = {
       page: this.activePage,
       size: 10,
@@ -42,6 +44,7 @@ export class MediaGalleryComponent implements OnInit {
     };
     this.messageService.getMessageMedia(data).subscribe({
       next: (res) => {
+        this.isFileLoad = false;
         if (this.activePage < res?.pagination.totalPages) {
           this.hasMoreData = true;
         } else {
@@ -75,6 +78,7 @@ export class MediaGalleryComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
+        this.isFileLoad = false;
       },
     });
   }
