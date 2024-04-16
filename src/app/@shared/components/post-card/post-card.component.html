@@ -257,6 +257,15 @@
                   <span>Copy URL</span>
                 </a>
               </button>
+              <button ngbDropdownItem *ngIf="post.streamname">
+                <a
+                  class="droplist d-flex align-items-center gap-2"
+                  [href]="tubeUrl + '/video/' + post.id" target="_blank"
+                >
+                  <fa-icon [icon]="['fas', 'play']" />
+                  <span>Large Player</span>
+                </a>
+              </button>
             </div>
           </div>
         </div>
