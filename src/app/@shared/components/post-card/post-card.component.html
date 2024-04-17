@@ -171,6 +171,15 @@
             />
 
             <div ngbDropdownMenu class="dropdown-menu">
+              <button ngbDropdownItem *ngIf="post.streamname">
+                <a
+                  class="droplist d-flex align-items-center gap-2"
+                  [href]="tubeUrl + '/video/' + post.id" target="_blank"
+                >
+                  <fa-icon [icon]="['fas', 'play']" />
+                  <span>Large Player</span>
+                </a>
+              </button>
               <ng-container *ngIf="profileId != post.profileid">
                 <button
                   ngbDropdownItem
@@ -247,7 +256,6 @@
                   </a>
                 </button>
               </ng-container>
-
               <button ngbDropdownItem>
                 <a
                   class="droplist d-flex align-items-center gap-2"

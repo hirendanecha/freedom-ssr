@@ -351,7 +351,11 @@
                               "
                             >
                               <div class="w-100-px h-100-px">
-                                <img
+                                <app-img-preview
+                                classes="h-100-px"
+                                [src]="message?.parentMessage?.messageMedia"
+                                ></app-img-preview>
+                                <!-- <img
                                   loading="lazy"
                                   data-src="{{
                                     message?.parentMessage?.messageMedia
@@ -359,7 +363,7 @@
                                   class="w-100 h-100 rounded-4"
                                   alt="icon"
                                   onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-                                />
+                                /> -->
                               </div>
                             </ng-container>
                             <ng-template #fileReplay>
@@ -625,7 +629,12 @@
                             "
                           >
                             <div class="w-100-px h-100-px">
-                              <img
+                              <app-img-preview
+                              class="msgImage"
+                              classes="h-100-px"
+                              [src]="message.parentMessage.messageMedia"
+                            ></app-img-preview>
+                              <!-- <img
                                 loading="lazy"
                                 data-src="{{
                                   message.parentMessage.messageMedia
@@ -633,7 +642,7 @@
                                 class="w-100 h-100 rounded-4"
                                 alt="icon"
                                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-                              />
+                              /> -->
                             </div>
                           </ng-container>
                           <ng-template #fileReplay>
