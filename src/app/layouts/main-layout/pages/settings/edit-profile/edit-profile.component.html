@@ -1,28 +1,23 @@
-<div class="d-flex flex-column flex-lg-row w-100 gap-5 edit-profile">
-  <div>
+<div class="d-flex flex-column w-100 gap-5 edit-profile">
+  <div class="d-flex flex-column flex-md-row gap-5">
     <app-img-picker
       classes="w-300-px h-300-px"
       [url]="customer.ProfilePicName"
       (onFileChange)="onProfileImgChange($event)"
     />
-    <div class="single-box mt-5 p-5">
-      <qrcode
-        [qrdata]="qrLink"
-        [width]="250"
-        [errorCorrectionLevel]="'Q'"
-      >
-      </qrcode>
-    </div>
-  </div>
-  <div class="d-flex flex-column mb-5 w-100">
     <app-img-picker
-      classes="w-100 h-300-px"
+      class="w-100"
+      classes="h-300-px"
       defaultImg="/assets/images/profile-cover.png"
       [url]="customer.CoverPicName"
       (onFileChange)="onProfileCoverImgChange($event)"
     />
-
-    <div class="single-box p-5 mt-5">
+  </div>
+  <div class="d-flex flex-column flex-md-row gap-md-5 mb-5">
+    <div class="single-box p-5 w-100">
+      <div class="text-start">
+        <span class="mb-3">1. Complete all required information</span>
+      </div>
       <form
         id="loginForm"
         class="form-dark"
@@ -70,7 +65,7 @@
             <label class="d-flex form-label align-items-center"
               >Email<span class="font-12-px ms-2">(not editable)</span></label
             >
-
+  
             <input
               type="text"
               name="email"
@@ -133,7 +128,7 @@
               disabled
               [(ngModel)]="customer.City"
             /> -->
-
+  
             <input
               type="text"
               class="input-area"
@@ -197,7 +192,7 @@
           </div>
         </div>
       </div>
-
+  
       <button
         class="btn btn-primary mt-5 login-button float-end w-100-px"
         (click)="confirmAndUpdateCustomer()"
@@ -210,9 +205,29 @@
         (click)="deleteAccount()"
       >
         Delete
-
+  
         <fa-icon [icon]="['fas', 'trash-can']" class="font-20-px" />
       </button>
+    </div>
+    <div class="d-flex flex-column gap-3">
+      <div class="d-flex flex-column p-3 single-box">
+        <span class="mb-2">2. Scan the QR code with your device</span>
+        <qrcode
+          [qrdata]="qrLink"
+          [width]="200"
+          [errorCorrectionLevel]="'Q'"
+        >
+      </qrcode>
+      </div>
+      <div class="d-flex flex-column p-3 single-box">
+        <span class="mb-2">3. Install the app</span>
+        <qrcode
+          [qrdata]="qrLink"
+          [width]="200"
+          [errorCorrectionLevel]="'Q'"
+        >
+        </qrcode>
+      </div>
     </div>
   </div>
 </div>
