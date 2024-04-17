@@ -123,6 +123,7 @@ import { EditGroupModalComponent } from './modals/edit-group-modal/edit-group-mo
 import { MediaGalleryComponent } from './components/media-gallery/media-gallery.component';
 import { GalleryImgPreviewComponent } from './components/gallery-img-preview/gallery-img-preview.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { QrScanModalComponent } from './modals/qrscan-modal/qrscan-modal.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -155,6 +156,7 @@ const sharedComponents = [
   EditGroupModalComponent,
   MediaGalleryComponent,
   GalleryImgPreviewComponent,
+  QrScanModalComponent,
 ];
 
 const sharedModules = [

@@ -18,6 +18,7 @@ import { TokenStorageService } from 'src/app/@shared/services/token-storage.serv
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 import { environment } from 'src/environments/environment';
+import { QrScanModalComponent } from 'src/app/@shared/modals/qrscan-modal/qrscan-modal.component';
 
 @Component({
   selector: 'app-edit-profile',
@@ -335,5 +336,19 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     let inputValue = inputElement.value;
     inputValue = inputValue.replace(/\s/g, '');
     inputElement.value = inputValue.toUpperCase();
+  }
+
+  openAppQR(store: string){
+    const modalRef = this.modalService.open(QrScanModalComponent, {
+      centered: true,
+      size: 'sm',
+    });
+    if (store === 'googlePlay') {
+      modalRef.componentInstance.store = 'https://play.google.com/store/apps/';
+      modalRef.componentInstance.image = '/assets/images/logos/googlePlay.png';
+    } else {
+      modalRef.componentInstance.store = 'https://apps.apple.com/us/app/apple-store/id375380948';
+      modalRef.componentInstance.image = '/assets/images/logos/appStore.png';
+    }
   }
 }

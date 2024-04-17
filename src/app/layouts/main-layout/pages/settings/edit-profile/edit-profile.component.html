@@ -1,4 +1,4 @@
-<div class="d-flex flex-column w-100 gap-5 edit-profile">
+<div class="d-flex flex-column gap-5 edit-profile">
   <div class="d-flex flex-column flex-md-row gap-5">
     <app-img-picker
       classes="w-300-px h-300-px"
@@ -13,7 +13,7 @@
       (onFileChange)="onProfileCoverImgChange($event)"
     />
   </div>
-  <div class="d-flex flex-column flex-md-row gap-md-5 mb-5">
+  <div class="d-flex flex-column flex-md-row gap-md-5">
     <div class="single-box p-5 w-100">
       <div class="text-start">
         <span class="mb-3">1. Complete all required information</span>
@@ -209,7 +209,7 @@
         <fa-icon [icon]="['fas', 'trash-can']" class="font-20-px" />
       </button>
     </div>
-    <div class="d-flex flex-column gap-3">
+    <div class="d-flex flex-column">
       <div class="d-flex flex-column p-3 single-box">
         <span class="mb-2">2. Scan the QR code with your device</span>
         <qrcode
@@ -219,14 +219,28 @@
         >
       </qrcode>
       </div>
-      <div class="d-flex flex-column p-3 single-box">
-        <span class="mb-2">3. Install the app</span>
-        <qrcode
-          [qrdata]="qrLink"
-          [width]="200"
+    </div>
+  </div>
+  <div class="d-flex flex-column text-start single-box p-3">
+    <span class="mb-2">3. Install the app</span>
+    <div class="d-flex gap-5">
+      <div class="d-flex flex-column gap-2 align-items-center qr-box p-3 c-pointer">
+        <img class="h-44-px" src="/assets/images/logos/googlePlay.png" (click)="openAppQR('googlePlay')">
+        <!-- <qrcode
+          qrdata="https://play.google.com/store/apps/"
+          [width]="100"
           [errorCorrectionLevel]="'Q'"
         >
-        </qrcode>
+        </qrcode> -->
+      </div>
+      <div class="d-flex flex-column gap-2 align-items-center qr-box p-3 c-pointer">
+        <img class="h-44-px" src="/assets/images/logos/appStore.png" (click)="openAppQR('appStore')">
+        <!-- <qrcode
+          qrdata="https://apps.apple.com/us/app/apple-store/id375380948"
+          [width]="100"
+          [errorCorrectionLevel]="'Q'"
+        >
+        </qrcode> -->
       </div>
     </div>
   </div>
