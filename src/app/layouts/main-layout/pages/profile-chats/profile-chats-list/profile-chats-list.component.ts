@@ -911,6 +911,8 @@ export class ProfileChatsListComponent
         Username: this.groupData?.groupName || this?.userChat.Username,
         actionType: "VC",
         notificationByProfileId: this.profileId,
+        roomId: this.userChat?.roomId || null,
+        groupId: this.userChat?.groupId || null,
         link: `https://facetime.tube/${originUrl}`,
         notificationDesc: this.groupData?.groupName || this?.userChat.Username + "incoming call...",
         notificationToProfileId: this.userChat.profileId,
