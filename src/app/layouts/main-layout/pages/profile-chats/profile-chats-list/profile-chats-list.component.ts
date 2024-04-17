@@ -28,6 +28,7 @@ import { EditGroupModalComponent } from 'src/app/@shared/modals/edit-group-modal
 import { MessageDatePipe } from 'src/app/@shared/pipe/message-date.pipe';
 import { MediaGalleryComponent } from 'src/app/@shared/components/media-gallery/media-gallery.component';
 import { EmojiPaths } from 'src/app/@shared/constant/emoji';
+import { CustomerService } from 'src/app/@shared/services/customer.service';
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -95,7 +96,8 @@ export class ProfileChatsListComponent
     private spinner: NgxSpinnerService,
     public encryptDecryptService: EncryptDecryptService,
     private modalService: NgbModal,
-    private offcanvasService: NgbOffcanvas
+    private offcanvasService: NgbOffcanvas,
+    private customerService: CustomerService
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -901,12 +903,45 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
-    this.socketService?.startCall(data, (data: any) => {});
+    if (this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
+      this.socketService?.startCall(data, (data: any) => {});
+    } else  {
+      const buzzRingData = {
+        ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+        Username: this.groupData?.groupName || this?.userChat.Username,
+        actionType: "VC",
+        notificationByProfileId: this.profileId,
+        link: `https://facetime.tube/${originUrl}`,
+        notificationDesc: this.groupData?.groupName || this?.userChat.Username + "incoming call...",
+        notificationToProfileId: this.userChat.profileId,
+        domain: "freedom.buzz"
+      };
+      this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
+        // next: (data: any) => {},
+        error: (err) => {console.log(err)}
+      });
+    }
     modalRef.result.then((res) => {
       if (!window.document.hidden) {
         if (res === 'missCalled') {
           this.chatObj.msgText = 'You have a missed call';
           this.sendMessage();
+
+          if (!this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
+            const buzzRingData = {
+              ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+              Username: this.groupData?.groupName || this?.userChat.Username,
+              actionType: "DC",
+              notificationByProfileId: this.profileId,
+              notificationDesc: this.groupData?.groupName || this?.userChat.Username + "incoming call...",
+              notificationToProfileId: this.userChat.profileId,
+              domain: "freedom.buzz"
+            };
+            this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
+              // next: (data: any) => {},
+              error: (err) => {console.log(err)}
+            });
+          }
         }
       }
     });
