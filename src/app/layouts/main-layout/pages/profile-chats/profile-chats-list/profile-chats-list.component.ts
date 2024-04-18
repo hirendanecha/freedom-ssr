@@ -188,7 +188,7 @@ export class ProfileChatsListComponent
         if (this.userChat.roomId === data?.roomId) {
           const readData = {
             ids: [data.id],
-            profileId: this.userChat.profileId,
+            profileId: data.sentBy,
           };
           this.socketService.readMessage(readData, (res) => {
             return;
