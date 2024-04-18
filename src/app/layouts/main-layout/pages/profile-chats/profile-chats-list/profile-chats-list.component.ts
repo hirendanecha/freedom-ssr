@@ -47,7 +47,7 @@ export class ProfileChatsListComponent
     new EventEmitter<any>();
   @ViewChild('chatContent') chatContent!: ElementRef;
 
-  webUrl = environment.webUrl
+  webUrl = environment.webUrl;
   profileId: number;
   chatObj = {
     msgText: null,
@@ -191,6 +191,8 @@ export class ProfileChatsListComponent
             profileId: data.sentBy,
           };
           this.socketService.readMessage(readData, (res) => {
+            console.log(res);
+
             return;
           });
         }
@@ -580,7 +582,9 @@ export class ProfileChatsListComponent
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.chatObj.msgText = this.extractImageUrlFromContent(data?.html.replace(/<div>\s*<br\s*\/?>\s*<\/div>\s*$/, ''));
+    this.chatObj.msgText = this.extractImageUrlFromContent(
+      data?.html.replace(/<div>\s*<br\s*\/?>\s*<\/div>\s*$/, '')
+    );
     if (data.html === '') {
       this.resetData();
     }
@@ -907,22 +911,27 @@ export class ProfileChatsListComponent
 
     if (this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
       this.socketService?.startCall(data, (data: any) => {});
-    } else  {
+    } else {
       const buzzRingData = {
-        ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+        ProfilePicName:
+          this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
         Username: this.groupData?.groupName || this?.userChat.Username,
-        actionType: "VC",
+        actionType: 'VC',
         notificationByProfileId: this.profileId,
         link: `${this.webUrl}freedom-call/${originUrl}`,
         roomId: this.userChat?.roomId || null,
         groupId: this.userChat?.groupId || null,
-        notificationDesc: this.groupData?.groupName || this?.userChat.Username + "incoming call...",
+        notificationDesc:
+          this.groupData?.groupName ||
+          this?.userChat.Username + 'incoming call...',
         notificationToProfileId: this.userChat.profileId,
-        domain: "freedom.buzz"
+        domain: 'freedom.buzz',
       };
       this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
         // next: (data: any) => {},
-        error: (err) => {console.log(err)}
+        error: (err) => {
+          console.log(err);
+        },
       });
     }
     modalRef.result.then((res) => {
@@ -931,19 +940,28 @@ export class ProfileChatsListComponent
           this.chatObj.msgText = 'You have a missed call';
           this.sendMessage();
 
-          if (!this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
+          if (
+            !this.sharedService?.onlineUserList.includes(
+              this.userChat?.profileId
+            )
+          ) {
             const buzzRingData = {
-              ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+              ProfilePicName:
+                this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
               Username: this.groupData?.groupName || this?.userChat.Username,
-              actionType: "DC",
+              actionType: 'DC',
               notificationByProfileId: this.profileId,
-              notificationDesc: this.groupData?.groupName || this?.userChat.Username + "incoming call...",
+              notificationDesc:
+                this.groupData?.groupName ||
+                this?.userChat.Username + 'incoming call...',
               notificationToProfileId: this.userChat.profileId,
-              domain: "freedom.buzz"
+              domain: 'freedom.buzz',
             };
             this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
               // next: (data: any) => {},
-              error: (err) => {console.log(err)}
+              error: (err) => {
+                console.log(err);
+              },
             });
           }
         }
