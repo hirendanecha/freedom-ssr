@@ -29,6 +29,7 @@ import { MessageDatePipe } from 'src/app/@shared/pipe/message-date.pipe';
 import { MediaGalleryComponent } from 'src/app/@shared/components/media-gallery/media-gallery.component';
 import { EmojiPaths } from 'src/app/@shared/constant/emoji';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -46,6 +47,7 @@ export class ProfileChatsListComponent
     new EventEmitter<any>();
   @ViewChild('chatContent') chatContent!: ElementRef;
 
+  webUrl = environment.webUrl
   profileId: number;
   chatObj = {
     msgText: null,
@@ -911,7 +913,7 @@ export class ProfileChatsListComponent
         Username: this.groupData?.groupName || this?.userChat.Username,
         actionType: "VC",
         notificationByProfileId: this.profileId,
-        link: `https://facetime.tube/${originUrl}`,
+        link: `${this.webUrl}freedom-call/${originUrl}`,
         notificationDesc: this.groupData?.groupName || this?.userChat.Username + "incoming call...",
         notificationToProfileId: this.userChat.profileId,
         domain: "freedom.buzz"

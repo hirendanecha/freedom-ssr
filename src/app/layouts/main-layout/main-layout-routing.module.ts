@@ -100,7 +100,7 @@ const routes: Routes = [
           isShowChatListSideBar: false,
           isShowChatModule: true
         },
-        canActivate: mapToCanActivate([AuthenticationGuard]),
+        // canActivate: mapToCanActivate([AuthenticationGuard]),
       },
     ],
   },
