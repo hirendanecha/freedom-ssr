@@ -172,7 +172,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 groupId: data.groupId || null,
               };
               if (!window.document.hidden) {
-                const callId = data.link.split('/').find(part => part.startsWith('callId-'))?.split('-')[1] || data.link.split('/').pop();
+                const callId = (data.link.includes('callId-') ? 'callId-' + data.link.split('-')[1] : 'callId-' + data.link.split('/').pop());
                 this.router.navigate([`/freedom-call/${callId}`], {
                   state: { chatDataPass },
                 });

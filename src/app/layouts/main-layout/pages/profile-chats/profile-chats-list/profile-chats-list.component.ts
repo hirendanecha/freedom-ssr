@@ -914,6 +914,8 @@ export class ProfileChatsListComponent
         actionType: "VC",
         notificationByProfileId: this.profileId,
         link: `${this.webUrl}freedom-call/${originUrl}`,
+        roomId: this.userChat?.roomId || null,
+        groupId: this.userChat?.groupId || null,
         notificationDesc: this.groupData?.groupName || this?.userChat.Username + "incoming call...",
         notificationToProfileId: this.userChat.profileId,
         domain: "freedom.buzz"
