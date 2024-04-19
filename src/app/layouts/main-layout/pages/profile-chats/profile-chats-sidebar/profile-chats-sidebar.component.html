@@ -400,6 +400,13 @@
                   class="dropdown-menu"
                   (mouseleave)="editPopup.close()"
                 >
+                  <button *ngIf="item?.roomId" ngbDropdownItem (click)="resendInvite(item)">
+                    <a class="droplist d-flex align-items-center gap-2">
+                      <fa-icon [icon]="['fas', 'repeat']"
+                      />
+                      <span class="data-text-color">Resend</span>
+                    </a>
+                  </button>
                   <button ngbDropdownItem (click)="deleteOrLeaveChat(item)">
                     <a class="droplist d-flex align-items-center gap-2">
                       <fa-icon

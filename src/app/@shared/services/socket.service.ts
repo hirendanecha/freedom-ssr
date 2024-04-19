@@ -181,6 +181,10 @@ export class SocketService {
     this.socket.emit('delete-room', params, callback);
   }
 
+  resendChatInvite(params, callback: (data: any) => void) {
+    this.socket.emit('resend-chat-invite', params, callback);
+  }
+
   switchChat(params, callback: (data: any) => void) {
     this.socket.emit('switch-group', params, callback);
   }
