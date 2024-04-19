@@ -65,6 +65,7 @@
           data-toggle="tooltip"
           data-placement="bottom"
           title="Research"
+          (click)="closeSidebar()"
         >
           <fa-icon [icon]="['fas', 'book-open']" class="font-24-px" />
           <span>Research</span>
@@ -104,6 +105,7 @@
           [routerLink]="'/profile-chats'"
           target="_blank"
           routerLinkActive="active"
+          (click)="closeSidebar()"
         >
           <fa-icon [icon]="['fas', 'envelope']" class="font-20-px" />
           <span>Messaging</span>
