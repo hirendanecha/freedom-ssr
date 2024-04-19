@@ -20,6 +20,8 @@ import { SharedService } from 'src/app/@shared/services/shared.service';
 import { Router } from '@angular/router';
 import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
 import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-modal/create-group-modal.component';
+import * as moment from 'moment';
+import { ToastService } from 'src/app/@shared/services/toast.service';
 
 @Component({
   selector: 'app-profile-chats-sidebar',
@@ -56,6 +58,7 @@ export class ProfileChatsSidebarComponent
     public sharedService: SharedService,
     private activeOffcanvas: NgbActiveOffcanvas,
     private router: Router,
+    private toasterService: ToastService,
     public encryptDecryptService: EncryptDecryptService,
     private modalService: NgbModal
   ) {
@@ -255,6 +258,29 @@ export class ProfileChatsSidebarComponent
         this.getGroupList();
         this.onNewChat?.emit({});
       });
+    }
+  }
+
+  resendInvite(item) {
+    if (item) {
+      const date = moment(new Date()).utc();
+      const data = {
+        roomId: item.roomId,
+        profileId: item.profileId,
+        createdBy: item.createdBy,
+        date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+      };
+
+      const hoursDifference = date.diff(item.createdDate, 'hours');
+      if (hoursDifference > 24) {
+        this.socketService?.resendChatInvite(data, (data: any) => {
+          this.toasterService.success('invitation sent successfully.');
+        });
+      } else {
+        this.toasterService.warring(
+          'Please wait 24 hours before sending invitations again.'
+        );
+      }
     }
   }
 
