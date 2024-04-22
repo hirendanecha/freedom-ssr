@@ -236,8 +236,12 @@
             position: unset !important;
           }
         }
+        li.you {
+          margin-left: 5px;
+        }
         li.me {
           text-align: start;
+          margin-right: 5px;
           .message {
             // background: var(--box-1st-color);
           }
