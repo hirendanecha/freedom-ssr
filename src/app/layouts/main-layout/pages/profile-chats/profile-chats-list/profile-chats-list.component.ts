@@ -87,7 +87,7 @@ export class ProfileChatsListComponent
   emojiPaths = EmojiPaths;
   originalFavicon: HTMLLinkElement;
   isGallerySidebarOpen: boolean = false;
-
+  currentUser: any = []
   // messageList: any = [];
   constructor(
     private socketService: SocketService,
@@ -919,14 +919,14 @@ export class ProfileChatsListComponent
       this.socketService?.startCall(data, (data: any) => {});
     } else  {
       const buzzRingData = {
-        ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
-        Username: this.groupData?.groupName || this?.userChat.Username,
+        ProfilePicName: this.groupData?.ProfileImage ||this.sharedService?.userData?.ProfilePicName,
+        Username: this.groupData?.groupName || this.sharedService?.userData?.Username,
         actionType: "VC",
         notificationByProfileId: this.profileId,
         link: `${this.webUrl}freedom-call/${originUrl}`,
         roomId: this.userChat?.roomId || null,
         groupId: this.userChat?.groupId || null,
-        notificationDesc: this.groupData?.groupName || this?.userChat.Username + "incoming call...",
+        notificationDesc: this.groupData?.groupName ||this.sharedService?.userData?.Username + " incoming call...",
         notificationToProfileId: this.userChat.profileId,
         domain: "freedom.buzz"
       };
