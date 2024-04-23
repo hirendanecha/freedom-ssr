@@ -286,13 +286,22 @@ export class ProfileChatsListComponent
     );
   }
 
+  prepareMessage(text: string): string | null {
+    const regex = /<img\s+[^>]*src="data:image\/.*?;base64,[^\s]*"[^>]*>|<img\s+[^>]*src=""[^>]*>/g;
+    let cleanedText = text.replace(regex, '');
+    const divregex = /<div\s*>\s*<\/div>/g;
+    if (cleanedText.replace(divregex, '').trim() === '') return null;
+    return this.encryptDecryptService?.encryptUsingAES256(cleanedText);
+  }
+
   // send btn
   sendMessage(): void {
     if (this.chatObj.id) {
-      const message =
-        this.chatObj.msgText !== null
-          ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
-          : null;
+      // const message =
+      //   this.chatObj.msgText !== null
+      //     ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
+      //     : null;
+      const message = this.chatObj.msgText !== null ? this.prepareMessage(this.chatObj.msgText) : null;
       const data = {
         id: this.chatObj.id,
         messageText: message,
@@ -334,11 +343,11 @@ export class ProfileChatsListComponent
         this.resetData();
       });
     } else {
-      const message =
-        this.chatObj.msgText !== null
-          ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
-          : null;
-
+      // const message =
+      //   this.chatObj.msgText !== null
+      //     ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
+      //     : null;
+      const message = this.chatObj.msgText !== null ? this.prepareMessage(this.chatObj.msgText) : null;
       const data = {
         messageText: message,
         roomId: this.userChat?.roomId || null,
