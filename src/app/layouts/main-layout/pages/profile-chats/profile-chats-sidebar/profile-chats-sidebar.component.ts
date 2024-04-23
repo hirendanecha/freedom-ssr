@@ -274,6 +274,9 @@ export class ProfileChatsSidebarComponent
       const hoursDifference = date.diff(item.createdDate, 'hours');
       if (hoursDifference > 24) {
         this.socketService?.resendChatInvite(data, (data: any) => {
+          this.getChatList();
+          this.getGroupList();
+          this.onNewChat?.emit({});
           this.toasterService.success('invitation sent successfully.');
         });
       } else {
