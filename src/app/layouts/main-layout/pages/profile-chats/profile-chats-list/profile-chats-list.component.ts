@@ -30,6 +30,8 @@ import { MediaGalleryComponent } from 'src/app/@shared/components/media-gallery/
 import { EmojiPaths } from 'src/app/@shared/constant/emoji';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { environment } from 'src/environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
+
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -77,6 +79,7 @@ export class ProfileChatsListComponent
   pdfName: string = '';
   viewUrl: string;
   pdfmsg: string;
+  userId: number;
   messageInputValue: string = '';
   firstTimeScroll = false;
   activePage = 1;
@@ -87,6 +90,10 @@ export class ProfileChatsListComponent
   emojiPaths = EmojiPaths;
   originalFavicon: HTMLLinkElement;
   isGallerySidebarOpen: boolean = false;
+  qrLink = '';
+  authToken: string;
+
+
   currentUser: any = []
   // messageList: any = [];
   constructor(
@@ -99,9 +106,14 @@ export class ProfileChatsListComponent
     public encryptDecryptService: EncryptDecryptService,
     private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private route:ActivatedRoute
+   
   ) {
+    this.userId = +this.route.snapshot.paramMap.get('id');
     this.profileId = +localStorage.getItem('profileId');
+    this.qrLink = `${environment.qrLink}${this.userId}?token=${this.authToken}`;
+
   }
 
   ngOnInit(): void {

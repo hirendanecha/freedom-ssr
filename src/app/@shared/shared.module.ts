@@ -93,6 +93,7 @@ import {
   faUserTimes,
   faPhotoFilm,
   faRepeat,
+  faMobile,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -125,6 +126,7 @@ import { MediaGalleryComponent } from './components/media-gallery/media-gallery.
 import { GalleryImgPreviewComponent } from './components/gallery-img-preview/gallery-img-preview.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { QrScanModalComponent } from './modals/qrscan-modal/qrscan-modal.component';
+import { AppQrModalComponent } from './modals/app-qr-modal/app-qr-modal.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -158,6 +160,7 @@ const sharedComponents = [
   MediaGalleryComponent,
   GalleryImgPreviewComponent,
   QrScanModalComponent,
+  AppQrModalComponent
 ];
 
 const sharedModules = [
@@ -265,7 +268,8 @@ export class SharedModule {
       faReply,
       faUserTimes,
       faPhotoFilm,
-      faRepeat
+      faRepeat,
+      faMobile
     );
   }
 }
