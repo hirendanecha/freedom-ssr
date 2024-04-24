@@ -27,15 +27,10 @@ export class AuthService {
     );
   }
 
-  setPassword(data: Object, token: string): any {
+  setPassword(data: Object): any {
     return this.http.post(
       `${environment.serverUrl}customers/set-password`,
-      data,
-      {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      }
+      data
     );
   }
 
