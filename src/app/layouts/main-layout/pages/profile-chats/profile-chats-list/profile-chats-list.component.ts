@@ -30,6 +30,7 @@ import { MediaGalleryComponent } from 'src/app/@shared/components/media-gallery/
 import { EmojiPaths } from 'src/app/@shared/constant/emoji';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { environment } from 'src/environments/environment';
+import { SeoService } from 'src/app/@shared/services/seo.service';
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -99,9 +100,17 @@ export class ProfileChatsListComponent
     public encryptDecryptService: EncryptDecryptService,
     private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private seoService: SeoService,
   ) {
     this.profileId = +localStorage.getItem('profileId');
+
+    const data = {
+      title: 'Buzz Chat',
+      url: `${location.href}`,
+      description: '',
+    };
+    this.seoService.updateSeoMetaData(data);
   }
 
   ngOnInit(): void {
