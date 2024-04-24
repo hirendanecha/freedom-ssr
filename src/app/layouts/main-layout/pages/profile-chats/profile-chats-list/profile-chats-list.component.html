@@ -357,7 +357,7 @@
                           >
                             <ng-container
                               *ngIf="
-                                !isFile(message?.parentMessage?.messageMedia);
+                                !isFileOrVideo(message?.parentMessage?.messageMedia);
                                 else fileReplay
                               "
                             >
@@ -633,11 +633,7 @@
                         <ng-container
                           *ngIf="message.parentMessage.messageMedia"
                         >
-                          <ng-container
-                            *ngIf="
-                              !isFile(message.parentMessage.messageMedia);
-                              else fileReplay
-                            "
+                          <ng-container *ngIf="!isFileOrVideo(message.parentMessage.messageMedia); else fileReplay"
                           >
                             <div class="w-100-px h-100-px">
                               <app-img-preview

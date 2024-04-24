@@ -31,7 +31,7 @@ import { EmojiPaths } from 'src/app/@shared/constant/emoji';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { SeoService } from 'src/app/@shared/services/seo.service';
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -107,13 +107,20 @@ export class ProfileChatsListComponent
     private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas,
     private customerService: CustomerService,
-    private route:ActivatedRoute
-   
+    private route:ActivatedRoute,
+    private seoService: SeoService,
   ) {
     this.userId = +this.route.snapshot.paramMap.get('id');
     this.profileId = +localStorage.getItem('profileId');
     this.qrLink = `${environment.qrLink}${this.userId}?token=${this.authToken}`;
 
+
+    const data = {
+      title: 'Buzz Chat',
+      url: `${location.href}`,
+      description: '',
+    };
+    this.seoService.updateSeoMetaData(data);
   }
 
   ngOnInit(): void {
@@ -680,6 +687,10 @@ export class ProfileChatsListComponent
 
   pdfView(pdfUrl) {
     window.open(pdfUrl);
+  }
+
+  isFileOrVideo(media: any): boolean {
+    return this.isFile(media) || this.isVideoFile(media);
   }
 
   isFile(media: string): boolean {
