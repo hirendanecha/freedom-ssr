@@ -7,6 +7,7 @@ import { SeeFirstUserComponent } from './see-first-user/see-first-user.component
 import { UnsubscribedUsersComponent } from './unsubscribed-users/unsubscribed-users.component';
 import { SharedModule } from 'src/app/@shared/shared.module';
 import { DeleteAccountComponent } from './delete-account/delete-account.component';
+import { SupportTicketPageComponent } from './support-ticket-page/support-ticket-page.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { DeleteAccountComponent } from './delete-account/delete-account.componen
     ViewProfileComponent,
     DeleteAccountComponent,
     SeeFirstUserComponent,
-    UnsubscribedUsersComponent
+    UnsubscribedUsersComponent,
+    SupportTicketPageComponent
   ],
   imports: [SettingsRoutingModule, SharedModule],
 })
