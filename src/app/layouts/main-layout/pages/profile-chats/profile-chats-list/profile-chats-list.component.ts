@@ -87,7 +87,7 @@ export class ProfileChatsListComponent
   emojiPaths = EmojiPaths;
   originalFavicon: HTMLLinkElement;
   isGallerySidebarOpen: boolean = false;
-
+  currentUser: any = []
   // messageList: any = [];
   constructor(
     private socketService: SocketService,
@@ -288,13 +288,22 @@ export class ProfileChatsListComponent
     );
   }
 
+  prepareMessage(text: string): string | null {
+    const regex = /<img\s+[^>]*src="data:image\/.*?;base64,[^\s]*"[^>]*>|<img\s+[^>]*src=""[^>]*>/g;
+    let cleanedText = text.replace(regex, '');
+    const divregex = /<div\s*>\s*<\/div>/g;
+    if (cleanedText.replace(divregex, '').trim() === '') return null;
+    return this.encryptDecryptService?.encryptUsingAES256(cleanedText);
+  }
+
   // send btn
   sendMessage(): void {
     if (this.chatObj.id) {
-      const message =
-        this.chatObj.msgText !== null
-          ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
-          : null;
+      // const message =
+      //   this.chatObj.msgText !== null
+      //     ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
+      //     : null;
+      const message = this.chatObj.msgText !== null ? this.prepareMessage(this.chatObj.msgText) : null;
       const data = {
         id: this.chatObj.id,
         messageText: message,
@@ -336,11 +345,11 @@ export class ProfileChatsListComponent
         this.resetData();
       });
     } else {
-      const message =
-        this.chatObj.msgText !== null
-          ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
-          : null;
-
+      // const message =
+      //   this.chatObj.msgText !== null
+      //     ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
+      //     : null;
+      const message = this.chatObj.msgText !== null ? this.prepareMessage(this.chatObj.msgText) : null;
       const data = {
         messageText: message,
         roomId: this.userChat?.roomId || null,
@@ -652,7 +661,8 @@ export class ProfileChatsListComponent
       media.endsWith('.docx') ||
       media.endsWith('.xls') ||
       media.endsWith('.xlsx') ||
-      media.endsWith('.zip');
+      media.endsWith('.zip') ||
+      media.endsWith('.apk')
     return media && fileType;
   }
 
@@ -661,7 +671,7 @@ export class ProfileChatsListComponent
   }
 
   isFile(media: string): boolean {
-    const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip'];
+    const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip','.apk'];
     return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
 
@@ -913,25 +923,20 @@ export class ProfileChatsListComponent
       this.socketService?.startCall(data, (data: any) => {});
     } else {
       const buzzRingData = {
-        ProfilePicName:
-          this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
-        Username: this.groupData?.groupName || this?.userChat.Username,
-        actionType: 'VC',
+        ProfilePicName: this.groupData?.ProfileImage ||this.sharedService?.userData?.ProfilePicName,
+        Username: this.groupData?.groupName || this.sharedService?.userData?.Username,
+        actionType: "VC",
         notificationByProfileId: this.profileId,
         link: `${this.webUrl}freedom-call/${originUrl}`,
         roomId: this.userChat?.roomId || null,
         groupId: this.userChat?.groupId || null,
-        notificationDesc:
-          this.groupData?.groupName ||
-          this?.userChat.Username + 'incoming call...',
+        notificationDesc: this.groupData?.groupName ||this.sharedService?.userData?.Username + " incoming call...",
         notificationToProfileId: this.userChat.profileId,
         domain: 'freedom.buzz',
       };
       this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
         // next: (data: any) => {},
-        error: (err) => {
-          console.log(err);
-        },
+        error: (err) => {console.log(err)}
       });
     }
     modalRef.result.then((res) => {

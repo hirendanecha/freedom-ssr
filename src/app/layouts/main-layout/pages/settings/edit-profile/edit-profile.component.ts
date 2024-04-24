@@ -344,7 +344,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       size: 'sm',
     });
     if (store === 'googlePlay') {
-      modalRef.componentInstance.store = 'https://play.google.com/store/apps/';
+      modalRef.componentInstance.store = 'https://s3.us-east-1.wasabisys.com/freedom-social/buzz-ring.apk';
       modalRef.componentInstance.image = '/assets/images/logos/googlePlay.png';
     } else {
       modalRef.componentInstance.store = 'https://apps.apple.com/us/app/apple-store/id375380948';

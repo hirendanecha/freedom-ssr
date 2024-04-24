@@ -21,7 +21,7 @@
         </h6>
       </div>
     </div>
-    <ul class="profile-link m-0 mt-5 p-0 border-bottom-0">
+    <ul class="profile-link m-0 mt-5 p-0 border-bottom-0 mb-10">
       <li class="ms-2">
         <a
           class="d-flex gap-4"
@@ -65,6 +65,7 @@
           data-toggle="tooltip"
           data-placement="bottom"
           title="Research"
+          (click)="closeSidebar()"
         >
           <fa-icon [icon]="['fas', 'book-open']" class="font-24-px" />
           <span>Research</span>
@@ -92,7 +93,8 @@
           class="d-flex gap-4"
           [routerLink]="'settings/view-profile/' + profileId"
           routerLinkActive="active"
-        >
+          (click)="closeSidebar()"
+          >
           <fa-icon [icon]="['fas', 'gear']" class="font-20-px" />
           <span>View Profile</span>
         </a>
@@ -103,6 +105,7 @@
           [routerLink]="'/profile-chats'"
           target="_blank"
           routerLinkActive="active"
+          (click)="closeSidebar()"
         >
           <fa-icon [icon]="['fas', 'envelope']" class="font-20-px" />
           <span>Messaging</span>

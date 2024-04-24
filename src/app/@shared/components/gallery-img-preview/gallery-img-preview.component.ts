@@ -96,7 +96,7 @@ export class GalleryImgPreviewComponent implements OnInit {
   }
 
   isFile(media: string): boolean {
-    const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip'];
+    const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip','.apk'];
     return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
 

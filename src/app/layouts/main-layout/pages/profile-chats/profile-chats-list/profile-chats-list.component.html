@@ -919,8 +919,35 @@
           <div
             class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
           >
-            <div class="form-content p-0 d-flex gap-2 align-items-center w-100">
-              <div class="file-input d-flex gap-1 gap-md-2">
+          <div class="form-content p-0 d-flex gap-2 align-items-center w-100">
+              <div class="file-upload mobile-fileselect-drop d-block d-sm-none">
+                <div ngbDropdown placement="top-start" class="select-emaojies">
+                  <button type="button" id="fileDropdown" ngbDropdownToggle title="Select File">
+                    <fa-icon [icon]="['fas', 'paperclip']" class="font-20-px"></fa-icon>
+                  </button>
+                  <div ngbDropdownMenu aria-labelledby="fileDropdown">
+                    <label class="file">
+                      <input type="file" [(ngModel)]="chatObj.msgMedia" name="doc" accept="application/*" (change)="onPostFileSelect($event)" />
+                      <span class="file-custom border-0 m-1 d-grid text-center">
+                        <fa-icon [icon]="['fas', 'paperclip']" class="font-24-px"></fa-icon>
+                      </span>
+                    </label>
+                    <label class="file">
+                      <input type="file" [(ngModel)]="chatObj.msgMedia" name="image" accept="image/*" (change)="onPostFileSelect($event)" />
+                      <span class="file-custom border-0 m-1 d-grid text-center">
+                        <fa-icon [icon]="['fas', 'image']" class="font-24-px"></fa-icon>
+                      </span>
+                    </label>
+                    <label class="file">
+                      <input type="file" [(ngModel)]="chatObj.msgMedia" id="fileInput" (change)="onPostFileSelect($event)" accept="video/*" />
+                      <span class="file-custom border-0 m-1 d-grid text-center">
+                        <fa-icon [icon]="['fas', 'video']" class="font-24-px"></fa-icon>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="file-input d-flex d-none d-sm-flex gap-1 gap-md-2">
                 <div class="file-upload">
                   <label class="file">
                     <input
