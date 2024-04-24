@@ -14,12 +14,13 @@ import { AuthService } from 'src/app/@shared/services/auth.service';
 })
 export class ResetPasswordComponent implements OnInit {
   @ViewChild('changePassword') changePassword: NgForm | any;
-  showPassword = false;
   loading = false;
   submitted = false;
   msg = '';
   type = '';
   userAccessToken: any;
+  passwordHidden: boolean = true;
+
   constructor(
     private modalService: NgbModal,
     private router: Router,
@@ -37,6 +38,11 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     // localStorage.setItem('auth-token', this.userAccessToken);
+  }
+
+  togglePasswordVisibility(passwordInput: HTMLInputElement) {
+    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    this.passwordHidden = !this.passwordHidden;
   }
 
   mustMatch() {
@@ -58,7 +64,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   validatepassword(): boolean {
-    const pattern = '[a-zA-Z0-9]{5,}';
+    const pattern = /^.{5,}$/;
     // const pattern =
     //   '(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[a-z])(?=.*[0-9].*[0-9]).{8}';
 
@@ -85,8 +91,7 @@ export class ResetPasswordComponent implements OnInit {
         {
           token: this.userAccessToken,
           password: this.changePassword.form.controls['confirmPassword'].value,
-        },
-        this.userAccessToken
+        }
       )
       .subscribe({
         next: (result) => {
@@ -100,7 +105,7 @@ export class ResetPasswordComponent implements OnInit {
         error: (error) => {
           this.loading = false;
           this.submitted = false;
-          this.msg = 'Something went wrong please try again.';
+          this.msg = 'You have entered the wrong password or username';
           this.type = 'danger';
         },
       });

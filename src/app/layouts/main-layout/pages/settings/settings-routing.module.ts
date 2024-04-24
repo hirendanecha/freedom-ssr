@@ -5,6 +5,7 @@ import { ViewProfileComponent } from './view-profile/view-profile.component';
 import { DeleteAccountComponent } from './delete-account/delete-account.component';
 import { SeeFirstUserComponent } from './see-first-user/see-first-user.component';
 import { UnsubscribedUsersComponent } from './unsubscribed-users/unsubscribed-users.component';
+import { SupportTicketPageComponent } from './support-ticket-page/support-ticket-page.component';
 const routes: Routes = [
   {
     path: 'edit-profile/:id',
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     path: 'unsubscribed-users',
     component: UnsubscribedUsersComponent,
+  },
+  {
+    path: 'report-bugs',
+    component: SupportTicketPageComponent,
   },
 ];
 

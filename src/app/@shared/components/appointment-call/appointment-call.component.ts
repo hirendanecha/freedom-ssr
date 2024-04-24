@@ -6,6 +6,7 @@ import { ProfileChatsListComponent } from 'src/app/layouts/main-layout/pages/pro
 import { ProfileChatsSidebarComponent } from 'src/app/layouts/main-layout/pages/profile-chats/profile-chats-sidebar/profile-chats-sidebar.component';
 import { SharedService } from '../../services/shared.service';
 import { MessageService } from '../../services/message.service';
+import { SeoService } from '../../services/seo.service';
 
 declare var JitsiMeetExternalAPI: any;
 @Component({
@@ -33,8 +34,16 @@ export class AppointmentCallComponent implements OnInit {
     private offcanvasService: NgbOffcanvas,
     private activeOffcanvas: NgbActiveOffcanvas,
     private sharedService: SharedService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private seoService: SeoService,
+  ) {
+    const data = {
+      title: 'Buzz Chat',
+      url: `${location.href}`,
+      description: '',
+    };
+    this.seoService.updateSeoMetaData(data);
+  }
 
   ngOnInit() {
     const stateData = window.history.state.chatDataPass;

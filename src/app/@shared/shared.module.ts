@@ -94,6 +94,8 @@ import {
   faPhotoFilm,
   faRepeat,
   faMobile,
+  faEyeSlash,
+  faTicketAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -269,7 +271,11 @@ export class SharedModule {
       faUserTimes,
       faPhotoFilm,
       faRepeat,
-      faMobile
+      faMobile,
+      faEye,
+      faEyeSlash,
+      faTicketAlt,
+      faPhotoFilm
     );
   }
 }
