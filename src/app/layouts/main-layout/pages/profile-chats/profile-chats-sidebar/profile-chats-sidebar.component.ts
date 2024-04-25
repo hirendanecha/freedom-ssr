@@ -22,6 +22,7 @@ import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.
 import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-modal/create-group-modal.component';
 import * as moment from 'moment';
 import { ToastService } from 'src/app/@shared/services/toast.service';
+import { MessageService } from 'src/app/@shared/services/message.service';
 
 @Component({
   selector: 'app-profile-chats-sidebar',
@@ -56,6 +57,7 @@ export class ProfileChatsSidebarComponent
     private customerService: CustomerService,
     private socketService: SocketService,
     public sharedService: SharedService,
+    public messageService: MessageService,
     private activeOffcanvas: NgbActiveOffcanvas,
     private router: Router,
     private toasterService: ToastService,
@@ -218,6 +220,7 @@ export class ProfileChatsSidebarComponent
           return ele;
         } else return ele;
       });
+      this.messageService.chatList.push(this.newChatList);
     }
   }
 

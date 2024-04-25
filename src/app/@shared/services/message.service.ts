@@ -7,7 +7,7 @@ import { environment } from "src/environments/environment";
   providedIn: 'root',
 })
 export class MessageService {
-
+    chatList: any[] = [];
     private baseUrl = environment.serverUrl + 'messages';
 
     constructor(private http: HttpClient) { }

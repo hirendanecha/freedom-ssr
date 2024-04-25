@@ -214,10 +214,10 @@
               <li class="you" *ngIf="message?.sentBy !== this.profileId">
                 <div
                   class="d-flex drop-options"
-                  *ngIf="message?.messageMedia || message?.messageText"
                 >
                   <div class="btn-group d-flex options me-2">
                     <div
+                    *ngIf="message?.messageMedia || message?.messageText"
                       ngbDropdown
                       #editPopup="ngbDropdown"
                       class="d-inline-block"
@@ -233,10 +233,16 @@
                         class="dropdown-menu"
                         (mouseleave)="editPopup.close()"
                       >
-                        <button ngbDropdownItem (click)="replyMsg(message)">
+                        <button ngbDropdownItem (click)="replyMsg(message)" *ngIf="message?.messageMedia || message?.messageText">
                           <a class="droplist d-flex align-items-center gap-2">
                             <fa-icon [icon]="['fas', 'reply']" />
                             <span class="data-text-color">Reply</span>
+                          </a>
+                        </button>
+                        <button ngbDropdownItem (click)="forwardMsg(message)" *ngIf="message?.messageMedia || message?.messageText">
+                          <a class="droplist d-flex align-items-center gap-2">
+                            <fa-icon class="forward-msg" [icon]="['fas', 'reply']" />
+                            <span class="data-text-color">Forward</span>
                           </a>
                         </button>
                         <ng-container
@@ -335,7 +341,6 @@
                       </ng-container>
                     </div>
                     <div
-                      *ngIf="message?.messageText !== null"
                       class="message d-flex gap-3 flex-column"
                     >
                       <ng-container *ngIf="message.parentMessageId">
@@ -456,16 +461,22 @@
                           class="dropdown-menu"
                           (mouseleave)="editPopup.close()"
                         >
-                          <button ngbDropdownItem (click)="replyMsg(message)">
+                          <button ngbDropdownItem (click)="replyMsg(message)" *ngIf="message?.messageMedia || message?.messageText">
                             <a class="droplist d-flex align-items-center gap-2">
                               <fa-icon [icon]="['fas', 'reply']" />
                               <span class="data-text-color">Reply</span>
                             </a>
                           </button>
+                          <button ngbDropdownItem (click)="forwardMsg(message)" *ngIf="message?.messageMedia || message?.messageText">
+                            <a class="droplist d-flex align-items-center gap-2">
+                              <fa-icon class="forward-msg" [icon]="['fas', 'reply']" />
+                              <span class="data-text-color">Forward</span>
+                            </a>
+                          </button>
                           <button
                             ngbDropdownItem
                             (click)="editMsg(message)"
-                            *ngIf="!message?.messageMedia"
+                            *ngIf="message?.messageText"
                           >
                             <a class="droplist d-flex align-items-center gap-2">
                               <fa-icon [icon]="['fas', 'pen-to-square']" />
@@ -567,7 +578,6 @@
 
                 <div
                   class="d-flex flex-row-reverse gap-2 drop-options"
-                  *ngIf="message?.messageText !== null"
                 >
                   <div class="btn-group d-flex options">
                     <div
@@ -586,16 +596,22 @@
                         class="dropdown-menu"
                         (mouseleave)="editPopup.close()"
                       >
-                        <button ngbDropdownItem (click)="replyMsg(message)">
+                        <button ngbDropdownItem (click)="replyMsg(message)" *ngIf="message?.messageMedia || message?.messageText">
                           <a class="droplist d-flex align-items-center gap-2">
                             <fa-icon [icon]="['fas', 'reply']" />
                             <span class="data-text-color">Reply</span>
                           </a>
                         </button>
+                        <button ngbDropdownItem (click)="forwardMsg(message)" *ngIf="message?.messageMedia || message?.messageText">
+                          <a class="droplist d-flex align-items-center gap-2">
+                            <fa-icon class="forward-msg" [icon]="['fas', 'reply']" />
+                            <span class="data-text-color">Forward</span>
+                          </a>
+                        </button>
                         <button
                           ngbDropdownItem
                           (click)="editMsg(message)"
-                          *ngIf="!message?.messageMedia"
+                          *ngIf="message?.messageText"
                         >
                           <a class="droplist d-flex align-items-center gap-2">
                             <fa-icon [icon]="['fas', 'pen-to-square']" />
