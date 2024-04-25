@@ -24,6 +24,7 @@ import * as moment from 'moment';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { QrScanModalComponent } from 'src/app/@shared/modals/qrscan-modal/qrscan-modal.component';
 import { AppQrModalComponent } from 'src/app/@shared/modals/app-qr-modal/app-qr-modal.component';
+import { MessageService } from 'src/app/@shared/services/message.service';
 
 @Component({
   selector: 'app-profile-chats-sidebar',
@@ -58,6 +59,7 @@ export class ProfileChatsSidebarComponent
     private customerService: CustomerService,
     private socketService: SocketService,
     public sharedService: SharedService,
+    public messageService: MessageService,
     private activeOffcanvas: NgbActiveOffcanvas,
     private router: Router,
     private toasterService: ToastService,
@@ -220,6 +222,7 @@ export class ProfileChatsSidebarComponent
           return ele;
         } else return ele;
       });
+      this.messageService.chatList.push(this.newChatList);
     }
   }
 
