@@ -9,49 +9,50 @@
 </div>
 
 <div class="modal-body text-start">
-  <div class="parent-replay mb-3">
-    <fa-icon [icon]="['fas', 'reply']" />
-    <ng-container
-      *ngIf="message?.messageMedia"
-    >
+    <div class="parent-replay mb-2">
+      <fa-icon [icon]="['fas', 'reply']" />
       <ng-container
-        *ngIf="
-          !isFileOrVideo(message?.messageMedia);
-          else fileReplay
-        "
+        *ngIf="message?.messageMedia"
       >
-        <div class="w-100-px h-100-px">
-          <app-img-preview
-          classes="h-100-px"
-          [src]="message?.messageMedia"
-          ></app-img-preview>
-        </div>
+        <ng-container
+          *ngIf="
+            !isFileOrVideo(message?.messageMedia);
+            else fileReplay
+          "
+        >
+          <div class="w-100-px h-100-px">
+            <app-img-preview
+            classes="h-100-px"
+            [src]="message?.messageMedia"
+            ></app-img-preview>
+          </div>
+        </ng-container>
+        <ng-template #fileReplay>
+          <div class="d-flex align-items-center gap-3">
+            <fa-icon
+              [icon]="['fas', 'file']"
+              class="c-pointer close-icon font-40-px"
+            />
+            <span
+              class="c-pdf-show"
+              [title]="
+                message?.messageMedia?.replaceAll('%',' ')"
+              >{{ message?.messageMedia?.replaceAll("%", " ")}}</span
+            >
+          </div>
+        </ng-template>
       </ng-container>
-      <ng-template #fileReplay>
-        <div class="w-100-px h-100-px">
-          <fa-icon
-            [icon]="['fas', 'file']"
-            class="c-pointer close-icon font-40-px"
-          />
-          <span
-            class="c-pdf-show"
-            [title]="
-              message?.messageMedia?.replaceAll('%',' ')"
-            >{{ message?.messageMedia?.replaceAll("%", " ")}}</span
-          >
-        </div>
-      </ng-template>
-    </ng-container>
-    <p
-      *ngIf="message?.messageText !== null"
-      class="m-0"
-      [innerHTML]="message?.messageText"
-    ></p>
-    <!-- encryptDecryptService.decryptUsingAES256(
-    ) -->
-    <span class="font-12-px">
-      {{ message?.Username }},{{ message?.createdDate | date : "dd-MM-yyyy"}}
-    </span>
+      <p
+        *ngIf="message?.messageText !== null"
+        class="m-0"
+        [innerHTML]="message?.messageText"
+      ></p>
+      <!-- encryptDecryptService.decryptUsingAES256(
+      ) -->
+      <span class="font-12-px">
+        {{ message?.Username }},{{ message?.createdDate | date : "dd-MM-yyyy"}}
+      </span>
+      <input class="mt-2 tag-input-div" type="text" [(ngModel)]="textInput" placeholder="Type a message here (optional)">
   </div>
 
   <div class="input-area h-48-px d-flex align-items-center">
@@ -105,10 +106,10 @@
     <span class="m-1">Suggested</span>
   </div>
   <div class="bg-box pe-3 rounded-2">
-    <div class="header-menu cus-scrollbar-pending overflow-auto">
+    <div class="header-menu cus-scrollbar-pending overflow-auto c-min-height">
       <div
         class="single-item messages-area d-flex justify-content-between align-items-baseline"
-        *ngFor="let item of messageService.chatList[1]"
+        *ngFor="let item of filteredChatList"
       >
         <div
           class="text-start d-flex justify-content-between chat-single px-5 py-2"

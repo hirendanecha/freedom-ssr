@@ -23,6 +23,8 @@ export class ForwardChatModalComponent implements OnInit {
   userList: any = [];
   selectedItems: any[] = [];
   addedInvitesList: any[] = [];
+  textInput: string = '';
+  filteredChatList = [];
 
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
@@ -41,36 +43,50 @@ export class ForwardChatModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.message = this.data;
+    this.getUserList();
   }
 
   getUserList(): void {
-    this.customerService.getProfileList(this.searchText).subscribe({
-      next: (res: any) => {
-        if (res?.data?.length > 0) {
-          const userList = res.data.filter((user: any) => {
-            return user.Id !== this.sharedService?.userData?.Id;
-          });
-          this.userList = userList.filter((user) => {
-            return !this.addedInvitesList.some(
-              (invite) => invite.Id === user.Id
-            );
-          });
-          this.userSearchNgbDropdown.open();
-        } else {
-          this.userList = [];
-          this.userSearchNgbDropdown.close();
+    // this.customerService.getProfileList(this.searchText).subscribe({
+    //   next: (res: any) => {
+    //     if (res?.data?.length > 0) {
+    //       const userList = res.data.filter((user: any) => {
+    //         return user.Id !== this.sharedService?.userData?.Id;
+    //       });
+    //       this.userList = userList.filter((user) => {
+    //         return !this.addedInvitesList.some(
+    //           (invite) => invite.Id === user.Id
+    //         );
+    //       });
+    //       this.userSearchNgbDropdown.open();
+    //     } else {
+    //       this.userList = [];
+    //       this.userSearchNgbDropdown.close();
+    //     }
+    //   },
+    //   error: () => {
+    //     this.userList = [];
+    //     this.userSearchNgbDropdown.close();
+    //   },
+    // });
+    if (this.searchText) {
+      const searchTextLower = this.searchText.toLowerCase();
+      this.filteredChatList = this.messageService.chatList[1].filter(
+        (ele: any) => {
+          return (
+            ele?.Username?.toLowerCase().includes(searchTextLower) ||
+            ele?.groupName?.toLowerCase().includes(searchTextLower)
+          );
         }
-      },
-      error: () => {
-        this.userList = [];
-        this.userSearchNgbDropdown.close();
-      },
-    });
+      );
+    } else {
+      this.filteredChatList = this.messageService.chatList[1];
+    }
   }
 
   addProfile(user) {
-    this.messageService.chatList.push(user);
-    this.searchText = '';
+    // this.messageService.chatList.push(user);
+    // this.searchText = '';
   }
 
   isFileOrVideo(media: any): boolean {
@@ -103,7 +119,12 @@ export class ForwardChatModalComponent implements OnInit {
   }
 
   sendUserMessage(message: any) {
+    const messageText =
+      this.textInput !== null
+        ? this.encryptDecryptService?.encryptUsingAES256(this.textInput)
+        : null;
     const data = {
+      messageText: messageText,
       roomId: message?.roomId || null,
       groupId: message?.groupId || null,
       sentBy: this.profileId,

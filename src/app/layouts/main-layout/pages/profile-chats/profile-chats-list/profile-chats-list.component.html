@@ -341,6 +341,7 @@
                       </ng-container>
                     </div>
                     <div
+                    *ngIf="message?.messageText !== null || message.parentMessageId"
                       class="message d-flex gap-3 flex-column"
                     >
                       <ng-container *ngIf="message.parentMessageId">
@@ -577,6 +578,7 @@
                 </ng-container>
 
                 <div
+                *ngIf="message?.messageText !== null || message.parentMessageId"
                   class="d-flex flex-row-reverse gap-2 drop-options"
                 >
                   <div class="btn-group d-flex options">
