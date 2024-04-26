@@ -144,8 +144,8 @@ export class IncomingcallModalComponent
         const message = `Call declined`;
         this.sendMessage(message);
       } else {
-        const message = `You have a missed call.`;
-        this.sendMessage(message);
+        // const message = `You have a missed call.`;
+        // this.sendMessage(message);
       }
       this.activateModal.close('cancel');
     });
