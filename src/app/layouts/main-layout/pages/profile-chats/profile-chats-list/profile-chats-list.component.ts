@@ -952,10 +952,11 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.calldata = data;
     modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
-
-    if (this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
-      this.socketService?.startCall(data, (data: any) => {});
-    } else {
+    
+    this.socketService?.startCall(data, (data: any) => {});
+    // if (this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
+    // } else {
+    // }
       const buzzRingData = {
         ProfilePicName: this.groupData?.ProfileImage ||this.sharedService?.userData?.ProfilePicName,
         Username: this.groupData?.groupName || this.sharedService?.userData?.Username,
@@ -972,20 +973,14 @@ export class ProfileChatsListComponent
         // next: (data: any) => {},
         error: (err) => {console.log(err)}
       });
-    }
     modalRef.result.then((res) => {
       if (!window.document.hidden) {
         if (res === 'missCalled') {
           this.chatObj.msgText = 'You have a missed call';
           this.sendMessage();
 
-          if (
-            !this.sharedService?.onlineUserList.includes(
-              this.userChat?.profileId
-            )
-          ) {
-            const buzzRingData = {
-              ProfilePicName:
+          const buzzRingData = {
+            ProfilePicName:
                 this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
               Username: this.groupData?.groupName || this?.userChat.Username,
               actionType: 'DC',
@@ -1004,7 +999,6 @@ export class ProfileChatsListComponent
             });
           }
         }
-      }
     });
   }
 

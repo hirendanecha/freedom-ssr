@@ -13,6 +13,7 @@ import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
 import { SoundControlService } from '../../services/sound-control.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { CustomerService } from '../../services/customer.service';
 
 @Component({
   selector: 'app-incoming-call-modal',
@@ -37,6 +38,7 @@ export class IncomingcallModalComponent
     private socketService: SocketService,
     public encryptDecryptService: EncryptDecryptService,
     private soundControlService: SoundControlService,
+    private customerService: CustomerService,
     private router: Router
   ) {
     this.profileId = +localStorage.getItem('profileId');
@@ -74,22 +76,24 @@ export class IncomingcallModalComponent
   }
 
   ngOnInit(): void {}
-  
+
   pickUpCall(): void {
     this.sound?.stop();
     clearTimeout(this.hangUpTimeout);
     if (!this.currentURL.includes(this.calldata?.link)) {
       this.currentURL.push(this.calldata.link);
       // window.open(this.calldata.link, '_blank');
-      
+
       // console.log('incomin', this.calldata.link);
       // this.router.navigate([`/appointment-call/${this.calldata.link}`]);
       const callId = this.calldata.link.replace('https://facetime.tube/', '');
       const chatDataPass = {
         roomId: this.calldata.roomId || null,
-        groupId: this.calldata.groupId || null
+        groupId: this.calldata.groupId || null,
       };
-      this.router.navigate([`/freedom-call/${callId}`], { state: { chatDataPass } });      
+      this.router.navigate([`/freedom-call/${callId}`], {
+        state: { chatDataPass },
+      });
       // this.router.navigate([`/freedom-call/${callId}`]);
       this.sound?.stop();
     }
@@ -104,6 +108,21 @@ export class IncomingcallModalComponent
         this.calldata.notificationToProfileId || this.profileId,
       link: this.calldata.link,
     };
+
+    const buzzRingData = {
+      actionType: 'DC',
+      notificationByProfileId: this.profileId,
+      notificationDesc: 'decline call...',
+      notificationToProfileId: this.calldata.notificationToProfileId,
+      domain: 'freedom.buzz',
+    };
+    this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
+      // next: (data: any) => {},
+      error: (err) => {
+        console.log(err);
+      },
+    });
+
     this.socketService?.pickUpCall(data, (data: any) => {
       return;
     });
