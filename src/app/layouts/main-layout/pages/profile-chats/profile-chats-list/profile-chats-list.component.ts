@@ -957,6 +957,7 @@ export class ProfileChatsListComponent
     // if (this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
     // } else {
     // }
+    if (this.userChat?.roomId) {
       const buzzRingData = {
         ProfilePicName: this.groupData?.ProfileImage ||this.sharedService?.userData?.ProfilePicName,
         Username: this.groupData?.groupName || this.sharedService?.userData?.Username,
@@ -973,6 +974,26 @@ export class ProfileChatsListComponent
         // next: (data: any) => {},
         error: (err) => {console.log(err)}
       });
+    } else if(this.userChat?.groupId){
+      let groupMembers = this.groupData?.memberList?.filter(item => item.profileId !== this.profileId)?.map(item => item.profileId);
+      const buzzRingGroupData = {
+        ProfilePicName: this.groupData?.ProfileImage ||this.sharedService?.userData?.ProfilePicName,
+        Username: this.groupData?.groupName || this.sharedService?.userData?.Username,
+        actionType: "VC",
+        notificationByProfileId: this.profileId,
+        link: `${this.webUrl}freedom-call/${originUrl}`,
+        roomId: this.userChat?.roomId || null,
+        groupId: this.userChat?.groupId || null,
+        notificationDesc: this.groupData?.groupName ||this.sharedService?.userData?.Username + " incoming call...",
+        notificationToProfileIds: groupMembers,
+        domain: 'freedom.buzz',
+      };
+      this.customerService.startGroupCallToBuzzRing(buzzRingGroupData).subscribe({
+        // next: (data: any) => {},
+        error: (err) => {console.log(err)}
+      });
+    }
+
     modalRef.result.then((res) => {
       if (!window.document.hidden) {
         if (res === 'missCalled') {
