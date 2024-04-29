@@ -341,10 +341,10 @@
                       </ng-container>
                     </div>
                     <div
-                    *ngIf="message?.messageText !== null || message.parentMessageId"
+                    *ngIf="message?.messageText !== null || message?.parentMessageId"
                       class="message d-flex gap-3 flex-column"
                     >
-                      <ng-container *ngIf="message.parentMessageId">
+                      <ng-container *ngIf="message?.parentMessageId">
                         <div class="parent-replay-alt">
                           <fa-icon [icon]="['fas', 'reply']" />
                           <ng-container
@@ -578,7 +578,7 @@
                 </ng-container>
 
                 <div
-                *ngIf="message?.messageText !== null || message.parentMessageId"
+                *ngIf="message?.messageText !== null || message?.parentMessageId"
                   class="d-flex flex-row-reverse gap-2 drop-options"
                 >
                   <div class="btn-group d-flex options">
@@ -634,7 +634,7 @@
                   </div>
 
                   <div class="message d-flex gap-3 flex-column">
-                    <ng-container *ngIf="message.parentMessageId">
+                    <ng-container *ngIf="message?.parentMessageId">
                       <div class="parent-replay">
                         <fa-icon [icon]="['fas', 'reply']" />
                         <ng-container
