@@ -355,7 +355,7 @@
                     *ngIf="message?.messageText !== null || message?.parentMessageId"
                       class="message d-flex gap-3 flex-column"
                     >
-                      <ng-container *ngIf="message.parentMessageId">
+                      <ng-container *ngIf="message?.parentMessageId">
                         <div class="parent-replay-alt">
                           <fa-icon [icon]="['fas', 'reply']" />
                           <ng-container
@@ -645,7 +645,7 @@
                   </div>
 
                   <div class="message d-flex gap-3 flex-column">
-                    <ng-container *ngIf="message.parentMessageId">
+                    <ng-container *ngIf="message?.parentMessageId">
                       <div class="parent-replay">
                         <fa-icon [icon]="['fas', 'reply']" />
                         <ng-container
