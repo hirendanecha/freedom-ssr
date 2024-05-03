@@ -674,6 +674,7 @@ export class ProfileChatsListComponent
 
   pdfView(pdfUrl) {
     window.open(pdfUrl);
+    this.toastService.success('Download successfully initiated.');
   }
 
   isFileOrVideo(media: any): boolean {
@@ -1114,6 +1115,7 @@ export class ProfileChatsListComponent
     const pdfLink = document.createElement('a');
     pdfLink.href = data;
     pdfLink.click();
+    this.toastService.success('Download successfully initiated.');
   }
 
   openMediaGallery() {
