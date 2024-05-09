@@ -33,6 +33,8 @@ import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ForwardChatModalComponent } from 'src/app/@shared/modals/forward-chat-modal/forward-chat-modal.component';
+import { v4 as uuid } from 'uuid';
+
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -953,11 +955,14 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.calldata = data;
     modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
-    
+
     this.socketService?.startCall(data, (data: any) => {});
     // if (this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
     // } else {
     // }
+    let uuId = uuid();
+    console.log(uuId);
+    localStorage.setItem('uuId', uuId);
     if (this.userChat?.roomId) {
       const buzzRingData = {
         ProfilePicName: this.groupData?.ProfileImage ||this.sharedService?.userData?.ProfilePicName,
@@ -970,6 +975,7 @@ export class ProfileChatsListComponent
         notificationDesc: this.groupData?.groupName ||this.sharedService?.userData?.Username + " incoming call...",
         notificationToProfileId: this.userChat.profileId,
         domain: 'freedom.buzz',
+        uuId: uuId,
       };
       this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
         // next: (data: any) => {},
@@ -988,11 +994,12 @@ export class ProfileChatsListComponent
         notificationDesc: this.groupData?.groupName ||this.sharedService?.userData?.Username + " incoming call...",
         notificationToProfileIds: groupMembers,
         domain: 'freedom.buzz',
+        uuId: uuId,
       };
       this.customerService.startGroupCallToBuzzRing(buzzRingGroupData).subscribe({
-        // next: (data: any) => {},
+          // next: (data: any) => {},
         error: (err) => {console.log(err)}
-      });
+        });
     }
 
     modalRef.result.then((res) => {
@@ -1000,27 +1007,29 @@ export class ProfileChatsListComponent
         if (res === 'missCalled') {
           this.chatObj.msgText = 'You have a missed call';
           this.sendMessage();
+          const uuId = localStorage.getItem('uuId');
 
           const buzzRingData = {
             ProfilePicName:
-                this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
-              Username: this.groupData?.groupName || this?.userChat.Username,
-              actionType: 'DC',
-              notificationByProfileId: this.profileId,
-              notificationDesc:
-                this.groupData?.groupName ||
-                this?.userChat.Username + 'incoming call...',
-              notificationToProfileId: this.userChat.profileId,
-              domain: 'freedom.buzz',
-            };
-            this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
-              // next: (data: any) => {},
-              error: (err) => {
-                console.log(err);
-              },
-            });
-          }
+              this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+            Username: this.groupData?.groupName || this?.userChat.Username,
+            actionType: 'DC',
+            notificationByProfileId: this.profileId,
+            notificationDesc:
+              this.groupData?.groupName ||
+              this?.userChat.Username + 'incoming call...',
+            notificationToProfileId: this.userChat.profileId,
+            domain: 'freedom.buzz',
+            uuId: uuId,
+          };
+          this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
+            // next: (data: any) => {},
+            error: (err) => {
+              console.log(err);
+            },
+          });
         }
+      }
     });
   }
 
