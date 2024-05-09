@@ -82,7 +82,8 @@
           }
         }
         .chat-content-sidepanel {
-          height: calc(100vh - 160px) !important;
+          height: calc(100vh - 205px) !important;
+          // height: calc(100vh - 160px) !important;
           overflow-y: auto;
         }
       }
@@ -175,7 +176,7 @@
       bottom: -20px;
 
       .tag-input-div {
-        margin-left: 50px;
+        // margin-left: 50px;
         background-color: var(--body-color);
         max-width: calc(100% - 5px) !important;
         width: 100% !important;
@@ -188,7 +189,7 @@
         top: unset !important;
         right: unset !important;
         left: -7px;
-        bottom: 0px;
+        bottom: 48px;
       }
     }
   }

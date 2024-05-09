@@ -3,6 +3,8 @@ import { MessageService } from '../../services/message.service';
 import * as moment from 'moment';
 import { NgbActiveOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GalleryImgPreviewComponent } from '../gallery-img-preview/gallery-img-preview.component';
+import { ToastService } from '../../services/toast.service';
+
 @Component({
   selector: 'app-media-gallery',
   templateUrl: './media-gallery.component.html',
@@ -20,7 +22,8 @@ export class MediaGalleryComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     public activeOffCanvas: NgbActiveOffcanvas,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastService: ToastService
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -100,12 +103,14 @@ export class MediaGalleryComponent implements OnInit {
 
   pdfView(pdfUrl: string) {
     window.open(pdfUrl);
+    this.toastService.success('Download successfully initiated.');
   }
 
   downloadPdf(data): void {
     const pdfLink = document.createElement('a');
     pdfLink.href = data;
     pdfLink.click();
+    this.toastService.success('Download successfully initiated.');
   }
 
   openImagePreview(src: string) {

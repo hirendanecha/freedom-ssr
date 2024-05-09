@@ -292,12 +292,20 @@
         overflow-y: auto !important;
         // height: 44px;
         padding: 9px;
+
+        @media (max-width:575px) {
+          margin-left: 0px;
+        }
       }
       .select-emaojies {
         top: unset !important;
         right: unset !important;
         left: -7px;
         bottom: 0px;
+        
+        @media (max-width:575px) {
+          bottom: 40px;
+        }
       }
     }
   }
