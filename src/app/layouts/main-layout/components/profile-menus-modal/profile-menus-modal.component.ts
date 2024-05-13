@@ -48,6 +48,9 @@ export class ProfileMenusModalComponent {
         case 'setting':
           this.goToSetting();
           break;
+          case 'support':
+            this.goToSupport();
+            break;
         case 'change-password':
           this.forgotPasswordOpen();
           break;
@@ -90,6 +93,9 @@ export class ProfileMenusModalComponent {
   goToViewProfile() {
     // window.open(`settings/view-profile/${profileId}`, '_blank')
     this.router.navigate([`settings/view-profile/${this.profileId}`]);
+  }
+  goToSupport(){
+    this.router.navigate([`/settings/report-bugs`])
   }
 
   forgotPasswordOpen() {
