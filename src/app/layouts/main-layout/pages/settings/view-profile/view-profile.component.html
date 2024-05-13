@@ -83,7 +83,7 @@
   <div class="d-lg-flex d-block w-100 gap-5 min-vh-100">
     <div class="flex-column mb-15 w-100">
       <ng-container *ngIf="activeTab === 1">
-        <app-post-list
+        <app-post-list class="post-card"
           parentComponent="ViewProfileComponent"
           [id]="profileId"
         />
@@ -265,7 +265,7 @@
       </ng-container>
     </div>
 
-    <ng-container *ngIf="(breakpointService?.screen | async).xl.gatherThen">
+    <ng-container *ngIf="(breakpointService?.screen | async).xxl.gatherThen">
       <div class="my-list-sidebar">
         <app-right-sidebar />
       </div>
