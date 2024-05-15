@@ -1002,7 +1002,7 @@ export class ProfileChatsListComponent
         let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
         const messageText = `<div>${content
           ?.replace(copyImage, '')
-          ?.replace(/\<br\>/gi, '')
+          // ?.replace(/\<br\>/gi, '')
           ?.replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
         const base64Image = copyImage
           .trim()
