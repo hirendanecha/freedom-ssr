@@ -427,6 +427,10 @@ export class ProfileChatsListComponent
 
   // getMessages
   getMessageList(): void {
+    const tagUserInput = document.querySelector("app-tag-user-input .tag-input-div") as HTMLInputElement;
+    if (tagUserInput) {
+      tagUserInput.focus();
+    }
     const messageObj = {
       // page: 1,
       page: this.activePage,
@@ -732,6 +736,10 @@ export class ProfileChatsListComponent
   }
 
   replyMsg(msgObj): void {
+    const tagUserInput = document.querySelector("app-tag-user-input .tag-input-div") as HTMLInputElement;
+    if (tagUserInput) {
+      tagUserInput.focus();
+    }
     this.chatObj.parentMessageId = msgObj?.id;
     this.replyMessage.msgText = msgObj.messageText;
     this.replyMessage.createdDate = msgObj?.createdDate;
