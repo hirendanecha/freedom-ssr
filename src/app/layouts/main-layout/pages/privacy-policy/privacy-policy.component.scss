@@ -1,0 +1,47 @@
+.privacy-notice {
+  padding: 20px;
+  // background-color: #f9f9f9;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  color: #333;
+
+  &__title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  &__intro,
+  &__commitment,
+  &__acceptance,
+  &__explanation {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+
+  &__link {
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__subtitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  &__list {
+    padding-left: 20px;
+    list-style-type: disc;
+
+    &-item {
+      margin-bottom: 10px;
+    }
+  }
+}

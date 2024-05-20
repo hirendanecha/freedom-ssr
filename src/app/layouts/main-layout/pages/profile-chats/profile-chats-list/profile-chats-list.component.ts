@@ -441,6 +441,10 @@ export class ProfileChatsListComponent
 
   // getMessages
   getMessageList(): void {
+    const tagUserInput = document.querySelector("app-tag-user-input .tag-input-div") as HTMLInputElement;
+    if (tagUserInput) {
+      tagUserInput.focus();
+    }
     const messageObj = {
       // page: 1,
       page: this.activePage,
@@ -748,6 +752,10 @@ export class ProfileChatsListComponent
   }
 
   replyMsg(msgObj): void {
+    const tagUserInput = document.querySelector("app-tag-user-input .tag-input-div") as HTMLInputElement;
+    if (tagUserInput) {
+      tagUserInput.focus();
+    }
     this.chatObj.parentMessageId = msgObj?.id;
     this.replyMessage.msgText = msgObj.messageText;
     this.replyMessage.createdDate = msgObj?.createdDate;
@@ -778,6 +786,10 @@ export class ProfileChatsListComponent
     });
     modalRef.componentInstance.data = msgObj;
     modalRef.result.then((res) => {
+      if (res === 'success') {
+        this.filteredMessageList = [];
+        this.getMessageList();
+      }
     });
   }
 
@@ -1049,7 +1061,7 @@ export class ProfileChatsListComponent
         let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
         const messageText = `<div>${content
           ?.replace(copyImage, '')
-          ?.replace(/\<br\>/gi, '')
+          // ?.replace(/\<br\>/gi, '')
           ?.replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
         const base64Image = copyImage
           .trim()

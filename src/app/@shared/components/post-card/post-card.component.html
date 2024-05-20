@@ -91,9 +91,21 @@
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                 alt="avatar"
               />
+              <div class="d-flex gap-3 align-items-baseline">
               <p class="cursor mt-2">
                 {{ (post?.Username || post?.FirstName).split(" ").join("") }}
               </p>
+
+              <button>
+                <a
+                  class="droplist d-flex align-items-center gap-2"
+                  [appCopyClipboard]="post.Username"
+                >
+                  <fa-icon [icon]="['fas', 'copy']" />
+                </a>
+              </button>
+            </div>
+              
               <div
                 class="d-flex"
                 *ngIf="
@@ -128,6 +140,7 @@
                     <span>Stop See First</span>
                   </a>
                 </button>
+                
               </div>
               <!-- <div
                 class="d-flex"
@@ -572,7 +585,7 @@
                         />
 
                         <div ngbDropdownMenu class="dropdown-menu">
-                          <button ngbDropdownItem>
+                          <button ngbDropdownItem *ngIf="comment.profileId == profileId">
                             <a
                               class="droplist d-flex align-items-center gap-2"
                               (click)="editComment(comment)"
@@ -775,7 +788,7 @@
                                 />
 
                                 <div ngbDropdownMenu class="dropdown-menu">
-                                  <button ngbDropdownItem>
+                                  <button ngbDropdownItem *ngIf="reply.profileId == profileId">
                                     <a
                                       class="droplist d-flex align-items-center gap-2"
                                       (click)="editComment(reply)"

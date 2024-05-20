@@ -277,7 +277,8 @@ export class SharedModule {
       faEye,
       faEyeSlash,
       faTicketAlt,
-      faPhotoFilm
+      faPhotoFilm,
+      faCopy
     );
   }
 }

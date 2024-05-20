@@ -3,6 +3,7 @@ import { RouterModule, Routes, mapToCanActivate } from '@angular/router';
 import { MainLayoutComponent } from './main-layout.component';
 import { AuthenticationGuard } from 'src/app/@shared/guards/authentication.guard';
 import { AppointmentCallComponent } from 'src/app/@shared/components/appointment-call/appointment-call.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 
 const routes: Routes = [
   {
@@ -101,6 +102,17 @@ const routes: Routes = [
           isShowChatModule: true
         },
         // canActivate: mapToCanActivate([AuthenticationGuard]),
+      },
+      {
+        path: 'privacy-policy',
+        component: PrivacyPolicyComponent,
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false,
+          isShowChatListSideBar: false,
+          isShowChatModule: false
+        },
       },
     ],
   },

@@ -2,6 +2,15 @@ h5 {
   text-transform: none;
 }
 
+.c-pdf-show{
+  overflow: hidden;
+  display: -webkit-inline-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  text-overflow: ellipsis;
+}
+
 ::ng-deep {
   mention-list {
     top: 70px !important;
