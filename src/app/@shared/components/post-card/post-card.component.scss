@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 663px;
   // overflow: hidden;
 
   .post-item {
@@ -69,7 +70,8 @@
     }
 
     .posted-wrap-text {
-      max-width: 515px;
+      // max-width: 515px;
+      max-width: 478px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
