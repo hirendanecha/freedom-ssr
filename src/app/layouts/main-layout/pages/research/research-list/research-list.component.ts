@@ -202,6 +202,7 @@ export class ResearchListComponent {
       reqObj['pdfUrl'] = this.postFile;
       reqObj['streamname'] = this.postVideo;
       reqObj['thumbfilename'] = this.postThumbfilename;
+      reqObj['posttype'] = 'R';
       this.socketService?.createOrEditPost(reqObj);
       this.toastService.success('Research added successfully.');
       this.resetPost();
