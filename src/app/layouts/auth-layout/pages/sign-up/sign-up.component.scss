@@ -5,11 +5,19 @@
     height: 490px;
     background-size: cover;
     background-repeat: no-repeat;
+
+    @media (min-width: 990px) and (max-width: 1400px) {
+      width: 400px;
+      height: 400px;
+    }
     .hrero-section {
       background: var(--hero-section-bg);
       padding: 50px;
       position: relative;
       height: 490px;
+      @media (min-width: 990px) and (max-width: 1400px) {
+        height: 400px;
+      }
       .about-freedom {
         position: absolute;
         top: 50%;
@@ -40,4 +48,11 @@
   .form-check-label{
     text-transform: none;
   }
+}
+.check-box{
+  width: 20px;
+  height: 20px;
+}
+.font-check{
+  font-size: 20px;
 }

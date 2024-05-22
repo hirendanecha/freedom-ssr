@@ -1,14 +1,23 @@
 <div class="row mt-8 login-content">
-  <div class="col-lg-6 d-lg-flex d-none align-items-center">
-    <div class="m-10 banner-sction">
-      <div class="hrero-section">
-        <div class="about-freedom" routerLink="/">
-          <h3 class="text-center">
-            The Umbrella platform for All freedom based projects worldwide
-          </h3>
-          <img src="/assets/images/banner/freedom-buzz.jpeg" alt="" />
+  <div class="col-lg-6 d-flex flex-column align-items-xl-end">
+    <div class="mb-3 d-flex justify-content-center mt-17">
+      <div class="img-pick d-flex flex-column justify-content-center mb-5">
+      <label class="form-label"
+        >Profile Picture<span class="text-danger"></span
+      ></label>
+      <app-img-picker classes="h-300-px w-300-px" (onFileChange)="selectFiles($event)" />
+     </div>
+    </div>
+ 
+    <div class="d-lg-block d-none banner-sction">
+        <div class="hrero-section">
+          <div class="about-freedom" routerLink="/">
+            <h3 class="text-center">
+              The Umbrella platform for All freedom based projects worldwide
+            </h3>
+            <!-- <img src="/assets/images/banner/freedom-buzz.jpeg" alt="" /> -->
+          </div>
         </div>
-      </div>
     </div>
   </div>
 
@@ -56,12 +65,19 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-6 mb-3 d-flex flex-column">
+        <div class="col-12 col-md-6 mb-3 d-none px-6">
           <label class="form-label"
             >Profile Picture<span class="text-danger"></span
           ></label>
           <app-img-picker (onFileChange)="selectFiles($event)" />
         </div>
+        <div class="col-12 col-md-6 mb-3 single-box px-6">
+          <p class="align-items-center text-start my-auto mt-3 font-check">Hide your personal information and remain anonymous on Freedom.buzz.<br>Only your User Name will be displayed</p>
+          <div class="d-flex justify-content-end">
+          <input type="checkbox" class="my-3 check-box" formControlName="Anonymous" />
+          <span class="text-danger">*</span>
+        </div>
+      </div>
 
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
@@ -314,7 +330,7 @@
         <div id="captcha" #captcha></div>
       </div>
       <div class="form-check ps-0 my-4 d-flex">
-        <input type="checkbox" class="p-0" formControlName="TermAndPolicy" />
+        <input type="checkbox" class="p-0 check-box" formControlName="TermAndPolicy" />
         <label class="form-check-label ms-2 c-pointer">
           I agree to the Freedom.buzz <a href="/user-agreement" target="_blank">Terms of Use</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
           <span class="text-danger">*</span>

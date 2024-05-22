@@ -59,6 +59,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     City: new FormControl('', [Validators.required]),
     County: new FormControl('', [Validators.required]),
     TermAndPolicy: new FormControl(false, Validators.required),
+    Anonymous: new FormControl(false, Validators.required),
   });
   @ViewChild('captcha', { static: false }) captchaElement: ElementRef;
   constructor(
@@ -227,7 +228,8 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     // this.profileImg?.file?.name &&
     if (
       this.registerForm.valid &&
-      this.registerForm.get('TermAndPolicy').value === true
+      this.registerForm.get('TermAndPolicy').value === true &&       
+      this.registerForm.get('Anonymous').value === true
     ) {
       if (!this.validatepassword()) {
         return;
