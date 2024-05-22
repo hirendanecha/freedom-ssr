@@ -4,6 +4,7 @@ import { MainLayoutComponent } from './main-layout.component';
 import { AuthenticationGuard } from 'src/app/@shared/guards/authentication.guard';
 import { AppointmentCallComponent } from 'src/app/@shared/components/appointment-call/appointment-call.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { UserAgreementComponent } from './pages/user-agreement/user-agreement.component';
 
 const routes: Routes = [
   {
@@ -106,6 +107,17 @@ const routes: Routes = [
       {
         path: 'privacy-policy',
         component: PrivacyPolicyComponent,
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false,
+          isShowChatListSideBar: false,
+          isShowChatModule: false
+        },
+      },
+      {
+        path: 'user-agreement',
+        component: UserAgreementComponent,
         data: {
           isShowLeftSideBar: false,
           isShowRightSideBar: false,
