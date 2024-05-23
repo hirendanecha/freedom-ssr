@@ -13,6 +13,7 @@ import { ConfirmationModalComponent } from 'src/app/@shared/modals/confirmation-
 import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { take } from 'rxjs';
 import * as moment from 'moment';
+import { AppQrModalComponent } from 'src/app/@shared/modals/app-qr-modal/app-qr-modal.component';
 
 @Component({
   selector: 'app-profile-chat-list',
@@ -39,6 +40,9 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     isShowChatListSideBar: true,
   };
   oldChat: any = {};
+
+  isMessageSoundEnabled: boolean = true;
+  isCallSoundEnabled: boolean = true;
 
   constructor(
     private renderer: Renderer2,
@@ -138,6 +142,19 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
           }
         });
       }
+    });
+  }
+
+  toggleSoundPreference(property: string, ngModelValue: boolean): void {
+    const soundPreferences =
+      JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    soundPreferences[property] = ngModelValue ? 'Y' : 'N';
+    localStorage.setItem('soundPreferences', JSON.stringify(soundPreferences));
+  }
+
+  appQrmodal(){
+    const modalRef = this.modalService.open(AppQrModalComponent, {
+      centered: true,
     });
   }
 

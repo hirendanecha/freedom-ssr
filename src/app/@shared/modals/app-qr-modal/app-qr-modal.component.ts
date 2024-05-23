@@ -1,6 +1,7 @@
 import { Component, Input, NgZone } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../services/toast.service';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -11,16 +12,20 @@ import { ToastService } from '../../services/toast.service';
 export class AppQrModalComponent {
   @Input() store: string;
   @Input() image: string;
-  @Input() title:string | undefined = 'Buzz Ring App'
+  @Input() title:string | undefined = 'BuzzRing App'
   showPlayQr :boolean = false
   showStoreQr :boolean = false
   isInnerWidthSmall: boolean;
   playStore = 'https://s3.us-east-1.wasabisys.com/freedom-social/BuzzRing.apk'
+  qrLink = '';
 
   constructor(public activeModal: NgbActiveModal,
     private toastService: ToastService,
     private ngZone:NgZone
   ) {
+    const profileId = +localStorage.getItem('profileId');
+    const authToken = localStorage.getItem('auth-token')
+    this.qrLink = `${environment.qrLink}${profileId}?token=${authToken}`;
     this.isInnerWidthSmall = window.innerWidth < 768;
     this.ngZone.runOutsideAngular(() => {
       window.addEventListener('resize', this.onResize.bind(this));
@@ -54,5 +59,10 @@ export class AppQrModalComponent {
     appLink.href = this.playStore;
     appLink.click();
     this.toastService.success('Download successfully initiated.');
+  }
+
+  closePreview(){
+    this.showPlayQr = false;
+    this.showStoreQr = false;
   }
 }

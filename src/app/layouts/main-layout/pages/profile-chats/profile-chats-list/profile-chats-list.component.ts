@@ -115,8 +115,8 @@ export class ProfileChatsListComponent
   ) {
     this.userId = +this.route.snapshot.paramMap.get('id');
     this.profileId = +localStorage.getItem('profileId');
-    const authToken = localStorage.getItem('auth-token')
-    this.qrLink = `${environment.qrLink}${this.profileId}?token=${authToken}`;
+    // const authToken = localStorage.getItem('auth-token')
+    // this.qrLink = `${environment.qrLink}${this.profileId}?token=${authToken}`;
 
     const data = {
       title: 'Buzz Chat',
