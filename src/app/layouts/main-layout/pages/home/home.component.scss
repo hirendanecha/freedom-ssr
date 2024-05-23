@@ -12,7 +12,7 @@
     text-overflow: ellipsis;
   }
   .share-post {
-    max-width: 696px;
+    max-width: 663px;
     width: 100%;
   }
 
@@ -33,6 +33,12 @@
   //     width: 70px;
   //   }
   // }
+
+  .custom-input-area {
+    @media (max-width: 575px) {
+      max-width: calc(100% - 60px);
+    }
+  }
 }
 .search-user-list {
   max-height: 332px;
@@ -150,5 +156,23 @@
 
   ngb-tooltip-window {
     z-index: 1 !important;
+  }
+}
+.home-input ::ng-deep app-tag-user-input {
+  .tag-input-div {
+    @media (min-width: 575px) and (max-width: 767px) {
+      max-width: 395px;
+    }
+    @media (max-width: 575px) {
+      max-width: unset;
+      width: 100%;
+    }
+  }
+  .select-emaojies {
+    @media (max-width: 575px) {
+      right: -10px;
+      top: unset;
+      bottom: -8px;
+    }
   }
 }

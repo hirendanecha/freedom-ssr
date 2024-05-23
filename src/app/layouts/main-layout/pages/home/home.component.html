@@ -124,13 +124,13 @@
         loading="lazy"
         data-src="{{ sharedService?.userData?.ProfilePicName }}"
         onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-        class="w-56-px h-56-px rounded-4"
+        class="w-56-px h-56-px d-none d-sm-flex rounded-4"
         alt="icon"
       />
 
       <!-- placeholder="Write something to post.." -->
       <div class="w-100 position-relative">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center home-input">
           <app-tag-user-input
             placeholder="Post a link or image or file or let's just talk!"
             [value]="postMessageInputValue"
@@ -183,104 +183,105 @@
             />
           </div>
         </ng-container>
-
-        <ul
-          class="d-flex justify-content-between justify-content-lg-between flex-wrap ps-0 mb-0 gap-1 gap-sm-5 pt-3 pt-sm-5"
-        >
-          <li
-            class="d-flex gap-2 align-items-center"
-            ngbTooltip="Comming Soon!"
-            placement="bottom"
+        <div class="custom-input-area">
+          <ul
+            class="d-flex justify-content-between justify-content-lg-between flex-wrap ps-0 mb-0 gap-1 gap-sm-5 pt-3 pt-sm-5"
           >
-            <!-- <li
-            class="d-flex gap-2 align-items-center"
-            data-toggle="tooltip"
-            data-placement="bottom"
-            title="Comming Soon!"
-          > -->
-            <fa-icon [icon]="['fas', 'satellite-dish']" class="font-20-px" />
-            <span>Live</span>
-          </li>
-
-          <li
-            class="d-flex align-items-center gap-2 pointer-events"
-            cursor
-            (click)="postImage.click()"
-          >
-            <input
-              type="file"
-              #postImage
-              hidden
-              class="d-none"
-              accept="image/*"
-              (change)="onPostFileSelect($event)"
-              [disabled]="postData?.meta?.metaimage"
-            />
-            <fa-icon [icon]="['fas', 'image']" class="font-20-px" />
-            <span>Image</span>
-          </li>
-          <li class="d-flex gap-2 align-items-center" (click)="pdfFile.click()">
-            <!-- ngbTooltip="Comming Soon!"
-            placement="bottom" -->
-            <input
-              type="file"
-              #pdfFile
-              hidden
-              class="d-none"
-              accept="application/pdf"
-              (change)="onPostFileSelect($event)"
-              [disabled]="postData?.meta?.metaimage"
-            />
-            <fa-icon [icon]="['fas', 'file']" class="font-20-px" />
-            <span>File</span>
-          </li>
-          <li
-            class="d-flex gap-2 align-items-center"
-            (click)="openAlertMessage()"
-          >
-            <!-- ngbTooltip="Comming Soon!"
-            placement="bottom" -->
-            <fa-icon [icon]="['fas', 'video']" class="font-20-px" />
-            <span>Video</span>
-          </li>
-          <!-- <li class="d-flex align-items-center gap-2" (click)="createPost()">
-            <img
-              src="assets/images/icon/emoji-laughing.png"
-              class="max-un"
-              alt="icon"
-            />
-            <span>Fallings/Activity</span>
-          </li> -->
-          <div
-            class="d-none d-sm-flex btn-area gap-3 w-100 d-flex justify-content-end"
-          >
-            <button
-              class="btn btn-sm btn-secondary px-3 py-1 d-flex justify-content-center align-items-center gap-2"
-              *ngIf="
-                postData?.postdescription ||
-                postData?.file?.name ||
-                postData.imageUrl
-              "
-              (click)="resetPost()"
+            <li
+              class="d-flex gap-2 align-items-center"
+              ngbTooltip="Comming Soon!"
+              placement="bottom"
             >
-              Cancel
-              <fa-icon class="c-icon-color" [icon]="['fas', 'xmark']" />
-            </button>
-
-            <button
-              class="btn btn-sm btn-primary px-3 py-1 d-flex justify-content-center align-items-center gap-2 float-end"
-              [disabled]="
-                !(postData?.postdescription || postData?.file?.name) ||
-                buttonClicked
-              "
-              (click)="uploadPostFileAndCreatePost()"
+              <!-- <li
+              class="d-flex gap-2 align-items-center"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Comming Soon!"
+            > -->
+              <fa-icon [icon]="['fas', 'satellite-dish']" class="font-20-px" />
+              <span>Live</span>
+            </li>
+  
+            <li
+              class="d-flex align-items-center gap-2 pointer-events"
+              cursor
+              (click)="postImage.click()"
             >
-              {{ "Post" }}
-
-              <fa-icon class="c-icon-color" [icon]="['fas', 'paper-plane']" />
-            </button>
-          </div>
-        </ul>
+              <input
+                type="file"
+                #postImage
+                hidden
+                class="d-none"
+                accept="image/*"
+                (change)="onPostFileSelect($event)"
+                [disabled]="postData?.meta?.metaimage"
+              />
+              <fa-icon [icon]="['fas', 'image']" class="font-20-px" />
+              <span>Image</span>
+            </li>
+            <li class="d-flex gap-2 align-items-center" (click)="pdfFile.click()">
+              <!-- ngbTooltip="Comming Soon!"
+              placement="bottom" -->
+              <input
+                type="file"
+                #pdfFile
+                hidden
+                class="d-none"
+                accept="application/pdf"
+                (change)="onPostFileSelect($event)"
+                [disabled]="postData?.meta?.metaimage"
+              />
+              <fa-icon [icon]="['fas', 'file']" class="font-20-px" />
+              <span>File</span>
+            </li>
+            <li
+              class="d-flex gap-2 align-items-center"
+              (click)="openAlertMessage()"
+            >
+              <!-- ngbTooltip="Comming Soon!"
+              placement="bottom" -->
+              <fa-icon [icon]="['fas', 'video']" class="font-20-px" />
+              <span>Video</span>
+            </li>
+            <!-- <li class="d-flex align-items-center gap-2" (click)="createPost()">
+              <img
+                src="assets/images/icon/emoji-laughing.png"
+                class="max-un"
+                alt="icon"
+              />
+              <span>Fallings/Activity</span>
+            </li> -->
+            <div
+              class="d-none d-sm-flex btn-area gap-3 w-100 d-flex justify-content-end"
+            >
+              <button
+                class="btn btn-sm btn-secondary px-3 py-1 d-flex justify-content-center align-items-center gap-2"
+                *ngIf="
+                  postData?.postdescription ||
+                  postData?.file?.name ||
+                  postData.imageUrl
+                "
+                (click)="resetPost()"
+              >
+                Cancel
+                <fa-icon class="c-icon-color" [icon]="['fas', 'xmark']" />
+              </button>
+  
+              <button
+                class="btn btn-sm btn-primary px-3 py-1 d-flex justify-content-center align-items-center gap-2 float-end"
+                [disabled]="
+                  !(postData?.postdescription || postData?.file?.name) ||
+                  buttonClicked
+                "
+                (click)="uploadPostFileAndCreatePost()"
+              >
+                {{ "Post" }}
+  
+                <fa-icon class="c-icon-color" [icon]="['fas', 'paper-plane']" />
+              </button>
+            </div>
+          </ul>
+        </div>
       </div>
     </div>
   </ng-container>
