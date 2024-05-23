@@ -93,6 +93,7 @@ import {
   faUserTimes,
   faPhotoFilm,
   faRepeat,
+  faMobile,
   faEyeSlash,
   faTicketAlt,
 } from '@fortawesome/free-solid-svg-icons';
@@ -125,6 +126,9 @@ import { CreateGroupModalComponent } from './modals/create-group-modal/create-gr
 import { EditGroupModalComponent } from './modals/edit-group-modal/edit-group-modal.component';
 import { MediaGalleryComponent } from './components/media-gallery/media-gallery.component';
 import { GalleryImgPreviewComponent } from './components/gallery-img-preview/gallery-img-preview.component';
+import { QRCodeModule } from 'angularx-qrcode';
+import { QrScanModalComponent } from './modals/qrscan-modal/qrscan-modal.component';
+import { AppQrModalComponent } from './modals/app-qr-modal/app-qr-modal.component';
 import { ForwardChatModalComponent } from './modals/forward-chat-modal/forward-chat-modal.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
@@ -158,6 +162,8 @@ const sharedComponents = [
   EditGroupModalComponent,
   MediaGalleryComponent,
   GalleryImgPreviewComponent,
+  QrScanModalComponent,
+  AppQrModalComponent,
   ForwardChatModalComponent,
 ];
 
@@ -175,6 +181,7 @@ const sharedModules = [
   FontAwesomeModule,
   PipeModule,
   MentionModule,
+  QRCodeModule
   // ProfileChartsModule
   // PdfViewerModule
 ];
@@ -266,6 +273,7 @@ export class SharedModule {
       faUserTimes,
       faPhotoFilm,
       faRepeat,
+      faMobile,
       faEye,
       faEyeSlash,
       faTicketAlt,

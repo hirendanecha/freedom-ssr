@@ -22,6 +22,8 @@ import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.
 import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-modal/create-group-modal.component';
 import * as moment from 'moment';
 import { ToastService } from 'src/app/@shared/services/toast.service';
+import { QrScanModalComponent } from 'src/app/@shared/modals/qrscan-modal/qrscan-modal.component';
+import { AppQrModalComponent } from 'src/app/@shared/modals/app-qr-modal/app-qr-modal.component';
 import { MessageService } from 'src/app/@shared/services/message.service';
 
 @Component({
@@ -239,6 +241,12 @@ export class ProfileChatsSidebarComponent
       }
     });
   }
+  appQrmodal(){
+    const modalRef = this.modalService.open(AppQrModalComponent, {
+      centered: true,
+    });
+  }
+  
 
   deleteOrLeaveChat(item) {
     if (item.roomId) {

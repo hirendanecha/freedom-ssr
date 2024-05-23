@@ -30,8 +30,11 @@ import { MediaGalleryComponent } from 'src/app/@shared/components/media-gallery/
 import { EmojiPaths } from 'src/app/@shared/constant/emoji';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { environment } from 'src/environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ForwardChatModalComponent } from 'src/app/@shared/modals/forward-chat-modal/forward-chat-modal.component';
+import { v4 as uuid } from 'uuid';
+
 @Component({
   selector: 'app-profile-chats-list',
   templateUrl: './profile-chats-list.component.html',
@@ -49,7 +52,7 @@ export class ProfileChatsListComponent
     new EventEmitter<any>();
   @ViewChild('chatContent') chatContent!: ElementRef;
 
-  webUrl = environment.webUrl
+  webUrl = environment.webUrl;
   profileId: number;
   chatObj = {
     msgText: null,
@@ -79,6 +82,7 @@ export class ProfileChatsListComponent
   pdfName: string = '';
   viewUrl: string;
   pdfmsg: string;
+  userId: number;
   messageInputValue: string = '';
   firstTimeScroll = false;
   activePage = 1;
@@ -89,6 +93,10 @@ export class ProfileChatsListComponent
   emojiPaths = EmojiPaths;
   originalFavicon: HTMLLinkElement;
   isGallerySidebarOpen: boolean = false;
+  qrLink = '';
+  authToken: string;
+
+
   currentUser: any = []
   // messageList: any = [];
   constructor(
@@ -102,9 +110,13 @@ export class ProfileChatsListComponent
     private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas,
     private customerService: CustomerService,
+    private route:ActivatedRoute,
     private seoService: SeoService,
   ) {
+    this.userId = +this.route.snapshot.paramMap.get('id');
     this.profileId = +localStorage.getItem('profileId');
+    const authToken = localStorage.getItem('auth-token')
+    this.qrLink = `${environment.qrLink}${this.profileId}?token=${authToken}`;
 
     const data = {
       title: 'Buzz Chat',
@@ -201,6 +213,8 @@ export class ProfileChatsListComponent
             profileId: data.sentBy,
           };
           this.socketService.readMessage(readData, (res) => {
+            console.log(res);
+
             return;
           });
         }
@@ -603,7 +617,9 @@ export class ProfileChatsListComponent
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.chatObj.msgText = this.extractImageUrlFromContent(data?.html.replace(/<div>\s*<br\s*\/?>\s*<\/div>\s*$/, ''));
+    this.chatObj.msgText = this.extractImageUrlFromContent(
+      data?.html.replace(/<div>\s*<br\s*\/?>\s*<\/div>\s*$/, '')
+    );
     if (data.html === '') {
       this.resetData();
     }
@@ -952,9 +968,14 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.sound = callSound;
     modalRef.componentInstance.title = 'RINGING...';
 
-    if (this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
-      this.socketService?.startCall(data, (data: any) => {});
-    } else  {
+    this.socketService?.startCall(data, (data: any) => {});
+    // if (this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
+    // } else {
+    // }
+    let uuId = uuid();
+    console.log(uuId);
+    localStorage.setItem('uuId', uuId);
+    if (this.userChat?.roomId) {
       const buzzRingData = {
         ProfilePicName: this.groupData?.ProfileImage ||this.sharedService?.userData?.ProfilePicName,
         Username: this.groupData?.groupName || this.sharedService?.userData?.Username,
@@ -965,34 +986,60 @@ export class ProfileChatsListComponent
         groupId: this.userChat?.groupId || null,
         notificationDesc: this.groupData?.groupName ||this.sharedService?.userData?.Username + " incoming call...",
         notificationToProfileId: this.userChat.profileId,
-        domain: "freedom.buzz"
+        domain: 'freedom.buzz',
+        uuId: uuId,
       };
       this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
         // next: (data: any) => {},
         error: (err) => {console.log(err)}
       });
+    } else if(this.userChat?.groupId){
+      let groupMembers = this.groupData?.memberList?.filter(item => item.profileId !== this.profileId)?.map(item => item.profileId);
+      const buzzRingGroupData = {
+        ProfilePicName: this.groupData?.ProfileImage ||this.sharedService?.userData?.ProfilePicName,
+        Username: this.groupData?.groupName || this.sharedService?.userData?.Username,
+        actionType: "VC",
+        notificationByProfileId: this.profileId,
+        link: `${this.webUrl}freedom-call/${originUrl}`,
+        roomId: this.userChat?.roomId || null,
+        groupId: this.userChat?.groupId || null,
+        notificationDesc: this.groupData?.groupName ||this.sharedService?.userData?.Username + " incoming call...",
+        notificationToProfileIds: groupMembers,
+        domain: 'freedom.buzz',
+        uuId: uuId,
+      };
+      this.customerService.startGroupCallToBuzzRing(buzzRingGroupData).subscribe({
+          // next: (data: any) => {},
+        error: (err) => {console.log(err)}
+        });
     }
+
     modalRef.result.then((res) => {
       if (!window.document.hidden) {
         if (res === 'missCalled') {
           this.chatObj.msgText = 'You have a missed call';
           this.sendMessage();
+          const uuId = localStorage.getItem('uuId');
 
-          if (!this.sharedService?.onlineUserList.includes(this.userChat?.profileId)) {
-            const buzzRingData = {
-              ProfilePicName: this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
-              Username: this.groupData?.groupName || this?.userChat.Username,
-              actionType: "DC",
-              notificationByProfileId: this.profileId,
-              notificationDesc: this.groupData?.groupName || this?.userChat.Username + "incoming call...",
-              notificationToProfileId: this.userChat.profileId,
-              domain: "freedom.buzz"
-            };
-            this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
-              // next: (data: any) => {},
-              error: (err) => {console.log(err)}
-            });
-          }
+          const buzzRingData = {
+            ProfilePicName:
+              this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+            Username: this.groupData?.groupName || this?.userChat.Username,
+            actionType: 'DC',
+            notificationByProfileId: this.profileId,
+            notificationDesc:
+              this.groupData?.groupName ||
+              this?.userChat.Username + 'incoming call...',
+            notificationToProfileId: this.userChat.profileId,
+            domain: 'freedom.buzz',
+            uuId: uuId,
+          };
+          this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
+            // next: (data: any) => {},
+            error: (err) => {
+              console.log(err);
+            },
+          });
         }
       }
     });
