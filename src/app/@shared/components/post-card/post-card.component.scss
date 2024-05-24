@@ -353,23 +353,26 @@
       margin-top: 24px;
     }
   }
-  .custom-width-comment ::ng-deep app-tag-user-input {
-    // max-width: 385px;
-    max-width: 420px;
-    // @media (max-width: 1399px) {
-    //   max-width: 250px;
-    // }
-    // @media (max-width: 1199px) {
-    //   max-width: 315px;
-    // }
-    // @media (max-width: 991px) {
-    //   max-width: 495px;
-    // }
-    @media (max-width: 767px) {
-      max-width: 315px;
+  
+  .custom-width-comment{
+   .file-custom{
+    @media (max-width: 575px) {
+    position: relative;
+    right: 50px;
     }
-    @media (max-width: 435px) {
-      max-width: 206px;
+   } 
+  }
+  .custom-width-comment ::ng-deep app-tag-user-input {
+    .tag-input-div {
+      @media (max-width: 575px) {
+        width: 100%;
+      }
+    }
+    .select-emaojies {
+      @media (max-width: 575px) {
+        right: 80px;
+        top: 58px;
+      }
     }
   }
 
@@ -486,53 +489,9 @@
     }
     .comment-emoji {
       .select-emaojies {
-        right: 50px !important;
-        @media (min-width: 1201px) and (max-width: 1399px) {
-          right: 90px !important;
-        }
-        @media (min-width: 992px) and (max-width: 1200px) {
+        @media (min-width: 576px) {
           right: 50px !important;
         }
-        @media (min-width: 768px) and (max-width: 991px) {
-          right: 155px !important;
-        }
-        @media (min-width: 576px) and (max-width: 767px) {
-          right: 80px !important;
-        }
-        @media (min-width: 545px) and (max-width: 575px) {
-          right: 126px !important;
-        }
-        @media (min-width: 515px) and (max-width: 544px) {
-          right: 95px !important;
-        }
-        @media (min-width: 436px) and (max-width: 514px) {
-          right: 50px !important;
-        }
-        @media (min-width: 420px) and (max-width: 435px) {
-          right: 100px !important;
-        }
-        @media (min-width: 400px) and (max-width: 419px) {
-          right: 75px !important;
-        }
-        @media (min-width: 280px) and (max-width: 400px) {
-          right: 50px !important;
-        }
-      }
-    }
-    .replay-comment-emoji {
-      .tag-input-div {
-        max-width: 350px !important;
-
-        @media (max-width: 510px) {
-          max-width: 274px !important;
-        }
-        @media (max-width: 431px) {
-          max-width: 220px !important;
-        }
-      }
-      .select-emaojies {
-        right: 50px !important;
-        top: 5px !important;
       }
     }
   }

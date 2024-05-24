@@ -452,7 +452,7 @@
 
         <div class="px-3 gap-2 align-items-center w-100">
           <div
-            class="d-flex align-items-baseline custom-width-comment position-relative"
+            class="d-flex align-items-baseline custom-width-comment position-relative gap-sm-0 gap-3"
           >
             <!-- <div
               #parentPostCommentElement
@@ -469,7 +469,7 @@
               (onDataChange)="onTagUserInputChangeEvent($event)"
             />
 
-            <div class="d-flex gap-2 lign-items-center">
+            <div class="d-flex gap-7 gap-sm-2 lign-items-center flex-column-reverse flex-sm-row position-relative">
               <!-- Emojis -->
               <!-- <div ngbDropdown placement="top-end" class="d-inline-block">
                 <button type="button" id="emojiModel" ngbDropdownToggle title="Emojis">
@@ -670,7 +670,7 @@
                   "
                   class="py-2 px-3 align-items-center w-100 mb-5"
                 >
-                  <div class="d-flex align-items-baseline position-relative">
+                  <div class="d-flex align-items-baseline position-relative custom-width-comment gap-sm-0 gap-2">
                     <!-- <div
                       #childPostCommentElement
                       contenteditable
@@ -678,14 +678,14 @@
                       class="outline-0 w-100 comment-input c-text"
                     ></div> -->
                     <app-tag-user-input
-                      class="replay-comment-emoji"
+                      class="comment-emoji"
                       placeholder="Reply comment"
                       [value]="replaycommentMessageInputValue"
                       [isShowMetaLoader]="true"
                       [isShowEmojis]="true"
                       (onDataChange)="onTagUserReplayInputChangeEvent($event)"
                     />
-                    <div class="file-input d-flex gap-2 align-items-center">
+                    <div class="file-input d-flex gap-7 gap-sm-2 align-items-center flex-column-reverse flex-sm-row">
                       <div class="file-upload d-flex">
                         <label class="file">
                           <input
