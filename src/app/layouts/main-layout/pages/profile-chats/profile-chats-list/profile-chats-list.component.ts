@@ -830,114 +830,114 @@ export class ProfileChatsListComponent
     );
   }
 
-  // getMetaDataFromUrlStr(url: string): Promise<any> {
-  //   return new Promise((resolve, reject) => {
-  //     if (url !== this.metaData?.url) {
-  //       this.isMetaLoader = true;
-  //       this.ngUnsubscribe.next();
-  //       const unsubscribe$ = new Subject<void>();
-
-  //       this.postService
-  //         .getMetaData({ url })
-  //         .pipe(takeUntil(unsubscribe$))
-  //         .subscribe({
-  //           next: (res: any) => {
-  //             this.isMetaLoader = false;
-  //             if (res?.meta?.image) {
-  //               const urls = res.meta?.image?.url;
-  //               const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
-
-  //               const metatitles = res?.meta?.title;
-  //               const metatitle = Array.isArray(metatitles)
-  //                 ? metatitles?.[0]
-  //                 : metatitles;
-
-  //               const metaursl = Array.isArray(url) ? url?.[0] : url;
-  //               this.metaData = {
-  //                 title: metatitle,
-  //                 metadescription: res?.meta?.description,
-  //                 metaimage: imgUrl,
-  //                 metalink: metaursl,
-  //                 url: url,
-  //               };
-  //               resolve(this.metaData);
-  //             } else {
-  //               const metatitles = res?.meta?.title;
-  //               const metatitle = Array.isArray(metatitles)
-  //                 ? metatitles?.[0]
-  //                 : metatitles;
-  //               const metaursl = Array.isArray(url) ? url?.[0] : url;
-  //               const metaLinkData = {
-  //                 title: metatitle,
-  //                 metadescription: res?.meta?.description,
-  //                 metalink: metaursl,
-  //                 url: url,
-  //               };
-  //               resolve(metaLinkData);
-  //             }
-  //           },
-  //           error: (err) => {
-  //             this.metaData.metalink = url;
-  //             this.isMetaLoader = false;
-  //             this.spinner.hide();
-  //             reject(err);
-  //           },
-  //           complete: () => {
-  //             unsubscribe$.next();
-  //             unsubscribe$.complete();
-  //           },
-  //         });
-  //     } else {
-  //       resolve(this.metaData);
-  //     }
-  //   });
-  // }
-
   getMetaDataFromUrlStr(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (url === this.metaData?.url) {
-        resolve(this.metaData);
-        return;
-      }
-      this.isMetaLoader = true;
-      this.ngUnsubscribe.next();
-      const unsubscribe$ = new Subject<void>();
-      this.postService
-        .getMetaData({ url })
-        .pipe(takeUntil(unsubscribe$))
-        .subscribe({
-          next: (res: any) => {
-            this.isMetaLoader = false;
-            const meta = res.meta || {};
-            const imageUrl = Array.isArray(meta.image?.url)
-              ? meta.image.url[0]
-              : meta.image?.url;
-            const metaTitle = Array.isArray(meta.title)
-              ? meta.title[0]
-              : meta.title;
-            const metaDescription = meta.description;
+      if (url !== this.metaData?.url) {
+        this.isMetaLoader = true;
+        this.ngUnsubscribe.next();
+        const unsubscribe$ = new Subject<void>();
 
-            const metaData = {
-              title: metaTitle,
-              metadescription: metaDescription,
-              metaimage: imageUrl,
-              metalink: url,
-              url: url,
-            };
-            this.metaData = metaData;
-            resolve(metaData);
-          },
-          error: (err) => {
-            this.isMetaLoader = false;
-            reject(err);
-          },
-          complete: () => {
-            unsubscribe$.next();
-            unsubscribe$.complete();
-          },
-        });
+        this.postService
+          .getMetaData({ url })
+          .pipe(takeUntil(unsubscribe$))
+          .subscribe({
+            next: (res: any) => {
+              this.isMetaLoader = false;
+              if (res?.meta?.image) {
+                const urls = res.meta?.image?.url;
+                const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+
+                const metatitles = res?.meta?.title;
+                const metatitle = Array.isArray(metatitles)
+                  ? metatitles?.[0]
+                  : metatitles;
+
+                const metaursl = Array.isArray(url) ? url?.[0] : url;
+                this.metaData = {
+                  title: metatitle,
+                  metadescription: res?.meta?.description,
+                  metaimage: imgUrl,
+                  metalink: metaursl,
+                  url: url,
+                };
+                resolve(this.metaData);
+              } else {
+                const metatitles = res?.meta?.title;
+                const metatitle = Array.isArray(metatitles)
+                  ? metatitles?.[0]
+                  : metatitles;
+                const metaursl = Array.isArray(url) ? url?.[0] : url;
+                const metaLinkData = {
+                  title: metatitle,
+                  metadescription: res?.meta?.description,
+                  metalink: metaursl,
+                  url: url,
+                };
+                resolve(metaLinkData);
+              }
+            },
+            error: (err) => {
+              this.metaData.metalink = url;
+              this.isMetaLoader = false;
+              this.spinner.hide();
+              reject(err);
+            },
+            complete: () => {
+              unsubscribe$.next();
+              unsubscribe$.complete();
+            },
+          });
+      } else {
+        resolve(this.metaData);
+      }
     });
   }
+
+  // getMetaDataFromUrlStr(url: string): Promise<any> {
+  //   return new Promise((resolve, reject) => {
+  //     if (url === this.metaData?.url) {
+  //       resolve(this.metaData);
+  //       return;
+  //     }
+  //     this.isMetaLoader = true;
+  //     this.ngUnsubscribe.next();
+  //     const unsubscribe$ = new Subject<void>();
+  //     this.postService
+  //       .getMetaData({ url })
+  //       .pipe(takeUntil(unsubscribe$))
+  //       .subscribe({
+  //         next: (res: any) => {
+  //           this.isMetaLoader = false;
+  //           const meta = res.meta || {};
+  //           const imageUrl = Array.isArray(meta.image?.url)
+  //             ? meta.image.url[0]
+  //             : meta.image?.url;
+  //           const metaTitle = Array.isArray(meta.title)
+  //             ? meta.title[0]
+  //             : meta.title;
+  //           const metaDescription = meta.description;
+
+  //           const metaData = {
+  //             title: metaTitle,
+  //             metadescription: metaDescription,
+  //             metaimage: imageUrl,
+  //             metalink: url,
+  //             url: url,
+  //           };
+  //           this.metaData = metaData;
+  //           resolve(metaData);
+  //         },
+  //         error: (err) => {
+  //           this.isMetaLoader = false;
+  //           reject(err);
+  //         },
+  //         complete: () => {
+  //           unsubscribe$.next();
+  //           unsubscribe$.complete();
+  //         },
+  //       });
+  //   });
+  // }
 
   startCall(): void {
     const modalRef = this.modalService.open(OutGoingCallModalComponent, {

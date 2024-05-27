@@ -6,6 +6,7 @@ import { AppointmentCallComponent } from 'src/app/@shared/components/appointment
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { UserAgreementComponent } from './pages/user-agreement/user-agreement.component';
 import { SupportTicketPageComponent } from './pages/settings/support-ticket-page/support-ticket-page.component';
+import { SupportContactComponent } from './pages/settings/support-contact/support-contact.component';
 
 const routes: Routes = [
   {
@@ -130,6 +131,17 @@ const routes: Routes = [
       {
         path: 'report-bugs',
         component: SupportTicketPageComponent,
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false,
+          isShowChatListSideBar: false,
+          isShowChatModule: false
+        },
+      },
+      {
+        path: 'support-contact',
+        component: SupportContactComponent,
         data: {
           isShowLeftSideBar: false,
           isShowRightSideBar: false,

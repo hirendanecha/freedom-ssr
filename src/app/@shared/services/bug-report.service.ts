@@ -13,4 +13,8 @@ export class BugReportService {
   reportAbug(data: any): Observable<Object> {
     return this.http.post(`${this.baseUrl}bugs-reports/add-bugs`, data);
   }
+
+  supportContact(data: any): Observable<Object> {
+    return this.http.post(`${this.baseUrl}bugs-reports/support-contact`, data);
+  }
 }
