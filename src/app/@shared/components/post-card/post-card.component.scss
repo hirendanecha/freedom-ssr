@@ -366,6 +366,7 @@
     .tag-input-div {
       @media (max-width: 575px) {
         width: 100%;
+        z-index: 1;
       }
     }
     .select-emaojies {
