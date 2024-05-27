@@ -119,7 +119,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'buzzring-policy',
+        path: 'buzzring/privacy-policy',
         component: BuzzRingPolicyComponent,
         data: {
           isShowLeftSideBar: false,
