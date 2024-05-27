@@ -7,6 +7,7 @@ import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.co
 import { UserAgreementComponent } from './pages/user-agreement/user-agreement.component';
 import { SupportTicketPageComponent } from './pages/settings/support-ticket-page/support-ticket-page.component';
 import { SupportContactComponent } from './pages/settings/support-contact/support-contact.component';
+import { BuzzRingPolicyComponent } from './pages/buzz-ring-policy/buzz-ring-policy.component';
 
 const routes: Routes = [
   {
@@ -109,6 +110,17 @@ const routes: Routes = [
       {
         path: 'privacy-policy',
         component: PrivacyPolicyComponent,
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false,
+          isShowChatListSideBar: false,
+          isShowChatModule: false
+        },
+      },
+      {
+        path: 'buzzring-policy',
+        component: BuzzRingPolicyComponent,
         data: {
           isShowLeftSideBar: false,
           isShowRightSideBar: false,
