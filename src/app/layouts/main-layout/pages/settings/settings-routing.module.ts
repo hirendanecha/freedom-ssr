@@ -31,10 +31,10 @@ const routes: Routes = [
     path: 'unsubscribed-users',
     component: UnsubscribedUsersComponent,
   },
-  {
-    path: 'report-bugs',
-    component: SupportTicketPageComponent,
-  },
+  // {
+  //   path: 'report-bugs',
+  //   component: SupportTicketPageComponent,
+  // },
 ];
 
 @NgModule({

@@ -66,41 +66,45 @@ export class SupportTicketPageComponent implements OnInit {
   }
 
   uploadAttachment() {
-    if (this.selectedFile) {
-      this.isFileUploadInProgress = true;
-      this.postService.uploadFile(this.selectedFile).subscribe({
-        next: (res: any) => {
-          if (res?.body?.url) {
+    if (this.profileId) {
+      if (this.selectedFile) {
+        this.isFileUploadInProgress = true;
+        this.postService.uploadFile(this.selectedFile).subscribe({
+          next: (res: any) => {
+            if (res?.body?.url) {
+              this.isFileUploadInProgress = false;
+              this.reportForm.get('attachmentFiles').setValue(res?.body?.url);
+              this.submitForm();
+            }
+          },
+          error: (err) => {
             this.isFileUploadInProgress = false;
-            this.reportForm.get('attachmentFiles').setValue(res?.body?.url);
-            this.submitForm();
-          }
-        },
-        error: (err) => {
-          this.isFileUploadInProgress = false;
-          console.log(err);
-        },
-      });
+            console.log(err);
+          },
+        });
+      } else {
+        this.submitForm();
+      }
     } else {
-      this.submitForm();
+      this.toasterService.danger('Please login first');
     }
   }
   submitForm(): void {
-    this.reportForm.get('profileId').setValue(this.profileId);
-    if (this.reportForm.valid) {
-      this.bugReportService.reportAbug(this.reportForm.value).subscribe({
-        next: (res: any) => {
-          this.toasterService.success(res.message);
-          this.resetForm();
-        },
-        error: (error) => {
-          this.toasterService.danger('something went wrong please try again!');
-          console.log(error);
-        },
-      });
-    } else {
-      this.toasterService.danger('please fill require data');
-    }
+      this.reportForm.get('profileId').setValue(this.profileId);
+      if (this.reportForm.valid) {
+        this.bugReportService.reportAbug(this.reportForm.value).subscribe({
+          next: (res: any) => {
+            this.toasterService.success(res.message);
+            this.resetForm();
+          },
+          error: (error) => {
+            this.toasterService.danger('something went wrong please try again!');
+            console.log(error);
+          },
+        });
+      } else {
+        this.toasterService.danger('please fill require data');
+      }
   }
 
   resetForm() {

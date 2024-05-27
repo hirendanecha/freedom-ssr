@@ -95,7 +95,7 @@ export class ProfileMenusModalComponent {
     this.router.navigate([`settings/view-profile/${this.profileId}`]);
   }
   goToSupport(){
-    this.router.navigate([`/settings/report-bugs`])
+    this.router.navigate([`/report-bugs`])
   }
 
   forgotPasswordOpen() {

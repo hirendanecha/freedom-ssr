@@ -5,6 +5,7 @@ import { AuthenticationGuard } from 'src/app/@shared/guards/authentication.guard
 import { AppointmentCallComponent } from 'src/app/@shared/components/appointment-call/appointment-call.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { UserAgreementComponent } from './pages/user-agreement/user-agreement.component';
+import { SupportTicketPageComponent } from './pages/settings/support-ticket-page/support-ticket-page.component';
 
 const routes: Routes = [
   {
@@ -118,6 +119,17 @@ const routes: Routes = [
       {
         path: 'user-agreement',
         component: UserAgreementComponent,
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false,
+          isShowChatListSideBar: false,
+          isShowChatModule: false
+        },
+      },
+      {
+        path: 'report-bugs',
+        component: SupportTicketPageComponent,
         data: {
           isShowLeftSideBar: false,
           isShowRightSideBar: false,
