@@ -220,13 +220,13 @@ export class SignUpComponent implements OnInit, AfterViewInit {
 
   onSubmit(): void {
     this.msg = '';
-    // if (!this.profileImg?.file?.name) {
-    //   this.msg = 'Please upload profile picture';
-    //   this.scrollTop();
-    //   // return false;
-    // }
-    // this.profileImg?.file?.name &&
+    if (!this.profileImg?.file?.name) {
+      this.msg = 'Please upload profile picture';
+      this.scrollTop();
+      // return false;
+    }
     if (
+      this.profileImg?.file?.name &&
       this.registerForm.valid &&
       this.registerForm.get('TermAndPolicy').value === true &&       
       this.registerForm.get('Anonymous').value === true
