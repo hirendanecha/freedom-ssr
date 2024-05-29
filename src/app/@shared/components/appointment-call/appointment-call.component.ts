@@ -7,6 +7,7 @@ import { ProfileChatsSidebarComponent } from 'src/app/layouts/main-layout/pages/
 import { SharedService } from '../../services/shared.service';
 import { MessageService } from '../../services/message.service';
 import { SeoService } from '../../services/seo.service';
+import { TokenStorageService } from '../../services/token-storage.service';
 
 declare var JitsiMeetExternalAPI: any;
 @Component({
@@ -36,6 +37,7 @@ export class AppointmentCallComponent implements OnInit {
     private sharedService: SharedService,
     private messageService: MessageService,
     private seoService: SeoService,
+    public tokenService: TokenStorageService,
   ) {
     const data = {
       title: 'Buzz Chat',
