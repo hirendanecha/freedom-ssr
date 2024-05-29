@@ -145,6 +145,17 @@
         </a>
       </li>
       <li>
+        <a
+          class="d-flex gap-4"
+          routerLink="/platforms"
+          routerLinkActive="active"
+          (click)="closeSidebar()"
+        >
+          <fa-icon [icon]="['fas', 'table-list']" class="font-24-px" />
+          <span>Platforms</span>
+        </a>
+      </li>
+      <li>
         <a class="d-flex gap-4" (click)="openWalletPopUp()">
           <fa-icon [icon]="['fas', 'download']" class="font-24-px" />
           <span>Download 1776 Wallet</span>
@@ -156,7 +167,7 @@
           <span>Claim 50 free 1776</span>
         </a>
       </li>
-
+ 
       <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
         <div
           class="d-flex gap-4 toggle-dropdown align-items-center"

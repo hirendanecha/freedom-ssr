@@ -8,6 +8,7 @@ import { UserAgreementComponent } from './pages/user-agreement/user-agreement.co
 import { SupportTicketPageComponent } from './pages/settings/support-ticket-page/support-ticket-page.component';
 import { SupportContactComponent } from './pages/settings/support-contact/support-contact.component';
 import { BuzzRingPolicyComponent } from './pages/buzz-ring-policy/buzz-ring-policy.component';
+import { PlatformsComponent } from './pages/platforms/platforms.component';
 
 const routes: Routes = [
   {
@@ -162,6 +163,17 @@ const routes: Routes = [
           isShowChatModule: false
         },
       },
+      {
+        path: 'platforms',
+        component: PlatformsComponent,
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false,
+          isShowChatListSideBar: false,
+          isShowChatModule: false
+        },
+      }
     ],
   },
 ];
