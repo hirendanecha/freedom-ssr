@@ -14,6 +14,7 @@ import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { take } from 'rxjs';
 import * as moment from 'moment';
 import { AppQrModalComponent } from 'src/app/@shared/modals/app-qr-modal/app-qr-modal.component';
+import { ConferenceLinkComponent } from 'src/app/@shared/modals/create-conference-link/conference-link-modal.component';
 
 @Component({
   selector: 'app-profile-chat-list',
@@ -154,6 +155,11 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
 
   appQrmodal(){
     const modalRef = this.modalService.open(AppQrModalComponent, {
+      centered: true,
+    });
+  }
+  uniqueLink(){
+    const modalRef = this.modalService.open(ConferenceLinkComponent ,{
       centered: true,
     });
   }

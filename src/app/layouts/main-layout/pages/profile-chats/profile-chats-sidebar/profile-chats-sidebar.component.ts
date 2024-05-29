@@ -25,6 +25,7 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
 import { QrScanModalComponent } from 'src/app/@shared/modals/qrscan-modal/qrscan-modal.component';
 import { AppQrModalComponent } from 'src/app/@shared/modals/app-qr-modal/app-qr-modal.component';
 import { MessageService } from 'src/app/@shared/services/message.service';
+import { ConferenceLinkComponent } from 'src/app/@shared/modals/create-conference-link/conference-link-modal.component';
 
 @Component({
   selector: 'app-profile-chats-sidebar',
@@ -243,6 +244,11 @@ export class ProfileChatsSidebarComponent
   }
   appQrmodal(){
     const modalRef = this.modalService.open(AppQrModalComponent, {
+      centered: true,
+    });
+  }
+  uniqueLink(){
+    const modalRef = this.modalService.open(ConferenceLinkComponent ,{
       centered: true,
     });
   }
