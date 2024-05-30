@@ -16,7 +16,8 @@ export class AppQrModalComponent {
   showPlayQr :boolean = false
   showStoreQr :boolean = false
   isInnerWidthSmall: boolean;
-  playStore = 'https://s3.us-east-1.wasabisys.com/freedom-social/BuzzRing.apk'
+  playStore = 'https://s3.us-east-1.wasabisys.com/freedom-social/BuzzRing.apk';
+  appStore = 'https://apps.apple.com/au/app/buzz-ring/id6503036047';
   qrLink = '';
 
   constructor(public activeModal: NgbActiveModal,
@@ -46,17 +47,17 @@ export class AppQrModalComponent {
     this.showStoreQr = !this.showStoreQr
   }
 
-  handleClick(): void {
+  handleClick(store : string): void {
     if (this.isInnerWidthSmall) {
-      this.downloadApp();
+      this.downloadApp(store);
     } else {
-      this.togglePlayApp();
+      store === 'playStore' ? this.togglePlayApp() : this.toggleStoreApp();
     }
   }
 
-  downloadApp(): void {
+  downloadApp(store: string): void {
     const appLink = document.createElement('a');
-    appLink.href = this.playStore;
+    appLink.href = store === 'playStore' ? this.playStore : this.appStore;
     appLink.click();
     this.toastService.success('Download successfully initiated.');
   }

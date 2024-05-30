@@ -129,6 +129,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
       'Would you like to add a Freedom.buzz icon to your mobile Home screen?';
     modalRef.result.then((res) => {
       if (res === 'success') {
+        localStorage.setItem('isMobilePopShow', 'N');
         const modalRef = this.modalService.open(ConfirmationModalComponent, {
           centered: true,
         });
