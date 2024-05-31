@@ -93,7 +93,7 @@
             </div>
             <fa-icon
               [icon]="['fas', 'gear']"
-              class="font-20-px m-1 ms-3"
+              class="font-20-px m-1 ms-3 d-none d-sm-flex"
               *ngIf="userChat.groupId"
             />
           </div>
@@ -102,6 +102,14 @@
           class="d-flex gap-3 align-items-center"
           *ngIf="userChat.isAccepted === 'Y'"
         >
+        <a (click)="groupEditDetails(groupData)">
+        <fa-icon
+        [icon]="['fas', 'gear']"
+        class="font-20-px m-1 ms-3 d-sm-none d-flex"
+        *ngIf="userChat.groupId"
+      />
+        </a> 
+        <div class="gap-3"> 
           <a
             *ngIf="userChat.roomId || userChat.groupId"
             class="nav-icon cursor"
@@ -128,6 +136,7 @@
             (click)="startCall()"
             ><fa-icon [icon]="['fas', 'video']" class="font-20-px m-1"
           /></a>
+        </div>
         </div>
       </div>
 
