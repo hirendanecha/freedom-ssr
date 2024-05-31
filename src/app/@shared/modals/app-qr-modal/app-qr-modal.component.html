@@ -53,16 +53,24 @@
 <ng-container *ngIf="!showStoreQr && !showPlayQr">
   <div class="d-center flex-column align-items-start m-3">
     <h4>Step 2</h4>
+    <h6>1. To Register Scan or Download to Images on your device</h6>
+    <h6>2. Open your QR Scanner app</h6>
+    <h6>3. Select option to open image</h6>
+    <h6>4. Scan downloaded QR code</h6>
   </div>
   <div class="d-flex flex-column">
-    <div class="d-center flex-column mb-4">
-      <span class="mb-2">Kindly use your device to scan the QR code to register.</span>
+    <div class="d-center flex-column gap-2 mb-4" #qrCode>
+      <!-- <span class="mb-2">Kindly use your device to scan the QR code to register.</span> -->
         <qrcode
           [qrdata]="qrLink"
           [width]="200"
           [errorCorrectionLevel]="'Q'"
         >
       </qrcode>
+      <button class="btn btn-primary d-flex gap-2" (click)="saveQRlocally()">
+        <fa-icon [icon]="['fas', 'download']" />
+        <span>Download</span>
+      </button>
     </div>
   </div>
 </ng-container>

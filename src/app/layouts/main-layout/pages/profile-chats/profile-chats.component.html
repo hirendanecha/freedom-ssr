@@ -1,13 +1,13 @@
 <div class="d-block d-lg-none chat-list-btn">
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between pt-4 mx-10">
     <button
-      class="button profile-active mb-4 mb-lg-0 d-flex align-items-center gap-2 ms-5"
+      class="button profile-active mb-4 mb-lg-0 d-flex align-items-center gap-2"
       (click)="openChatListSidebar()"
     >
       <fa-icon [icon]="['fas', 'sliders']" class="font-20-px" />
-      <span>Chat List</span>
+      <span>Contacts</span>
     </button>
-    <div class="btn-group cus-dropdown d-flex gap-3 me-5">
+    <div class="btn-group cus-dropdown d-flex gap-3">
       <div ngbDropdown class="d-inline-block">
         <button class="dropdown-btn" ngbDropdownToggle>
           <fa-icon [icon]="['fas', 'ellipsis-v']" class="font-20-px" />
@@ -72,7 +72,7 @@
     </div>
   </div>
 </div>
-<div class="row justify-content-center pt-5">
+<div class="row justify-content-center pt-lg-5">
   <div
     class="col-xxl-3 col-xl-4 col-lg-4 pe-0 m-0 p-0 d-none d-lg-block w-300-px"
   >

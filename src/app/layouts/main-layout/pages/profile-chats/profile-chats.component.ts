@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  NgZone,
   OnDestroy,
   OnInit,
   Renderer2,
@@ -44,6 +45,8 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
 
   isMessageSoundEnabled: boolean = true;
   isCallSoundEnabled: boolean = true;
+  isInnerWidthSmall: boolean;
+  isSidebarOpen: boolean = false;
 
   constructor(
     private renderer: Renderer2,
@@ -52,12 +55,20 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     private sharedService: SharedService,
     private socketService: SocketService,
     private modalService: NgbModal,
-    public breakpointService: BreakpointService
+    public breakpointService: BreakpointService,
+    private ngZone:NgZone
   ) {
     this.profileId = +localStorage.getItem('profileId');
     if (this.sharedService.isNotify) {
       this.sharedService.isNotify = false;
     }
+    this.isInnerWidthSmall = window.innerWidth < 576;
+    if (this.isInnerWidthSmall && !this.isSidebarOpen) {
+      this.openChatListSidebar();
+    }
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('resize', this.onResize.bind(this));
+    });
   }
   ngOnInit(): void {
     this.socketService.connect();
@@ -108,13 +119,26 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     this.selectedRoomId = id;
   }
 
+  onResize() {
+    this.ngZone.run(() => {
+      this.isInnerWidthSmall = window.innerWidth < 576;
+      if (this.isInnerWidthSmall && !this.isSidebarOpen) {
+        this.openChatListSidebar();
+      }
+    });
+  }
+
   openChatListSidebar() {
     const offcanvasRef = this.offcanvasService.open(
       ProfileChatsSidebarComponent,
       this.userChat
     );
+    this.isSidebarOpen = true;
     offcanvasRef.componentInstance.onNewChat.subscribe((emittedData: any) => {
       this.onChatPost(emittedData);
+    });
+    offcanvasRef.result.then((result) => {}).catch((reason) => {
+        this.isSidebarOpen = false;
     });
   }
 
@@ -128,8 +152,8 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.message =
       'Would you like to add a Freedom.buzz icon to your mobile Home screen?';
     modalRef.result.then((res) => {
+      localStorage.setItem('isMobilePopShow', 'N');
       if (res === 'success') {
-        localStorage.setItem('isMobilePopShow', 'N');
         const modalRef = this.modalService.open(ConfirmationModalComponent, {
           centered: true,
         });
@@ -140,7 +164,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
           'On your browser click on browser menu, then click Add to Home Screen';
         modalRef.result.then((res) => {
           if (res === 'success') {
-            localStorage.setItem('isMobilePopShow', 'N');
+            // localStorage.setItem('isMobilePopShow', 'N');
           }
         });
       }
@@ -167,6 +191,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isRoomCreated = false;
+    window.removeEventListener('resize', this.onResize.bind(this));
     // if (this.socketService?.socket) {
     //   this.socketService.socket?.disconnect();
     // }

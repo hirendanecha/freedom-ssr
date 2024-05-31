@@ -1,4 +1,4 @@
-import { Component, Input, NgZone } from '@angular/core';
+import { Component, ElementRef, Input, NgZone, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../services/toast.service';
 import { environment } from 'src/environments/environment';
@@ -13,6 +13,7 @@ export class AppQrModalComponent {
   @Input() store: string;
   @Input() image: string;
   @Input() title:string | undefined = 'BuzzRing App'
+  @ViewChild('qrCode', { static: false }) qrCodeElement: ElementRef;
   showPlayQr :boolean = false
   showStoreQr :boolean = false
   isInnerWidthSmall: boolean;
@@ -65,5 +66,15 @@ export class AppQrModalComponent {
   closePreview(){
     this.showPlayQr = false;
     this.showStoreQr = false;
+  }
+
+  saveQRlocally(){
+    const qrElement = this.qrCodeElement.nativeElement.querySelector('canvas');
+    if (qrElement) {
+      const link = document.createElement('a');
+      link.href = qrElement.toDataURL('image/png');
+      link.download = 'BuzzRing-qr-code.png';
+      link.click();
+    }
   }
 }
