@@ -8,11 +8,54 @@
           class="avatar-item d-flex mb-2 gap-3 align-items-center cursor"
           (click)="clearChatList()"
         >
-          <div class="avatar-item">
+          <div ngbDropdown class="avatar-item position-relative online-status">
             <!--  -->
+            <ng-container>
+              <button
+                ngbDropdownToggle
+                class="abs-activity position-absolute d-center smtxt"
+                [ngClass]="{
+                  'abs-active ': sharedService.userData.userStatus === 'active',
+                  'abs-away': sharedService.userData.userStatus === 'away',
+                  'abs-dnd': sharedService.userData.userStatus === 'dnd',
+                  'abs-invisible': sharedService.userData.userStatus === 'invisible' }"
+              ></button>
+              <div ngbDropdownMenu class="dropdown-menu">
+                <div class="dropdown-preferences">
+                  <div class="d-flex flex-column">
+                    <div class="c-pointer d-flex align-items-baseline mt-2 justify-content-between">
+                      <h6 class="d-flex" (click)="profileStatus('active')">
+                        Active
+
+                      </h6>
+                      <fa-icon [icon]="['fas', 'check']" class="font-20-px"  *ngIf="sharedService.userData.userStatus === 'active'" />
+
+                    </div>
+                    <div class="c-pointer d-flex align-items-baseline mt-2 justify-content-between">
+                      <h6 class="d-flex" (click)="profileStatus('away')">
+                        Away
+                      </h6>
+                      <fa-icon [icon]="['fas', 'check']" class="font-20-px"  *ngIf="sharedService.userData.userStatus === 'away'" />
+                    </div>
+                    <div class="c-pointer d-flex align-items-baseline mt-2 justify-content-between">
+                      <h6 class="d-flex" (click)="profileStatus('dnd')">
+                        Do not disturb
+                      </h6>
+                      <fa-icon [icon]="['fas', 'check']" class="font-20-px"  *ngIf="sharedService.userData.userStatus === 'dnd'" />
+                    </div>
+                    <div class="c-pointer d-flex align-items-baseline mt-2 justify-content-between">
+                      <h6 class="d-flex" (click)="profileStatus('invisible')">
+                        Invisible
+                      </h6>
+                      <fa-icon [icon]="['fas', 'check']" class="font-20-px"  *ngIf="sharedService.userData.userStatus === 'invisible'" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
             <img
               [src]="sharedService?.userData?.ProfilePicName"
-              class="w-48-px rounded-3"
+              class="w-48-px h-48-px rounded-circle"
               alt="avatar"
             />
           </div>
@@ -91,22 +134,22 @@
                     class="c-pointer d-flex align-items-baseline mt-3"
                     (click)="appQrmodal()"
                   >
-                  <fa-icon
-                  [icon]="['fas', 'mobile']"
-                  class="font-20-px me-2"
-                />
+                    <fa-icon
+                      [icon]="['fas', 'mobile']"
+                      class="font-20-px me-2"
+                    />
                     <h6 class="d-flex">Buzz Ring App</h6>
                   </div>
                   <div
-                  class="c-pointer d-flex align-items-baseline mt-3"
-                  (click)="uniqueLink()"
-                >
-                <fa-icon
-                [icon]="['fas', 'square-plus']"
-                class="font-20-px me-2"
-              />
-                  <h6 class="d-flex">Create Unique Link</h6>
-                </div>
+                    class="c-pointer d-flex align-items-baseline mt-3"
+                    (click)="uniqueLink()"
+                  >
+                    <fa-icon
+                      [icon]="['fas', 'square-plus']"
+                      class="font-20-px me-2"
+                    />
+                    <h6 class="d-flex">Create Unique Link</h6>
+                  </div>
                 </div>
               </div>
             </div>
@@ -289,12 +332,23 @@
           <div class="d-flex gap-2">
             <div class="avatar position-relative online-status">
               <ng-container *ngIf="item?.roomId">
-                <span
-                  class="abs-area position-absolute d-center smtxt"
-                  *ngIf="
-                    sharedService?.onlineUserList.includes(item?.profileId)
-                  "
-                ></span>
+                <ng-container [ngSwitch]="findUserStatus(item?.profileId)">
+                  <span
+                    class="abs-area position-absolute d-center smtxt ac"
+                    *ngSwitchCase="'active'"
+                    [ngClass]="'abs-active'"
+                  ></span>
+                  <span
+                    class="abs-area position-absolute d-center smtxt"
+                    *ngSwitchCase="'away'"
+                    [ngClass]="'abs-away'"
+                  ></span>
+                  <span
+                    class="abs-area position-absolute d-center smtxt"
+                    *ngSwitchCase="'dnd'"
+                    [ngClass]="'abs-dnd'"
+                  ></span>
+                </ng-container>
               </ng-container>
               <img
                 class="avatar-img h-40-px w-40-px max-un"
@@ -420,10 +474,13 @@
                   class="dropdown-menu"
                   (mouseleave)="editPopup.close()"
                 >
-                  <button *ngIf="item?.roomId" ngbDropdownItem (click)="resendInvite(item)">
+                  <button
+                    *ngIf="item?.roomId"
+                    ngbDropdownItem
+                    (click)="resendInvite(item)"
+                  >
                     <a class="droplist d-flex align-items-center gap-2">
-                      <fa-icon [icon]="['fas', 'repeat']"
-                      />
+                      <fa-icon [icon]="['fas', 'repeat']" />
                       <span class="data-text-color">Resend</span>
                     </a>
                   </button>

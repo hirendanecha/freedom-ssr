@@ -56,6 +56,7 @@ export class ProfileChatsSidebarComponent
   @Output('onNewChat') onNewChat: EventEmitter<any> = new EventEmitter<any>();
   @Input('isRoomCreated') isRoomCreated: boolean = false;
   @Input('selectedRoomId') selectedRoomId: number = null;
+  userStatus: string;
   constructor(
     private customerService: CustomerService,
     private socketService: SocketService,
@@ -248,11 +249,10 @@ export class ProfileChatsSidebarComponent
     });
   }
   uniqueLink(){
-    const modalRef = this.modalService.open(ConferenceLinkComponent ,{
+    const modalRef = this.modalService.open(ConferenceLinkComponent, {
       centered: true,
     });
   }
-  
 
   deleteOrLeaveChat(item) {
     if (item.roomId) {
@@ -317,4 +317,20 @@ export class ProfileChatsSidebarComponent
   //     });
   //   }
   // }
+  profileStatus(status: string) {
+    const data = {
+      status: status,
+      id: this.profileId,
+    };
+    this.socketService.switchOnlineStatus(data, (res) => {
+      this.sharedService.userData.userStatus = res.status
+    });
+  }
+  findUserStatus(id: string): string {
+    const user = this.sharedService.onlineUserList.find(
+      (ele) => ele.userId === id
+    );
+    const status = user?.status;
+    return status;
+  }
 }

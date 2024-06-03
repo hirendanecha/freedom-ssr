@@ -90,8 +90,29 @@
       width: 12px;
       height: 12px;
       // background: var(--highlight-color);
+      border-radius: 50%;
+    }
+    .abs-activity {
+      left: 37px;
+      top: 35px;
+      width: 12px;
+      height: 12px;
+      // background: var(--highlight-color);
       background: #00a469;
       border-radius: 50%;
+    }
+
+    .abs-active {
+      background: #00a469;
+    }
+    .abs-away {
+      background: #ffcc00;
+    }
+    .abs-dnd {
+      background: red;
+    }
+    .abs-invisible{
+      background: rgb(156, 155, 155);
     }
   }
   .dropdown-toggle {
