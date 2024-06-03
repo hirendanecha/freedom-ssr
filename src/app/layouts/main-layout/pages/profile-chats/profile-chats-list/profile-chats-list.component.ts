@@ -97,6 +97,7 @@ export class ProfileChatsListComponent
   authToken: string;
   userStatus: string;
   isOnline = false;
+
   currentUser: any = [];
   // messageList: any = [];
   constructor(
@@ -187,6 +188,8 @@ export class ProfileChatsListComponent
           const lastIndex = this.filteredMessageList.length - 1;
           if (this.filteredMessageList[lastIndex]) {
             this.filteredMessageList[lastIndex]?.messages.push(data);
+          } else {
+            this.filteredMessageList.push({ messages: [data] });
           }
           if (this.userChat.groupId === data?.groupId) {
             if (this.userChat?.groupId) {
