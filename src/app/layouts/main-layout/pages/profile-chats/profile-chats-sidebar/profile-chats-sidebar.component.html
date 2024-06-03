@@ -23,8 +23,8 @@
               <div ngbDropdownMenu class="dropdown-menu">
                 <div class="dropdown-preferences">
                   <div class="d-flex flex-column">
-                    <div class="c-pointer d-flex align-items-baseline mt-2 justify-content-between">
-                      <h6 class="d-flex" (click)="profileStatus('active')">
+                    <div class="c-pointer d-flex align-items-baseline mt-2 justify-content-between ">
+                      <h6 class="d-flex w-100" (click)="profileStatus('active')">
                         Active
 
                       </h6>
@@ -32,19 +32,19 @@
 
                     </div>
                     <div class="c-pointer d-flex align-items-baseline mt-2 justify-content-between">
-                      <h6 class="d-flex" (click)="profileStatus('away')">
+                      <h6 class="d-flex w-100" (click)="profileStatus('away')">
                         Away
                       </h6>
                       <fa-icon [icon]="['fas', 'check']" class="font-20-px"  *ngIf="sharedService.userData.userStatus === 'away'" />
                     </div>
                     <div class="c-pointer d-flex align-items-baseline mt-2 justify-content-between">
-                      <h6 class="d-flex" (click)="profileStatus('dnd')">
+                      <h6 class="d-flex w-100" (click)="profileStatus('dnd')">
                         Do not disturb
                       </h6>
                       <fa-icon [icon]="['fas', 'check']" class="font-20-px"  *ngIf="sharedService.userData.userStatus === 'dnd'" />
                     </div>
                     <div class="c-pointer d-flex align-items-baseline mt-2 justify-content-between">
-                      <h6 class="d-flex" (click)="profileStatus('invisible')">
+                      <h6 class="d-flex w-100" (click)="profileStatus('invisible')">
                         Invisible
                       </h6>
                       <fa-icon [icon]="['fas', 'check']" class="font-20-px"  *ngIf="sharedService.userData.userStatus === 'invisible'" />
