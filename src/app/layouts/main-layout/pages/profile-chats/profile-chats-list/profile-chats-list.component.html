@@ -107,6 +107,15 @@
               *ngIf="userChat.groupId"
             />
           </a>
+          <a
+          *ngIf="userChat.roomId"
+          class="nav-icon cursor"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Create Group"
+          (click)="createGroup()"
+          ><fa-icon [icon]="['fas', 'users']" class="font-20-px m-1"
+        /></a>
           <div class="gap-3 d-flex flex-column flex-sm-row">
             <a
               *ngIf="userChat.roomId || userChat.groupId"
@@ -117,16 +126,7 @@
               (click)="openMediaGallery()"
               ><fa-icon [icon]="['fas', 'photo-film']" class="font-20-px m-1"
             /></a>
-            <a
-              *ngIf="userChat.roomId"
-              class="nav-icon cursor"
-              data-toggle="tooltip"
-              data-placement="bottom"
-              title="Create Group"
-              (click)="createGroup()"
-              ><fa-icon [icon]="['fas', 'users']" class="font-20-px m-1"
-            /></a>
-            <a
+              <a
               class="nav-icon cursor"
               data-toggle="tooltip"
               data-placement="bottom"
