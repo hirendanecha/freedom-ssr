@@ -54,11 +54,14 @@
         </div> -->
         <!-- <app-img-preview [src]="post?.thumbfilename" classes="w-100" /> -->
         <video
-          [src]="post?.streamname"
-          controls
-          class="w-100 mt-1 rounded"
-          [autoplay]="false"
+        data-src="{{post.thumbfilename}}"
+        [src]="post?.streamname"
+        controls
+        class="w-100 mt-1 rounded"
+        [autoplay]="false"
+        poster="{{post.thumbfilename}}"
         ></video>
+    
       </ng-container>
 
       <app-post-meta-data-card [post]="post" />
