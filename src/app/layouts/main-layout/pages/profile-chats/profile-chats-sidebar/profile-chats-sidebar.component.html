@@ -6,7 +6,6 @@
       >
         <div
           class="avatar-item d-flex mb-2 gap-3 align-items-center cursor"
-          (click)="clearChatList()"
         >
           <div ngbDropdown class="avatar-item position-relative online-status">
             <!--  -->
@@ -26,7 +25,6 @@
                     <div class="c-pointer d-flex justify-content-between ">
                       <h6 ngbDropdownItem class="d-flex w-100" (click)="profileStatus('active')">
                         Active
-
                       </h6>
                       <fa-icon [icon]="['fas', 'check']" class="font-20-px"  *ngIf="sharedService.userData.userStatus === 'active'" />
 
@@ -59,7 +57,7 @@
               alt="avatar"
             />
           </div>
-          <div class="info-area">
+          <div class="info-area" (click)="clearChatList()">
             <h6 class="m-0">{{ sharedService?.userData?.Username }}</h6>
           </div>
         </div>
