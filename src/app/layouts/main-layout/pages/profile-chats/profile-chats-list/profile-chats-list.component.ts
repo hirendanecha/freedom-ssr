@@ -953,11 +953,11 @@ export class ProfileChatsListComponent
             const metaTitle = Array.isArray(meta.title)
               ? meta.title[0]
               : meta.title;
-            const metaDescription = meta.description;
+            const metaDescription = meta.description === 'undefined' ? 'Post content' : meta.description;
 
             const metaData = {
               title: metaTitle,
-              metadescription: metaDescription,
+              metadescription: metaDescription === 'undefined' ? 'Post content' : metaDescription,
               metaimage: imageUrl,
               metalink: url,
               url: url,
