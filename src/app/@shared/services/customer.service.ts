@@ -56,6 +56,10 @@ export class CustomerService {
     return this.http.get(`${this.baseUrl}/zip/${zip}?country=${country}`);
   }
 
+  getStateData(country: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/states?countryCode=${country}`);
+  }
+
   getCountriesData(): Observable<{ country_code: string; country: string }[]> {
     return this.http.get<{ country_code: string; country: string }[]>(
       `${this.baseUrl}/countries`
