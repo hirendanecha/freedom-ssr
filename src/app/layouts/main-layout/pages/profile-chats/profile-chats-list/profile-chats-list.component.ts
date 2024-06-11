@@ -953,11 +953,17 @@ export class ProfileChatsListComponent
             const metaTitle = Array.isArray(meta.title)
               ? meta.title[0]
               : meta.title;
-            const metaDescription = meta.description === 'undefined' ? 'Post content' : meta.description;
+            const metaDescription =
+              meta.description === 'undefined'
+                ? 'Post content'
+                : meta.description;
 
             const metaData = {
               title: metaTitle,
-              metadescription: metaDescription === 'undefined' ? 'Post content' : metaDescription,
+              metadescription:
+                metaDescription === 'undefined'
+                  ? 'Post content'
+                  : metaDescription,
               metaimage: imageUrl,
               metalink: url,
               url: url,
@@ -1247,5 +1253,18 @@ export class ProfileChatsListComponent
       (ele) => ele.userId === id
     );
     this.isOnline = this.sharedService.onlineUserList[index] ? true : false;
+  }
+
+  profileStatus(status: string) {
+    const data = {
+      status: status,
+      id: this.profileId,
+    };
+    const localUserData = JSON.parse(localStorage.getItem('userData'));
+    this.socketService.switchOnlineStatus(data, (res) => {
+      this.sharedService.userData.userStatus = res.status;
+      localUserData.userStatus = res.status;
+      localStorage.setItem('userData', JSON.stringify(localUserData));
+    });
   }
 }
