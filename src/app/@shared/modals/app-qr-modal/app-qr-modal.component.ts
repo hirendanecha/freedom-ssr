@@ -17,7 +17,7 @@ export class AppQrModalComponent {
   showPlayQr: boolean = false;
   showStoreQr: boolean = false;
   isInnerWidthSmall: boolean;
-  playStore = 'https://s3.us-east-1.wasabisys.com/freedom-social/BuzzRing.apk';
+  playStore = 'https://play.google.com/store/apps/details?id=com.buzzring.app';
   appStore = 'https://apps.apple.com/au/app/buzz-ring/id6503036047';
   qrLink = '';
 

@@ -1075,60 +1075,7 @@
           </div>
         </ng-container>
 
-        <form class="py-3 pt-2 px-3 message-content">
-          <div
-            [ngClass]="sidebarClass ? 'd-block' : 'd-block d-sm-none'"
-            class="file-upload mobile-fileselect-drop"
-          >
-            <!-- <div class="d-flex ms-11 select-emaojies"> -->
-            <div class="d-center gap-10 ms-11 select-emaojies">
-              <label class="file">
-                <input
-                  type="file"
-                  [(ngModel)]="chatObj.msgMedia"
-                  name="doc"
-                  accept="application/*"
-                  (change)="onPostFileSelect($event)"
-                />
-                <span class="file-custom border-0 m-1 d-grid text-center">
-                  <fa-icon
-                    [icon]="['fas', 'paperclip']"
-                    class="font-24-px"
-                  ></fa-icon>
-                </span>
-              </label>
-              <label class="file">
-                <input
-                  type="file"
-                  [(ngModel)]="chatObj.msgMedia"
-                  name="image"
-                  accept="image/*"
-                  (change)="onPostFileSelect($event)"
-                />
-                <span class="file-custom border-0 m-1 d-grid text-center">
-                  <fa-icon
-                    [icon]="['fas', 'image']"
-                    class="font-24-px"
-                  ></fa-icon>
-                </span>
-              </label>
-              <label class="file">
-                <input
-                  type="file"
-                  [(ngModel)]="chatObj.msgMedia"
-                  id="fileInput"
-                  (change)="onPostFileSelect($event)"
-                  accept="video/*"
-                />
-                <span class="file-custom border-0 m-1 d-grid text-center">
-                  <fa-icon
-                    [icon]="['fas', 'video']"
-                    class="font-24-px"
-                  ></fa-icon>
-                </span>
-              </label>
-            </div>
-          </div>
+        <form class="p-2 message-content" [ngClass]="!sidebarClass ? 'p-sm-3' : ''">
           <div
             class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
           >
@@ -1264,6 +1211,59 @@
               </div>
             </div>
           </div>
+          <div
+          [ngClass]="sidebarClass ? 'd-block' : 'd-block d-sm-none'"
+          class="file-upload mobile-fileselect-drop"
+        >
+          <!-- <div class="d-flex ms-11 select-emaojies"> -->
+          <div class="d-center gap-10 ms-11 pt-2 select-emaojies">
+            <label class="file">
+              <input
+                type="file"
+                [(ngModel)]="chatObj.msgMedia"
+                name="doc"
+                accept="application/*"
+                (change)="onPostFileSelect($event)"
+              />
+              <span class="file-custom border-0 m-1 d-grid text-center">
+                <fa-icon
+                  [icon]="['fas', 'paperclip']"
+                  class="font-24-px"
+                ></fa-icon>
+              </span>
+            </label>
+            <label class="file">
+              <input
+                type="file"
+                [(ngModel)]="chatObj.msgMedia"
+                name="image"
+                accept="image/*"
+                (change)="onPostFileSelect($event)"
+              />
+              <span class="file-custom border-0 m-1 d-grid text-center">
+                <fa-icon
+                  [icon]="['fas', 'image']"
+                  class="font-24-px"
+                ></fa-icon>
+              </span>
+            </label>
+            <label class="file">
+              <input
+                type="file"
+                [(ngModel)]="chatObj.msgMedia"
+                id="fileInput"
+                (change)="onPostFileSelect($event)"
+                accept="video/*"
+              />
+              <span class="file-custom border-0 m-1 d-grid text-center">
+                <fa-icon
+                  [icon]="['fas', 'video']"
+                  class="font-24-px"
+                ></fa-icon>
+              </span>
+            </label>
+          </div>
+        </div>
         </form>
       </div>
     </div>
