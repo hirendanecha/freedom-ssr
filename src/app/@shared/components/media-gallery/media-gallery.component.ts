@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { NgbActiveOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GalleryImgPreviewComponent } from '../gallery-img-preview/gallery-img-preview.component';
 import { ToastService } from '../../services/toast.service';
+import { FILE_EXTENSIONS, FILE_EXTENSIONS_Video } from '../../constant/file-extensions';
 
 @Component({
   selector: 'app-media-gallery',
@@ -88,12 +89,12 @@ export class MediaGalleryComponent implements OnInit {
 
   isFile(media: string): boolean {
     this.fileName = media?.split('/')[3]?.replaceAll('%', '-');
-    const FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip'];
-    return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
+    const File = FILE_EXTENSIONS;
+    return File.some((ext) => media?.endsWith(ext));
   }
   
   isVideoFile(media: string): boolean {
-    const FILE_EXTENSIONS = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv', '.mpeg', '.rmvb', '.m4v', '.3gp', '.webm', '.ogg', '.vob', '.ts', '.mpg'];
+    const FILE_EXTENSIONS = FILE_EXTENSIONS_Video;
     return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
 

@@ -6,6 +6,7 @@ import { SocketService } from '../../services/socket.service';
 import { SharedService } from '../../services/shared.service';
 import { MessageService } from '../../services/message.service';
 import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
+import { FILE_EXTENSIONS, FILE_EXTENSIONS_Video } from '../../constant/file-extensions';
 
 @Component({
   selector: 'app-forward-chat-modal',
@@ -94,12 +95,12 @@ export class ForwardChatModalComponent implements OnInit {
   }
 
   isFile(media: string): boolean {
-    const FILE_EXTENSIONS = ['.pdf','.doc','.docx','.xls','.xlsx','.zip','.apk'];
-    return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
+    const File = FILE_EXTENSIONS;
+    return File.some((ext) => media?.endsWith(ext));
   }
 
   isVideoFile(media: string): boolean {
-    const FILE_EXTENSIONS = ['.mp4','.avi','.mov','.wmv','.flv','.mkv','.mpeg','.rmvb','.m4v','.3gp','.webm','.ogg','.vob','.ts','.mpg'];
+    const FILE_EXTENSIONS = FILE_EXTENSIONS_Video;
     return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
 

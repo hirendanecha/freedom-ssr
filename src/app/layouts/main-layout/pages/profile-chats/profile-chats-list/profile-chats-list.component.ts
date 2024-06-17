@@ -34,6 +34,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ForwardChatModalComponent } from 'src/app/@shared/modals/forward-chat-modal/forward-chat-modal.component';
 import { v4 as uuid } from 'uuid';
+import { FILE_EXTENSIONS, FILE_EXTENSIONS_Video } from 'src/app/@shared/constant/file-extensions';
 
 @Component({
   selector: 'app-profile-chats-list',
@@ -129,6 +130,8 @@ export class ProfileChatsListComponent
 
   ngOnInit(): void {
     if (this.userChat?.roomId || this.userChat?.groupId) {
+      this.messageList = [];
+      this.filteredMessageList = [];
       this.getMessageList();
     }
     this.socketService.socket?.on('new-message', (data) => {
@@ -708,16 +711,12 @@ export class ProfileChatsListComponent
   }
 
   isPdf(media: string): boolean {
+    if (!media) {
+      return false;
+    }
     this.pdfmsg = media?.split('/')[3]?.replaceAll('%', '-');
-    const fileType =
-      media.endsWith('.pdf') ||
-      media.endsWith('.doc') ||
-      media.endsWith('.docx') ||
-      media.endsWith('.xls') ||
-      media.endsWith('.xlsx') ||
-      media.endsWith('.zip') ||
-      media.endsWith('.apk');
-    return media && fileType;
+    const fileType = FILE_EXTENSIONS.some(ext => media.endsWith(ext));
+    return fileType;
   }
 
   pdfView(pdfUrl) {
@@ -730,36 +729,12 @@ export class ProfileChatsListComponent
   }
 
   isFile(media: string): boolean {
-    const FILE_EXTENSIONS = [
-      '.pdf',
-      '.doc',
-      '.docx',
-      '.xls',
-      '.xlsx',
-      '.zip',
-      '.apk',
-    ];
-    return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
+    const File = FILE_EXTENSIONS
+    return File.some((ext) => media?.endsWith(ext));
   }
 
   isVideoFile(media: string): boolean {
-    const FILE_EXTENSIONS = [
-      '.mp4',
-      '.avi',
-      '.mov',
-      '.wmv',
-      '.flv',
-      '.mkv',
-      '.mpeg',
-      '.rmvb',
-      '.m4v',
-      '.3gp',
-      '.webm',
-      '.ogg',
-      '.vob',
-      '.ts',
-      '.mpg',
-    ];
+    const FILE_EXTENSIONS = FILE_EXTENSIONS_Video
     return FILE_EXTENSIONS.some((ext) => media?.endsWith(ext));
   }
 
@@ -798,14 +773,7 @@ export class ProfileChatsListComponent
     this.replyMessage.msgText = msgObj.messageText;
     this.replyMessage.createdDate = msgObj?.createdDate;
     this.replyMessage.Username = msgObj.Username;
-    // const file = msgObj.messageMedia;
-    // const fileType =
-    //   file.endsWith('.pdf') ||
-    //   file.endsWith('.doc') ||
-    //   file.endsWith('.docx') ||
-    //   file.endsWith('.xls') ||
-    //   file.endsWith('.xlsx') ||
-    //   file.endsWith('.zip');
+
     if (!msgObj.messageText) {
       if (this.isFile(msgObj.messageMedia)) {
         this.pdfName = msgObj.messageMedia;
