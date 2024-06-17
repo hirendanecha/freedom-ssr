@@ -876,7 +876,21 @@
               </li>
             </ng-container>
           </ul>
-          <app-inline-loader *ngIf="isFileUploadInProgress" />
+          <app-inline-loader *ngIf="isFileUploadInProgress && !progressValue" />
+          <ng-container *ngIf="progressValue">
+            <div class="container d-flex justify-content-center padding">
+              <div class="row">
+                <div class="col-md-9 col-sm-6">
+                  <div class="progress">
+                    <span>
+                      <span class="progress-bar" [ngStyle]="{'transform': 'rotate(' + updateProgress() + 'deg)'}"></span>
+                    </span>
+                    <div class="progress-value">{{ progressValue }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>            
+          </ng-container>
           <ng-container *ngIf="filteredMessageList?.length">
             <ng-container
               *ngIf="
