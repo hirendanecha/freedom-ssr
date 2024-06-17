@@ -82,7 +82,8 @@
           }
         }
         .chat-content-sidepanel {
-          height: calc(100vh - 205px) !important;
+          height: calc(96vh - 205px) !important;
+          // height: calc(100vh - 205px) !important;
           // height: calc(100vh - 160px) !important;
           overflow-y: auto;
         }
@@ -207,9 +208,9 @@
     }
   }
 
-  .profile-active{
-    fa-icon svg path {
-      fill: #ffff;
-    }
-  }
+  // .profile-active{
+  //   fa-icon svg path {
+  //     fill: #ffff;
+  //   }
+  // }
 }

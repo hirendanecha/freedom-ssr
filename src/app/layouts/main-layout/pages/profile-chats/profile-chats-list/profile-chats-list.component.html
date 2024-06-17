@@ -98,7 +98,9 @@
           class="d-flex gap-3 align-items-center"
           *ngIf="userChat.isAccepted === 'Y'"
         >
-          <div ngbDropdown class="avatar-item online-status d-none d-md-block">
+          <div ngbDropdown class="avatar-item online-status"
+          [ngClass]="!sidebarClass ? 'd-none d-md-block' : 'd-none'"
+        >
             <!--  -->
             <button
               ngbDropdownToggle
@@ -196,8 +198,9 @@
             (click)="createGroup()"
             ><fa-icon [icon]="['fas', 'users']" class="font-20-px m-1"
           /></a>
-          <div class="gap-3 d-flex flex-column flex-sm-row">
+          <div class="gap-3 d-flex flex-wrap">
             <a
+              [ngClass]="sidebarClass ? 'd-none' : ''"
               *ngIf="userChat.roomId || userChat.groupId"
               class="nav-icon cursor"
               data-toggle="tooltip"
