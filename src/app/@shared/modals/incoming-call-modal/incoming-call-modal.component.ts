@@ -6,7 +6,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Howl } from 'howler';
 import { SocketService } from '../../services/socket.service';
 import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
@@ -39,7 +39,8 @@ export class IncomingcallModalComponent
     public encryptDecryptService: EncryptDecryptService,
     private soundControlService: SoundControlService,
     private customerService: CustomerService,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal,
   ) {
     this.profileId = +localStorage.getItem('profileId');
   }
@@ -75,7 +76,15 @@ export class IncomingcallModalComponent
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.socketService.socket?.on('notification', (data: any) => {
+      if (data?.actionType === 'SC') {
+        this.sound?.stop();
+        this.modalService.dismissAll();
+        clearTimeout(this.hangUpTimeout);
+      }
+    })
+  }
 
   pickUpCall(): void {
     this.sound?.stop();
