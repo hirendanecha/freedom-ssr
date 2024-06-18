@@ -112,6 +112,10 @@ export class ProfileChatsListComponent
   currentUser: any = [];
   currentIndex: number = -1;
   currentHighlightedIndex: number = -1;
+  uploadTo = {
+    groupId: null,
+    roomId: null,
+  };
   // messageList: any = [];
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   constructor(
@@ -234,8 +238,11 @@ export class ProfileChatsListComponent
             profileId: data.sentBy,
           };
           this.socketService.readMessage(readData, (res) => {
-            console.log(res);
-
+            if (res && this.sharedService.isNotify) {
+              this.originalFavicon['href'] = '/assets/images/icon.jpg';
+              this.sharedService.isNotify = false;
+            }
+            // console.log(res);
             return;
           });
         }
@@ -281,12 +288,12 @@ export class ProfileChatsListComponent
       this.filteredMessageList = [];
       this.hasMoreData = false;
       this.getGroupDetails(this.userChat.groupId);
-      this.notificationNavigation();
       this.resetData();
     } else {
       this.groupData = null;
     }
     if (this.userChat?.roomId || this.userChat?.groupId) {
+      this.notificationNavigation();
       this.activePage = 1;
       this.messageList = [];
       this.filteredMessageList = [];
@@ -423,8 +430,8 @@ export class ProfileChatsListComponent
           : null;
       const data = {
         messageText: message,
-        roomId: this.userChat?.roomId || null,
-        groupId: this.userChat?.groupId || null,
+        roomId: this.uploadTo.roomId ? this.uploadTo.roomId : this.userChat?.roomId || null,
+        groupId: this.uploadTo.groupId ? this.uploadTo.groupId : this.userChat?.groupId || null,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
@@ -468,7 +475,7 @@ export class ProfileChatsListComponent
         }
         if (this.filteredMessageList.length > 0) {
           const lastIndex = this.filteredMessageList.length - 1;
-          if (this.filteredMessageList[lastIndex]) {
+          if (this.filteredMessageList[lastIndex] && !this.uploadTo.roomId && !this.uploadTo.groupId) {
             this.filteredMessageList[lastIndex]?.['messages'].push(data);
           }
         } else {
@@ -536,6 +543,10 @@ export class ProfileChatsListComponent
     this.pdfName = null;
     this.viewUrl = null;
     this.resetData();
+    if (this.isFileUploadInProgress) {
+      this.cancelUpload$.next();
+      this.isFileUploadInProgress = false;
+    }
   }
 
   removeReplay(): void {
@@ -560,30 +571,35 @@ export class ProfileChatsListComponent
       if (this.chatObj.msgText || this.selectedFile.name) {
         if (this.selectedFile) {
           this.isFileUploadInProgress = true;
-          this.postService
-            .uploadFile(this.selectedFile)
-            .pipe(takeUntil(this.cancelUpload$))
-            .subscribe({
-              next: (event) => {
-                if (event.type === HttpEventType.UploadProgress) {
-                  let streamnameProgress = Math.round(
-                    (100 * event.loaded) / event.total
-                  );
-                  this.progressValue = streamnameProgress;
-                  this.cdr.markForCheck();
-                } else if (event.type === HttpEventType.Response) {
-                  this.isFileUploadInProgress = false;
-                  this.chatObj.msgMedia = event.body.url;
-                  this.sendMessage();
-                  this.progressValue = 0;
-                }
-              },
-              error: (err) => {
+          const param = {
+            roomId: this.userChat?.roomId,
+            groupId: this.userChat?.groupId,
+          }
+          this.postService.uploadFile(this.selectedFile, param).pipe(
+            takeUntil(this.cancelUpload$)
+          ).subscribe({
+            next: (event) => {
+              if (event.type === HttpEventType.UploadProgress) {
+                let streamnameProgress = Math.round((100 * event.loaded) / event.total);
+                this.progressValue = streamnameProgress;
+                this.cdr.markForCheck();
+              } else if (event.type === HttpEventType.Response) {
                 this.isFileUploadInProgress = false;
-                console.log(err);
-              },
-            });
-        } else {
+                this.chatObj.msgMedia = event.body.url;
+                console.log(event.body);
+                this.uploadTo.roomId = event.body.roomId || null,
+                this.uploadTo.groupId = event.body.groupId || null,
+                this.sendMessage();
+                this.progressValue = 0;
+              }
+            },
+            error: (err) => {
+              this.isFileUploadInProgress = false;
+              console.log(err);
+            },
+          });
+        } 
+        else {
           this.isFileUploadInProgress = true;
           this.sendMessage();
         }
@@ -596,10 +612,6 @@ export class ProfileChatsListComponent
 
   resetData(): void {
     document.removeEventListener('keyup', this.onKeyUp);
-    if (this.isFileUploadInProgress) {
-      this.cancelUpload$.next();
-      this.isFileUploadInProgress = false;
-    }
     this.progressValue = 0;
     this.chatObj['id'] = null;
     this.chatObj.parentMessageId = null;
@@ -1107,10 +1119,10 @@ export class ProfileChatsListComponent
 
   notificationNavigation() {
     const isRead = localStorage.getItem('isRead');
-    if (isRead === 'N') {
+    if (isRead === 'Y') {
       this.originalFavicon['href'] = '/assets/images/icon.jpg';
-      localStorage.setItem('isRead', 'Y');
       this.sharedService.isNotify = false;
+      // localStorage.setItem('isRead', 'Y');
     }
   }
 
