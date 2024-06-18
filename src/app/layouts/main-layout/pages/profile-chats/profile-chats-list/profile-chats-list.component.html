@@ -98,7 +98,7 @@
           class="d-flex gap-3 align-items-center"
           *ngIf="userChat.isAccepted === 'Y'"
         >
-          <div *ngIf="isSearch">
+          <div [ngClass]="!sidebarClass ? 'd-none d-md-block' : 'd-none'" *ngIf="isSearch">
             <input
               type="text"
               [(ngModel)]="searchQuery"
@@ -107,10 +107,10 @@
               placeholder="Search messages"
             />
           </div>
-          <a (click)="openSearch(isSearch)">
+          <a [ngClass]="!sidebarClass ? 'd-none d-md-flex' : 'd-none'" (click)="openSearch(isSearch)">
             <fa-icon
               [icon]="['fas', 'search']"
-              class="font-20-px m-1 ms-3 d-flex"
+              class="font-20-px m-1 ms-3 d-flex c-pointer"
             />
           </a>
 
@@ -254,7 +254,6 @@
                   <div class="d-flex flex-column">
                     <div class="c-pointer d-flex align-items-baseline gap-2" ngbDropdownItem>
                       <a
-                        
                         [ngClass]="sidebarClass ? 'd-none' : ''"
                         *ngIf="userChat.roomId || userChat.groupId"
                         class="nav-icon cursor d-flex align-items-center gap-2"
@@ -268,14 +267,12 @@
                       />
                       <span>Gallery</span>
                     </a>
-                     
                     </div>
                     <div
                       class="c-pointer d-flex align-items-baseline gap-2"
                       ngbDropdownItem
                     >
                       <a
-                        
                         *ngIf="userChat.roomId"
                         class="nav-icon cursor d-flex align-items-center gap-2"
                         data-toggle="tooltip"
@@ -313,52 +310,6 @@
               </div>
             </ng-container>
           </div>
-
-          <!-- <div ngbDropdown class="d-sm-none d-flex">
-            <button ngbDropdownToggle  >
-            <fa-icon 
-            [icon]="['fas', 'ellipsis-v']"
-            />
-           </button>
-            <div class="gap-3 d-flex flex-wrap" ngbDropdownMenu>
-              <div>
-              <a
-                ngbDropdownItem
-                [ngClass]="sidebarClass ? 'd-none' : ''"
-                *ngIf="userChat.roomId || userChat.groupId"
-                class="nav-icon cursor"
-                data-toggle="tooltip"
-                data-placement="bottom"
-                title="Media Gallery"
-                (click)="openMediaGallery()"
-                ><fa-icon [icon]="['fas', 'photo-film']" class="font-20-px m-1"
-              /></a>
-            </div>
-            <div>
-              <a
-              ngbDropdownItem
-              *ngIf="userChat.roomId"
-              class="nav-icon cursor"
-              data-toggle="tooltip"
-              data-placement="bottom"
-              title="Create Group"
-              (click)="createGroup()"
-              ><fa-icon [icon]="['fas', 'users']" class="font-20-px m-1"
-            /></a>
-          </div>
-          <div>
-              <a
-                ngbDropdownItem
-                class="nav-icon cursor"
-                data-toggle="tooltip"
-                data-placement="bottom"
-                title="Video Call"
-                (click)="startCall()"
-                ><fa-icon [icon]="['fas', 'phone']" class="font-20-px m-1"
-              /></a>
-            </div>
-            </div>
-          </div> -->
         </div>
       </div>
 
