@@ -125,6 +125,9 @@
         display: none;
       }
     }
+    .highlight {
+      background-color: yellow;
+    }
   }
 
   .bg-color {
@@ -379,6 +382,12 @@
     }
   }
   li.you .message {
+    .highlight {
+      background-color: #000 !important;
+    }
+    .highlighted {
+      background-color: lightblue !important; /* Adjust as per your design */
+    }
     .message-text-custom {
       a {
         color: var(--para-2nd-color) !important;
@@ -392,6 +401,12 @@
     }
   }
   li.me .message {
+    .highlight {
+      background-color: #000 !important;
+    }
+    .highlighted {
+      background-color: lightblue !important; /* Adjust as per your design */
+    }
     svg path {
       fill: var(--secondary-color);
     }

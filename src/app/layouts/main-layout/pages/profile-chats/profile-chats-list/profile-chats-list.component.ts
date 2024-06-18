@@ -1,5 +1,6 @@
 import {
   AfterViewChecked,
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -9,8 +10,10 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   SimpleChanges,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
@@ -35,7 +38,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ForwardChatModalComponent } from 'src/app/@shared/modals/forward-chat-modal/forward-chat-modal.component';
 import { v4 as uuid } from 'uuid';
-import { FILE_EXTENSIONS, FILE_EXTENSIONS_Video} from 'src/app/@shared/constant/file-extensions';
+import {
+  FILE_EXTENSIONS,
+  FILE_EXTENSIONS_Video,
+} from 'src/app/@shared/constant/file-extensions';
 import { HttpEventType } from '@angular/common/http';
 
 @Component({
@@ -45,7 +51,7 @@ import { HttpEventType } from '@angular/common/http';
 })
 // changeDetection: ChangeDetectionStrategy.OnPush,
 export class ProfileChatsListComponent
-  implements OnInit, OnChanges, AfterViewChecked, OnDestroy
+  implements OnInit, OnChanges, AfterViewChecked, OnDestroy, AfterViewInit
 {
   @Input('userChat') userChat: any = {};
   @Input('sidebarClass') sidebarClass: boolean = false;
@@ -101,9 +107,13 @@ export class ProfileChatsListComponent
   authToken: string;
   userStatus: string;
   isOnline = false;
-
+  isSearch = false;
+  searchQuery = '';
   currentUser: any = [];
+  currentIndex: number = -1;
+  currentHighlightedIndex: number = -1;
   // messageList: any = [];
+  @ViewChildren('message') messageElements: QueryList<ElementRef>;
   constructor(
     private socketService: SocketService,
     public sharedService: SharedService,
@@ -131,6 +141,7 @@ export class ProfileChatsListComponent
     };
     this.seoService.updateSeoMetaData(data);
   }
+  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     if (this.userChat?.roomId || this.userChat?.groupId) {
@@ -298,6 +309,9 @@ export class ProfileChatsListComponent
       });
       this.findUserStatus(this.userChat.profileId);
     }
+    this.messageElements.changes.subscribe(() => {
+      this.resetIndex();
+    });
   }
 
   // scroller down
@@ -546,28 +560,30 @@ export class ProfileChatsListComponent
       if (this.chatObj.msgText || this.selectedFile.name) {
         if (this.selectedFile) {
           this.isFileUploadInProgress = true;
-          this.postService.uploadFile(this.selectedFile).pipe(
-            takeUntil(this.cancelUpload$)
-          ).subscribe({
-            next: (event) => {
-              if (event.type === HttpEventType.UploadProgress) {
-                let streamnameProgress = Math.round((100 * event.loaded) / event.total);
-                this.progressValue = streamnameProgress;
-                this.cdr.markForCheck();
-              } else if (event.type === HttpEventType.Response) {
+          this.postService
+            .uploadFile(this.selectedFile)
+            .pipe(takeUntil(this.cancelUpload$))
+            .subscribe({
+              next: (event) => {
+                if (event.type === HttpEventType.UploadProgress) {
+                  let streamnameProgress = Math.round(
+                    (100 * event.loaded) / event.total
+                  );
+                  this.progressValue = streamnameProgress;
+                  this.cdr.markForCheck();
+                } else if (event.type === HttpEventType.Response) {
+                  this.isFileUploadInProgress = false;
+                  this.chatObj.msgMedia = event.body.url;
+                  this.sendMessage();
+                  this.progressValue = 0;
+                }
+              },
+              error: (err) => {
                 this.isFileUploadInProgress = false;
-                this.chatObj.msgMedia = event.body.url;
-                this.sendMessage();
-                this.progressValue = 0;
-              }
-            },
-            error: (err) => {
-              this.isFileUploadInProgress = false;
-              console.log(err);
-            },
-          });
-        } 
-        else {
+                console.log(err);
+              },
+            });
+        } else {
           this.isFileUploadInProgress = true;
           this.sendMessage();
         }
@@ -1254,5 +1270,73 @@ export class ProfileChatsListComponent
 
   updateProgress(): number {
     return (this.progressValue / 100) * 360;
+  }
+
+  openSearch(isSearch) {
+    this.isSearch = !isSearch;
+  }
+
+  scrollToHighlighted(index: number) {
+    const highlightedElements = this.messageElements
+      .toArray()
+      .filter(
+        (element) => element.nativeElement.querySelector('.highlight') !== null
+      );
+
+    if (highlightedElements.length > 0) {
+      const element = highlightedElements[index];
+      if (element) {
+        element.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }
+  }
+
+  onSearch(event): void {
+    // this.searchQuery = event.target.value;
+    console.log(event.target.value);
+    if (event.target.value) {
+      this.scrollToHighlighted(this.currentHighlightedIndex);
+    } else {
+      this.resetIndex();
+      this.scrollToBottom();
+    }
+  }
+
+  nextHighlighted() {
+    const highlightedElements = this.messageElements
+      .toArray()
+      .filter(
+        (element) => element.nativeElement.querySelector('.highlight') !== null
+      );
+
+    if (highlightedElements.length > 0) {
+      this.currentHighlightedIndex =
+        (this.currentHighlightedIndex + 1) % highlightedElements.length;
+      console.log(this.currentHighlightedIndex);
+
+      this.scrollToHighlighted(this.currentHighlightedIndex);
+    }
+  }
+
+  previousHighlighted() {
+    const highlightedElements = this.messageElements
+      .toArray()
+      .filter(
+        (element) => element.nativeElement.querySelector('.highlight') !== null
+      );
+
+    if (highlightedElements.length > 0) {
+      this.currentHighlightedIndex =
+        (this.currentHighlightedIndex - 1 + highlightedElements.length) %
+        highlightedElements.length;
+      this.scrollToHighlighted(this.currentHighlightedIndex);
+    }
+  }
+
+  resetIndex() {
+    this.currentHighlightedIndex = -1;
   }
 }
