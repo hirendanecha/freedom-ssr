@@ -99,6 +99,9 @@ import {
   faSquarePlus,
   faTableList,
   faChevronLeft,
+  faPhoneFlip,
+  faVoicemail,
+  faPhoneVolume,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -184,7 +187,7 @@ const sharedModules = [
   FontAwesomeModule,
   PipeModule,
   MentionModule,
-  QRCodeModule
+  QRCodeModule,
   // ProfileChartsModule
   // PdfViewerModule
 ];
@@ -284,7 +287,10 @@ export class SharedModule {
       faCopy,
       faSquarePlus,
       faTableList,
-      faChevronLeft
+      faChevronLeft,
+      faPhoneFlip,
+      faVoicemail,
+      faPhoneVolume
     );
   }
 }

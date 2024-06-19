@@ -116,6 +116,8 @@ export class ProfileChatsListComponent
     groupId: null,
     roomId: null,
   };
+  isOnCall = false;
+  callRoomId: number;
   // messageList: any = [];
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   constructor(
@@ -131,10 +133,12 @@ export class ProfileChatsListComponent
     private customerService: CustomerService,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private seoService: SeoService
+    private seoService: SeoService,
+    private router: Router
   ) {
     this.userId = +this.route.snapshot.paramMap.get('id');
     this.profileId = +localStorage.getItem('profileId');
+    this.callRoomId = +localStorage.getItem('callRoomId');
     // const authToken = localStorage.getItem('auth-token')
     // this.qrLink = `${environment.qrLink}${this.profileId}?token=${authToken}`;
 
@@ -144,6 +148,7 @@ export class ProfileChatsListComponent
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
+    this.isOnCall = this.router.url.includes('/freedom-call/') || false;
   }
   ngAfterViewInit(): void {}
 
@@ -430,8 +435,12 @@ export class ProfileChatsListComponent
           : null;
       const data = {
         messageText: message,
-        roomId: this.uploadTo.roomId ? this.uploadTo.roomId : this.userChat?.roomId || null,
-        groupId: this.uploadTo.groupId ? this.uploadTo.groupId : this.userChat?.groupId || null,
+        roomId: this.uploadTo.roomId
+          ? this.uploadTo.roomId
+          : this.userChat?.roomId || null,
+        groupId: this.uploadTo.groupId
+          ? this.uploadTo.groupId
+          : this.userChat?.groupId || null,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
@@ -475,7 +484,11 @@ export class ProfileChatsListComponent
         }
         if (this.filteredMessageList.length > 0) {
           const lastIndex = this.filteredMessageList.length - 1;
-          if (this.filteredMessageList[lastIndex] && !this.uploadTo.roomId && !this.uploadTo.groupId) {
+          if (
+            this.filteredMessageList[lastIndex] &&
+            !this.uploadTo.roomId &&
+            !this.uploadTo.groupId
+          ) {
             this.filteredMessageList[lastIndex]?.['messages'].push(data);
           }
         } else {
@@ -574,32 +587,34 @@ export class ProfileChatsListComponent
           const param = {
             roomId: this.userChat?.roomId,
             groupId: this.userChat?.groupId,
-          }
-          this.postService.uploadFile(this.selectedFile, param).pipe(
-            takeUntil(this.cancelUpload$)
-          ).subscribe({
-            next: (event) => {
-              if (event.type === HttpEventType.UploadProgress) {
-                let streamnameProgress = Math.round((100 * event.loaded) / event.total);
-                this.progressValue = streamnameProgress;
-                this.cdr.markForCheck();
-              } else if (event.type === HttpEventType.Response) {
+          };
+          this.postService
+            .uploadFile(this.selectedFile, param)
+            .pipe(takeUntil(this.cancelUpload$))
+            .subscribe({
+              next: (event) => {
+                if (event.type === HttpEventType.UploadProgress) {
+                  let streamnameProgress = Math.round(
+                    (100 * event.loaded) / event.total
+                  );
+                  this.progressValue = streamnameProgress;
+                  this.cdr.markForCheck();
+                } else if (event.type === HttpEventType.Response) {
+                  this.isFileUploadInProgress = false;
+                  this.chatObj.msgMedia = event.body.url;
+                  console.log(event.body);
+                  (this.uploadTo.roomId = event.body.roomId || null),
+                    (this.uploadTo.groupId = event.body.groupId || null),
+                    this.sendMessage();
+                  this.progressValue = 0;
+                }
+              },
+              error: (err) => {
                 this.isFileUploadInProgress = false;
-                this.chatObj.msgMedia = event.body.url;
-                console.log(event.body);
-                this.uploadTo.roomId = event.body.roomId || null,
-                this.uploadTo.groupId = event.body.groupId || null,
-                this.sendMessage();
-                this.progressValue = 0;
-              }
-            },
-            error: (err) => {
-              this.isFileUploadInProgress = false;
-              console.log(err);
-            },
-          });
-        } 
-        else {
+                console.log(err);
+              },
+            });
+        } else {
           this.isFileUploadInProgress = true;
           this.sendMessage();
         }
@@ -884,6 +899,8 @@ export class ProfileChatsListComponent
       backdrop: 'static',
     });
     const originUrl = `callId-${new Date().getTime()}`;
+    const parts = window.location.href.split('/');
+    const lastParam = parts[parts.length - 1];
     const data = {
       ProfilePicName:
         this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
@@ -891,8 +908,9 @@ export class ProfileChatsListComponent
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
       notificationByProfileId: this.profileId,
-      link: originUrl,
+      link: this.isOnCall ? lastParam : originUrl,
     };
+    localStorage.setItem('callRoomId', this.userChat?.roomId);
     if (!data?.groupId) {
       data['notificationToProfileId'] = this.userChat.profileId;
     }
