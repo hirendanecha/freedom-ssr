@@ -641,6 +641,8 @@ export class ProfileChatsListComponent
     this.pdfName = null;
     this.selectedFile = null;
     this.messageInputValue = '';
+    this.searchQuery = '';
+    this.isSearch = false;
     if (this.messageInputValue !== null) {
       setTimeout(() => {
         this.messageInputValue = null;
@@ -1306,23 +1308,37 @@ export class ProfileChatsListComponent
 
   openSearch(isSearch) {
     this.isSearch = !isSearch;
+    this.clearSearchQuery();
+    if (!isSearch) {
+      setTimeout(() => {
+        const searchInput = document.querySelector(
+          '.searchChatBar .input-area input'
+        ) as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 100);
+    }
   }
 
   scrollToHighlighted(index: number) {
-    this.messageElements.forEach(element => {
-      const currentHighlighted = element.nativeElement.querySelector('.highlighted');
+    this.messageElements.forEach((element) => {
+      const currentHighlighted =
+        element.nativeElement.querySelector('.highlighted');
       if (currentHighlighted) {
         this.renderer.removeClass(currentHighlighted, 'highlighted');
       }
     });
-    const highlightedElements = this.messageElements.toArray().filter(element =>
-      element.nativeElement.querySelector('.highlight') !== null
-    );
-  
+    const highlightedElements = this.messageElements
+      .toArray()
+      .filter(
+        (element) => element.nativeElement.querySelector('.highlight') !== null
+      );
+
     if (index >= 0 && index < highlightedElements.length) {
       const element = highlightedElements[index];
       const highlightedSpan = element.nativeElement.querySelector('.highlight');
-  
+
       if (highlightedSpan) {
         this.renderer.addClass(highlightedSpan, 'highlighted');
         element.nativeElement.scrollIntoView({
@@ -1332,7 +1348,7 @@ export class ProfileChatsListComponent
       }
     }
   }
-  
+
   onSearch(event): void {
     // this.searchQuery = event.target.value;
     // console.log(event.target.value);
@@ -1350,7 +1366,7 @@ export class ProfileChatsListComponent
       .filter(
         (element) => element.nativeElement.querySelector('.highlight') !== null
       );
-  
+
     if (highlightedElements.length > 0) {
       this.currentHighlightedIndex =
         (this.currentHighlightedIndex - 1 + highlightedElements.length) %
@@ -1361,21 +1377,25 @@ export class ProfileChatsListComponent
 
   previousHighlighted() {
     const highlightedElements = this.messageElements
-    .toArray()
-    .filter(
-      (element) => element.nativeElement.querySelector('.highlight') !== null
-    );
+      .toArray()
+      .filter(
+        (element) => element.nativeElement.querySelector('.highlight') !== null
+      );
 
-  if (highlightedElements.length > 0) {
-    this.currentHighlightedIndex =
-      (this.currentHighlightedIndex + 1) % highlightedElements.length;
-    console.log(this.currentHighlightedIndex);
+    if (highlightedElements.length > 0) {
+      this.currentHighlightedIndex =
+        (this.currentHighlightedIndex + 1) % highlightedElements.length;
+      // console.log(this.currentHighlightedIndex);
 
-    this.scrollToHighlighted(this.currentHighlightedIndex);
-  }
+      this.scrollToHighlighted(this.currentHighlightedIndex);
+    }
   }
 
   resetIndex() {
     this.currentHighlightedIndex = -1;
+  }
+
+  clearSearchQuery(): void {
+    this.searchQuery = '';
   }
 }

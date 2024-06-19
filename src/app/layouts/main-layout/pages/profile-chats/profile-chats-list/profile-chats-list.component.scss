@@ -1,4 +1,10 @@
 :host {
+  .searchChatBar{
+    position: absolute;
+    width: calc(100% - 50px);
+    top: 76px;
+    z-index: 1;
+  }
   .main {
     background: var(--section-1st-color);
     height: 78vh;

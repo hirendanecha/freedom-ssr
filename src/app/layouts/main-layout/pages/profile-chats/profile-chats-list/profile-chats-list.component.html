@@ -60,9 +60,10 @@
   <ng-container *ngIf="userChat.roomId || userChat.groupId">
     <div class="main">
       <div
-        class="chat-head py-2 px-3 d-center justify-content-between h-72-px"
+        class="chat-head py-2 px-3 position-relative"
         *ngIf="userChat?.createdBy"
       >
+      <div class="d-center justify-content-between h-58-px">
         <div
           class="d-flex gap-4 align-items-center c-pointer"
           (click)="userChat.groupId ? groupEditDetails(groupData) : ''"
@@ -98,20 +99,7 @@
           class="d-flex gap-3 align-items-center"
           *ngIf="userChat.isAccepted === 'Y'"
         >
-          <div
-            [ngClass]="!sidebarClass ? 'd-none d-md-block' : 'd-none'"
-            *ngIf="isSearch"
-          >
-            <input
-              type="text"
-              [(ngModel)]="searchQuery"
-              (change)="onSearch($event)"
-              (keydown.enter)="nextHighlighted()"
-              placeholder="Search messages"
-            />
-          </div>
           <a
-            [ngClass]="!sidebarClass ? 'd-none d-md-flex' : 'd-none'"
             (click)="openSearch(isSearch)"
           >
             <fa-icon
@@ -326,6 +314,40 @@
             </ng-container>
           </div>
         </div>
+      </div>
+        
+      <ng-container *ngIf="isSearch">
+        <div class="searchChatBar">
+        <div class="d-flex gap-3">
+          <div class="input-area py-2 d-flex align-items-center w-100">
+            <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (change)="onSearch($event)"
+            (keydown.enter)="nextHighlighted()"
+            placeholder="Find a message in current conversation"
+            />
+            <fa-icon [icon]="['fas', 'xmark']" *ngIf="searchQuery" (click)="clearSearchQuery()" />
+          </div>
+            <div class="d-flex gap-2">
+              <button (click)="nextHighlighted()">
+                <fa-icon
+                [icon]="['fas', 'circle-chevron-up']"
+                class="font-24-px me-2"
+              ></fa-icon>
+              </button>
+              <button (click)="previousHighlighted()">
+                <fa-icon
+                [icon]="['fas', 'circle-chevron-down']"
+                class="font-24-px me-2"
+              ></fa-icon>
+              </button>
+            </div>
+            <button (click)="openSearch(isSearch)">Cancel</button>
+          </div>
+        </div>
+      </ng-container>
+
       </div>
 
       <div
