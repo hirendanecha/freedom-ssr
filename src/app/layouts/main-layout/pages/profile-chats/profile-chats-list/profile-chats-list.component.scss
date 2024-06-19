@@ -384,9 +384,11 @@
   li.you .message {
     .highlight {
       background-color: #000 !important;
+      color: #fff !important;
     }
     .highlighted {
-      background-color: lightblue !important; /* Adjust as per your design */
+      background-color: yellow !important;
+      color: #000 !important;
     }
     .message-text-custom {
       a {
@@ -403,9 +405,11 @@
   li.me .message {
     .highlight {
       background-color: #000 !important;
+      color: #fff !important;
     }
     .highlighted {
-      background-color: lightblue !important; /* Adjust as per your design */
+      background-color: yellow !important;
+      color: #000 !important;
     }
     svg path {
       fill: var(--secondary-color);

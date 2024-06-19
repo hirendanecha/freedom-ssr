@@ -11,6 +11,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  Renderer2,
   SimpleChanges,
   ViewChild,
   ViewChildren,
@@ -134,6 +135,7 @@ export class ProfileChatsListComponent
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private seoService: SeoService,
+    private renderer: Renderer2,
     private router: Router
   ) {
     this.userId = +this.route.snapshot.paramMap.get('id');
@@ -1307,15 +1309,22 @@ export class ProfileChatsListComponent
   }
 
   scrollToHighlighted(index: number) {
-    const highlightedElements = this.messageElements
-      .toArray()
-      .filter(
-        (element) => element.nativeElement.querySelector('.highlight') !== null
-      );
-
-    if (highlightedElements.length > 0) {
+    this.messageElements.forEach(element => {
+      const currentHighlighted = element.nativeElement.querySelector('.highlighted');
+      if (currentHighlighted) {
+        this.renderer.removeClass(currentHighlighted, 'highlighted');
+      }
+    });
+    const highlightedElements = this.messageElements.toArray().filter(element =>
+      element.nativeElement.querySelector('.highlight') !== null
+    );
+  
+    if (index >= 0 && index < highlightedElements.length) {
       const element = highlightedElements[index];
-      if (element) {
+      const highlightedSpan = element.nativeElement.querySelector('.highlight');
+  
+      if (highlightedSpan) {
+        this.renderer.addClass(highlightedSpan, 'highlighted');
         element.nativeElement.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
@@ -1323,10 +1332,10 @@ export class ProfileChatsListComponent
       }
     }
   }
-
+  
   onSearch(event): void {
     // this.searchQuery = event.target.value;
-    console.log(event.target.value);
+    // console.log(event.target.value);
     if (event.target.value) {
       this.scrollToHighlighted(this.currentHighlightedIndex);
     } else {
