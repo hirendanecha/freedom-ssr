@@ -1323,29 +1323,29 @@ export class ProfileChatsListComponent
       .filter(
         (element) => element.nativeElement.querySelector('.highlight') !== null
       );
-
-    if (highlightedElements.length > 0) {
-      this.currentHighlightedIndex =
-        (this.currentHighlightedIndex + 1) % highlightedElements.length;
-      console.log(this.currentHighlightedIndex);
-
-      this.scrollToHighlighted(this.currentHighlightedIndex);
-    }
-  }
-
-  previousHighlighted() {
-    const highlightedElements = this.messageElements
-      .toArray()
-      .filter(
-        (element) => element.nativeElement.querySelector('.highlight') !== null
-      );
-
+  
     if (highlightedElements.length > 0) {
       this.currentHighlightedIndex =
         (this.currentHighlightedIndex - 1 + highlightedElements.length) %
         highlightedElements.length;
       this.scrollToHighlighted(this.currentHighlightedIndex);
     }
+  }
+
+  previousHighlighted() {
+    const highlightedElements = this.messageElements
+    .toArray()
+    .filter(
+      (element) => element.nativeElement.querySelector('.highlight') !== null
+    );
+
+  if (highlightedElements.length > 0) {
+    this.currentHighlightedIndex =
+      (this.currentHighlightedIndex + 1) % highlightedElements.length;
+    console.log(this.currentHighlightedIndex);
+
+    this.scrollToHighlighted(this.currentHighlightedIndex);
+  }
   }
 
   resetIndex() {
