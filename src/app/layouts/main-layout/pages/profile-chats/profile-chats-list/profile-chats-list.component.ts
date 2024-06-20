@@ -119,7 +119,7 @@ export class ProfileChatsListComponent
   };
   isOnCall = false;
   callRoomId: number;
-  isLoadMorePosts: boolean = true;
+  isLoading: boolean = false;
   // messageList: any = [];
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   constructor(
@@ -1192,8 +1192,10 @@ export class ProfileChatsListComponent
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
     };
+    this.isLoading = true;
     this.socketService.getMessages(messageObj, (res) => {
       this.filterChatMessage(res);
+      this.isLoading = false;
     });
   }
 
@@ -1402,7 +1404,7 @@ export class ProfileChatsListComponent
 
   onScroll(event: any): void {
     const element = event.target;
-    if (element.scrollTop === 0 && this.hasMoreData) {
+    if (element.scrollTop < 100 && this.hasMoreData && !this.isLoading) {
       this.loadMoreChats();
     }
   }
