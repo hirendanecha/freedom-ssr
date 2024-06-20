@@ -325,6 +325,7 @@
             [(ngModel)]="searchQuery"
             (change)="onSearch($event)"
             (keydown.enter)="nextHighlighted()"
+            (keydown.shift.enter)="previousHighlighted()"
             placeholder="Find a message in current conversation"
             />
             <fa-icon [icon]="['fas', 'xmark']" *ngIf="searchQuery" (click)="clearSearchQuery()" />

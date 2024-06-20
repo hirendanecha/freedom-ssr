@@ -43,6 +43,9 @@ export class HeaderComponent {
   };
   environment = environment;
   originalFavicon: HTMLLinkElement;
+
+  hideSearch = false;
+
   constructor(
     private modalService: NgbModal,
     public sharedService: SharedService,
