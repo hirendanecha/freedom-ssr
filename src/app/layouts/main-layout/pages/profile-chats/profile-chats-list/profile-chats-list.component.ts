@@ -119,6 +119,7 @@ export class ProfileChatsListComponent
   };
   isOnCall = false;
   callRoomId: number;
+  isLoadMorePosts: boolean = true;
   // messageList: any = [];
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   constructor(
@@ -1397,5 +1398,12 @@ export class ProfileChatsListComponent
 
   clearSearchQuery(): void {
     this.searchQuery = '';
+  }
+
+  onScroll(event: any): void {
+    const element = event.target;
+    if (element.scrollTop === 0 && this.hasMoreData) {
+      this.loadMoreChats();
+    }
   }
 }

@@ -355,6 +355,7 @@
         [ngClass]="sidebarClass ? 'chat-content-sidepanel' : 'chat-content'"
         class="position-relative"
         #chatContent
+        (scroll)="onScroll($event)"
       >
         <ng-container
           *ngIf="
@@ -410,7 +411,7 @@
             userChat.isAccepted === 'Y'
           "
         >
-          <div
+          <!-- <div
             class="d-center m-3 text-white c-pointer"
             (click)="loadMoreChats()"
             *ngIf="hasMoreData"
@@ -420,7 +421,7 @@
               class="font-24-px me-2"
             ></fa-icon>
             <span>Loadmore</span>
-          </div>
+          </div> -->
           <ul
             class="py-2 px-3 cus-scrollbar bottom-0 main-chat-box"
             *ngFor="let msg of filteredMessageList"
