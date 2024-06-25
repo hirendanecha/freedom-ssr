@@ -153,7 +153,12 @@ export class ProfileChatsListComponent
     this.seoService.updateSeoMetaData(data);
     this.isOnCall = this.router.url.includes('/freedom-call/') || false;
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    if (this.callRoomId) {
+      localStorage.removeItem('callRoomId')
+      this.callRoomId = null
+    }
+  }
 
   ngOnInit(): void {
     if (this.userChat?.roomId || this.userChat?.groupId) {
@@ -272,7 +277,7 @@ export class ProfileChatsListComponent
           });
         });
       }
-      console.log(this.sharedService.onlineUserList);
+      // console.log(this.sharedService.onlineUserList);
     });
     this.socketService.socket?.emit('online-users');
     this.socketService.socket?.on('typing', (data) => {
@@ -320,7 +325,7 @@ export class ProfileChatsListComponent
             });
           });
         }
-        console.log(this.sharedService.onlineUserList);
+        // console.log(this.sharedService.onlineUserList);
       });
       this.findUserStatus(this.userChat.profileId);
     }
