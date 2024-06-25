@@ -438,12 +438,8 @@ export class ProfileChatsListComponent
           : null;
       const data = {
         messageText: message,
-        roomId: this.uploadTo.roomId
-          ? this.uploadTo.roomId
-          : this.userChat?.roomId || null,
-        groupId: this.uploadTo.groupId
-          ? this.uploadTo.groupId
-          : this.userChat?.groupId || null,
+        roomId: this.uploadTo.roomId ?? this.userChat?.roomId ?? null,
+        groupId: this.uploadTo.groupId ?? this.userChat?.groupId ?? null,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
@@ -603,13 +599,14 @@ export class ProfileChatsListComponent
                   this.progressValue = streamnameProgress;
                   this.cdr.markForCheck();
                 } else if (event.type === HttpEventType.Response) {
+                  if (event?.body?.roomId !== this.userChat?.roomId) {
+                    this.uploadTo.roomId = event.body.roomId;
+                  } else if (event?.body?.groupId !== this.userChat?.groupId) {
+                    this.uploadTo.groupId = event.body.groupId;
+                  }
                   this.isFileUploadInProgress = false;
-                  this.chatObj.msgMedia = event.body.url;
-                  console.log(event.body);
-                  (this.uploadTo.roomId = event.body.roomId || null),
-                    (this.uploadTo.groupId = event.body.groupId || null),
-                    this.sendMessage();
-                  this.progressValue = 0;
+                  this.chatObj.msgMedia = event?.body?.url;
+                  this.sendMessage();
                 }
               },
               error: (err) => {
@@ -644,6 +641,8 @@ export class ProfileChatsListComponent
     this.messageInputValue = '';
     this.searchQuery = '';
     this.isSearch = false;
+    this.uploadTo.roomId = null
+    this.uploadTo.groupId = null
     if (this.messageInputValue !== null) {
       setTimeout(() => {
         this.messageInputValue = null;
