@@ -155,8 +155,8 @@ export class ProfileChatsListComponent
   }
   ngAfterViewInit(): void {
     if (this.callRoomId) {
-      localStorage.removeItem('callRoomId')
-      this.callRoomId = null
+      localStorage.removeItem('callRoomId');
+      this.callRoomId = null;
     }
   }
 
@@ -371,15 +371,28 @@ export class ProfileChatsListComponent
       }
     );
   }
-
   prepareMessage(text: string): string | null {
+    const regexFontStart = /<font\s+[^>]*?>/gi;
+    const regexFontEnd = /<\/font\s*?>/gi;
+    let cleanedText = text
+      .replace(regexFontStart, '<font>')
+      .replace(regexFontEnd, '</font>');
     const regex =
       /<img\s+[^>]*src="data:image\/.*?;base64,[^\s]*"[^>]*>|<img\s+[^>]*src=""[^>]*>/g;
-    let cleanedText = text.replace(regex, '');
+    cleanedText = cleanedText.replace(regex, '');
     const divregex = /<div\s*>\s*<\/div>/g;
     if (cleanedText.replace(divregex, '').trim() === '') return null;
-    return this.encryptDecryptService?.encryptUsingAES256(cleanedText);
+    return this.encryptDecryptService?.encryptUsingAES256(cleanedText) || null;
   }
+
+  // prepareMessage(text: string): string | null {
+  //   const regex =
+  //     /<img\s+[^>]*src="data:image\/.*?;base64,[^\s]*"[^>]*>|<img\s+[^>]*src=""[^>]*>/g;
+  //   let cleanedText = text.replace(regex, '');
+  //   const divregex = /<div\s*>\s*<\/div>/g;
+  //   if (cleanedText.replace(divregex, '').trim() === '') return null;
+  //   return this.encryptDecryptService?.encryptUsingAES256(cleanedText);
+  // }
 
   // send btn
   sendMessage(): void {
@@ -646,8 +659,8 @@ export class ProfileChatsListComponent
     this.messageInputValue = '';
     this.searchQuery = '';
     this.isSearch = false;
-    this.uploadTo.roomId = null
-    this.uploadTo.groupId = null
+    this.uploadTo.roomId = null;
+    this.uploadTo.groupId = null;
     if (this.messageInputValue !== null) {
       setTimeout(() => {
         this.messageInputValue = null;
@@ -754,6 +767,23 @@ export class ProfileChatsListComponent
     this.messageInputValue = msgObj.messageText;
     this.chatObj.msgMedia = msgObj.messageMedia;
     this.chatObj.parentMessageId = msgObj?.parentMessageId || null;
+    const tagUserInput = document.querySelector('app-tag-user-input .tag-input-div') as HTMLInputElement;
+    if (tagUserInput) {
+      setTimeout(() => {
+        this.focusCursorToEnd(tagUserInput);
+        tagUserInput.scrollTop = tagUserInput.scrollHeight;
+      }, 100);
+    }    
+  }
+
+  focusCursorToEnd(tagUserInput) {
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(tagUserInput);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    tagUserInput.focus();
   }
 
   deleteMsg(msg, date): void {
