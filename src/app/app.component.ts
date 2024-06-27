@@ -87,7 +87,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         if (splashScreenLoader) {
           splashScreenLoader.style.display = 'none';
         }
-      }, 1000);
+      }, 2000);
 
       if (!this.socketService.socket?.connected) {
         this.socketService.socket?.connect();
