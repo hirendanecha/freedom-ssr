@@ -43,6 +43,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   };
   theme = '';
   passwordHidden: boolean = true;
+  confirmpasswordHidden: boolean = true;
 
   @ViewChild('zipCode') zipCode: ElementRef;
 
@@ -117,6 +118,12 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   togglePasswordVisibility(passwordInput: HTMLInputElement) {
     passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
     this.passwordHidden = !this.passwordHidden;
+  }
+
+  toggleConfirmPasswordVisibility(confirmpasswordInput: HTMLInputElement) {
+    confirmpasswordInput.type =
+    confirmpasswordInput.type === 'password' ? 'text' : 'password';
+    this.confirmpasswordHidden = !this.confirmpasswordHidden;
   }
 
   selectFiles(event) {

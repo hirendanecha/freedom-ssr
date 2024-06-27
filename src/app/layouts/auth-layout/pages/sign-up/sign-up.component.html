@@ -149,7 +149,7 @@
               autocomplete="new-password"
               #passwordInput
             />
-            <fa-icon [icon]="passwordHidden ? ['fas', 'eye'] : ['fas', 'eye-slash']" class="font-20-px position-absolute" (click)="togglePasswordVisibility(passwordInput)"></fa-icon>
+            <fa-icon [icon]="passwordHidden ? ['fas', 'eye'] : ['fas', 'eye-slash']" class="font-20-px position-absolute c-pointer" (click)="togglePasswordVisibility(passwordInput)"></fa-icon>
           </div>
           <div
             class="text-danger"
@@ -166,18 +166,26 @@
           <label class="form-label"
             >Confirm Password<span class="text-danger">*</span></label
           >
-          <input
-            type="password"
-            class="input-area"
-            required
-            name="confirmPassword"
-            placeholder="Enter confirm password"
-            (focusout)="validatepassword()"
-            (input)="changetopassword($event)"
-            (keyup)="changetopassword($event)"
-            formControlName="confirm_password"
-            autocomplete="new-password"
-          />
+          <div class="d-flex custom-input-area position-relative">
+            <input
+              type="password"
+              class="input-area"
+              required
+              name="confirmPassword"
+              placeholder="Enter confirm password"
+              (focusout)="validatepassword()"
+              (input)="changetopassword($event)"
+              (keyup)="changetopassword($event)"
+              formControlName="confirm_password"
+              autocomplete="new-password"
+              #confirmpasswordInput
+            />
+            <fa-icon
+            [icon]="confirmpasswordHidden ? ['fas', 'eye'] : ['fas', 'eye-slash']"
+            class="font-20-px position-absolute eye-slash c-pointer"
+            (click)="toggleConfirmPasswordVisibility(confirmpasswordInput)"
+            ></fa-icon>
+          </div>
           <div
             class="text-danger"
             *ngIf="
@@ -222,6 +230,7 @@
             class="input-area w-100"
             formControlName="Country"
             (input)="convertToUppercase($event)"
+            (change)="onCountryChange($event)"
           >
             <option [value]="defaultCountry">United states</option>
             <option
