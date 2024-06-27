@@ -605,6 +605,7 @@ export class ProfileChatsListComponent
             roomId: this.userChat?.roomId,
             groupId: this.userChat?.groupId,
           };
+          this.scrollToBottom();
           this.postService
             .uploadFile(this.selectedFile, param)
             .pipe(takeUntil(this.cancelUpload$))
