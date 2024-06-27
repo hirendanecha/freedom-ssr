@@ -218,7 +218,21 @@ export class ProfileChatsListComponent
           }
           this.scrollToBottom();
           if (data !== null) {
-            this.messageList.push(data);
+            // this.messageList.push(data);
+            const url = data?.messageText || null;
+            const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
+            const matches = text?.match(
+              /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
+            );
+
+            if (matches?.[0]) {
+              this.getMetaDataFromUrlStr(matches?.[0]).then((metaData) => {
+                data['metaData'] = metaData;
+                this.messageList.push(data);
+              });
+            } else {
+              this.messageList.push(data);
+            }
           }
           const lastIndex = this.filteredMessageList.length - 1;
           if (this.filteredMessageList[lastIndex]) {
@@ -487,6 +501,7 @@ export class ProfileChatsListComponent
           );
           if (matches?.[0]) {
             data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
+            this.scrollToBottom();
           }
         }
         this.messageList.push(data);
@@ -774,7 +789,7 @@ export class ProfileChatsListComponent
         this.focusCursorToEnd(tagUserInput);
         tagUserInput.scrollTop = tagUserInput.scrollHeight;
       }, 100);
-    }    
+    }
   }
 
   focusCursorToEnd(tagUserInput) {
@@ -881,7 +896,12 @@ export class ProfileChatsListComponent
   // }
 
   getMetaDataFromUrlStr(url: string): Promise<any> {
-    return new Promise((resolve, reject) => {
+    // return new Promise((resolve, reject) => {
+    // if (url === this.metaData?.url) {
+    //   resolve(this.metaData);
+    //   return;
+    // }
+    return new Promise((resolve) => {
       if (url === this.metaData?.url) {
         resolve(this.metaData);
         return;
@@ -922,7 +942,12 @@ export class ProfileChatsListComponent
           },
           error: (err) => {
             this.isMetaLoader = false;
-            reject(err);
+            // reject(err);
+            const metaUrl = {
+              metalink: url,
+              url: url,
+            };
+            resolve(metaUrl);
           },
           complete: () => {
             unsubscribe$.next();
