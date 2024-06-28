@@ -1036,9 +1036,10 @@
           </ul>
           <app-inline-loader *ngIf="isFileUploadInProgress && !progressValue" />
           <ng-container *ngIf="progressValue">
-            <div class="container d-flex justify-content-center padding">
-              <div class="row">
-                <div class="col-md-9 col-sm-6">
+            <!-- <div class="container d-flex justify-content-center padding"> -->
+            <div class="padding position-fixed top-50 start-50 end-50">
+              <div class="row ps-lg-20">
+                <div class="col-12">
                   <div class="progress">
                     <span>
                       <span
