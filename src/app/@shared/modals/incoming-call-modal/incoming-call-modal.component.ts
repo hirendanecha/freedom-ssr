@@ -162,7 +162,7 @@ export class IncomingcallModalComponent
       groupId: this.calldata?.groupId,
       notificationByProfileId:
         this.calldata.notificationToProfileId || this.profileId,
-      message: isCallCut ? 'Call declined' : 'You have a missed call.',
+      message: isCallCut ? 'Call declined' : 'Not answered.',
     };
     this.socketService?.hangUpCall(data, (data: any) => {
       if (isCallCut && messageText) {
