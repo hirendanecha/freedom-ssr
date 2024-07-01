@@ -178,7 +178,9 @@
 
       .tag-input-div {
         // margin-left: 50px;
-        background-color: var(--body-color);
+        // background-color: var(--body-color);
+        background-color: var(--input-field);
+        color: var(--input-field-text) !important;
         max-width: calc(100% - 5px) !important;
         width: 100% !important;
         min-height: 44px !important;

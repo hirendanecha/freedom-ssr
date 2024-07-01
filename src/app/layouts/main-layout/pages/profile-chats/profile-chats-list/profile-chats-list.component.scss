@@ -463,8 +463,21 @@
       font-weight: 600 !important;
     }
   }
-  app-tag-user-input {
+
+  .group-input-field app-tag-user-input {
     .tag-input-div {
+      div,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      a,
+      span,
+      p {
+        color: var(--input-text) !important;
+      }
       a {
         color: var(--input-field-text) !important;
         font-weight: 600 !important;
