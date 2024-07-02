@@ -80,7 +80,7 @@ export class ProfileChatsListComponent
   progressValue = 0;
   selectedFile: any;
 
-  groupData: any = [];
+  groupData: any = {};
   messageList: any = [];
   filteredMessageList: any = [];
   readMessagesBy: any = [];
