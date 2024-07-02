@@ -143,15 +143,18 @@ export class EditGroupModalComponent implements OnInit {
         : this.data?.memberList?.map((item) => {
             return item.profileId;
           });
-    console.log(groupMembers);
+    const isUpdate = this.addedInvitesList.length ? true : false;
     const groupData = {
       profileId: this.profileId,
       profileImage: this.profileImg.url,
       groupName: this.changeGroupName,
       profileIds: groupMembers,
       groupId: this.groupId,
-      isUpdate: true,
+      isUpdate: isUpdate,
     };
+    console.log(groupData);
+    console.log(this.addedInvitesList);
+
     this.activateModal.close(groupData);
   }
 
