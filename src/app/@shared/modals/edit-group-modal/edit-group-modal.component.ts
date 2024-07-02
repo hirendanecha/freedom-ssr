@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {
   NgbActiveModal,
   NgbDropdown,
@@ -25,6 +32,7 @@ export class EditGroupModalComponent implements OnInit {
   @Input() message: string;
   @Input() data: any;
   @Input() groupId: number;
+
   profileId: number;
   searchText = '';
   userList: any = [];
@@ -137,25 +145,33 @@ export class EditGroupModalComponent implements OnInit {
   }
 
   editGroup() {
-    let groupMembers =
-      this.addedInvitesList?.length > 0
-        ? this.addedInvitesList.map((item) => item.Id)
-        : this.data?.memberList?.map((item) => {
-            return item.profileId;
-          });
-    const isUpdate = this.addedInvitesList.length ? true : false;
-    const groupData = {
-      profileId: this.profileId,
-      profileImage: this.profileImg.url,
-      groupName: this.changeGroupName,
-      profileIds: groupMembers,
-      groupId: this.groupId,
-      isUpdate: isUpdate,
-    };
-    console.log(groupData);
-    console.log(this.addedInvitesList);
+    if (
+      this.addedInvitesList?.length ||
+      this.changeGroupName !== this.data.groupName ||
+      this.profileImg.file
+    ) {
+      let groupMembers =
+        this.addedInvitesList?.length > 0
+          ? this.addedInvitesList.map((item) => item.Id)
+          : this.data?.memberList?.map((item) => {
+              return item.profileId;
+            });
+      const isUpdate = this.addedInvitesList.length ? true : false;
+      const groupData = {
+        profileId: this.profileId,
+        profileImage: this.profileImg.url,
+        groupName: this.changeGroupName,
+        profileIds: groupMembers,
+        groupId: this.groupId,
+        isUpdate: isUpdate,
+      };
+      console.log(groupData);
+      console.log(this.addedInvitesList);
 
-    this.activateModal.close(groupData);
+      this.activateModal.close(groupData);
+    } else {
+      this.activateModal.close(this.data);
+    }
   }
 
   removeGroupUser(id) {
@@ -180,7 +196,8 @@ export class EditGroupModalComponent implements OnInit {
           groupId: this.groupId,
         };
         this.socketService.removeGroupMember(data, (res) => {
-          this.data = res;
+          this.data = { ...res };
+          console.log(this.data);
         });
         if (id === this.profileId) {
           this.activateModal.close('cancel');

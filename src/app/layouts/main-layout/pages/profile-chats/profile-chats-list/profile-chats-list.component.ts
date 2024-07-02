@@ -783,7 +783,9 @@ export class ProfileChatsListComponent
     this.messageInputValue = msgObj.messageText;
     this.chatObj.msgMedia = msgObj.messageMedia;
     this.chatObj.parentMessageId = msgObj?.parentMessageId || null;
-    const tagUserInput = document.querySelector('app-tag-user-input .tag-input-div') as HTMLInputElement;
+    const tagUserInput = document.querySelector(
+      'app-tag-user-input .tag-input-div'
+    ) as HTMLInputElement;
     if (tagUserInput) {
       setTimeout(() => {
         this.focusCursorToEnd(tagUserInput);
@@ -1169,10 +1171,15 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.groupId = this.userChat?.groupId;
     modalRef.result.then((res) => {
       if (res !== 'cancel') {
-        this.socketService?.createGroup(res, (data: any) => {
-          this.groupData = data;
-          this.newRoomCreated.emit(true);
-        });
+        console.log(res);
+        if (Object.keys(res).includes('isUpdate')) {
+          this.socketService?.createGroup(res, (data: any) => {
+            this.groupData = data;
+            this.newRoomCreated.emit(true);
+          });
+        } else {
+          this.groupData = res;
+        }
       } else {
         this.newRoomCreated.emit(true);
         this.userChat = {};
