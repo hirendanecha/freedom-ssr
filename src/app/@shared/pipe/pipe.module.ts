@@ -9,6 +9,7 @@ import { MessageTimePipe } from './message-time.pipe';
 import { MessageDatePipe } from './message-date.pipe';
 import { SearchFilterPipe } from './search-filter.pipe';
 import { HighlightPipe } from './hightlight-text.pipe';
+import { RandomAdvertisementUrlPipe } from './random-advertisement.pipe';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { HighlightPipe } from './hightlight-text.pipe';
     MessageDatePipe,
     SearchFilterPipe,
     HighlightPipe,
+    RandomAdvertisementUrlPipe
   ],
   imports: [CommonModule],
   exports: [
@@ -33,6 +35,7 @@ import { HighlightPipe } from './hightlight-text.pipe';
     MessageDatePipe,
     SearchFilterPipe,
     HighlightPipe,
+    RandomAdvertisementUrlPipe
   ],
 })
 export class PipeModule {}
