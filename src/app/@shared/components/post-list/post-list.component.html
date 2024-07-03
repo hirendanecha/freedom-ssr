@@ -6,7 +6,7 @@
     <ng-container *ngFor="let post of postList; let i = index">
       <app-post-card [post]="post" (onEditPost)="onEditPostData(post, i)" (getPostList)="getPostList()"></app-post-card>
       <ng-container *ngIf="(i + 1) % 5 === 0 && advertisementDataList?.length">
-        <div class="img-preview rounded-3 w-100">
+        <div class="img-preview rounded-3 w-100 advertisement-section">
           <img
             loading="lazy"
             [src]="advertisementDataList | randomAdvertisementUrl: i"
