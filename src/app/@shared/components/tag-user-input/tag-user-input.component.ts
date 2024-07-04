@@ -312,8 +312,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     const imgTag = contentContainer.querySelector('img');
 
     if (imgTag) {
-      const tagUserInput = document.querySelector('.tag-input-div') as HTMLInputElement;
-      if (tagUserInput) {tagUserInput.focus()}
+      // const tagUserInput = document.querySelector('.tag-input-div') as HTMLInputElement;
+      // if (tagUserInput) {tagUserInput.focus()}
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
