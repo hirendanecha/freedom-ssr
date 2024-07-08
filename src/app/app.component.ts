@@ -39,6 +39,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   originalFavicon: HTMLLinkElement;
   currentURL = [];
   isOnCall = false;
+  private scripts: { [name: string]: { loaded: boolean; src: string } } = {};
   constructor(
     private sharedService: SharedService,
     private spinner: NgxSpinnerService,
@@ -54,6 +55,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.checkDocumentFocus();
     this.profileId = +localStorage.getItem('profileId');
     this.isOnCall = this.router.url.includes('/freedom-call/') || false;
+
+    this.scripts = {
+      jitsi: { loaded: false, src: 'https://meet.jit.si/external_api.js' },
+    };
   }
 
   ngOnInit(): void {
@@ -73,6 +78,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           // );
         },
       });
+
+      this.loadScript('jitsi');
     }
   }
 
@@ -205,6 +212,24 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sharedService.isNotify = true;
       }
     }
+  }
+
+  loadScript(name: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.scripts[name].loaded) {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = this.scripts[name].src;
+        script.onload = () => {
+          this.scripts[name].loaded = true;
+          resolve();
+        };
+        script.onerror = (error: any) => reject(error);
+        document.head.appendChild(script);
+      } else {
+        resolve();
+      }
+    });
   }
 
   @HostListener('window:scroll', [])

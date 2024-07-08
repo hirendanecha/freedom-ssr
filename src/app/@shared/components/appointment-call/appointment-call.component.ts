@@ -37,7 +37,7 @@ export class AppointmentCallComponent implements OnInit {
     private sharedService: SharedService,
     private messageService: MessageService,
     private seoService: SeoService,
-    public tokenService: TokenStorageService,
+    public tokenService: TokenStorageService
   ) {
     const data = {
       title: 'Buzz Chat',
@@ -62,10 +62,23 @@ export class AppointmentCallComponent implements OnInit {
       parentNode: document.querySelector('#meet'),
       configOverwrite: {
         prejoinPageEnabled: false,
+        startWithAudioMuted: true,
+        startWithVideoMuted: true,
+        defaultLanguage: 'en',
+        disableInviteFunctions: true,
+        disableChatModeratorIndicator: true,
       },
       interfaceConfigOverwrite: {
         filmStripOnly: false,
         SHOW_JITSI_WATERMARK: false,
+        OPTIMAL_BROWSERS: [
+          'chrome',
+          'chromium',
+          'firefox',
+          'electron',
+          'safari',
+          'webkit',
+        ],
       },
       disableModeratorIndicator: true,
       lang: 'en',
