@@ -972,7 +972,7 @@ export class ProfileChatsListComponent
     const lastParam = parts[parts.length - 1];
     const data = {
       ProfilePicName:
-        this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+      this.groupData?.profileImage || this.userChat?.ProfilePicName,
       Username: this.groupData?.groupName || this?.userChat.Username,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
@@ -1003,7 +1003,7 @@ export class ProfileChatsListComponent
     if (this.userChat?.roomId) {
       const buzzRingData = {
         ProfilePicName:
-          this.groupData?.ProfileImage ||
+          this.groupData?.profileImage ||
           this.sharedService?.userData?.ProfilePicName,
         Username:
           this.groupData?.groupName || this.sharedService?.userData?.Username,
@@ -1031,7 +1031,7 @@ export class ProfileChatsListComponent
         ?.map((item) => item.profileId);
       const buzzRingGroupData = {
         ProfilePicName:
-          this.groupData?.ProfileImage ||
+          this.groupData?.profileImage ||
           this.sharedService?.userData?.ProfilePicName,
         Username:
           this.groupData?.groupName || this.sharedService?.userData?.Username,
@@ -1066,7 +1066,7 @@ export class ProfileChatsListComponent
 
           const buzzRingData = {
             ProfilePicName:
-              this.groupData?.ProfileImage || this.userChat?.ProfilePicName,
+              this.groupData?.profileImage || this.userChat?.ProfilePicName,
             Username: this.groupData?.groupName || this?.userChat.Username,
             actionType: 'DC',
             notificationByProfileId: this.profileId,

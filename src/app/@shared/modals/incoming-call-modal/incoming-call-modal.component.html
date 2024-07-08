@@ -6,7 +6,7 @@
       alt="image"
       onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
     />
-    <h4 class="mt-5">{{ calldata?.Username }}</h4>
+    <h4 class="mt-5">{{ calldata?.groupName || calldata?.Username}}</h4>
     <span class="mb-3">{{ title }}</span>
 
     <div class="m-2" *ngIf="!isOnCall">

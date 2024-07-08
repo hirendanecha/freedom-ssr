@@ -160,7 +160,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               IncomingcallModalComponent,
               {
                 centered: true,
-                size: 'sm',
+                size: 'sm', 
                 backdrop: 'static',
               }
             );
