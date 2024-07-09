@@ -343,7 +343,7 @@ export class ProfileChatsListComponent
       });
       this.findUserStatus(this.userChat.profileId);
     }
-    this.messageElements.changes.subscribe(() => {
+    this.messageElements?.changes?.subscribe(() => {
       this.resetIndex();
     });
   }
@@ -472,15 +472,21 @@ export class ProfileChatsListComponent
         messageText: message,
         // roomId: this.uploadTo.roomId ?? this.userChat?.roomId ?? null,
         // groupId: this.uploadTo.groupId ?? this.userChat?.groupId ?? null,
-        roomId: this.uploadTo.roomId ?? (this.uploadTo.groupId ? null : this.userChat?.roomId) ?? null,
-        groupId: this.uploadTo.groupId ?? (this.uploadTo.roomId ? null : this.userChat?.groupId) ?? null,
+        roomId:
+          this.uploadTo.roomId ??
+          (this.uploadTo.groupId ? null : this.userChat?.roomId) ??
+          null,
+        groupId:
+          this.uploadTo.groupId ??
+          (this.uploadTo.roomId ? null : this.userChat?.groupId) ??
+          null,
         sentBy: this.profileId,
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
         parentMessageId: this.chatObj?.parentMessageId || null,
       };
       this.userChat?.roomId ? (data['isRead'] = 'N') : null;
-    
+
       this.socketService.sendMessage(data, async (data: any) => {
         this.isFileUploadInProgress = false;
         this.scrollToBottom();
@@ -757,7 +763,7 @@ export class ProfileChatsListComponent
     }
   }
 
-  messageInputFocus(){
+  messageInputFocus() {
     const tagUserInput = document.querySelector(
       'app-tag-user-input .tag-input-div'
     ) as HTMLInputElement;
@@ -972,14 +978,14 @@ export class ProfileChatsListComponent
     const lastParam = parts[parts.length - 1];
     const data = {
       ProfilePicName:
-      this.groupData?.profileImage || this.userChat?.ProfilePicName,
+        this.groupData?.profileImage || this.userChat?.ProfilePicName,
       Username: this.groupData?.groupName || this?.userChat.Username,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
       notificationByProfileId: this.profileId,
       link: this.isOnCall ? lastParam : originUrl,
     };
-    localStorage.setItem('callRoomId', this.userChat?.roomId);
+    localStorage.setItem('callRoomId', data?.roomId || data.groupId);
     if (!data?.groupId) {
       data['notificationToProfileId'] = this.userChat.profileId;
     }

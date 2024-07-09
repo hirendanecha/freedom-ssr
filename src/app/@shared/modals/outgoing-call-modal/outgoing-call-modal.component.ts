@@ -64,6 +64,9 @@ export class OutGoingCallModalComponent
       if (data?.actionType === 'DC') {
         this.sound?.stop();
         this.activateModal.close('cancel');
+      } else if (data?.actionType === 'SC') {
+        this.sound?.stop();
+        this.activateModal.close('success');
       }
     });
   }
@@ -72,6 +75,7 @@ export class OutGoingCallModalComponent
     this.socketService.socket?.on('notification', (data: any) => {
       if (data?.actionType === 'SC') {
         this.sound?.stop();
+        this.activateModal.close('success');
       }
     });
   }

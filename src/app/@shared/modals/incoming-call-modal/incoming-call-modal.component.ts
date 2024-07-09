@@ -118,7 +118,6 @@ export class IncomingcallModalComponent
           state: { chatDataPass },
         });
       }
-      // this.router.navigate([`/freedom-call/${callId}`]);
       this.sound?.stop();
     }
     this.activateModal.close('success');
@@ -141,7 +140,9 @@ export class IncomingcallModalComponent
       domain: 'freedom.buzz',
     };
     this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
-      // next: (data: any) => {},
+      next: (data: any) => {
+        console.log(data);
+      },
       error: (err) => {
         console.log(err);
       },
@@ -166,18 +167,15 @@ export class IncomingcallModalComponent
     };
     this.socketService?.hangUpCall(data, (data: any) => {
       if (isCallCut && messageText) {
-        // const message = `Call declined`;
         this.sendMessage(messageText);
       } else {
-        // const message = `You have a missed call.`;
-        // this.sendMessage(message);
+        return;
       }
       this.activateModal.close('cancel');
     });
   }
 
   sendMessage(message: string) {
-    // const message = this.encryptDecryptService?.encryptUsingAES256(`I'll call you back.`);
     const data = {
       messageText: this.encryptDecryptService?.encryptUsingAES256(message),
       roomId: this.calldata?.roomId || null,
