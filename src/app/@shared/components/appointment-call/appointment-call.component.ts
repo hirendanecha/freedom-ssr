@@ -61,7 +61,6 @@ export class AppointmentCallComponent implements OnInit {
       roomName: appointmentURLCall,
       parentNode: document.querySelector('#meet'),
       configOverwrite: {
-        startWithAudioMuted: false,
         startWithVideoMuted: true,
         defaultLanguage: 'en',
       },
