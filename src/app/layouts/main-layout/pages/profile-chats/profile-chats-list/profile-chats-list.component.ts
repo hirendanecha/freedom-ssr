@@ -985,7 +985,7 @@ export class ProfileChatsListComponent
       notificationByProfileId: this.profileId,
       link: this.isOnCall ? lastParam : originUrl,
     };
-    localStorage.setItem('callRoomId', this.userChat?.roomId);
+    localStorage.setItem('callRoomId', data?.roomId || data.groupId);
     if (!data?.groupId) {
       data['notificationToProfileId'] = this.userChat.profileId;
     }
