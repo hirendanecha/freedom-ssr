@@ -218,13 +218,37 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   selectTagUser(user: any): void {
     const htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
-    const text = htmlText.replace(
-      `@${this.userNameSearch}`,
-      `<a href="/settings/view-profile/${user?.Id
-      }" class="text-danger" data-id="${user?.Id}">@${user?.Username.split(
-        ' '
-      ).join('')}</a>`
-    );
+    // const text = htmlText.replace(
+    //   `@${this.userNameSearch}`,
+    //   `<a href="/settings/view-profile/${user?.Id
+    //   }" class="text-danger" data-id="${user?.Id}">@${user?.Username.split(
+    //     ' '
+    //   ).join('')}</a>`
+    // );
+    const replaceUsernamesInTextNodes = (html: string, userName: string, userId: string, displayName: string) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const walk = (node: Node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const regex = new RegExp(`@${userName}`, 'g');
+          const replacement = `<a href="/settings/view-profile/${userId}" class="text-danger" data-id="${userId}">@${displayName}</a>`;
+          const replacedText = node.nodeValue?.replace(regex, replacement);
+          if (replacedText !== node.nodeValue) {
+            const span = document.createElement('span');
+            span.innerHTML = replacedText!;
+            while (span.firstChild) {
+              node.parentNode?.insertBefore(span.firstChild, node);
+            }
+            node.parentNode?.removeChild(node);
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName.toLowerCase() !== 'a') {
+          node.childNodes.forEach(child => walk(child));
+        }
+      };
+      doc.body.childNodes.forEach(child => walk(child));
+      return doc.body.innerHTML;
+    };
+    const text = replaceUsernamesInTextNodes(htmlText, this.userNameSearch, user?.Id, user?.Username.split(' ').join(''));
     this.setTagInputDivValue(text);
     this.emitChangeEvent();
     this.moveCursorToEnd();
