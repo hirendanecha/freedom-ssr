@@ -544,12 +544,7 @@ export class ProfileChatsListComponent
 
   // getMessages
   getMessageList(): void {
-    const tagUserInput = document.querySelector(
-      'app-tag-user-input .tag-input-div'
-    ) as HTMLInputElement;
-    if (tagUserInput) {
-      tagUserInput.focus();
-    }
+    this.messageInputFocus();
     this.getMessagesBySocket();
   }
 
@@ -576,6 +571,7 @@ export class ProfileChatsListComponent
       this.selectedFile = file;
       this.viewUrl = URL.createObjectURL(file);
     }
+    this.messageInputFocus();
     document.addEventListener('keyup', this.onKeyUp);
   }
 
@@ -744,12 +740,7 @@ export class ProfileChatsListComponent
   }
 
   replyMsg(msgObj): void {
-    const tagUserInput = document.querySelector(
-      'app-tag-user-input .tag-input-div'
-    ) as HTMLInputElement;
-    if (tagUserInput) {
-      tagUserInput.focus();
-    }
+    this.messageInputFocus();
     this.chatObj.parentMessageId = msgObj?.id;
     this.replyMessage.msgText = msgObj.messageText;
     this.replyMessage.createdDate = msgObj?.createdDate;
@@ -763,6 +754,15 @@ export class ProfileChatsListComponent
       } else {
         this.viewUrl = msgObj.messageMedia;
       }
+    }
+  }
+
+  messageInputFocus(){
+    const tagUserInput = document.querySelector(
+      'app-tag-user-input .tag-input-div'
+    ) as HTMLInputElement;
+    if (tagUserInput) {
+      tagUserInput.focus();
     }
   }
 
