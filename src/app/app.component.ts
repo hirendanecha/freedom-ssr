@@ -39,7 +39,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   originalFavicon: HTMLLinkElement;
   currentURL = [];
   isOnCall = false;
-  private scripts: { [name: string]: { loaded: boolean; src: string } } = {};
   constructor(
     private sharedService: SharedService,
     private spinner: NgxSpinnerService,
@@ -55,10 +54,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.checkDocumentFocus();
     this.profileId = +localStorage.getItem('profileId');
     this.isOnCall = this.router.url.includes('/freedom-call/') || false;
-
-    this.scripts = {
-      jitsi: { loaded: false, src: 'https://meet.jit.si/external_api.js' },
-    };
   }
 
   ngOnInit(): void {

@@ -154,7 +154,7 @@ export class ProfileChatsListComponent
     this.isOnCall = this.router.url.includes('/freedom-call/') || false;
   }
   ngAfterViewInit(): void {
-    if (this.callRoomId) {
+    if (this.callRoomId && !this.sidebarClass) {
       localStorage.removeItem('callRoomId');
       this.callRoomId = null;
     }
