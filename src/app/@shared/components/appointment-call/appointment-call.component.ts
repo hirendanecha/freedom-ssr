@@ -17,7 +17,7 @@ declare var JitsiMeetExternalAPI: any;
 })
 export class AppointmentCallComponent implements OnInit {
   appointmentCall: SafeResourceUrl;
-  domain: string = 'facetime.tube';
+  domain: string = 'meet.facetime.tube';
   options: any;
   api: any;
   conferenceJoinedListener: any;
