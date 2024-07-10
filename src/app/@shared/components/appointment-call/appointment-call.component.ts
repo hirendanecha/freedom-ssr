@@ -64,12 +64,8 @@ export class AppointmentCallComponent implements OnInit {
         startWithVideoMuted: true,
         defaultLanguage: 'en',
       },
-      interfaceConfigOverwrite: {
-        filmStripOnly: false,
-        SHOW_JITSI_WATERMARK: false,
-      },
-      disableModeratorIndicator: true,
-      lang: 'en',
+      enableNoAudioDetection: true,
+      enableNoisyMicDetection: true,
     };
 
     const api = new JitsiMeetExternalAPI(this.domain, this.options);

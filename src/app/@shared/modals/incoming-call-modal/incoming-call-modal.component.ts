@@ -93,19 +93,17 @@ export class IncomingcallModalComponent
     clearTimeout(this.hangUpTimeout);
     if (!this.currentURL.includes(this.calldata?.link)) {
       this.currentURL.push(this.calldata.link);
-      // window.open(this.calldata.link, '_blank');
-
-      // console.log('incomin', this.calldata.link);
-      // this.router.navigate([`/appointment-call/${this.calldata.link}`]);
       let chatDataPass = {
         roomId: this.calldata.roomId || null,
         groupId: this.calldata.groupId || null,
       };
-      if (this.calldata?.roomId) {
-        localStorage.setItem('callRoomId', this.calldata?.roomId);
+      if (this.calldata?.roomId || this.calldata.groupId) {
+        localStorage.setItem(
+          'callRoomId',
+          this.calldata?.roomId || this.calldata.groupId
+        );
       }
       if (this.isOnCall) {
-        // const url = window.location.href;
         const parts = window.location.href.split('/');
         const callId = parts[parts.length - 1];
         this.calldata.link = callId;
