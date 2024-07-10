@@ -97,7 +97,7 @@ const routes: Routes = [
         canActivate: mapToCanActivate([AuthenticationGuard]),
       },
       {
-        path: 'freedom-call/:callId',
+        path: 'buzz-call/:callId',
         component: AppointmentCallComponent,
         data: {
           isShowLeftSideBar: false,

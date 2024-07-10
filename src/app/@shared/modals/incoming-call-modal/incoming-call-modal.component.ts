@@ -44,7 +44,7 @@ export class IncomingcallModalComponent
     private route: ActivatedRoute
   ) {
     this.profileId = +localStorage.getItem('profileId');
-    this.isOnCall = this.router.url.includes('/freedom-call/') || false;
+    this.isOnCall = this.router.url.includes('/buzz-call/') || false;
   }
 
   ngAfterViewInit(): void {
@@ -107,12 +107,12 @@ export class IncomingcallModalComponent
         const parts = window.location.href.split('/');
         const callId = parts[parts.length - 1];
         this.calldata.link = callId;
-        this.router.navigate([`/freedom-call/${callId}`], {
+        this.router.navigate([`/buzz-call/${callId}`], {
           state: { chatDataPass },
         });
       } else {
         const callId = this.calldata.link.replace('https://facetime.tube/', '');
-        this.router.navigate([`/freedom-call/${callId}`], {
+        this.router.navigate([`/buzz-call/${callId}`], {
           state: { chatDataPass },
         });
       }

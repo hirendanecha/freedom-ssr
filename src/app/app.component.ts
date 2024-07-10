@@ -53,7 +53,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this.checkDocumentFocus();
     this.profileId = +localStorage.getItem('profileId');
-    this.isOnCall = this.router.url.includes('/freedom-call/') || false;
+    this.isOnCall = this.router.url.includes('/buzz-call/') || false;
   }
 
   ngOnInit(): void {
@@ -177,10 +177,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               if (!window.document.hidden) {
                 const callIdMatch = data.link.match(/callId-\d+/);
                 const callId = callIdMatch ? callIdMatch[0] : data.link;
-                this.router.navigate([`/freedom-call/${callId}`], {
+                this.router.navigate([`/buzz-call/${callId}`], {
                   state: { chatDataPass },
                 });
-                // this.router.navigate([`/freedom-call/${data.link}`]);
+                // this.router.navigate([`/buzz-call/${data.link}`]);
               }
               // window.open(`appointment-call/${data.link}`, '_blank');
               // window?.open(data?.link, '_blank');
