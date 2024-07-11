@@ -610,6 +610,22 @@ export class ProfileChatsListComponent
     this.chatObj.msgText = this.extractImageUrlFromContent(
       data?.html.replace(/<div>\s*<br\s*\/?>\s*<\/div>\s*$/, '')
     );
+    if (this.selectedFile) {
+      const tagUserInput = document.querySelector(
+        'app-tag-user-input .tag-input-div'
+      ) as HTMLDivElement;
+      if (tagUserInput) {
+        const controlKeyUpHandler = (event: KeyboardEvent) => {
+          if (event.key === 'Control') {
+            if (tagUserInput.innerHTML.length > 0) {
+              tagUserInput.innerHTML = tagUserInput.innerHTML.slice(0, -1);
+            }
+            document.removeEventListener('keyup', controlKeyUpHandler);
+          }
+        };      
+        document.addEventListener('keyup', controlKeyUpHandler);
+      }
+    }
     if (data.html === '') {
       this.resetData();
     }
