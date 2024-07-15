@@ -610,22 +610,6 @@ export class ProfileChatsListComponent
     this.chatObj.msgText = this.extractImageUrlFromContent(
       data?.html.replace(/<div>\s*<br\s*\/?>\s*<\/div>\s*$/, '')
     );
-    if (this.selectedFile) {
-      const tagUserInput = document.querySelector(
-        'app-tag-user-input .tag-input-div'
-      ) as HTMLDivElement;
-      if (tagUserInput) {
-        const controlKeyUpHandler = (event: KeyboardEvent) => {
-          if (event.key === 'Control') {
-            if (tagUserInput.innerHTML.length > 0) {
-              tagUserInput.innerHTML = tagUserInput.innerHTML.slice(0, -1);
-            }
-            document.removeEventListener('keyup', controlKeyUpHandler);
-          }
-        };      
-        document.addEventListener('keyup', controlKeyUpHandler);
-      }
-    }
     if (data.html === '') {
       this.resetData();
     }
@@ -1115,6 +1099,7 @@ export class ProfileChatsListComponent
     contentContainer.innerHTML = content;
     const imgTag = contentContainer.querySelector('img');
     if (imgTag) {
+      this.focusTagInput()
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
@@ -1155,6 +1140,19 @@ export class ProfileChatsListComponent
       return content;
     }
     return null;
+  }
+
+  focusTagInput(){
+    if (this.selectedFile) {
+      const tagUserInput = document.querySelector(
+        'app-tag-user-input .tag-input-div'
+      ) as HTMLDivElement;
+      if (tagUserInput) {
+        setTimeout(() => {
+          tagUserInput.innerHTML = tagUserInput.innerHTML.slice(0, -1);
+        }, 100);    
+      }
+    }
   }
 
   createGroup() {

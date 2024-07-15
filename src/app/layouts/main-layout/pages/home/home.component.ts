@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void { }
 
   onPostFileSelect(event: any): void {
-    const tagUserInput = document.querySelector('app-tag-user-input .tag-input-div') as HTMLInputElement;
+    const tagUserInput = document.querySelector('.home-input app-tag-user-input .tag-input-div') as HTMLInputElement;
     if (tagUserInput) {tagUserInput.focus()}
     const file = event.target?.files?.[0] || {};
     if (file.type.includes('application/pdf')) {
@@ -538,7 +538,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (imgTag) {
       const tagUserInput = document.querySelector('app-tag-user-input .tag-input-div') as HTMLInputElement;
-      if (tagUserInput) {tagUserInput.focus()}
+      if (tagUserInput) {setTimeout(() => {
+        tagUserInput.innerHTML = tagUserInput.innerHTML.slice(0, -1);
+      }, 100);}
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
