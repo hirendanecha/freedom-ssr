@@ -196,4 +196,8 @@ export class SocketService {
   getMessages(params, callback: (data: any) => void) {
     this.socket.emit('get-messages', params, callback);
   }
+  
+  checkRoom(params, callback: (data: any) => void) {
+    this.socket.emit('check-room', params, callback);
+  }
 }

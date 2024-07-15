@@ -82,7 +82,6 @@ export class PostCardComponent implements OnInit {
   replayCommentDescriptionimageUrl: string;
   shareButton = false;
   isViewProfile = false;
-
   emojiPaths = EmojiPaths;
 
   constructor(
@@ -100,7 +99,7 @@ export class PostCardComponent implements OnInit {
     public tokenService: TokenStorageService,
     private seoService: SeoService,
     public breakpointService: BreakpointService,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal,
   ) {
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
@@ -219,6 +218,16 @@ export class PostCardComponent implements OnInit {
       });
   }
 
+  selectMessaging(data){
+    const userData = {
+      Id: data.profileid,
+      ProfilePicName: data.ProfilePicName,
+      Username: data.Username
+    }
+    this.router.navigate(['/profile-chats'], {
+      state: { chatUserData: userData}
+    });
+  }
   goToViewProfile(id: any): void {
     this.router.navigate([`settings/view-profile/${id}`]);
   }

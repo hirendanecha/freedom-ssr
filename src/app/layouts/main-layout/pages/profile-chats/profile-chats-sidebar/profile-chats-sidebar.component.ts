@@ -27,6 +27,7 @@ import { QrScanModalComponent } from 'src/app/@shared/modals/qrscan-modal/qrscan
 import { AppQrModalComponent } from 'src/app/@shared/modals/app-qr-modal/app-qr-modal.component';
 import { MessageService } from 'src/app/@shared/services/message.service';
 import { ConferenceLinkComponent } from 'src/app/@shared/modals/create-conference-link/conference-link-modal.component';
+import { UserService } from 'src/app/@shared/services/user.service';
 
 @Component({
   selector: 'app-profile-chats-sidebar',
@@ -34,8 +35,7 @@ import { ConferenceLinkComponent } from 'src/app/@shared/modals/create-conferenc
   styleUrls: ['./profile-chats-sidebar.component.scss'],
 })
 export class ProfileChatsSidebarComponent
-  implements AfterViewInit, OnChanges, OnInit
-{
+  implements AfterViewInit, OnChanges, OnInit {
   chatList: any = [];
   pendingChatList: any = [];
   groupList: any = [];
@@ -45,7 +45,9 @@ export class ProfileChatsSidebarComponent
   searchText = '';
   userList: any = [];
   profileId: number;
+  chatData: any = [];
   selectedChatUser: any;
+  showUserProfile: boolean = false;
 
   isMessageSoundEnabled: boolean = true;
   isCallSoundEnabled: boolean = true;
@@ -97,10 +99,14 @@ export class ProfileChatsSidebarComponent
   }
 
   ngOnInit(): void {
+    this.chatData = history.state.chatUserData;
     this.socketService.connect();
     this.getChatList();
     this.getGroupList();
     this.backCanvas =this.activeCanvas.hasOpenOffcanvas();
+    if (this.chatData) {
+      this.checkRoom();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -339,5 +345,38 @@ export class ProfileChatsSidebarComponent
     );
     const status = user?.status;
     return status;
+  }
+
+  checkRoom(): void {
+    const oldUserChat = {
+      profileId1: this.profileId,
+      profileId2: this.chatData.Id,
+    };
+    this.socketService.checkRoom(oldUserChat, (res: any) => {
+      console.log('data', res); 
+      if (res.length) {
+        const data = res[0];
+        const existingUser = {
+          roomId: data.id,
+          profileId: data.profileId1,
+          Username: data.Username || this.chatData.Username,
+          ProfilePicName: data.ProfilePicName || this.chatData.ProfilePicName,
+          isAccepted: data.isAccepted,
+          isDeleted: data.isDeleted,
+          lastMessageText: data.lastMessageText,
+          createdBy: this.chatData.Id
+        }
+        this.onNewChat?.emit(existingUser);
+      } else {
+        const newUser = {
+          Id: this.chatData.Id,
+          Username: this.chatData.Username,
+          ProfilePicName: this.chatData.ProfilePicName,
+          unReadMessage: 0
+        }
+        this.onNewChat?.emit(newUser);
+      }
+    });
+
   }
 }

@@ -67,7 +67,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this.socketService.connect();
-    
+
     const isMobilePopUp = localStorage.getItem('isMobilePopShow');
     if (isMobilePopUp !== 'N') {
       this.breakpointService.screen.pipe(take(1)).subscribe((screen) => {
@@ -76,7 +76,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
         }
       });
     }
-   
+
     this.isInnerWidthSmall = window.innerWidth < 576;
     if (this.isInnerWidthSmall && !this.isSidebarOpen && this.router.url === '/profile-chats') {
       this.openChatListSidebar();
@@ -141,7 +141,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
       this.onChatPost(emittedData);
     });
     offcanvasRef.result.then((result) => {}).catch((reason) => {
-        this.isSidebarOpen = false;
+      this.isSidebarOpen = false;
     });
   }
 
