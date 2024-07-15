@@ -140,8 +140,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       this.onClearFile();
     }
 
-    const text = htmlText.replace(/<[^>]*>/g, '');
-    const matches = text.match(/(?:https?:\/\/|www\.)[^\s]+/g);
+    const text = htmlText.replace(/<br\s*\/?>|<[^>]*>/g, '');
+    const matches = text?.match(/(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/);
     const url = matches?.[0];
     if (url) {
       if (url !== this.metaData?.url) {
@@ -184,7 +184,9 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
               this.spinner.hide();
             },
             error: () => {
-              this.metaData.metalink = url;
+              if (this.metaData.metalink === null || '') {
+                this.metaData.metalink = url;
+              }
               this.isMetaLoader = false;
               // this.clearMetaData();
               this.spinner.hide();
