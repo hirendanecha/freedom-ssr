@@ -479,7 +479,7 @@
         />
 
         <div class="px-3 gap-2 align-items-center w-100">
-          <div
+          <div [attr.id]="'comment-' + post.id"
             class="d-flex align-items-baseline custom-width-comment position-relative gap-sm-0 gap-3"
           >
             <!-- <div
@@ -494,7 +494,7 @@
               [value]="commentMessageInputValue"
               [isShowMetaLoader]="true"
               [isShowEmojis]="true"
-              (onDataChange)="onTagUserInputChangeEvent($event)"
+              (onDataChange)="onTagUserInputChangeEvent($event, post.id)"
             />
 
             <div class="d-flex gap-7 gap-sm-2 lign-items-center flex-column-reverse flex-sm-row position-relative">
@@ -516,7 +516,7 @@
                   <input
                     type="file"
                     accept="image/*"
-                    (change)="onPostFileSelect($event, 'parent')"
+                    (change)="onPostFileSelect($event, 'parent', post.id)"
                   />
                   <span
                     class="file-custom border-0 d-grid text-center"
@@ -698,7 +698,7 @@
                   "
                   class="py-2 px-3 align-items-center w-100 mb-5"
                 >
-                  <div class="d-flex align-items-baseline position-relative custom-width-comment gap-sm-0 gap-2">
+                  <div [attr.id]="'replaycomment-' + post.id" class="d-flex align-items-baseline position-relative custom-width-comment gap-sm-0 gap-2">
                     <!-- <div
                       #childPostCommentElement
                       contenteditable
@@ -711,7 +711,7 @@
                       [value]="replaycommentMessageInputValue"
                       [isShowMetaLoader]="true"
                       [isShowEmojis]="true"
-                      (onDataChange)="onTagUserReplayInputChangeEvent($event)"
+                      (onDataChange)="onTagUserReplayInputChangeEvent($event, post.id)"
                     />
                     <div class="file-input d-flex gap-7 gap-sm-2 align-items-center flex-column-reverse flex-sm-row">
                       <div class="file-upload d-flex">
@@ -719,7 +719,7 @@
                           <input
                             type="file"
                             accept="image/*"
-                            (change)="onPostFileSelect($event, 'child')"
+                            (change)="onPostFileSelect($event, 'child', post.id)"
                           />
                           <span
                             class="file-custom border-0 d-grid text-center"

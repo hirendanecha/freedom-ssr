@@ -550,13 +550,14 @@ export class PostCardComponent implements OnInit {
     // }
   }
 
-  onPostFileSelect(event: any, type: string): void {
+  onPostFileSelect(event: any, type: string, postId: number): void {
     if (type === 'parent') {
       this.isParent = true;
     } else {
       this.isParent = false;
     }
     const file = event.target?.files?.[0] || {};
+    this.focusTagInput(postId);
     if (file.type.includes('image/')) {
       this.commentData['file'] = file;
       this.commentData['imageUrl'] = URL.createObjectURL(file);
@@ -606,13 +607,13 @@ export class PostCardComponent implements OnInit {
     }
   }
 
-  onTagUserInputChangeEvent(data: any): void {
-    this.extractLargeImageFromContent(data.html);
+  onTagUserInputChangeEvent(data: any, postId): void {
+    this.extractLargeImageFromContent(data.html, postId);
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
   }
-  onTagUserReplayInputChangeEvent(data: any): void {
-    this.extractLargeImageFromContent(data.html);
+  onTagUserReplayInputChangeEvent(data: any, postId): void {
+    this.extractLargeImageFromContent(data.html, postId);
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
   }
@@ -742,7 +743,7 @@ export class PostCardComponent implements OnInit {
     // }
   }
 
-  extractLargeImageFromContent(content: string): void {
+  extractLargeImageFromContent(content: string, postId): void {
     const contentContainer = document.createElement('div');
     contentContainer.innerHTML = content;
     const imgTag = contentContainer.querySelector('img');
@@ -751,10 +752,11 @@ export class PostCardComponent implements OnInit {
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
-        .getAttribute('src')
-        .toLowerCase()
-        .endsWith('.gif');
+      .getAttribute('src')
+      .toLowerCase()
+      .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
+        this.focusTagInput(postId);
         const copyImage = imgTag.getAttribute('src');
         const bytes = copyImage.length;
         const megabytes = bytes / (1024 * 1024);
@@ -786,6 +788,18 @@ export class PostCardComponent implements OnInit {
       }
     } else {
       this.commentData.comment = content;
+    }
+  }
+
+  focusTagInput(postId: number) {
+    const tagUserInput = document.querySelector(`#replaycomment-${postId} .tag-input-div`) as HTMLInputElement || document.querySelector(`#comment-${postId} .tag-input-div`) as HTMLInputElement
+    if (tagUserInput) {
+      tagUserInput.focus();
+      if (tagUserInput.innerHTML.length) {
+        setTimeout(() => {
+          tagUserInput.innerHTML = tagUserInput.innerHTML.slice(0, -1);
+        }, 100);
+      }
     }
   }
 }

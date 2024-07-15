@@ -86,6 +86,7 @@ export class CreateGroupModalComponent implements OnInit {
       groupName: commaSeparatedString,
       profileIds: groupMembers,
       groupId: this.groupId || null,
+      isUpdate: true
     };
     this.activateModal.close(groupData);
   }

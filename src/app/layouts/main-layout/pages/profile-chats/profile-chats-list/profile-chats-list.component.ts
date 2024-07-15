@@ -1099,6 +1099,7 @@ export class ProfileChatsListComponent
     contentContainer.innerHTML = content;
     const imgTag = contentContainer.querySelector('img');
     if (imgTag) {
+      this.focusTagInput()
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
@@ -1139,6 +1140,19 @@ export class ProfileChatsListComponent
       return content;
     }
     return null;
+  }
+
+  focusTagInput(){
+    if (this.selectedFile) {
+      const tagUserInput = document.querySelector(
+        'app-tag-user-input .tag-input-div'
+      ) as HTMLDivElement;
+      if (tagUserInput) {
+        setTimeout(() => {
+          tagUserInput.innerHTML = tagUserInput.innerHTML.slice(0, -1);
+        }, 100);    
+      }
+    }
   }
 
   createGroup() {
