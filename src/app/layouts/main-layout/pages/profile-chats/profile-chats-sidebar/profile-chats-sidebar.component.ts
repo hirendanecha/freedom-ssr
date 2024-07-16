@@ -18,7 +18,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
 import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-modal/create-group-modal.component';
 import * as moment from 'moment';
@@ -68,6 +68,7 @@ export class ProfileChatsSidebarComponent
     public messageService: MessageService,
     private activeOffcanvas: NgbActiveOffcanvas,
     private activeCanvas: NgbOffcanvas,
+    private route: ActivatedRoute,
     private router: Router,
     private toasterService: ToastService,
     public encryptDecryptService: EncryptDecryptService,
@@ -99,7 +100,13 @@ export class ProfileChatsSidebarComponent
   }
 
   ngOnInit(): void {
-    this.chatData = history.state.chatUserData;
+    // this.chatData = history.state.chatUserData;
+    this.route.queryParams.subscribe(params => {
+      if (params['chatUserData']) {
+        this.chatData = JSON.parse(decodeURIComponent(params['chatUserData']));
+        this.router.navigate([], { relativeTo: this.route, queryParams: {} });
+      }
+    });
     this.socketService.connect();
     this.getChatList();
     this.getGroupList();
@@ -353,9 +360,8 @@ export class ProfileChatsSidebarComponent
       profileId2: this.chatData.Id,
     };
     this.socketService.checkRoom(oldUserChat, (res: any) => {
-      console.log('data', res); 
-      if (res.length) {
-        const data = res[0];
+      const data = res.find(obj => obj.isDeleted === "N");      
+      if (data && data.id) {
         const existingUser = {
           roomId: data.id,
           profileId: data.profileId1,

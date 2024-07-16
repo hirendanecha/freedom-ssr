@@ -141,7 +141,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     }
 
     const text = htmlText.replace(/<br\s*\/?>|<[^>]*>/g, '');
-    const matches = text?.match(/(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/);
+    // const matches = text?.match(/(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/);
+    const matches = text.match(/(?:https?:\/\/|www\.)[^\s<&]+(?:\.[^\s<&]+)+(?:\.[^\s<]+)?/g);
     const url = matches?.[0];
     if (url) {
       if (url !== this.metaData?.url) {

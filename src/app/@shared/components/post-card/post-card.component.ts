@@ -224,9 +224,14 @@ export class PostCardComponent implements OnInit {
       ProfilePicName: data.ProfilePicName,
       Username: data.Username
     }
-    this.router.navigate(['/profile-chats'], {
-      state: { chatUserData: userData}
-    });
+    // this.router.navigate(['/profile-chats'], {
+    //   state: { chatUserData: userData}
+    // });
+    const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+    const url = this.router.createUrlTree(['/profile-chats'], {
+      queryParams: { chatUserData: encodedUserData }
+    }).toString();
+    window.open(url, '_blank');
   }
   goToViewProfile(id: any): void {
     this.router.navigate([`settings/view-profile/${id}`]);
