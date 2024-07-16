@@ -385,10 +385,12 @@
     .highlight {
       background-color: #000 !important;
       color: #fff !important;
+      text-transform: none;
     }
     .highlighted {
       background-color: yellow !important;
       color: #000 !important;
+      text-transform: none;
     }
     .message-text-custom {
       a {
@@ -406,10 +408,12 @@
     .highlight {
       background-color: #000 !important;
       color: #fff !important;
+      text-transform: none;
     }
     .highlighted {
       background-color: yellow !important;
       color: #000 !important;
+      text-transform: none;
     }
     svg path {
       fill: var(--secondary-color);
@@ -426,8 +430,7 @@
       }
     }
   }
-  .parent-replay-alt,
-  .parent-replay,
+
   .message-text-custom {
     h1,
     h2,
@@ -480,7 +483,9 @@
       }
     }
   }
-
+  
+  .parent-replay-alt,
+  .parent-replay,
   .replay-message-box {
     h1,
     h2,

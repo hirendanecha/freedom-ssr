@@ -101,14 +101,14 @@
             class="d-flex gap-3 align-items-center"
             *ngIf="userChat.isAccepted === 'Y'"
           >
-            <!-- <a (click)="openSearch(isSearch)">
+            <a class="d-none d-sm-flex" (click)="openSearch(isSearch)">
               <fa-icon
                 [icon]="['fas', 'search']"
                 class="font-20-px m-1 ms-3 d-flex c-pointer"
               />
-            </a> -->
+            </a>
             <a
-            class="nav-icon cursor d-flex align-items-center gap-2"
+            class="nav-icon cursor d-sm-none d-flex align-items-center gap-2"
             data-toggle="tooltip"
             data-placement="bottom"
             title="Video Call"
