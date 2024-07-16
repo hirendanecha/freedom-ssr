@@ -372,6 +372,7 @@ export class ProfileChatsSidebarComponent
           lastMessageText: data.lastMessageText,
           createdBy: this.chatData.Id
         }
+        this.selectedChatUser = existingUser.roomId
         this.onNewChat?.emit(existingUser);
       } else {
         const newUser = {

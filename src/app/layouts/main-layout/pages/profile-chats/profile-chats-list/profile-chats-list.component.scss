@@ -381,12 +381,6 @@
       }
     }
   }
-  .replay-message-box {
-    a {
-      color: var(--para-2nd-color) !important;
-      font-weight: 600 !important;
-    }
-  }
   li.you .message {
     .highlight {
       background-color: #000 !important;
@@ -484,6 +478,34 @@
         color: var(--input-field-text) !important;
         font-weight: 600 !important;
       }
+    }
+  }
+
+  .replay-message-box {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    span,
+    b,
+    p,
+    em,
+    div,
+    strong,
+    li {
+      font-size: 16px !important;
+      line-height: 22px !important;
+      margin: unset !important;
+      letter-spacing: unset !important;
+      background-color: unset !important;
+      font-weight: 500 !important;
+      text-wrap: unset !important;
+    }
+    a {
+      color: var(--para-2nd-color) !important;
+      font-weight: 600 !important;
     }
   }
 }

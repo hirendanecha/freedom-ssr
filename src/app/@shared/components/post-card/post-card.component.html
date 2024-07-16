@@ -371,7 +371,7 @@
       [innerHTML]="post.postdescription | noSanitize"
     ></p>
     <ng-container *ngIf="descriptionimageUrl">
-      <app-img-preview [src]="descriptionimageUrl" classes="w-100" />
+      <app-img-preview [src]="descriptionimageUrl" class="mb-2" classes="w-100" />
     </ng-container>
     <ng-container *ngIf="post.parentPostId">
       <app-re-post-card [id]="post.parentPostId" />
