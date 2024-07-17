@@ -111,7 +111,7 @@ export class ProfileChatsSidebarComponent
     this.getChatList();
     this.getGroupList();
     this.backCanvas =this.activeCanvas.hasOpenOffcanvas();
-    if (this.chatData) {
+    if (this.chatData && !this.backCanvas) {
       this.checkRoom();
     }
   }
