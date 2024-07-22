@@ -6,6 +6,9 @@
   .post-item {
     .advertisement-section {
       max-width: 663px;
+      img{
+        max-height: 250px;
+      }
     }
   }
 }
