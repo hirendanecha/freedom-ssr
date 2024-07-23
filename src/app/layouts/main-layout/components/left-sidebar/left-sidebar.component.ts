@@ -113,10 +113,9 @@ export class LeftSidebarComponent implements OnInit, AfterViewInit {
   reloadPage(): void {
     this.closeSidebar();
     window.scrollTo(0, 0);
-    this.router.navigate(['home']);
-    // .then(() => {
-    //   location.reload();
-    // })
+    this.router.navigate(['home']).then(() => {
+      location.reload();
+    })
   }
 
   closeSidebar(): void {
