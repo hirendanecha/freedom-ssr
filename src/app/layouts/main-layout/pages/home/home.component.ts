@@ -539,7 +539,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (imgTag) {
       const tagUserInput = document.querySelector('app-tag-user-input .tag-input-div') as HTMLInputElement;
       if (tagUserInput) {setTimeout(() => {
-        tagUserInput.innerHTML = tagUserInput.innerHTML.slice(0, -1);
+        tagUserInput.innerText = tagUserInput.innerText + ' '.slice(0, -1);
+        const range = document.createRange();
+        const selection = window.getSelection();
+        if (selection) {
+          range.selectNodeContents(tagUserInput);
+          range.collapse(false);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
       }, 100);}
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
