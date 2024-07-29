@@ -161,7 +161,7 @@ export class IncomingcallModalComponent
       groupId: this.calldata?.groupId,
       notificationByProfileId:
         this.calldata.notificationToProfileId || this.profileId,
-      message: isCallCut ? 'Call declined' : 'Not answered.',
+      message: isCallCut ? 'Call declined' : 'No Answer',
     };
     this.socketService?.hangUpCall(data, (data: any) => {
       if (isCallCut && messageText) {
