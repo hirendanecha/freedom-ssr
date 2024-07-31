@@ -34,16 +34,16 @@ export class NotificationsModalComponent implements AfterViewInit {
       .readUnreadNotification(notification.id, 'Y')
       .subscribe({
         next: (res) => {
-          const type = ['M', 'SC', 'DC', 'VC']
-          if (type.includes(notification?.actionType)) {
-            this.router.navigate([`profile-chats`]);
-          } else {
-            this.router.navigate([`post/${postId}`]);
-          }
+          // const type = ['M', 'SC', 'DC', 'VC']
+          // if (type.includes(notification?.actionType)) {
+          //   this.router.navigate([`profile-chats`]);
+          // } else {
+          //   this.router.navigate([`post/${postId}`]);
+          // }
           // window.open(`post/${postId}`.toString(), '_blank')
-          this.closeModal();
         },
       });
+      this.closeModal();
   }
 
   closeModal(): void {
