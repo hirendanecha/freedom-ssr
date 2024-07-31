@@ -5,7 +5,7 @@ import {
   NgbOffcanvas,
 } from '@ng-bootstrap/ng-bootstrap';
 import { SharedService } from '../../../../@shared/services/shared.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { CustomerService } from '../../../../@shared/services/customer.service';
 import { ProfileMenusModalComponent } from '../profile-menus-modal/profile-menus-modal.component';
 import { NotificationsModalComponent } from '../notifications-modal/notifications-modal.component';
@@ -45,6 +45,7 @@ export class HeaderComponent {
   originalFavicon: HTMLLinkElement;
 
   hideSearch = false;
+  hideSubHeader: boolean = false;
 
   constructor(
     private modalService: NgbModal,
@@ -71,6 +72,12 @@ export class HeaderComponent {
       this.sharedService.isNotify = false;
     }
     this.channelId = +localStorage.getItem('channelId');
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.hideSubHeader = this.router.url.includes('profile-chats');
+      }
+    });
   }
 
   openProfileMenuModal(): void {

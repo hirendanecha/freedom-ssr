@@ -212,7 +212,7 @@
     </nav>
   </div>
 
-  <div class="c-color">
+  <div class="c-color" *ngIf="!hideSubHeader">
     <div class="container">
       <ng-container *ngIf="(breakpointService?.screen | async).xxl.lessThen">
         <div
