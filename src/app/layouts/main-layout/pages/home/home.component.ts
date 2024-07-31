@@ -535,27 +535,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const contentContainer = document.createElement('div');
     contentContainer.innerHTML = content;
     const imgTag = contentContainer.querySelector('img');
-
     if (imgTag) {
-      const tagUserInput = document.querySelector('app-tag-user-input .tag-input-div') as HTMLInputElement;
-      if (tagUserInput) {setTimeout(() => {
-        tagUserInput.innerText = tagUserInput.innerText + ' '.slice(0, -1);
-        const range = document.createRange();
-        const selection = window.getSelection();
-        if (selection) {
-          range.selectNodeContents(tagUserInput);
-          range.collapse(false);
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
-      }, 100);}
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
-      const imageGif = imgTag
-        .getAttribute('src')
-        .toLowerCase()
-        .endsWith('.gif');
+      const imageGif = imgTag.getAttribute('src').toLowerCase().endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
+        this.focusTagInput();
         const copyImage = imgTag.getAttribute('src');
         const bytes = copyImage.length;
         const megabytes = bytes / (1024 * 1024);
@@ -593,5 +578,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.postData['postdescription'] = content;
     }
+  }
+
+  focusTagInput(){
+    const tagUserInput = document.querySelector('app-tag-user-input .tag-input-div') as HTMLInputElement;
+    if (tagUserInput) {setTimeout(() => {
+      tagUserInput.innerText = tagUserInput.innerText + ' '.slice(0, -1);
+      const range = document.createRange();
+      const selection = window.getSelection();
+      if (selection) {
+        range.selectNodeContents(tagUserInput);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }, 100);}
   }
 }

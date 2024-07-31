@@ -392,6 +392,10 @@
     -webkit-box-orient: vertical;
   }
 
+  .text-transform{
+    text-transform: none;
+  }
+
   ::ng-deep {
     .post-description {
       h1,

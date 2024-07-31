@@ -1099,14 +1099,14 @@ export class ProfileChatsListComponent
     contentContainer.innerHTML = content;
     const imgTag = contentContainer.querySelector('img');
     if (imgTag) {
-      this.focusTagInput()
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
-        .getAttribute('src')
-        .toLowerCase()
-        .endsWith('.gif');
+      .getAttribute('src')
+      .toLowerCase()
+      .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
+        this.focusTagInput();
         const copyImage = imgTag.getAttribute('src');
         let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
         const messageText = `<div>${content

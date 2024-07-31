@@ -159,6 +159,10 @@
   }
 }
 .home-input ::ng-deep app-tag-user-input {
+  .input-area {
+    background-color: var(--secondary-color);
+    color: var(--input-text) !important;
+  }
   .tag-input-div {
     @media (min-width: 575px) and (max-width: 767px) {
       max-width: 395px;
