@@ -14,8 +14,11 @@
       overflow-y: auto;
       height: calc(100vh - 310px);
       // min-height: calc(100vh - 350px);
-      @media (max-width: 991px) {
+      @media (min-width: 576px) and (max-width: 991px) {
         height: calc(88vh - 310px) !important;
+      }
+      @media (max-width: 575px) {
+        height: calc(82vh - 310px) !important;
       }
     }
     .c-pdf-show {
