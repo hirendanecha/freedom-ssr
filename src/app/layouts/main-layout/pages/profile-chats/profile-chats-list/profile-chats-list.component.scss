@@ -302,10 +302,9 @@
         .options {
           visibility: hidden !important;
         }
-        &:hover {
-          .options {
-            visibility: visible !important;
-          }
+        &:hover .options,
+        &:focus-within .options {
+          visibility: visible !important;
         }
       }
     }

@@ -162,6 +162,21 @@
   .input-area {
     background-color: var(--secondary-color);
     color: var(--input-text) !important;
+    div,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    a,
+    span,
+    p {
+      color: var(--input-text) !important;
+    }
+    a {
+      color: var(--bs-danger-rgb) !important;
+    }
   }
   .tag-input-div {
     @media (min-width: 575px) and (max-width: 767px) {
