@@ -474,13 +474,13 @@
         <img
           loading="lazy"
           data-src="{{ sharedService?.userData?.ProfilePicName }}"
-          class="w-40-px h-40-px rounded-3"
+          class="w-40-px h-40-px rounded-3 d-none d-sm-flex"
           alt="icon"
         />
 
-        <div class="px-3 gap-2 align-items-center w-100">
+        <div class="px-sm-3 gap-2 align-items-center w-100">
           <div [attr.id]="'comment-' + post.id"
-            class="d-flex align-items-baseline custom-width-comment position-relative gap-sm-0 gap-3"
+          class="d-flex align-items-center custom-width-comment position-relative"
           >
             <!-- <div
               #parentPostCommentElement
@@ -497,7 +497,7 @@
               (onDataChange)="onTagUserInputChangeEvent($event, post.id)"
             />
 
-            <div class="d-flex gap-7 gap-sm-2 lign-items-center flex-column-reverse flex-sm-row position-relative">
+            <div class="d-flex gap-2 lign-items-center align-items-center">
               <!-- Emojis -->
               <!-- <div ngbDropdown placement="top-end" class="d-inline-block">
                 <button type="button" id="emojiModel" ngbDropdownToggle title="Emojis">
@@ -696,9 +696,9 @@
                     post.id === comment.postId &&
                     commentId === comment.id
                   "
-                  class="py-2 px-3 align-items-center w-100 mb-5"
+                  class="py-2 px-sm-3 align-items-center w-100 mb-5"
                 >
-                  <div [attr.id]="'replaycomment-' + post.id" class="d-flex align-items-baseline position-relative custom-width-comment gap-sm-0 gap-2">
+                  <div [attr.id]="'replaycomment-' + post.id" class="d-flex align-items-center position-relative custom-width-comment">
                     <!-- <div
                       #childPostCommentElement
                       contenteditable
@@ -713,7 +713,7 @@
                       [isShowEmojis]="true"
                       (onDataChange)="onTagUserReplayInputChangeEvent($event, post.id)"
                     />
-                    <div class="file-input d-flex gap-7 gap-sm-2 align-items-center flex-column-reverse flex-sm-row">
+                    <div class="file-input d-flex align-items-center gap-2">
                       <div class="file-upload d-flex">
                         <label class="file">
                           <input
