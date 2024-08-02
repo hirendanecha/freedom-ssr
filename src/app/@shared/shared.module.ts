@@ -138,6 +138,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { QrScanModalComponent } from './modals/qrscan-modal/qrscan-modal.component';
 import { AppQrModalComponent } from './modals/app-qr-modal/app-qr-modal.component';
 import { ForwardChatModalComponent } from './modals/forward-chat-modal/forward-chat-modal.component';
+import { ImgLayoutComponent } from './components/img-layout/img-layout.component';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -173,6 +174,7 @@ const sharedComponents = [
   QrScanModalComponent,
   AppQrModalComponent,
   ForwardChatModalComponent,
+  ImgLayoutComponent
 ];
 
 const sharedModules = [

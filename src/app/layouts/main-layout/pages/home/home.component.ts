@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     imageUrl: '',
     posttype: 'S',
     pdfUrl: '',
+    imagesList: [],
   };
 
   communitySlug: string;
@@ -59,11 +60,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   addMemberSearchNgbDropdown: NgbDropdown;
   userList: any = [];
   memberIds: any = [];
-  pdfName: string = '';
   notificationId: number;
   buttonClicked = false;
   originalFavicon: HTMLLinkElement;
-
+  postMediaData: any[] = [];
+  currentImageIndex: number = this.postMediaData.length - 1;
+  currentIndex: any;
   constructor(
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
@@ -132,30 +134,49 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void { }
 
   onPostFileSelect(event: any): void {
-    const tagUserInput = document.querySelector('.home-input app-tag-user-input .tag-input-div') as HTMLInputElement;
-    if (tagUserInput) {tagUserInput.focus()}
-    const file = event.target?.files?.[0] || {};
-    if (file.type.includes('application/pdf')) {
-      this.postData['file'] = file;
-      this.pdfName = file?.name;
-      this.postData['imageUrl'] = null;
-      this.postData['streamname'] = null;
-    } else {
-      this.postData['file'] = file;
-      this.postData['imageUrl'] = URL.createObjectURL(file);
-      this.pdfName = null;
-      this.postData['pdfUrl'] = null;
+    const tagUserInput = document.querySelector(
+      '.home-input app-tag-user-input .tag-input-div'
+    ) as HTMLInputElement;
+    if (tagUserInput) {
+      tagUserInput.focus();
     }
-    // if (file?.size < 5120000) {
-    // } else {
-    //   this.toastService.warring('Image is too large!');
-    // }
+    const files = event.target?.files;
+    if (files.length > 4) {
+      this.toastService.warring(
+        'Please choose up to 4 photos, videos, or GIFs.'
+      );
+      return;
+    }
+    const selectedFiles: any[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileData: any = {
+        file: file,
+        pdfName: null,
+        imageUrl: null,
+      };
+      if (
+        file.type.includes('application/pdf') ||
+        file.type.includes('application/msword') ||
+        file.type.includes(
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
+      ) {
+        fileData.pdfName = file.name;
+      } else if (file.type.includes('image/')) {
+        fileData.imageUrl = URL.createObjectURL(file);
+      }
+      selectedFiles.push(fileData);
+      // console.log(`File ${i + 1}:`, fileData);
+    }
+    this.postMediaData = selectedFiles;
+    // console.log('Selected files:', this.postMediaData);
   }
 
-  removePostSelectedFile(): void {
-    this.postData['file'] = null;
-    this.postData['imageUrl'] = null;
-    this.pdfName = null;
+  removePostSelectedFile(index: number): void {
+    if (index > -1 && index < this.postMediaData.length) {
+      this.postMediaData.splice(index, 1);
+    }
   }
 
   getCommunityDetailsBySlug(): void {
@@ -234,28 +255,25 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   uploadPostFileAndCreatePost(): void {
     this.buttonClicked = true;
-    if (this.postData?.postdescription || this.postData?.file?.name) {
-      if (this.postData?.file?.name) {
+    if (this.postData?.postdescription || this.postMediaData?.length) {
+      if (this.postMediaData?.length) {
         this.spinner.show();
-        this.postService.uploadFile(this.postData?.file).subscribe({
+        const media = this.postMediaData.map((file) => file.file);
+        this.postService.uploadFile(media).subscribe({
           next: (res: any) => {
-            // this.spinner.hide();
-            if (res?.body?.url) {
-              if (this.postData?.file.type.includes('application/pdf')) {
-                this.postData['pdfUrl'] = res?.body?.url;
-                this.postData['imageUrl'] = null;
+            this.spinner.hide();
+            if (res?.body?.imagesList) {
+              // if (this.postData?.file?.type?.includes('application/pdf')) {
+              //   this.postMediaData['pdfUrl'] = res?.body?.url;
+              //   this.postMediaData['imageUrl'] = null;
+              //   this.createOrEditPost();
+              // } else {
+                // this.postMediaData['file'] = null;
+                // this.postData['pdfUrl'] = res?.body?.pdfUrl;
+                this.postData['imagesList'] = res?.body?.imagesList;
                 this.createOrEditPost();
-              } else {
-                this.postData['file'] = null;
-                this.postData['imageUrl'] = res?.body?.url;
-                this.postData['pdfUrl'] = null;
-                this.createOrEditPost();
-              }
+                // }
             }
-            // if (this.postData.file?.size < 5120000) {
-            // } else {
-            //   this.toastService.warring('Image is too large!');
-            // }
           },
           error: (err) => {
             this.spinner.hide();
@@ -272,8 +290,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.postData.tags = getTagUsersFromAnchorTags(this.postMessageTags);
     if (
       this.postData?.postdescription ||
-      this.postData?.imageUrl ||
-      this.postData?.pdfUrl
+      this.postData?.imagesList
     ) {
       if (!(this.postData?.meta?.metalink || this.postData?.metalink)) {
         this.postData.metalink = null;
@@ -295,6 +312,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   resetPost() {
+    this.postMediaData = [];
     this.postData['id'] = '';
     this.postData['postdescription'] = '';
     this.postData['meta'] = {};
@@ -302,7 +320,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.postData['file'] = {};
     this.postData['imageUrl'] = '';
     this.postData['pdfUrl'] = '';
-    this.pdfName = '';
     this.postMessageInputValue = ' ';
     setTimeout(() => {
       this.postMessageInputValue = '';
@@ -432,25 +449,25 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           serviceParams = [this.communityDetails?.Id, this.profileId];
         }
-  
+
         serviceFunction.apply(this.communityService, serviceParams)
           .subscribe({
-            next: (res: any) => {
-              if (res) {
-                this.toastService.success(res.message);
-                // this.getCommunityDetailsBySlug();
-                this.router.navigate([
+          next: (res: any) => {
+            if (res) {
+              this.toastService.success(res.message);
+              // this.getCommunityDetailsBySlug();
+              this.router.navigate([
                   `${this.communityDetails.pageType === 'community'
                     ? 'communities'
                     : 'pages'
-                  }`,
-                ]);
-              }
-            },
-            error: (error) => {
-              console.log(error);
-              this.toastService.success(error.message);
-            },
+                }`,
+              ]);
+            }
+          },
+          error: (error) => {
+            console.log(error);
+            this.toastService.success(error.message);
+          },
         });
       }
     });
@@ -583,15 +600,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   focusTagInput(){
     const tagUserInput = document.querySelector('app-tag-user-input .tag-input-div') as HTMLInputElement;
     if (tagUserInput) {setTimeout(() => {
-      tagUserInput.innerText = tagUserInput.innerText + ' '.slice(0, -1);
-      const range = document.createRange();
-      const selection = window.getSelection();
-      if (selection) {
-        range.selectNodeContents(tagUserInput);
-        range.collapse(false);
-        selection.removeAllRanges();
-        selection.addRange(range);
-      }
+        tagUserInput.innerText = tagUserInput.innerText + ' '.slice(0, -1);
+        const range = document.createRange();
+        const selection = window.getSelection();
+        if (selection) {
+          range.selectNodeContents(tagUserInput);
+          range.collapse(false);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
     }, 100);}
   }
 }

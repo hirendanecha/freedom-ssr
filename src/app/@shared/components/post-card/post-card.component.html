@@ -5,7 +5,7 @@
     !post?.hide &&
     (post?.postdescription ||
       post?.metadescription ||
-      post?.imageUrl ||
+      post?.imagesList.length ||
       post?.pdfUrl ||
       post.parentPostId)
   "
@@ -46,7 +46,7 @@
                 class="d-flex align-items-center"
                 (mouseover)="showHoverBox = true"
               >
-                {{ (post?.Username || post?.FirstName).split(" ").join("") }}
+                {{ (post?.Username || post?.FirstName)?.split(" ").join("") }}
                 <!-- [ngbTooltip]="post.postcreationdate | date : ' h:mm a MMM d, y'" -->
                 <div>
                   <fa-icon
@@ -92,20 +92,20 @@
                 alt="avatar"
               />
               <div class="d-flex gap-3 align-items-baseline">
-              <p class="cursor mt-2">
-                {{ (post?.Username || post?.FirstName).split(" ").join("") }}
-              </p>
+                <p class="cursor mt-2">
+                  {{ (post?.Username || post?.FirstName)?.split(" ").join("") }}
+                </p>
 
-              <button>
-                <a
-                  class="droplist d-flex align-items-center gap-2"
-                  [appCopyClipboard]="post.Username"
-                >
-                  <fa-icon [icon]="['fas', 'copy']" />
-                </a>
-              </button>
-            </div>
-              
+                <button>
+                  <a
+                    class="droplist d-flex align-items-center gap-2"
+                    [appCopyClipboard]="post.Username"
+                  >
+                    <fa-icon [icon]="['fas', 'copy']" />
+                  </a>
+                </button>
+              </div>
+
               <div
                 class="d-flex"
                 *ngIf="
@@ -140,7 +140,6 @@
                     <span>Stop See First</span>
                   </a>
                 </button>
-                
               </div>
               <div
                 class="d-flex mt-2"
@@ -162,14 +161,13 @@
                   <a
                     class="droplist d-flex align-items-center gap-2"
                     routerLink="/platforms" target="_blank"
-                    
                   >
                     <fa-icon [icon]="['fas', 'table-list']" />
                     <span>Platforms</span>
                   </a>
-                </button> 
+                </button>
               </div>
-              
+
               <!-- <div
                 class="d-flex"
                 *ngIf="
@@ -371,32 +369,39 @@
       [innerHTML]="post.postdescription | noSanitize"
     ></p>
     <ng-container *ngIf="descriptionimageUrl">
-      <app-img-preview [src]="descriptionimageUrl" class="mb-2" classes="w-100" />
+      <app-img-preview
+        [src]="descriptionimageUrl"
+        class="mb-2"
+        classes="w-100"
+      />
     </ng-container>
     <ng-container *ngIf="post.parentPostId">
       <app-re-post-card [id]="post.parentPostId" />
     </ng-container>
-    <ng-container *ngIf="post?.pdfUrl">
+    <ng-container *ngFor="let media of post?.imagesList">
       <!-- <app-pdf-preview [src]="post?.pdfUrl" classes="w-100" /> -->
-      <div (click)="pdfView(post?.pdfUrl)">
-        <div class="d-flex align-items-center">
-          <fa-icon
-            [icon]="['fas', 'file-pdf']"
-            class="c-pointer close-icon font-60-px"
-          />
-          <span class="pdf-name c-pointer">
-            {{ post.pdfUrl.split("/")[3].replaceAll("%", " ") }}
-          </span>
+      <ng-container *ngIf="media?.pdfUrl">
+        <div (click)="pdfView(media?.pdfUrl)">
+          <div class="d-flex align-items-center">
+            <fa-icon
+              [icon]="['fas', 'file-pdf']"
+              class="c-pointer close-icon font-60-px"
+            />
+            <span class="pdf-name c-pointer">
+              {{ media?.pdfUrl?.split("/")[3]?.replaceAll("%", " ") }}
+            </span>
+          </div>
         </div>
-      </div>
-      <div class="mb-10"></div>
+        <div class="mb-10"></div>
+      </ng-container>
     </ng-container>
 
     <app-post-meta-data-card [post]="post" />
 
-    <ng-container *ngIf="post?.imageUrl">
+    <app-img-layout [post]="post" />
+    <!-- <ng-container *ngIf="post?.imageUrl">
       <app-img-preview [src]="post?.imageUrl" classes="w-100" />
-    </ng-container>
+    </ng-container> -->
     <ng-container *ngIf="post?.streamname">
       <!-- <div class="video-albumname mb-3">
         {{ post.albumname }}
@@ -480,7 +485,7 @@
 
         <div class="px-sm-3 gap-2 align-items-center w-100">
           <div [attr.id]="'comment-' + post.id"
-          class="d-flex align-items-center custom-width-comment position-relative"
+            class="d-flex align-items-center custom-width-comment position-relative"
           >
             <!-- <div
               #parentPostCommentElement

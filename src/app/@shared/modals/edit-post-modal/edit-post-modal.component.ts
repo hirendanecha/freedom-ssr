@@ -1,4 +1,12 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../services/toast.service';
 import { getTagUsersFromAnchorTags } from '../../utils/utils';
@@ -14,20 +22,24 @@ export class EditPostModalComponent implements AfterViewInit {
   @Input() title: string = 'Confirmation Dialog';
   @Input() message: string;
   @Input() data: any;
-  @ViewChild('parentPostCommentElement', { static: false }) parentPostCommentElement: ElementRef;
+  @ViewChild('parentPostCommentElement', { static: false })
+  parentPostCommentElement: ElementRef;
 
   postData: any = {
     file: null,
     url: '',
-    tags: []
+    tags: [],
   };
 
-  postInputValue: string = ''
+  postInputValue: string = '';
   commentMessageTags: any[];
-  selectedImage = ''
-  pdfName = ''
+  selectedImage = '';
+  pdfName = '';
 
-  constructor(public activeModal: NgbActiveModal,
+  postMediaData: any[] = [];
+
+  constructor(
+    public activeModal: NgbActiveModal,
     private toastService: ToastService,
     private renderer: Renderer2,
     private changeDetectorRef: ChangeDetectorRef
@@ -40,34 +52,76 @@ export class EditPostModalComponent implements AfterViewInit {
       this.pdfName = this.data?.pdfUrl?.split('/')[3];
       this.postData = { ...this.data }
       this.changeDetectorRef.detectChanges();
+      // let media = this.postData?.imagesList;
+      this.postMediaData = this.postData?.imagesList;
     }
   }
+
+  // onPostFileSelect(event: any): void {
+  //   const file = event.target?.files?.[0] || {};
+  //   if (file.type.includes('image/')) {
+  //     this.postData['file'] = file;
+  //     this.selectedImage = URL.createObjectURL(file);
+  //   } else if (file.type.includes('application/pdf')) {
+  //     this.postData['file'] = file;
+  //     this.pdfName = file?.name;
+  //   }
+  //   else {
+  //     this.toastService.danger(`sorry ${file.type} are not allowed!`)
+  //   }
+  //   // if (file?.size < 5120000) {
+  //   // } else {
+  //   //   this.toastService.warring('Image is too large!');
+  //   // }
+  // }
 
   onPostFileSelect(event: any): void {
-    const file = event.target?.files?.[0] || {};
-    if (file.type.includes('image/')) {
-      this.postData['file'] = file;
-      this.selectedImage = URL.createObjectURL(file);
-    } else if (file.type.includes('application/pdf')) {
-      this.postData['file'] = file;
-      this.pdfName = file?.name;
+    const files = event.target?.files;
+    if (files.length > 4) {
+      this.toastService.warring(
+        'Please choose up to 4 photos, videos, or GIFs.'
+      );
+      return;
     }
-    else {
-      this.toastService.danger(`sorry ${file.type} are not allowed!`)
+    const selectedFiles: any[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileData: any = {
+        file: file,
+        pdfName: null,
+        imageUrl: null,
+      };
+      if (
+        file.type.includes('application/pdf') ||
+        file.type.includes('application/msword') ||
+        file.type.includes(
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
+      ) {
+        fileData.pdfName = file.name;
+      } else if (file.type.includes('image/')) {
+        fileData.imageUrl = URL.createObjectURL(file);
+      }
+      selectedFiles.push(fileData);
+      // console.log(`File ${i + 1}:`, fileData);
     }
-    // if (file?.size < 5120000) {
-    // } else {
-    //   this.toastService.warring('Image is too large!');
-    // }
+    this.postMediaData = selectedFiles;
+    // console.log('Selected files:', this.postMediaData);
   }
 
-  removePostSelectedFile(): void {
-    this.postData['file'] = null;
-    this.postData['imageUrl'] = '';
-    this.postData['pdfUrl'] = '';
-    this.selectedImage = '';
-    this.pdfName = '';
+  removePostSelectedFile(index: number): void {
+    if (index > -1 && index < this.postMediaData.length) {
+      this.postMediaData.splice(index, 1);
+    }
   }
+
+  // removePostSelectedFile(): void {
+  //   this.postData['file'] = null;
+  //   this.postData['imageUrl'] = '';
+  //   this.postData['pdfUrl'] = '';
+  //   this.selectedImage = '';
+  //   this.pdfName = '';
+  // }
 
   onChangeComment(): void {
     this.postData.tags = getTagUsersFromAnchorTags(this.commentMessageTags);

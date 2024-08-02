@@ -396,6 +396,45 @@
     text-transform: none;
   }
 
+  .post-img {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  
+    .single {
+      flex: 1;
+      img {
+        width: 100%;
+        height: auto;
+      }
+  
+      &.d-grid {
+        display: grid;
+        gap: 8px;
+      }
+  
+      &:nth-child(2) {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, 1fr);
+      }
+  
+      &:nth-child(3) {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, 1fr);
+      }
+  
+      &:nth-child(4) {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+      }
+    }
+  }
+  
+  
   ::ng-deep {
     .post-description {
       h1,

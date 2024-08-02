@@ -39,12 +39,26 @@
       max-width: calc(100% - 60px);
     }
   }
+
+  .select-media-post{
+    min-height: 300px;
+    max-height: 300px;
+    max-width: 300px;
+  }
 }
 .search-user-list {
   max-height: 332px;
   overflow: auto;
 }
 ::ng-deep {
+  .carousel-item {
+    transition: none;
+  }
+  .carousel-inner .active{
+    display: flex;
+    justify-content: center;
+    transition: none;
+  }
   .emoji-menu-panale {
     position: fixed;
     right: 36%;
