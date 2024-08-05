@@ -262,7 +262,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   uploadPostFileAndCreatePost(): void {
     this.buttonClicked = true;
-
+    this.spinner.show();
     if (this.postData?.editImagesList?.length) {
       this.postMediaData = this.postMediaData?.concat(
         this.postData?.editImagesList
@@ -270,23 +270,22 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.postData?.postdescription || this.postMediaData?.length) {
       if (this.postMediaData?.length) {
-        this.spinner.show();
         let media = this.postMediaData?.map((file) => file?.file);
         this.postService.uploadFile(media).subscribe({
           next: (res: any) => {
-            this.spinner.hide();
             if (res?.body?.imagesList) {
+              this.spinner.hide();
               // if (this.postData?.file?.type?.includes('application/pdf')) {
-              //   this.postMediaData['pdfUrl'] = res?.body?.url;
-              //   this.postMediaData['imageUrl'] = null;
-              //   this.createOrEditPost();
-              // } else {
-              // this.postMediaData['file'] = null;
-              // this.postData['pdfUrl'] = res?.body?.pdfUrl;
-              if (this.postData['imagesList']?.length) {
-                for (const media of res?.body?.imagesList) {
-                  this.postData['imagesList'].push(media);
-                }
+                //   this.postMediaData['pdfUrl'] = res?.body?.url;
+                //   this.postMediaData['imageUrl'] = null;
+                //   this.createOrEditPost();
+                // } else {
+                  // this.postMediaData['file'] = null;
+                  // this.postData['pdfUrl'] = res?.body?.pdfUrl;
+                  if (this.postData['imagesList']?.length) {
+                    for (const media of res?.body?.imagesList) {
+                      this.postData['imagesList'].push(media);
+                    }
               } else {
                 this.postData['imagesList'] = res?.body?.imagesList;
               }
