@@ -41,9 +41,9 @@
           [isShowEmojis]="true"
           (onDataChange)="onTagUserInputChangeEvent($event)"
         />
-        <div class="file-input ms-2">
+        <div class="file-input ms-2" *ngIf="postMediaData?.length < 3">
           <div class="file-upload">
-            <label class="file" *ngIf="!(postData?.pdfUrl || postData?.pdfUrl)">
+            <label class="file" *ngIf="postMediaData?.length < 3">
               <input
                 type="file"
                 multiple
@@ -63,7 +63,7 @@
             <label
               class="d-flex gap-2 align-items-center"
               (click)="pdfFile.click()"
-              *ngIf="!(postData?.imageUrl || selectedImage)"
+              *ngIf="!(postMediaData?.[0]?.imageUrl || selectedImage)"
             >
               <!-- ngbTooltip="Comming Soon!"
               placement="bottom" -->
@@ -112,9 +112,9 @@
           />
         </div>
       </ng-container> -->
-      <ng-container *ngIf="postMediaData?.[0]">
+      <ng-container *ngIf="combinedMediaData?.length">
         <ngb-carousel [showNavigationIndicators]="false" [interval]="0">
-          <ng-container *ngFor="let media of postMediaData; let i = index">
+          <ng-container *ngFor="let media of combinedMediaData">
             <ng-template ngbSlide>
               <div class="d-flex select-media-post align-items-center">
                 <ng-container *ngIf="media?.imageUrl">
@@ -130,7 +130,7 @@
                       [icon]="['fas', 'xmark']"
                       class="position-absolute top-0 start-100 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
                       role="button"
-                      (click)="removePostSelectedFile(i)"
+                      (click)="removePostSelectedFile(media)"
                     />
                   </div>
                 </ng-container>
@@ -140,12 +140,14 @@
                       [icon]="['fas', 'file-pdf']"
                       class="c-pointer close-icon font-40-px"
                     />
-                    <span class="c-pdf-show">{{ media?.pdfUrl.replaceAll('%', ' ') }}</span>
+                    <span class="c-pdf-show">{{
+                      media?.pdfUrl.replaceAll("%", " ")
+                    }}</span>
                     <fa-icon
                       [icon]="['fas', 'xmark']"
                       class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
                       role="button"
-                      (click)="removePostSelectedFile(i)"
+                      (click)="removePostSelectedFile(media)"
                     />
                   </div>
                 </ng-container>

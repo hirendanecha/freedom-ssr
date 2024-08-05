@@ -37,20 +37,21 @@ export class EditPostModalComponent implements AfterViewInit {
   pdfName = '';
 
   postMediaData: any[] = [];
+  editMediaData: any[] = [];
+  removeImagesList: any[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
     private toastService: ToastService,
     private renderer: Renderer2,
     private changeDetectorRef: ChangeDetectorRef
-  ) {
-  }
+  ) {}
 
   ngAfterViewInit(): void {
     if (this.data) {
-      this.postInputValue = this.data?.postdescription
+      this.postInputValue = this.data?.postdescription;
       this.pdfName = this.data?.pdfUrl?.split('/')[3];
-      this.postData = { ...this.data }
+      this.postData = { ...this.data };
       this.changeDetectorRef.detectChanges();
       // let media = this.postData?.imagesList;
       this.postMediaData = this.postData?.imagesList;
@@ -105,13 +106,22 @@ export class EditPostModalComponent implements AfterViewInit {
       selectedFiles.push(fileData);
       // console.log(`File ${i + 1}:`, fileData);
     }
-    this.postMediaData = selectedFiles;
+    this.editMediaData = (this.editMediaData || []).concat(selectedFiles);
     // console.log('Selected files:', this.postMediaData);
   }
 
-  removePostSelectedFile(index: number): void {
-    if (index > -1 && index < this.postMediaData.length) {
-      this.postMediaData.splice(index, 1);
+  removePostSelectedFile(media: any = {}): void {
+    if (media.id) {
+      this.removeImagesList.push({ id: media.id });
+      this.postMediaData = this.postMediaData.filter(
+        (ele) => ele.id != media.id
+      );
+      console.log(this.removeImagesList);
+    } else {
+      this.editMediaData = this.editMediaData.filter(
+        (ele: any) => ele?.file?.name != media?.file?.name
+      );
+      console.log(this.editMediaData);
     }
   }
 
@@ -125,14 +135,16 @@ export class EditPostModalComponent implements AfterViewInit {
 
   onChangeComment(): void {
     this.postData.tags = getTagUsersFromAnchorTags(this.commentMessageTags);
+    this.postData['editImagesList'] = this.editMediaData;
+    this.postData['imagesList'] = this.postMediaData;
+    this.postData['removeImagesList'] = this.removeImagesList;
     this.activeModal.close(this.postData);
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.extractLargeImageFromContent(data.html)
+    this.extractLargeImageFromContent(data.html);
     this.commentMessageTags = data?.tags;
   }
-
 
   extractLargeImageFromContent(content: string): void {
     const contentContainer = document.createElement('div');
@@ -152,8 +164,11 @@ export class EditPostModalComponent implements AfterViewInit {
         const megabytes = bytes / (1024 * 1024);
         if (megabytes > 1) {
           // this.postData.comment = content.replace(copyImage, '');
-          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">'
-          this.postData.postdescription = `<div>${content.replace(copyImage, '').replace(/\<br\>/ig, '').replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
+          this.postData.postdescription = `<div>${content
+            .replace(copyImage, '')
+            .replace(/\<br\>/gi, '')
+            .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
           const base64Image = copyImage
             .trim()
             .replace(/^data:image\/\w+;base64,/, '');
@@ -179,5 +194,9 @@ export class EditPostModalComponent implements AfterViewInit {
     } else {
       this.postData.postdescription = content;
     }
+  }
+
+  get combinedMediaData(): any[] {
+    return [...(this.editMediaData || []), ...(this.postMediaData || [])];
   }
 }

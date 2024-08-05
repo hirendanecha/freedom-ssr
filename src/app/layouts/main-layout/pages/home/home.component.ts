@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   onPostFileSelect(event: any): void {
     const tagUserInput = document.querySelector(
@@ -169,7 +169,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       selectedFiles.push(fileData);
       // console.log(`File ${i + 1}:`, fileData);
     }
-    this.postMediaData = selectedFiles;
+    // this.postMediaData = selectedFiles;
+    this.postMediaData = (this.postMediaData || []).concat(selectedFiles);
     // console.log('Selected files:', this.postMediaData);
   }
 
@@ -255,10 +256,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   uploadPostFileAndCreatePost(): void {
     this.buttonClicked = true;
+
+    this.postMediaData = this.postMediaData.concat(
+      this.postData?.editImagesList
+    );
     if (this.postData?.postdescription || this.postMediaData?.length) {
       if (this.postMediaData?.length) {
         this.spinner.show();
-        const media = this.postMediaData.map((file) => file.file);
+        let media = this.postMediaData.map((file) => file.file);
         this.postService.uploadFile(media).subscribe({
           next: (res: any) => {
             this.spinner.hide();
@@ -268,11 +273,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               //   this.postMediaData['imageUrl'] = null;
               //   this.createOrEditPost();
               // } else {
-                // this.postMediaData['file'] = null;
-                // this.postData['pdfUrl'] = res?.body?.pdfUrl;
+              // this.postMediaData['file'] = null;
+              // this.postData['pdfUrl'] = res?.body?.pdfUrl;
+              if (this.postData['imagesList']?.length) {
+                for (const media of res?.body?.imagesList) {
+                  this.postData['imagesList'].push(media);
+                }
+              } else {
                 this.postData['imagesList'] = res?.body?.imagesList;
-                this.createOrEditPost();
-                // }
+              }
+              this.createOrEditPost();
+              // }
             }
           },
           error: (err) => {
@@ -283,15 +294,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.spinner.hide();
         this.createOrEditPost();
       }
+    } else {
+      this.createOrEditPost();
     }
   }
 
   createOrEditPost(): void {
     this.postData.tags = getTagUsersFromAnchorTags(this.postMessageTags);
-    if (
-      this.postData?.postdescription ||
-      this.postData?.imagesList
-    ) {
+    if (this.postData?.postdescription || this.postData?.imagesList) {
       if (!(this.postData?.meta?.metalink || this.postData?.metalink)) {
         this.postData.metalink = null;
         this.postData.title = null;
@@ -330,8 +340,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   onEditPost(post: any): void {
     if (post.posttype === 'V') {
       this.openUploadVideoModal(post);
-    }
-    else {
+    } else {
       this.openUploadEditPostModal(post);
     }
   }
@@ -442,7 +451,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     modalRef.componentInstance.message = modalMessage;
     modalRef.result.then((res) => {
       if (res === 'success') {
-        const serviceFunction = actionType === 'delete' ? this.communityService.deleteCommunity : this.communityService.removeFromCommunity;
+        const serviceFunction =
+          actionType === 'delete'
+            ? this.communityService.deleteCommunity
+            : this.communityService.removeFromCommunity;
         let serviceParams: any[];
         if (actionType === 'delete') {
           serviceParams = [this.communityDetails?.Id];
@@ -450,14 +462,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           serviceParams = [this.communityDetails?.Id, this.profileId];
         }
 
-        serviceFunction.apply(this.communityService, serviceParams)
-          .subscribe({
+        serviceFunction.apply(this.communityService, serviceParams).subscribe({
           next: (res: any) => {
             if (res) {
               this.toastService.success(res.message);
               // this.getCommunityDetailsBySlug();
               this.router.navigate([
-                  `${this.communityDetails.pageType === 'community'
+                `${
+                  this.communityDetails.pageType === 'community'
                     ? 'communities'
                     : 'pages'
                 }`,
@@ -515,14 +527,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       centered: true,
       backdrop: 'static',
     });
+    const postData = { ...post };
     modalRef.componentInstance.title = `Edit Post`;
     modalRef.componentInstance.confirmButtonLabel = `Save`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.communityId = this.communityDetails?.Id;
-    modalRef.componentInstance.data = post.id ? post : null;
+    modalRef.componentInstance.data = postData.id ? postData : null;
     modalRef.result.then((res) => {
       if (res.id) {
         this.postData = res;
+        console.log(this.postData);
         this.uploadPostFileAndCreatePost();
       }
     });
@@ -555,7 +569,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (imgTag) {
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
-      const imageGif = imgTag.getAttribute('src').toLowerCase().endsWith('.gif');
+      const imageGif = imgTag
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
         this.focusTagInput();
         const copyImage = imgTag.getAttribute('src');
@@ -597,9 +614,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  focusTagInput(){
-    const tagUserInput = document.querySelector('app-tag-user-input .tag-input-div') as HTMLInputElement;
-    if (tagUserInput) {setTimeout(() => {
+  focusTagInput() {
+    const tagUserInput = document.querySelector(
+      'app-tag-user-input .tag-input-div'
+    ) as HTMLInputElement;
+    if (tagUserInput) {
+      setTimeout(() => {
         tagUserInput.innerText = tagUserInput.innerText + ' '.slice(0, -1);
         const range = document.createRange();
         const selection = window.getSelection();
@@ -609,6 +629,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           selection.removeAllRanges();
           selection.addRange(range);
         }
-    }, 100);}
+      }, 100);
+    }
   }
 }
