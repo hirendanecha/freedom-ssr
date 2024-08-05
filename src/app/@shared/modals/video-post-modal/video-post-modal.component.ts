@@ -11,10 +11,10 @@ import {
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../services/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PostService } from '../../services/post.service';
 import { forkJoin } from 'rxjs';
 import { SocketService } from '../../services/socket.service';
 import { HttpEventType } from '@angular/common/http';
+import { UploadFilesService } from '../../services/upload-files.service';
 
 @Component({
   selector: 'app-video-post-modal',
@@ -57,8 +57,8 @@ export class VideoPostModalComponent implements AfterViewInit {
     public activeModal: NgbActiveModal,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
-    private postService: PostService,
     private socketService: SocketService,
+    private uploadFilesService: UploadFilesService,
     private cdr: ChangeDetectorRef
   ) {
     this.postData.profileid = localStorage.getItem('profileId');
@@ -150,7 +150,7 @@ export class VideoPostModalComponent implements AfterViewInit {
             if (this.postData?.file1?.name || this.postData?.file2?.name) {
               if (this.postData?.file1?.name) {
                 this.isProgress = true;
-                this.postService.uploadFile(this.postData?.file1).subscribe((event) => {
+                this.uploadFilesService.uploadFile(this.postData?.file1).subscribe((event) => {
                   if (event.type === HttpEventType.UploadProgress) {
                     this.streamnameProgress = Math.round(
                       (100 * event.loaded) / event.total
@@ -174,7 +174,7 @@ export class VideoPostModalComponent implements AfterViewInit {
                 if (this.postData.id) {
                   this.spinner.show();
                 }
-                this.postService.uploadFile(this.postData?.file2).subscribe((event) => {
+                this.uploadFilesService.uploadFile(this.postData?.file2).subscribe((event) => {
                   if (event.type === HttpEventType.UploadProgress) {
                     this.thumbfilenameProgress = Math.round(
                       (100 * event.loaded) / event.total

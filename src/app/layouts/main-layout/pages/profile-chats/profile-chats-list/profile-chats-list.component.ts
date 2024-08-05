@@ -44,6 +44,7 @@ import {
   FILE_EXTENSIONS_Video,
 } from 'src/app/@shared/constant/file-extensions';
 import { HttpEventType } from '@angular/common/http';
+import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 
 @Component({
   selector: 'app-profile-chats-list',
@@ -127,6 +128,7 @@ export class ProfileChatsListComponent
     public sharedService: SharedService,
     private messageService: MessageService,
     private postService: PostService,
+    private uploadFilesService: UploadFilesService,
     private toastService: ToastService,
     private spinner: NgxSpinnerService,
     public encryptDecryptService: EncryptDecryptService,
@@ -625,7 +627,7 @@ export class ProfileChatsListComponent
             groupId: this.userChat?.groupId,
           };
           this.scrollToBottom();
-          this.postService
+          this.uploadFilesService
             .uploadFile(this.selectedFile, param)
             .pipe(takeUntil(this.cancelUpload$))
             .subscribe({

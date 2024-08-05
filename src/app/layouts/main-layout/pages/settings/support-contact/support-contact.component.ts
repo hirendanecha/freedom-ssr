@@ -4,6 +4,7 @@ import { BugReportService } from 'src/app/@shared/services/bug-report.service';
 import { PostService } from 'src/app/@shared/services/post.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
+import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 
 @Component({
   selector: 'app-support-contact',
@@ -20,8 +21,8 @@ export class SupportContactComponent implements OnInit {
   constructor(
     private seoService: SeoService,
     private fb: FormBuilder,
-    private postService: PostService,
     private bugReportService: BugReportService,
+    private uploadFilesService: UploadFilesService,
     private toasterService: ToastService
   ) {
     const data = {
@@ -65,7 +66,7 @@ export class SupportContactComponent implements OnInit {
   uploadAttachment() {
     if (this.selectedFile) {
       this.isFileUploadInProgress = true;
-      this.postService.uploadFile(this.selectedFile).subscribe({
+      this.uploadFilesService.uploadFile(this.selectedFile).subscribe({
         next: (res: any) => {
           if (res?.body?.url) {
             this.isFileUploadInProgress = false;

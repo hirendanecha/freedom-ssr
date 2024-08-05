@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BugReportService } from 'src/app/@shared/services/bug-report.service';
-import { PostService } from 'src/app/@shared/services/post.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
+import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 
 @Component({
   selector: 'app-support-ticket-page',
@@ -21,7 +21,7 @@ export class SupportTicketPageComponent implements OnInit {
   constructor(
     private seoService: SeoService,
     private fb: FormBuilder,
-    private postService: PostService,
+    private uploadFilesService: UploadFilesService,
     private bugReportService: BugReportService,
     private toasterService: ToastService
   ) {
@@ -69,7 +69,7 @@ export class SupportTicketPageComponent implements OnInit {
     if (this.profileId) {
       if (this.selectedFile) {
         this.isFileUploadInProgress = true;
-        this.postService.uploadFile(this.selectedFile).subscribe({
+        this.uploadFilesService.uploadFile(this.selectedFile).subscribe({
           next: (res: any) => {
             if (res?.body?.url) {
               this.isFileUploadInProgress = false;

@@ -9,6 +9,7 @@ import { SeoService } from 'src/app/@shared/services/seo.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
+import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 import {
   deleteExtraParamsFromReqObj,
   isFormSubmittedAndError,
@@ -67,6 +68,7 @@ export class ResearchListComponent {
     private breakpointService: BreakpointService,
     private toastService: ToastService,
     private seoService: SeoService,
+    private uploadFilesService: UploadFilesService,
     private socketService: SocketService
   ) {
     const data = {
@@ -228,7 +230,7 @@ export class ResearchListComponent {
   createImagePost(): void {
     const profileId = localStorage.getItem('profileId');
     if (this.selectedImgFile && !this.selectedVideoFile) {
-      this.postService.uploadFile(this.selectedImgFile).subscribe({
+      this.uploadFilesService.uploadFile(this.selectedImgFile).subscribe({
         next: (res: any) => {
           if (res?.body?.url) {
             this.postImage = res?.body?.url;
@@ -237,7 +239,7 @@ export class ResearchListComponent {
         },
       });
     } else if (this.selectedpdfFile) {
-      this.postService.uploadFile(this.selectedpdfFile).subscribe({
+      this.uploadFilesService.uploadFile(this.selectedpdfFile).subscribe({
         next: (res: any) => {
           if (res?.body?.url) {
             this.postFile = res?.body?.url;
@@ -247,14 +249,14 @@ export class ResearchListComponent {
       });
     } else if (this.selectedVideoFile && this.selectedImgFile) {
       this.spinner.show();
-      this.postService.uploadFile(this.selectedImgFile).subscribe({
+      this.uploadFilesService.uploadFile(this.selectedImgFile).subscribe({
         next: (res: any) => {
           if (res?.body?.url) {
             this.postThumbfilename = res?.body?.url;
           }
         },
       });
-      this.postService.uploadFile(this.selectedVideoFile).subscribe({
+      this.uploadFilesService.uploadFile(this.selectedVideoFile).subscribe({
         next: (res: any) => {
           if (res?.body?.url) {
             this.postVideo = res?.body?.url;

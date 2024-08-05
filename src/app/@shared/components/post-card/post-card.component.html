@@ -367,10 +367,10 @@
     
 
     <p class="post-description mdtxt m-0 mt-4 pb-3"
-      [innerHTML]="post.postdescription | truncate: (showFullDesc ? -1 : 800) | noSanitize">
+      [innerHTML]="post?.postdescription | stripHtml | truncate: (showFullDesc ? -1 : 800) | noSanitize">
     </p>
     
-    <ng-container *ngIf="post.postdescription.length > 400">
+    <ng-container *ngIf="(post?.postdescription | stripHtml).length > 400">
       <button (click)="showFullDescription()">
         {{ showFullDesc ? "Read Less" : "Read More" }}
       </button>
@@ -404,11 +404,12 @@
     </ng-container>
 
     <app-post-meta-data-card [post]="post" />
-
-    <app-img-layout [post]="post" />
-    <!-- <ng-container *ngIf="post?.imageUrl">
+    <ng-container *ngIf="post?.imagesList">
+      <app-img-layout [post]="post" />
+    </ng-container>
+    <ng-container *ngIf="post?.imageUrl">
       <app-img-preview [src]="post?.imageUrl" classes="w-100" />
-    </ng-container> -->
+    </ng-container>
     <ng-container *ngIf="post?.streamname">
       <!-- <div class="video-albumname mb-3">
         {{ post.albumname }}

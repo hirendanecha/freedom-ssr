@@ -9,9 +9,9 @@ import {
 import { ProfileService } from '../../services/profile.service';
 import { SharedService } from '../../services/shared.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PostService } from '../../services/post.service';
 import { ToastService } from '../../services/toast.service';
 import { SocketService } from '../../services/socket.service';
+import { UploadFilesService } from '../../services/upload-files.service';
 
 @Component({
   selector: 'app-edit-research-modal',
@@ -28,7 +28,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit {
   constructor(
     public activeModal: NgbActiveModal,
     private profileService: ProfileService,
-    private postService: PostService,
+    private uploadFilesService: UploadFilesService,
     public sharedService: SharedService,
     private spinner: NgxSpinnerService,
     private toastService: ToastService,
@@ -186,7 +186,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit {
   createImagePost(): void {
     const profileId = localStorage.getItem('profileId');
     if (this.selectedImgFile) {
-      this.postService
+      this.uploadFilesService
         .uploadFile(this.selectedImgFile)
         .subscribe({
           next: (res: any) => {
@@ -197,7 +197,7 @@ export class EditResearchModalComponent implements OnInit, AfterViewInit {
           },
         });
     } else if (this.selectedpdfFile) {
-      this.postService
+      this.uploadFilesService
         .uploadFile(this.selectedpdfFile)
         .subscribe({
           next: (res: any) => {

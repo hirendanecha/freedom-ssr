@@ -9,3 +9,13 @@ export class TruncatePipe implements PipeTransform {
     return value.substring(0, limit) + '...';
   }
 }
+@Pipe({
+  name: 'stripHtml'
+})
+export class StripHtmlPipe implements PipeTransform {
+  transform(value: string): string {
+    const div = document.createElement('div');
+    div.innerHTML = value;
+    return div.innerText || div.textContent || '';
+  }
+}
