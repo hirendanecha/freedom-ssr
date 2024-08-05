@@ -1,6 +1,6 @@
 <div class="post-img d-flex justify-content-between flex-wrap gap-2 gap-lg-3">
   <!-- One Image -->
-  <div class="single" *ngIf="post?.imagesList.length === 1">
+  <div class="single" *ngIf="post?.imagesList?.length === 1">
     <app-img-preview
       *ngIf="post.imagesList[0]?.imageUrl"
       [src]="post.imagesList[0]?.imageUrl"
@@ -9,7 +9,7 @@
   </div>
 
   <!-- Two Images -->
-  <div class="single d-flex gap-2" *ngIf="post?.imagesList.length === 2">
+  <div class="single d-flex gap-2" *ngIf="post?.imagesList?.length === 2">
     <div class="small-images" *ngIf="post.imagesList[0]?.imageUrl">
       <app-img-preview
         *ngIf="post.imagesList[0]?.imageUrl"
@@ -25,7 +25,7 @@
   </div>
 
   <!-- Three Images -->
-  <div class="single d-grid gap-3" *ngIf="post?.imagesList.length === 3">
+  <div class="single d-grid gap-3" *ngIf="post?.imagesList?.length === 3">
     <div class="large-image" *ngIf="post.imagesList[0]?.imageUrl">
       <app-img-preview
         *ngIf="post.imagesList[0]?.imageUrl"
@@ -48,7 +48,7 @@
   </div>
 
   <!-- Four Images -->
-  <div class="single d-grid gap-3" *ngIf="post?.imagesList.length === 4">
+  <div class="single d-grid gap-3" *ngIf="post?.imagesList?.length === 4">
     <div class="small-images" *ngIf="post.imagesList[0]?.imageUrl">
       <app-img-preview
         *ngIf="post.imagesList[0]?.imageUrl"

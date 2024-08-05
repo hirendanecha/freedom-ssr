@@ -45,20 +45,32 @@
     max-height: 300px;
     max-width: 300px;
   }
+
+  ::ng-deep {
+    .carousel-item {
+      transition: none;
+    }
+    .carousel-inner .active {
+      display: flex;
+      justify-content: center;
+      transition: none;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+      background-color: gray;
+      top: 115px;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+    }
+  }
 }
 .search-user-list {
   max-height: 332px;
   overflow: auto;
 }
 ::ng-deep {
-  .carousel-item {
-    transition: none;
-  }
-  .carousel-inner .active{
-    display: flex;
-    justify-content: center;
-    transition: none;
-  }
   .emoji-menu-panale {
     position: fixed;
     right: 36%;

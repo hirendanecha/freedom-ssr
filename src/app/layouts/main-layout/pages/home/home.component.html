@@ -135,6 +135,7 @@
             placeholder="Post a link or image or file or let's just talk!"
             [value]="postMessageInputValue"
             [isShowMetaLoader]="true"
+            [isCopyImagePreview]="false"
             [isShowEmojis]="true"
             (onDataChange)="onTagUserInputChangeEvent($event)"
           />
@@ -152,19 +153,18 @@
           </button>
         </div>
         <ng-container *ngIf="postMediaData[0]">
-          <ngb-carousel [showNavigationIndicators]="false" [interval]="0">
+          <!-- <ngb-carousel [showNavigationIndicators]="false" [interval]="0"> -->
+            <ngb-carousel [showNavigationIndicators]="false" [interval]="0"
+              [showNavigationArrows]="postMediaData.length > 1">
             <ng-container *ngFor="let media of postMediaData; let i = index">
               <ng-template ngbSlide>
                 <div class="d-flex select-media-post align-items-center">
                   <ng-container *ngIf="media?.imageUrl">
                     <div class="position-relative mt-5">
-                      <img
-                        loading="lazy"
-                        [src]="media?.imageUrl"
-                        class="w-100 h-100 rounded-4"
-                        alt="icon"
-                        onerror="this.onerror=null;"
-                      />
+                      <app-img-preview
+                      [src]="media?.imageUrl"
+                      classes="w-300-px h-300-px"
+                    ></app-img-preview>
                       <fa-icon
                         [icon]="['fas', 'xmark']"
                         class="position-absolute top-0 start-100 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
@@ -173,13 +173,13 @@
                       />
                     </div>
                   </ng-container>
-                  <ng-container *ngIf="media.pdfName">
+                  <ng-container *ngIf="media?.pdfName">
                     <div class="position-relative mt-5">
                       <fa-icon
                         [icon]="['fas', 'file-pdf']"
                         class="c-pointer close-icon font-40-px"
                       />
-                      <span class="c-pdf-show">{{ media.pdfName.replaceAll('%', ' ') }}</span>
+                      <span class="c-pdf-show">{{ media?.pdfName?.replaceAll('%', ' ') }}</span>
                       <fa-icon
                         [icon]="['fas', 'xmark']"
                         class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"

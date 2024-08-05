@@ -34,7 +34,6 @@ export class EditPostModalComponent implements AfterViewInit {
   postInputValue: string = '';
   commentMessageTags: any[];
   selectedImage = '';
-  pdfName = '';
 
   postMediaData: any[] = [];
   editMediaData: any[] = [];
@@ -50,7 +49,7 @@ export class EditPostModalComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     if (this.data) {
       this.postInputValue = this.data?.postdescription;
-      this.pdfName = this.data?.pdfUrl?.split('/')[3];
+      // this.pdfName = this.data?.pdfUrl?.split('/')[3];
       this.postData = { ...this.data };
       this.changeDetectorRef.detectChanges();
       // let media = this.postData?.imagesList;

@@ -257,13 +257,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   uploadPostFileAndCreatePost(): void {
     this.buttonClicked = true;
 
-    this.postMediaData = this.postMediaData.concat(
-      this.postData?.editImagesList
-    );
+    if (this.postData?.editImagesList?.length) {      
+      this.postMediaData = this.postMediaData?.concat(
+        this.postData?.editImagesList
+      );
+    }
     if (this.postData?.postdescription || this.postMediaData?.length) {
       if (this.postMediaData?.length) {
         this.spinner.show();
-        let media = this.postMediaData.map((file) => file.file);
+        let media = this.postMediaData?.map((file) => file?.file);
         this.postService.uploadFile(media).subscribe({
           next: (res: any) => {
             this.spinner.hide();
@@ -316,7 +318,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    this.extractImageUrlFromContent(data.html);
+    // this.extractImageUrlFromContent(data.html);
+    this.postData.postdescription = this.extractImageUrlFromContent(
+      data?.html.replace(/<div>\s*<br\s*\/?>\s*<\/div>\s*$/, '')
+    );
     this.postData.meta = data?.meta;
     this.postMessageTags = data?.tags;
   }
@@ -562,7 +567,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   //   this.postMessageInputValue = this.postMessageInputValue + `<img src=${emoji} width="60" height="60">`;
   // }
 
-  extractImageUrlFromContent(content: string): void {
+  extractImageUrlFromContent(content: string) {
     const contentContainer = document.createElement('div');
     contentContainer.innerHTML = content;
     const imgTag = contentContainer.querySelector('img');
@@ -570,48 +575,46 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
-        .getAttribute('src')
-        .toLowerCase()
-        .endsWith('.gif');
+      .getAttribute('src')
+      .toLowerCase()
+      .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
         this.focusTagInput();
         const copyImage = imgTag.getAttribute('src');
-        const bytes = copyImage.length;
-        const megabytes = bytes / (1024 * 1024);
-        if (megabytes > 1) {
-          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
-          this.postData['postdescription'] = `<div>${content
-            .replace(copyImage, '')
-            .replace(/\<br\>/gi, '')
-            .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
-          // this.postData['postdescription'] =  content.replace(copyImage, '').replace(new RegExp(copyImageTag, 'g'), '');
-          // this.postData['postdescription'] = contentContainer.innerText;
-          // this.postData['postdescription'] = content.replace(copyImage, '');
-          const base64Image = copyImage
-            .trim()
-            .replace(/^data:image\/\w+;base64,/, '');
-          try {
-            const binaryString = window.atob(base64Image);
-            const uint8Array = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-              uint8Array[i] = binaryString.charCodeAt(i);
-            }
-            const blob = new Blob([uint8Array], { type: 'image/jpeg' });
-            const fileName = `copyImage-${new Date().getTime()}.jpg`;
-            const file = new File([blob], fileName, { type: 'image/jpeg' });
-            this.postData.file = file;
-          } catch (error) {
-            console.error('Base64 decoding error:', error);
+        let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
+        const postText = `<div>${content
+          ?.replace(copyImage, '')
+          ?.replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+        const base64Image = copyImage
+          .trim()
+          ?.replace(/^data:image\/\w+;base64,/, '');
+        try {
+          const binaryString = window.atob(base64Image);
+          const uint8Array = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            uint8Array[i] = binaryString.charCodeAt(i);
           }
-        } else {
-          this.postData['postdescription'] = content;
+          const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+          const fileName = `copyImage-${new Date().getTime()}.jpg`;
+          const file = new File([blob], fileName, { type: 'image/jpeg' });
+          const fileData: any = {
+            file: file,
+            imageUrl: URL.createObjectURL(file),
+          };
+          this.postMediaData[0] = fileData;
+        } catch (error) {
+          console.error('Base64 decoding error:', error);
         }
-      } else {
-        this.postData['postdescription'] = content;
+        if (postText !== '<div></div>') {
+          return postText;
+        }
+      } else if (imageGif) {
+        return content;
       }
     } else {
-      this.postData['postdescription'] = content;
+      return content;
     }
+    return null;
   }
 
   focusTagInput() {

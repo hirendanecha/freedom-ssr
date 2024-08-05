@@ -34,8 +34,9 @@
           placeholder="Comment..."
           class="outline-0 w-100 comment-input c-text"
         ></div> -->
+        <!-- class="edit-comment-emoji" -->
         <app-tag-user-input
-          class="edit-comment-emoji"
+          [ngClass]="postMediaData?.length < 3 ? 'edit-comment-emoji' : ''"
           placeholder="Post a link or image or file or let's just talk!"
           [value]="postInputValue"
           [isShowEmojis]="true"
@@ -60,24 +61,23 @@
                 />
               </span>
             </label>
-            <label
-              class="d-flex gap-2 align-items-center"
-              (click)="pdfFile.click()"
-              *ngIf="!(postMediaData?.[0]?.imageUrl || selectedImage)"
-            >
-              <!-- ngbTooltip="Comming Soon!"
-              placement="bottom" -->
+            <label class="file" *ngIf="!(postMediaData?.[0]?.imageUrl || selectedImage)">
               <input
                 type="file"
-                #pdfFile
-                hidden
                 multiple
-                class="d-none"
                 accept="application/pdf"
                 (change)="onPostFileSelect($event)"
                 [disabled]="postData?.meta?.metaimage"
               />
-              <fa-icon [icon]="['fas', 'file']" class="font-20-px" />
+              <span
+                class="file-custom border-0 d-grid text-center"
+                role="button"
+              >
+                <fa-icon
+                  [icon]="['fas', 'file']"
+                  class="m-0 font-24-px text-primary"
+                />
+              </span>
             </label>
           </div>
         </div>
@@ -113,7 +113,8 @@
         </div>
       </ng-container> -->
       <ng-container *ngIf="combinedMediaData?.length">
-        <ngb-carousel [showNavigationIndicators]="false" [interval]="0">
+        <ngb-carousel [showNavigationIndicators]="false" [interval]="0"
+          [showNavigationArrows]="combinedMediaData.length > 1">
           <ng-container *ngFor="let media of combinedMediaData">
             <ng-template ngbSlide>
               <div class="d-flex select-media-post align-items-center">
@@ -134,15 +135,14 @@
                     />
                   </div>
                 </ng-container>
-                <ng-container *ngIf="media?.pdfUrl">
+                <ng-container *ngIf="media?.pdfUrl || media?.pdfName">
                   <div class="position-relative mt-5 w-220-px">
                     <fa-icon
                       [icon]="['fas', 'file-pdf']"
                       class="c-pointer close-icon font-40-px"
                     />
-                    <span class="c-pdf-show">{{
-                      media?.pdfUrl.replaceAll("%", " ")
-                    }}</span>
+                    <span class="c-pdf-show">
+                      {{ (media?.pdfUrl || media?.pdfName)?.replace('%', ' ') }}</span>
                     <fa-icon
                       [icon]="['fas', 'xmark']"
                       class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
