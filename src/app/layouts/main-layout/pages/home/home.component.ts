@@ -134,6 +134,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {}
 
   onPostFileSelect(event: any): void {
+    if (this.postMediaData.length > 3) {
+      this.toastService.warring(
+        'Please choose up to 4 photos, videos, or GIFs.'
+      );
+      return;
+    }
     const tagUserInput = document.querySelector(
       '.home-input app-tag-user-input .tag-input-div'
     ) as HTMLInputElement;
@@ -257,7 +263,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   uploadPostFileAndCreatePost(): void {
     this.buttonClicked = true;
 
-    if (this.postData?.editImagesList?.length) {      
+    if (this.postData?.editImagesList?.length) {
       this.postMediaData = this.postMediaData?.concat(
         this.postData?.editImagesList
       );
@@ -575,9 +581,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
-      .getAttribute('src')
-      .toLowerCase()
-      .endsWith('.gif');
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
         this.focusTagInput();
         const copyImage = imgTag.getAttribute('src');

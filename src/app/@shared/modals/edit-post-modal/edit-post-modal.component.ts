@@ -77,6 +77,12 @@ export class EditPostModalComponent implements AfterViewInit {
 
   onPostFileSelect(event: any): void {
     const files = event.target?.files;
+    if (this.combinedMediaData.length > 3) {
+      this.toastService.warring(
+        'Please choose up to 4 photos, videos, or GIFs.'
+      );
+      return;
+    }
     if (files.length > 4) {
       this.toastService.warring(
         'Please choose up to 4 photos, videos, or GIFs.'
