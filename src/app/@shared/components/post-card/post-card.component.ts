@@ -70,6 +70,7 @@ export class PostCardComponent implements OnInit {
   tubeUrl = environment.tubeUrl;
   player: any;
   isExpand = false;
+  showFullDesc : boolean = false;
   commentCount = 0;
   commentMessageInputValue: string = '';
   replaycommentMessageInputValue: string = '';
@@ -199,6 +200,9 @@ export class PostCardComponent implements OnInit {
           });
       }
     });
+  }
+  showFullDescription() {
+    this.showFullDesc = !this.showFullDesc;
   }
 
   unsubscribe(post: any): void {

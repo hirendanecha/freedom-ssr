@@ -364,10 +364,17 @@
         {{ post.albumname }}
       </div>
     </ng-container>
-    <p
-      class="post-description mdtxt m-0 mt-4 pb-3"
-      [innerHTML]="post.postdescription | noSanitize"
-    ></p>
+    
+
+    <p class="post-description mdtxt m-0 mt-4 pb-3"
+      [innerHTML]="post.postdescription | truncate: (showFullDesc ? -1 : 800) | noSanitize">
+    </p>
+    
+    <ng-container *ngIf="post.postdescription.length > 400">
+      <button (click)="showFullDescription()">
+        {{ showFullDesc ? "Read Less" : "Read More" }}
+      </button>
+</ng-container>
     <ng-container *ngIf="descriptionimageUrl">
       <app-img-preview
         [src]="descriptionimageUrl"
