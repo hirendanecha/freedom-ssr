@@ -10,6 +10,7 @@ import { MessageDatePipe } from './message-date.pipe';
 import { SearchFilterPipe } from './search-filter.pipe';
 import { HighlightPipe } from './hightlight-text.pipe';
 import { RandomAdvertisementUrlPipe } from './random-advertisement.pipe';
+import { TruncatePipe } from './post-description.pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { RandomAdvertisementUrlPipe } from './random-advertisement.pipe';
     MessageDatePipe,
     SearchFilterPipe,
     HighlightPipe,
-    RandomAdvertisementUrlPipe
+    RandomAdvertisementUrlPipe,
+    TruncatePipe
   ],
   imports: [CommonModule],
   exports: [
@@ -35,7 +37,8 @@ import { RandomAdvertisementUrlPipe } from './random-advertisement.pipe';
     MessageDatePipe,
     SearchFilterPipe,
     HighlightPipe,
-    RandomAdvertisementUrlPipe
+    RandomAdvertisementUrlPipe,
+    TruncatePipe
   ],
 })
 export class PipeModule {}
