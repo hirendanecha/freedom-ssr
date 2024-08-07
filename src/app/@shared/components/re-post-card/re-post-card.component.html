@@ -65,7 +65,9 @@
       </ng-container>
 
       <app-post-meta-data-card [post]="post" />
-
+      <ng-container *ngIf="post?.imagesList">
+        <app-img-layout [post]="post" />
+      </ng-container>
       <ng-container *ngIf="post?.imageUrl">
         <app-img-preview [src]="post?.imageUrl" classes="w-100" />
       </ng-container>
