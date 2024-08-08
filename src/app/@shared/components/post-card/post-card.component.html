@@ -93,7 +93,7 @@
               />
               <div class="d-flex gap-3 align-items-baseline">
                 <p class="cursor mt-2">
-                  {{ (post?.Username || post?.FirstName)?.split(" ").join("") }}
+                  {{ (post?.Username || post?.FirstName).split(" ").join("") }}
                 </p>
 
                 <button>
@@ -160,7 +160,8 @@
                 <button *ngIf="!seeFirstList.includes(post.profileid)">
                   <a
                     class="droplist d-flex align-items-center gap-2"
-                    routerLink="/platforms" target="_blank"
+                    routerLink="/platforms"
+                    target="_blank"
                   >
                     <fa-icon [icon]="['fas', 'table-list']" />
                     <span>Platforms</span>
@@ -213,7 +214,8 @@
               <button ngbDropdownItem *ngIf="post.streamname">
                 <a
                   class="droplist d-flex align-items-center gap-2"
-                  [href]="tubeUrl + '/video/' + post.id" target="_blank"
+                  [href]="tubeUrl + '/video/' + post.id"
+                  target="_blank"
                 >
                   <fa-icon [icon]="['fas', 'play']" />
                   <span>Large Player</span>
@@ -364,17 +366,22 @@
         {{ post.albumname }}
       </div>
     </ng-container>
-    
 
-    <p class="post-description mdtxt m-0 mt-4 pb-3"
-      [innerHTML]="post?.postdescription | stripHtml | truncate: (showFullDesc ? -1 : 800) | noSanitize">
-    </p>
-    
-    <ng-container *ngIf="(post?.postdescription | stripHtml).length > 400">
-      <button (click)="showFullDescription()">
+    <p
+      class="post-description mdtxt m-0 mt-4 pb-3"
+      [innerHTML]="
+        post?.postdescription
+          | stripHtml
+          | truncate : (showFullDesc ? -1 : 300)
+          | noSanitize
+      "
+    ></p>
+
+    <ng-container *ngIf="(post?.postdescription | stripHtml).length > 300">
+      <button (click)="showFullDescription()" class="text-danger">
         {{ showFullDesc ? "Read Less" : "Read More" }}
       </button>
-</ng-container>
+    </ng-container>
     <ng-container *ngIf="descriptionimageUrl">
       <app-img-preview
         [src]="descriptionimageUrl"
@@ -492,7 +499,8 @@
         />
 
         <div class="px-sm-3 gap-2 align-items-center w-100">
-          <div [attr.id]="'comment-' + post.id"
+          <div
+            [attr.id]="'comment-' + post.id"
             class="d-flex align-items-center custom-width-comment position-relative"
           >
             <!-- <div
@@ -626,7 +634,10 @@
                         />
 
                         <div ngbDropdownMenu class="dropdown-menu">
-                          <button ngbDropdownItem *ngIf="comment.profileId == profileId">
+                          <button
+                            ngbDropdownItem
+                            *ngIf="comment.profileId == profileId"
+                          >
                             <a
                               class="droplist d-flex align-items-center gap-2"
                               (click)="editComment(comment)"
@@ -711,7 +722,10 @@
                   "
                   class="py-2 px-sm-3 align-items-center w-100 mb-5"
                 >
-                  <div [attr.id]="'replaycomment-' + post.id" class="d-flex align-items-center position-relative custom-width-comment">
+                  <div
+                    [attr.id]="'replaycomment-' + post.id"
+                    class="d-flex align-items-center position-relative custom-width-comment"
+                  >
                     <!-- <div
                       #childPostCommentElement
                       contenteditable
@@ -724,7 +738,9 @@
                       [value]="replaycommentMessageInputValue"
                       [isShowMetaLoader]="true"
                       [isShowEmojis]="true"
-                      (onDataChange)="onTagUserReplayInputChangeEvent($event, post.id)"
+                      (onDataChange)="
+                        onTagUserReplayInputChangeEvent($event, post.id)
+                      "
                     />
                     <div class="file-input d-flex align-items-center gap-2">
                       <div class="file-upload d-flex">
@@ -732,7 +748,9 @@
                           <input
                             type="file"
                             accept="image/*"
-                            (change)="onPostFileSelect($event, 'child', post.id)"
+                            (change)="
+                              onPostFileSelect($event, 'child', post.id)
+                            "
                           />
                           <span
                             class="file-custom border-0 d-grid text-center"
@@ -829,7 +847,10 @@
                                 />
 
                                 <div ngbDropdownMenu class="dropdown-menu">
-                                  <button ngbDropdownItem *ngIf="reply.profileId == profileId">
+                                  <button
+                                    ngbDropdownItem
+                                    *ngIf="reply.profileId == profileId"
+                                  >
                                     <a
                                       class="droplist d-flex align-items-center gap-2"
                                       (click)="editComment(reply)"

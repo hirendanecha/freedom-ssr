@@ -70,7 +70,7 @@ export class PostCardComponent implements OnInit {
   tubeUrl = environment.tubeUrl;
   player: any;
   isExpand = false;
-  showFullDesc : boolean = false;
+  showFullDesc: boolean = false;
   commentCount = 0;
   commentMessageInputValue: string = '';
   replaycommentMessageInputValue: string = '';
@@ -100,12 +100,14 @@ export class PostCardComponent implements OnInit {
     public tokenService: TokenStorageService,
     private seoService: SeoService,
     public breakpointService: BreakpointService,
-    public activeModal: NgbActiveModal,
+    public activeModal: NgbActiveModal
   ) {
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
-
-      if (this.post?.id && this.post?.posttype === 'V' || this.post?.posttype === 'R') {
+      if (
+        (this.post?.id && this.post?.posttype === 'V') ||
+        this.post?.posttype === 'R'
+      ) {
         this.playVideo(this.post?.id);
       }
       this.socketListner();
@@ -202,6 +204,8 @@ export class PostCardComponent implements OnInit {
     });
   }
   showFullDescription() {
+    console.log(this.post.postdescription?.length);
+
     this.showFullDesc = !this.showFullDesc;
   }
 
@@ -222,19 +226,21 @@ export class PostCardComponent implements OnInit {
       });
   }
 
-  selectMessaging(data){
+  selectMessaging(data) {
     const userData = {
       Id: data.profileid,
       ProfilePicName: data.ProfilePicName,
-      Username: data.Username
-    }
+      Username: data.Username,
+    };
     // this.router.navigate(['/profile-chats'], {
     //   state: { chatUserData: userData}
     // });
     const encodedUserData = encodeURIComponent(JSON.stringify(userData));
-    const url = this.router.createUrlTree(['/profile-chats'], {
-      queryParams: { chatUserData: encodedUserData }
-    }).toString();
+    const url = this.router
+      .createUrlTree(['/profile-chats'], {
+        queryParams: { chatUserData: encodedUserData },
+      })
+      .toString();
     window.open(url, '_blank');
   }
   goToViewProfile(id: any): void {
@@ -267,7 +273,6 @@ export class PostCardComponent implements OnInit {
     if (comment) {
       const modalRef = this.modalService.open(ReplyCommentModalComponent, {
         centered: true,
-
       });
       modalRef.componentInstance.title = 'Edit Comment';
       modalRef.componentInstance.confirmButtonLabel = 'Comment';
@@ -761,9 +766,9 @@ export class PostCardComponent implements OnInit {
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
-      .getAttribute('src')
-      .toLowerCase()
-      .endsWith('.gif');
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
         this.focusTagInput(postId);
         const copyImage = imgTag.getAttribute('src');
@@ -771,8 +776,11 @@ export class PostCardComponent implements OnInit {
         const megabytes = bytes / (1024 * 1024);
         if (megabytes > 1) {
           // this.commentData.comment = content.replace(copyImage, '');
-          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">'
-          this.commentData.comment = `<div>${content.replace(copyImage, '').replace(/\<br\>/ig, '').replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
+          this.commentData.comment = `<div>${content
+            .replace(copyImage, '')
+            .replace(/\<br\>/gi, '')
+            .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
           const base64Image = copyImage
             .trim()
             .replace(/^data:image\/\w+;base64,/, '');
@@ -801,7 +809,13 @@ export class PostCardComponent implements OnInit {
   }
 
   focusTagInput(postId: number) {
-    const tagUserInput = document.querySelector(`#replaycomment-${postId} .tag-input-div`) as HTMLInputElement || document.querySelector(`#comment-${postId} .tag-input-div`) as HTMLInputElement
+    const tagUserInput =
+      (document.querySelector(
+        `#replaycomment-${postId} .tag-input-div`
+      ) as HTMLInputElement) ||
+      (document.querySelector(
+        `#comment-${postId} .tag-input-div`
+      ) as HTMLInputElement);
     if (tagUserInput) {
       tagUserInput.focus();
       if (tagUserInput.innerHTML.length) {
