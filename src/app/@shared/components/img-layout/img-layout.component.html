@@ -186,8 +186,8 @@
     class="c-pointer close-icon font-40-px float-end"
     (click)="closeImagePreview()"
   />
-  <div class="w-100">
-    <ngb-carousel [activeId]="currentIndex" (slide)="onSlide($event)">
+  <div class="w-100" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
+    <ngb-carousel [activeId]="currentIndex" [interval]="0" (slide)="onSlide($event)">
       <ng-template
         ngbSlide
         *ngFor="let img of post?.imagesList; let index = index"

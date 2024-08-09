@@ -6,7 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { NgbModal, NgbSlideEvent } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarousel, NgbModal, NgbSlideEvent } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-img-layout',
@@ -16,6 +16,8 @@ import { NgbModal, NgbSlideEvent } from '@ng-bootstrap/ng-bootstrap';
 export class ImgLayoutComponent {
   @Input('post') post: any = [];
   @ViewChild('carouselTemplate') carouselTemplate!: TemplateRef<any>;
+  @ViewChild('carousel') carousel: NgbCarousel;
+  posIni: number;
   imageList: any[] = [];
   currentIndex: string;
   constructor(
@@ -62,5 +64,29 @@ export class ImgLayoutComponent {
 
   onSlide(event: NgbSlideEvent) {
     this.currentIndex = event.current;
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    this.posIni = event.changedTouches[0].pageX;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    const posEnd = event.changedTouches[0].pageX;
+    this.move(posEnd);
+  }
+
+  move(posEnd: number): void {
+    const offset = this.posIni - posEnd;
+    if (offset < -100) {
+      const previousbtn = document.querySelector('.carousel-control-prev') as HTMLInputElement;
+      if (previousbtn) {
+        previousbtn.click();
+      }
+    } else if (offset > 100) {
+      const nextbtn = document.querySelector('.carousel-control-next') as HTMLInputElement;
+      if (nextbtn) {
+        nextbtn.click();
+      }
+    }
   }
 }
