@@ -62,6 +62,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   memberIds: any = [];
   notificationId: number;
   buttonClicked = false;
+  isProcessingFileInput = false;
   originalFavicon: HTMLLinkElement;
   postMediaData: any[] = [];
   currentImageIndex: number = this.postMediaData.length - 1;
@@ -550,6 +551,24 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.uploadPostFileAndCreatePost();
       }
     });
+  }
+  openAlertMessageImg(fileInput: HTMLInputElement): void {
+    if (!this.isProcessingFileInput) {
+      this.isProcessingFileInput = true;
+      const modalRef = this.modalService.open(ConfirmationModalComponent, {
+        centered: true,
+      });
+      modalRef.componentInstance.title = `Warning message`;
+      modalRef.componentInstance.confirmButtonLabel = 'Ok';
+      modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+      modalRef.componentInstance.message = `Add up to 4 images`;
+      modalRef.result.then((res) => {
+        if (res === 'success') {
+          fileInput.click();
+          this.isProcessingFileInput = false;
+        }
+      });
+    }
   }
 
   openAlertMessage(): void {
