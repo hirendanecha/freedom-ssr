@@ -277,16 +277,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             if (res?.body?.imagesList) {
               this.spinner.hide();
               // if (this.postData?.file?.type?.includes('application/pdf')) {
-                //   this.postMediaData['pdfUrl'] = res?.body?.url;
-                //   this.postMediaData['imageUrl'] = null;
-                //   this.createOrEditPost();
-                // } else {
-                  // this.postMediaData['file'] = null;
-                  // this.postData['pdfUrl'] = res?.body?.pdfUrl;
-                  if (this.postData['imagesList']?.length) {
-                    for (const media of res?.body?.imagesList) {
-                      this.postData['imagesList'].push(media);
-                    }
+              //   this.postMediaData['pdfUrl'] = res?.body?.url;
+              //   this.postMediaData['imageUrl'] = null;
+              //   this.createOrEditPost();
+              // } else {
+              // this.postMediaData['file'] = null;
+              // this.postData['pdfUrl'] = res?.body?.pdfUrl;
+              if (this.postData['imagesList']?.length) {
+                for (const media of res?.body?.imagesList) {
+                  this.postData['imagesList'].push(media);
+                }
               } else {
                 this.postData['imagesList'] = res?.body?.imagesList;
               }
@@ -553,21 +553,27 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   openAlertMessageImg(fileInput: HTMLInputElement): void {
-    if (!this.isProcessingFileInput) {
-      this.isProcessingFileInput = true;
-      const modalRef = this.modalService.open(ConfirmationModalComponent, {
-        centered: true,
-      });
-      modalRef.componentInstance.title = `Warning message`;
-      modalRef.componentInstance.confirmButtonLabel = 'Ok';
-      modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-      modalRef.componentInstance.message = `Add up to 4 images`;
-      modalRef.result.then((res) => {
-        if (res === 'success') {
-          fileInput.click();
-          this.isProcessingFileInput = false;
-        }
-      });
+    if (this.postMediaData.length) {
+      fileInput.click();
+    } else {
+      if (!this.isProcessingFileInput) {
+        this.isProcessingFileInput = true;
+        const modalRef = this.modalService.open(ConfirmationModalComponent, {
+          centered: true,
+        });
+        modalRef.componentInstance.title = `Warning message`;
+        modalRef.componentInstance.confirmButtonLabel = 'Ok';
+        modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+        modalRef.componentInstance.message = `Add up to 4 images`;
+        modalRef.result.then((res) => {
+          if (res === 'success') {
+            fileInput.click();
+            this.isProcessingFileInput = false;
+          } else if (res === 'cancel') {
+            this.isProcessingFileInput = false;
+          }
+        });
+      }
     }
   }
 

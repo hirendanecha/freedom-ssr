@@ -149,6 +149,9 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
     });
+     setTimeout(() => {
+      modalRef.close();
+    }, 30000);
     modalRef.componentInstance.title = 'Mobile screen detected';
     modalRef.componentInstance.confirmButtonLabel = 'Yes';
     modalRef.componentInstance.cancelButtonLabel = 'No';
