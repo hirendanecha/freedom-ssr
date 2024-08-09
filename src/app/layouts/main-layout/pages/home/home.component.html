@@ -217,19 +217,19 @@
               cursor
               (click)="openAlertMessageImg(postImage)"
               >
-              <input
-                type="file"
-                #postImage
-                hidden
-                multiple
-                class="d-none"
-                accept="image/*"
-                (change)="onPostFileSelect($event)"
-                [disabled]="postData?.meta?.metaimage"
-              />
               <fa-icon [icon]="['fas', 'image']" class="font-20-px" />
               <span>Image</span>
             </li>
+            <input
+              type="file"
+              #postImage
+              hidden
+              multiple
+              class="d-none"
+              accept="image/*"
+              (change)="onPostFileSelect($event)"
+              [disabled]="postData?.meta?.metaimage"
+            />
             <li class="d-flex gap-2 align-items-center" (click)="pdfFile.click()">
               <!-- ngbTooltip="Comming Soon!"
               placement="bottom" -->
