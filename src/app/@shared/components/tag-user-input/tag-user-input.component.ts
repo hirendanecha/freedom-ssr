@@ -233,9 +233,11 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       const doc = parser.parseFromString(html, 'text/html');
       const walk = (node: Node) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          const regex = new RegExp(`@${userName}`, 'g');
+          const regex = /@/g;
           const replacement = `<a href="/settings/view-profile/${userId}" class="text-danger" data-id="${userId}">@${displayName}</a>`;
-          const replacedText = node.nodeValue?.replace(regex, replacement);
+          let replacedText = node.nodeValue?.replace(regex, replacement);
+          const textRegex = new RegExp(`(?<=<\/a>)${userName}`, 'g');
+          replacedText = replacedText?.replace(textRegex, '');
           if (replacedText !== node.nodeValue) {
             const span = document.createElement('span');
             span.innerHTML = replacedText!;
