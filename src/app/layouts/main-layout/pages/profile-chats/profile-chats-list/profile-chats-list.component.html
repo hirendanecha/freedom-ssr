@@ -108,16 +108,13 @@
               />
             </a>
             <a
-            class="nav-icon cursor d-sm-none d-flex align-items-center gap-2"
-            data-toggle="tooltip"
-            data-placement="bottom"
-            title="Video Call"
-            (click)="startCall()"
-            ><fa-icon
-              [icon]="['fas', 'phone']"
-              class="font-20-px m-1"
-            />
-          </a>
+              class="nav-icon cursor d-sm-none d-flex align-items-center gap-2"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Video Call"
+              (click)="startCall()"
+              ><fa-icon [icon]="['fas', 'phone']" class="font-20-px m-1" />
+            </a>
 
             <div
               ngbDropdown
@@ -308,18 +305,19 @@
                         class="c-pointer d-flex align-items-baseline gap-2"
                         ngbDropdownItem
                       >
-                      <a (click)="openSearch(isSearch)"
-                      class="nav-icon cursor d-flex align-items-center gap-2"
-                      data-toggle="tooltip"
-                      data-placement="bottom"
-                      title="Search"
-                      >
-                        <fa-icon
-                          [icon]="['fas', 'search']"
-                          class="font-20-px m-1 ms-3 d-flex c-pointer"
-                        />
-                        <span>Search</span>
-                      </a>
+                        <a
+                          (click)="openSearch(isSearch)"
+                          class="nav-icon cursor d-flex align-items-center gap-2"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Search"
+                        >
+                          <fa-icon
+                            [icon]="['fas', 'search']"
+                            class="font-20-px m-1 ms-3 d-flex c-pointer"
+                          />
+                          <span>Search</span>
+                        </a>
                         <!-- <a
                           class="nav-icon cursor d-flex align-items-center gap-2"
                           data-toggle="tooltip"
@@ -899,6 +897,7 @@
                         ngbDropdown
                         #editPopup="ngbDropdown"
                         class="d-inline-block"
+                        placement="bottom-end"
                       >
                         <button class="dropdown-btn" ngbDropdownToggle>
                           <fa-icon
@@ -1056,6 +1055,25 @@
                           </div>
                         </ng-container>
                       </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!userChat?.groupId">
+                  <div
+                    class="d-flex flex-row-reverse pb-2 gap-1"
+                    *ngIf="i === messageIndex"
+                  >
+                    <div
+                      class="c-pointer"
+                      [title]="userChat.Username || userChat.FirstName"
+                    >
+                      <img
+                        loading="lazy"
+                        data-src="{{ userChat.ProfilePicName }}"
+                        class="rounded-circle h-20-px w-20-px"
+                        draggable="false"
+                        onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                      />
                     </div>
                   </div>
                 </ng-container>

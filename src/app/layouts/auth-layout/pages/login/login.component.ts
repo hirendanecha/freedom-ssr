@@ -106,7 +106,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   togglePasswordVisibility(passwordInput: HTMLInputElement) {
-    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type =
+      passwordInput.type === 'password' ? 'text' : 'password';
     this.passwordHidden = !this.passwordHidden;
   }
 
@@ -115,7 +116,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     if (!token) {
       this.msg = 'Invalid captcha kindly try again!';
       this.type = 'danger';
-      return;
+      // return;
     }
     if (this.loginForm.valid) {
       this.spinner.show();
@@ -123,17 +124,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
         next: (data: any) => {
           this.spinner.hide();
           if (!data.error) {
-            // this.cookieService.set('token', data?.accessToken);
-            // this.cookieService.set('auth-user', JSON.stringify(data?.user));
             this.tokenStorage.saveToken(data?.accessToken);
             this.tokenStorage.saveUser(data.user);
             localStorage.setItem('profileId', data.user.profileId);
             localStorage.setItem('communityId', data.user.communityId);
             localStorage.setItem('channelId', data.user?.channelId);
-            window.localStorage.user_level_id = 2;
-            window.localStorage.user_id = data.user.Id;
-            window.localStorage.user_country = data.user.Country;
-            window.localStorage.user_zip = data.user.ZipCode;
             this.sharedService.getUserDetails();
             this.isLoginFailed = false;
             this.isLoggedIn = true;

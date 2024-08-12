@@ -121,6 +121,7 @@ export class ProfileChatsListComponent
   isOnCall = false;
   callRoomId: number;
   isLoading: boolean = false;
+  messageIndex: number;
   // messageList: any = [];
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   constructor(
@@ -279,6 +280,7 @@ export class ProfileChatsListComponent
     });
     this.socketService.socket.on('seen-room-message', (data) => {
       this.readMessageRoom = 'Y';
+      this.messageIndex = null;
     });
 
     this.socketService.socket?.on('get-users', (data) => {
@@ -516,6 +518,7 @@ export class ProfileChatsListComponent
         }
         this.messageList.push(data);
         this.readMessageRoom = data?.isRead;
+        // this.messageIndex = null;
         if (this.userChat.groupId === data.groupId) {
           this.readMessagesBy = [];
           this.socketService.readGroupMessage(data, (readUsers) => {
@@ -1104,9 +1107,9 @@ export class ProfileChatsListComponent
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
       const imageGif = imgTag
-      .getAttribute('src')
-      .toLowerCase()
-      .endsWith('.gif');
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
         this.focusTagInput();
         const copyImage = imgTag.getAttribute('src');
@@ -1144,7 +1147,7 @@ export class ProfileChatsListComponent
     return null;
   }
 
-  focusTagInput(){
+  focusTagInput() {
     if (this.selectedFile) {
       const tagUserInput = document.querySelector(
         'app-tag-user-input .tag-input-div'
@@ -1160,7 +1163,7 @@ export class ProfileChatsListComponent
             selection.removeAllRanges();
             selection.addRange(range);
           }
-        }, 100);    
+        }, 100);
       }
     }
   }
@@ -1359,6 +1362,7 @@ export class ProfileChatsListComponent
         this.readMessagesBy = data?.filter(
           (item) => item.ID !== this.profileId
         );
+        this.messageIndex = null;
       });
       const date = moment(new Date()).utc();
       const oldChat = {
@@ -1402,6 +1406,13 @@ export class ProfileChatsListComponent
         }
       }));
     });
+    this.filteredMessageList.forEach((element) => {
+      this.messageIndex =
+        element.messages.findIndex(
+          (e: any) => e.isRead === 'N' && e.sentBy === this.profileId
+        ) - 1;
+    });
+    console.log('messages==>', this.messageIndex);
   }
 
   updateProgress(): number {

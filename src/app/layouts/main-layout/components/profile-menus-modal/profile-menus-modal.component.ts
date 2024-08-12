@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbActiveModal, NgbActiveOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbActiveModal,
+  NgbActiveOffcanvas,
+  NgbModal,
+} from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
@@ -12,11 +16,11 @@ import { ForgotPasswordComponent } from 'src/app/layouts/auth-layout/pages/forgo
 @Component({
   selector: 'app-profile-menus-modal',
   templateUrl: './profile-menus-modal.component.html',
-  styleUrls: ['./profile-menus-modal.component.scss']
+  styleUrls: ['./profile-menus-modal.component.scss'],
 })
 export class ProfileMenusModalComponent {
   profileId: number;
-  userId: number
+  userId: number;
 
   constructor(
     public sharedService: SharedService,
@@ -30,8 +34,11 @@ export class ProfileMenusModalComponent {
     private cookieService: CookieService,
     private socketService: SocketService
   ) {
-    this.userId = +localStorage.getItem('user_id');
-    this.profileId = +localStorage.getItem('profileId');
+    // this.userId = +localStorage.getItem('user_id');
+    this.sharedService.loggedInUser$.subscribe((data) => {
+      this.userId = data?.UserID;
+      this.profileId = data?.profileId;
+    });
   }
 
   closeMenu(e: MouseEvent, type: string) {
@@ -48,9 +55,9 @@ export class ProfileMenusModalComponent {
         case 'setting':
           this.goToSetting();
           break;
-          case 'support':
-            this.goToSupport();
-            break;
+        case 'support':
+          this.goToSupport();
+          break;
         case 'change-password':
           this.forgotPasswordOpen();
           break;
@@ -65,20 +72,22 @@ export class ProfileMenusModalComponent {
 
   logout(): void {
     // this.isCollapsed = true;
-    this.socketService?.socket?.emit('offline', (data) => { return })
+    this.socketService?.socket?.emit('offline', (data) => {
+      return;
+    });
     this.socketService?.socket?.on('get-users', (data) => {
-      data.map(ele => {
+      data.map((ele) => {
         if (!this.sharedService.onlineUserList.includes(ele.userId)) {
-          this.sharedService.onlineUserList.push(ele.userId)
+          this.sharedService.onlineUserList.push(ele.userId);
         }
-      })
+      });
       // this.onlineUserList = data;
-    })
+    });
     this.customerService.logout().subscribe({
-      next: (res => {
+      next: (res) => {
         this.tokenStorageService.signOut();
         return;
-      })
+      },
     });
     // this.toastService.success('Logout successfully');
     // this.router.navigate(['/auth']);
@@ -94,8 +103,8 @@ export class ProfileMenusModalComponent {
     // window.open(`settings/view-profile/${profileId}`, '_blank')
     this.router.navigate([`settings/view-profile/${this.profileId}`]);
   }
-  goToSupport(){
-    this.router.navigate([`/report-bugs`])
+  goToSupport() {
+    this.router.navigate([`/report-bugs`]);
   }
 
   forgotPasswordOpen() {

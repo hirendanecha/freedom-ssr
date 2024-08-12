@@ -79,7 +79,7 @@ export class EditGroupModalComponent implements OnInit {
         if (res?.data?.length > 0) {
           this.userList = res.data.filter((user: any) => {
             return (
-              user.Id !== this.sharedService?.userData?.Id &&
+              user.Id !== this.sharedService?.userData?.profileId &&
               !this.addedInvitesList.some((invite) => invite.Id === user.Id) &&
               !this.data.memberList.some(
                 (member) => member.profileId === user.Id

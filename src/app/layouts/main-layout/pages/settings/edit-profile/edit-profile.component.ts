@@ -36,7 +36,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   coverPic: any = {};
   profileId: number;
   userlocalId: number;
-  profileData: any = {};
   @ViewChild('zipCode') zipCode: ElementRef;
   uploadListSubject: Subject<void> = new Subject<void>();
   profileImg: any = {
@@ -62,10 +61,14 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     private toastService: ToastService,
     private uploadService: UploadFilesService
   ) {
-    this.userlocalId = +localStorage.getItem('user_id');
     this.userId = +this.route.snapshot.paramMap.get('id');
-    this.profileId = +localStorage.getItem('profileId');
-    this.userMail = JSON.parse(localStorage.getItem('auth-user'))?.Email;
+    this.userMail = JSON.parse(localStorage.getItem('userData'))?.Email;
+    this.sharedService.loggedInUser$.subscribe((user) => {
+      this.customer = user;
+      this.userlocalId = user?.UserID;
+      this.profileId = user?.profileId;
+      console.log(this.customer);
+    });
     if (this.profileId) {
       this.getProfile(this.profileId);
       this.authToken = localStorage.getItem('auth-token');
@@ -103,23 +106,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
         : 'N';
     }
     localStorage.setItem('soundPreferences', JSON.stringify(soundOct));
-  }
-
-  getUserDetails(id): void {
-    this.spinner.show();
-    this.customerService.getCustomer(id).subscribe(
-      (data: any) => {
-        if (data) {
-          this.spinner.hide();
-          this.customer = data;
-          this.getAllCountries();
-        }
-      },
-      (err) => {
-        this.spinner.hide();
-        console.log(err);
-      }
-    );
   }
 
   validatepassword() {
@@ -338,16 +324,18 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     inputElement.value = inputValue.toUpperCase();
   }
 
-  openAppQR(store: string){
+  openAppQR(store: string) {
     const modalRef = this.modalService.open(QrScanModalComponent, {
       centered: true,
       size: 'sm',
     });
     if (store === 'googlePlay') {
-      modalRef.componentInstance.store = 'https://s3.us-east-1.wasabisys.com/freedom-social/buzz-ring.apk';
+      modalRef.componentInstance.store =
+        'https://s3.us-east-1.wasabisys.com/freedom-social/buzz-ring.apk';
       modalRef.componentInstance.image = '/assets/images/logos/googlePlay.png';
     } else {
-      modalRef.componentInstance.store = 'https://apps.apple.com/us/app/apple-store/id375380948';
+      modalRef.componentInstance.store =
+        'https://apps.apple.com/us/app/apple-store/id375380948';
       modalRef.componentInstance.image = '/assets/images/logos/appStore.png';
     }
   }

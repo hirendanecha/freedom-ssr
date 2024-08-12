@@ -5,7 +5,7 @@ import { CustomerService } from './customer.service';
 import { CommunityService } from './community.service';
 import { PostService } from './post.service';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +21,8 @@ export class SharedService {
 
   private isRoomCreatedSubject: BehaviorSubject<boolean> =
     new BehaviorSubject<boolean>(false);
+  loginUserInfo = new BehaviorSubject<any>(null);
+  loggedInUser$ = this.loginUserInfo.asObservable();
 
   constructor(
     public modalService: NgbModal,
@@ -68,21 +70,15 @@ export class SharedService {
   getUserDetails() {
     const profileId = localStorage.getItem('profileId');
     if (profileId) {
-      const localUserData = JSON.parse(localStorage.getItem('userData'));
-      if (localUserData?.ID) {
-        this.userData = localUserData;
-      }
-
       this.spinner.show();
-
       this.customerService.getProfile(profileId).subscribe({
         next: (res: any) => {
           this.spinner.hide();
           const data = res?.data?.[0];
-
           if (data) {
             this.userData = data;
             localStorage.setItem('userData', JSON.stringify(this.userData));
+            this.getLoginUserDetails(this.userData);
           }
         },
         error: (error) => {
@@ -174,5 +170,9 @@ export class SharedService {
   // Method to get an Observable that emits isRoomCreated changes
   getIsRoomCreatedObservable(): Observable<boolean> {
     return this.isRoomCreatedSubject.asObservable();
+  }
+
+  getLoginUserDetails(userData: any = {}) {
+    this.loginUserInfo.next(userData);
   }
 }
