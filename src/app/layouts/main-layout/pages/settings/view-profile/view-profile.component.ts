@@ -46,10 +46,12 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     private toastService: ToastService
   ) {
     this.router.events.subscribe((event: any) => {
-      const id = event?.routerEvent?.url.split('/')[3];
-      this.profileId = id
-      if (id) {
-        this.getProfile(id);
+      if (event?.routerEvent?.url.includes('/settings/view-profile')) {
+        const id = event?.routerEvent?.url.split('/')[3];
+        this.profileId = id;
+        if (id) {
+          this.getProfile(id);
+        }
       }
       this.profileId = +localStorage.getItem('profileId');
     });
@@ -62,10 +64,11 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalService.close();
   }
 
-
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   getProfile(id): void {
+    console.log('in>>>>>>>>>>>>>', id);
+
     this.spinner.show();
     this.customerService.getProfile(id).subscribe({
       next: (res: any) => {
@@ -135,23 +138,21 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getPdfs(): void {
-    this.postService.getPdfsFile(this.customer.Id).subscribe(
-      {
-        next: (res: any) => {
-          this.spinner.hide();
-          if (res) {
-            res.map((e: any) => {
-              e.pdfName = e.pdfUrl.split('/')[3].replaceAll('%', ' ')
-            })
-            this.pdfList = res;
-          }
-        },
-        error:
-          (error) => {
-            this.spinner.hide();
-            console.log(error);
-          }
-      });
+    this.postService.getPdfsFile(this.customer.Id).subscribe({
+      next: (res: any) => {
+        this.spinner.hide();
+        if (res) {
+          res.map((e: any) => {
+            e.pdfName = e.pdfUrl.split('/')[3].replaceAll('%', ' ');
+          });
+          this.pdfList = res;
+        }
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
+    });
   }
 
   viewUserPost(id) {
@@ -168,7 +169,6 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   deletePost(postId): void {
-    
     const modalRef = this.modal.open(ConfirmationModalComponent, {
       centered: true,
       backdrop: 'static',
@@ -180,11 +180,11 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       'Are you sure want to delete this post?';
     modalRef.result.then((res) => {
       if (res === 'success') {
-          this.postService.deletePost(postId).subscribe({
-            next: (res: any) => {
-              if (res) {
-                this.toastService.success('Post deleted successfully');
-                this.getPdfs()
+        this.postService.deletePost(postId).subscribe({
+          next: (res: any) => {
+            if (res) {
+              this.toastService.success('Post deleted successfully');
+              this.getPdfs();
             }
           },
           error: (error) => {

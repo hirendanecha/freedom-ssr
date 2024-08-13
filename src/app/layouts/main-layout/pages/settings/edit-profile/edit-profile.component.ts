@@ -61,12 +61,14 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     private toastService: ToastService,
     private uploadService: UploadFilesService
   ) {
+    this.spinner.hide();
     this.userId = +this.route.snapshot.paramMap.get('id');
-    this.userMail = JSON.parse(localStorage.getItem('userData'))?.Email;
+    // this.userMail = JSON.parse(localStorage.getItem('userData'))?.Email;
     this.sharedService.loggedInUser$.subscribe((user) => {
       this.customer = user;
       this.userlocalId = user?.UserID;
       this.profileId = user?.profileId;
+      this.userMail = user?.Email;
       console.log(this.customer);
     });
     if (this.profileId) {
