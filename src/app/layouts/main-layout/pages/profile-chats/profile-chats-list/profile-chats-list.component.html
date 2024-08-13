@@ -726,6 +726,25 @@
                 [class.highlighted]="i === currentHighlightedIndex"
               >
                 <ng-container *ngIf="message?.sentBy === this.profileId">
+                  <ng-container *ngIf="!userChat?.groupId">
+                    <div
+                      class="d-flex flex-row-reverse pb-2 gap-1"
+                      *ngIf="i === messageIndex && message.isRead === 'N'"
+                    >
+                      <div
+                        class="c-pointer"
+                        [title]="userChat.Username || userChat.FirstName"
+                      >
+                        <img
+                          loading="lazy"
+                          data-src="{{ userChat.ProfilePicName }}"
+                          class="rounded-circle h-20-px w-20-px"
+                          draggable="false"
+                          onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+                        />
+                      </div>
+                    </div>
+                  </ng-container>
                   <span class="font-12-px data-text-color me-3">{{
                     displayLocalTime(message?.createdDate)
                   }}</span>
@@ -1055,25 +1074,6 @@
                           </div>
                         </ng-container>
                       </div>
-                    </div>
-                  </div>
-                </ng-container>
-                <ng-container *ngIf="!userChat?.groupId">
-                  <div
-                    class="d-flex flex-row-reverse pb-2 gap-1"
-                    *ngIf="i === messageIndex"
-                  >
-                    <div
-                      class="c-pointer"
-                      [title]="userChat.Username || userChat.FirstName"
-                    >
-                      <img
-                        loading="lazy"
-                        data-src="{{ userChat.ProfilePicName }}"
-                        class="rounded-circle h-20-px w-20-px"
-                        draggable="false"
-                        onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-                      />
                     </div>
                   </div>
                 </ng-container>

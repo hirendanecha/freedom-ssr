@@ -1406,13 +1406,26 @@ export class ProfileChatsListComponent
         }
       }));
     });
-    this.filteredMessageList.forEach((element) => {
-      this.messageIndex =
-        element.messages.findIndex(
+    if (this.userChat?.roomId) {
+      const unreadIndex = this.filteredMessageList.findIndex((element) =>
+        element.messages.some(
           (e: any) => e.isRead === 'N' && e.sentBy === this.profileId
-        ) - 1;
-    });
-    console.log('messages==>', this.messageIndex);
+        )
+      );
+
+      if (unreadIndex !== -1) {
+        this.messageIndex = this.filteredMessageList[
+          unreadIndex
+        ].messages.findIndex(
+          (e: any) => e.isRead === 'N' && e.sentBy === this.profileId
+        );
+      }
+      console.log(
+        'messageIndex==>',
+        this.messageIndex,
+        this.filteredMessageList
+      );
+    }
   }
 
   updateProgress(): number {

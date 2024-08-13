@@ -70,7 +70,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       console.log(this.customer);
     });
     if (this.profileId) {
-      this.getProfile(this.profileId);
+      // this.getProfile(this.profileId);
       this.authToken = localStorage.getItem('auth-token');
     }
     this.qrLink = `${environment.qrLink}${this.userId}?token=${this.authToken}`;
@@ -86,6 +86,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     if (notificationSound === 'N') {
       this.isNotificationSoundEnabled = false;
     }
+    this.getAllCountries();
   }
 
   ngAfterViewInit(): void {
@@ -256,22 +257,22 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getProfile(id): void {
-    this.spinner.show();
-    this.customerService.getProfile(id).subscribe({
-      next: (res: any) => {
-        this.spinner.hide();
-        if (res.data) {
-          this.customer = res.data[0];
-          this.getAllCountries();
-        }
-      },
-      error: (error) => {
-        this.spinner.hide();
-        console.log(error);
-      },
-    });
-  }
+  // getProfile(id): void {
+  //   this.spinner.show();
+  //   this.customerService.getProfile(id).subscribe({
+  //     next: (res: any) => {
+  //       this.spinner.hide();
+  //       if (res.data) {
+  //         this.customer = res.data[0];
+  //
+  //       }
+  //     },
+  //     error: (error) => {
+  //       this.spinner.hide();
+  //       console.log(error);
+  //     },
+  //   });
+  // }
 
   onProfileImgChange(event: any): void {
     this.profileImg = event;
