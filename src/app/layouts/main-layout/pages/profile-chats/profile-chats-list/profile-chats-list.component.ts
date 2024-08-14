@@ -122,7 +122,8 @@ export class ProfileChatsListComponent
   callRoomId: number;
   isLoading: boolean = false;
   messageIndex: number;
-  // messageList: any = [];
+  unreadMessage: any = {};
+  relevantMembers: any = [];
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   constructor(
     private socketService: SocketService,
@@ -314,6 +315,8 @@ export class ProfileChatsListComponent
   ngOnChanges(changes: SimpleChanges): void {
     this.originalFavicon = document.querySelector('link[rel="icon"]');
     if (this.userChat?.groupId) {
+      console.log('group-chat==>', this.userChat);
+
       this.activePage = 1;
       this.messageList = [];
       this.filteredMessageList = [];
@@ -1198,6 +1201,8 @@ export class ProfileChatsListComponent
   }
 
   groupEditDetails(data): void {
+    console.log(data);
+
     const modalRef = this.modalService.open(EditGroupModalComponent, {
       centered: true,
       size: 'md',
@@ -1407,24 +1412,34 @@ export class ProfileChatsListComponent
       }));
     });
     if (this.userChat?.roomId) {
-      const unreadIndex = this.filteredMessageList.findIndex((element) =>
-        element.messages.some(
-          (e: any) => e.isRead === 'N' && e.sentBy === this.profileId
-        )
-      );
-
-      if (unreadIndex !== -1) {
-        this.messageIndex = this.filteredMessageList[
-          unreadIndex
-        ].messages.findIndex(
-          (e: any) => e.isRead === 'N' && e.sentBy === this.profileId
+      this.unreadMessage = {};
+      for (let group of this.filteredMessageList) {
+        const unreadMessage = group.messages.find(
+          (message: any) => message.isRead === 'N'
         );
+        if (unreadMessage) {
+          this.unreadMessage = { date: group.date, message: unreadMessage };
+          break;
+        }
       }
-      console.log(
-        'messageIndex==>',
-        this.messageIndex,
-        this.filteredMessageList
-      );
+    }
+    if (this.userChat?.groupId) {
+      this.relevantMembers = [];
+      for (let group of this.filteredMessageList) {
+        this.groupData.memberList.forEach((member) => {
+          const matchingMessage = group.messages.find(
+            (msg) =>
+              member?.switchDate < msg.createdDate &&
+              member?.profileId !== this.profileId &&
+              msg.sentBy == this.profileId
+          );
+
+          if (matchingMessage) {
+            member['message'] = matchingMessage;
+            this.relevantMembers.push(member);
+          }
+        });
+      }
     }
   }
 
