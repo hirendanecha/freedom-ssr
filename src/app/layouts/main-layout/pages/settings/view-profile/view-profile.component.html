@@ -30,7 +30,7 @@
             <h3 class="d-flex">
               {{ customer?.Username }}
             </h3>
-            <div class="col-md" *ngIf="+profileId === customer.Id">
+            <div class="col-md" *ngIf="+profileId === customer?.profileId">
               <button
                 class="btn btn-sm btn-primary float-end d-flex"
                 (click)="openEditProfile()"
@@ -235,7 +235,7 @@
                     <button ngbDropdownItem>
                       <a
                         class="droplist d-flex align-items-center gap-2"
-                        *ngIf="profileId == customer?.Id"
+                        *ngIf="profileId == customer?.profileId"
                         (click)="deletePost(item.id)"
                       >
                         <fa-icon [icon]="['fas', 'trash-can']" />
