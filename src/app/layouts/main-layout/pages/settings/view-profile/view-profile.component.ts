@@ -79,7 +79,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
           const data = {
             title: this.customer?.Username,
             // title: this.customer?.FirstName + ' ' + this.customer?.LastName,
-            url: `${environment.webUrl}settings/view-profile/${this.customer?.Id}`,
+            url: `${environment.webUrl}settings/view-profile/${this.customer?.profileId}`,
             description: '',
             image: this.customer?.ProfilePicName,
           };
