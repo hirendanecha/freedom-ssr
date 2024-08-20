@@ -46,7 +46,7 @@
                 class="d-flex align-items-center"
                 (mouseover)="showHoverBox = true"
               >
-                {{ (post?.Username || post?.FirstName)?.split(" ").join("") }}
+                {{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
                 <!-- [ngbTooltip]="post.postcreationdate | date : ' h:mm a MMM d, y'" -->
                 <div>
                   <fa-icon
@@ -93,7 +93,7 @@
               />
               <div class="d-flex gap-3 align-items-baseline">
                 <p class="cursor mt-2">
-                  {{ (post?.Username || post?.FirstName).split(" ").join("") }}
+                  {{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
                 </p>
 
                 <button>

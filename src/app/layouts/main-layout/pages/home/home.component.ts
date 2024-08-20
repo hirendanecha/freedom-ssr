@@ -67,6 +67,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   postMediaData: any[] = [];
   currentImageIndex: number = this.postMediaData.length - 1;
   currentIndex: any;
+  selectedFiles: any[] = [];
   constructor(
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
@@ -155,7 +156,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       return;
     }
-    const selectedFiles: any[] = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const fileData: any = {
@@ -174,13 +174,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       } else if (file.type.includes('image/')) {
         fileData.imageUrl = URL.createObjectURL(file);
       }
-      selectedFiles.push(fileData);
+      this.selectedFiles.push(fileData);
       // console.log(`File ${i + 1}:`, fileData);
     }
     if (files?.[0]?.type?.includes('application/')) {
-      this.postMediaData = selectedFiles;
+      this.postMediaData = this.selectedFiles;
     } else {
-      this.postMediaData = (this.postMediaData || []).concat(selectedFiles);
+      this.postMediaData = (this.postMediaData || []).concat(this.selectedFiles);
     }
     // console.log('Selected files:', this.postMediaData);
   }
@@ -361,6 +361,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.postData['file'] = {};
     this.postData['imageUrl'] = '';
     this.postData['pdfUrl'] = '';
+    this.selectedFiles = [];
     this.postMessageInputValue = ' ';
     setTimeout(() => {
       this.postMessageInputValue = '';
