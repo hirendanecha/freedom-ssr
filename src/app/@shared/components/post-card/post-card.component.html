@@ -409,6 +409,19 @@
         <div class="mb-10"></div>
       </ng-container>
     </ng-container>
+    <ng-container *ngIf="post?.pdfUrl">
+      <div (click)="pdfView(post?.pdfUrl)">
+        <div class="d-flex align-items-center">
+          <fa-icon
+            [icon]="['fas', 'file-pdf']"
+            class="c-pointer close-icon font-60-px"
+          />
+          <span class="pdf-name c-pointer">
+            {{ post?.pdfUrl?.split("/")[3]?.replaceAll("%", " ") }}
+          </span>
+        </div>
+      </div>
+    </ng-container>
 
     <app-post-meta-data-card [post]="post" />
     <ng-container *ngIf="post?.imagesList">

@@ -28,6 +28,7 @@ import { AddFreedomPageComponent } from '../freedom-page/add-page-modal/add-page
 import { isPlatformBrowser } from '@angular/common';
 import { Howl } from 'howler';
 import { EditPostModalComponent } from 'src/app/@shared/modals/edit-post-modal/edit-post-modal.component';
+import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -79,6 +80,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public tokenService: TokenStorageService,
     private seoService: SeoService,
+    private uploadFilesService: UploadFilesService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     if (isPlatformBrowser(this.platformId)) {
@@ -175,8 +177,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       selectedFiles.push(fileData);
       // console.log(`File ${i + 1}:`, fileData);
     }
-    // this.postMediaData = selectedFiles;
-    this.postMediaData = (this.postMediaData || []).concat(selectedFiles);
+    if (files?.[0]?.type?.includes('application/')) {
+      this.postMediaData = selectedFiles;
+    } else {
+      this.postMediaData = (this.postMediaData || []).concat(selectedFiles);
+    }
     // console.log('Selected files:', this.postMediaData);
   }
 
@@ -270,33 +275,48 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.postData?.postdescription || this.postMediaData?.length) {
       if (this.postMediaData?.length) {
-        let media = this.postMediaData?.map((file) => file?.file);
-        this.postService.uploadFile(media).subscribe({
-          next: (res: any) => {
-            if (res?.body?.imagesList) {
-              this.spinner.hide();
-              // if (this.postData?.file?.type?.includes('application/pdf')) {
-              //   this.postMediaData['pdfUrl'] = res?.body?.url;
-              //   this.postMediaData['imageUrl'] = null;
-              //   this.createOrEditPost();
-              // } else {
-              // this.postMediaData['file'] = null;
-              // this.postData['pdfUrl'] = res?.body?.pdfUrl;
-              if (this.postData['imagesList']?.length) {
-                for (const media of res?.body?.imagesList) {
-                  this.postData['imagesList'].push(media);
-                }
-              } else {
-                this.postData['imagesList'] = res?.body?.imagesList;
+        if (this.postMediaData?.[0]?.pdfName) {
+          let media = this.postMediaData?.map((file) => file?.file);
+          this.uploadFilesService.uploadFile(media[0]).subscribe({
+            next: (res: any) => {
+              if (res?.body?.url) {
+                this.postData['pdfUrl'] = res?.body?.url;
+                this.createOrEditPost();
               }
-              this.createOrEditPost();
-              // }
-            }
-          },
-          error: (err) => {
-            this.spinner.hide();
-          },
-        });
+            },
+            error: (err) => {
+              this.spinner.hide();
+            },
+          });
+        } else {
+          let media = this.postMediaData?.map((file) => file?.file);
+          this.postService.uploadFile(media).subscribe({
+            next: (res: any) => {
+              if (res?.body?.imagesList) {
+                this.spinner.hide();
+                // if (this.postData?.file?.type?.includes('application/pdf')) {
+                //   this.postMediaData['pdfUrl'] = res?.body?.url;
+                //   this.postMediaData['imageUrl'] = null;
+                //   this.createOrEditPost();
+                // } else {
+                // this.postMediaData['file'] = null;
+                // this.postData['pdfUrl'] = res?.body?.pdfUrl;
+                if (this.postData['imagesList']?.length) {
+                  for (const media of res?.body?.imagesList) {
+                    this.postData['imagesList'].push(media);
+                  }
+                } else {
+                  this.postData['imagesList'] = res?.body?.imagesList;
+                }
+                this.createOrEditPost();
+                // }
+              }
+            },
+            error: (err) => {
+              this.spinner.hide();
+            },
+          });
+        }
       } else {
         this.spinner.hide();
         this.createOrEditPost();
@@ -335,6 +355,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.postMediaData = [];
     this.postData['id'] = '';
     this.postData['postdescription'] = '';
+    this.postData['imagesList'] = '';
     this.postData['meta'] = {};
     this.postData['tags'] = [];
     this.postData['file'] = {};
