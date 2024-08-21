@@ -46,6 +46,7 @@ export class HeaderComponent {
 
   hideSearch = false;
   hideSubHeader: boolean = false;
+  authToken = localStorage.getItem('auth-token');
 
   constructor(
     private modalService: NgbModal,
@@ -176,10 +177,18 @@ export class HeaderComponent {
 
   redirectToTube(): void {
     const channelId = +localStorage.getItem('channelId');
+    // if (channelId) {
+    //   window.open(`${environment.tubeUrl}?channelId=${channelId}`, '_blank');
+    // } else {
+    //   window.open(`${environment.tubeUrl}`, '_blank');
+    // }
+    let redirectUrl = `${environment.tubeUrl}`;
     if (channelId) {
-      window.open(`${environment.tubeUrl}?channelId=${channelId}`, '_blank');
-    } else {
-      window.open(`${environment.tubeUrl}`, '_blank');
+      redirectUrl += `?channelId=${channelId}`;
     }
+    if (this.authToken) {
+      redirectUrl += channelId ? `&authToken=${this.authToken}` : `?authToken=${this.authToken}`;
+    }
+    window.open(redirectUrl, '_blank');
   }
 }

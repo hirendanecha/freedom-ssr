@@ -143,11 +143,10 @@
         <li>
           <!-- (click)="redirectToTube()" -->
           <a
-            [href]="
-              channelId
-                ? environment.tubeUrl + '?channelId=' + channelId
-                : environment.tubeUrl
-            "
+          [href]="
+          channelId 
+            ? environment.tubeUrl + '?channelId=' + channelId + (authToken ? '&authToken=' + authToken : '') 
+            : environment.tubeUrl + (authToken ? '?authToken=' + authToken : '')"
             target="_blank"
             routerLinkActive="active"
             class="nav-icon cursor"
