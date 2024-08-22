@@ -200,4 +200,8 @@ export class SocketService {
   checkRoom(params, callback: (data: any) => void) {
     this.socket.emit('check-room', params, callback);
   }
+
+  logout(params, callback: (data: any) => void) {
+    this.socket.emit('logout', params, callback);
+  }
 }

@@ -85,6 +85,7 @@ export class ProfileMenusModalComponent {
     });
     this.customerService.logout().subscribe({
       next: (res) => {
+        this.tokenStorageService.clearLoginSession(this.profileId);
         this.tokenStorageService.signOut();
         return;
       },
