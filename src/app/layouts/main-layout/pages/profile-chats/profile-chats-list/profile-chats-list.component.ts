@@ -224,7 +224,7 @@ export class ProfileChatsListComponent
           if (data !== null) {
             // this.messageList.push(data);
             const url = data?.messageText || null;
-            const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
+            const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, ' ');
             const matches = text?.match(
               /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
             );
@@ -510,7 +510,7 @@ export class ProfileChatsListComponent
                 data.parentMessage?.messageText
               );
           }
-          const text = data.messageText?.replace(/<br\s*\/?>|<[^>]*>/g, '');
+          const text = data.messageText?.replace(/<br\s*\/?>|<[^>]*>/g, ' ');
           const matches = text?.match(
             /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
           );
@@ -1400,7 +1400,7 @@ export class ProfileChatsListComponent
     this.filteredMessageList.map((element) => {
       return (element.messages = element?.messages.filter(async (e: any) => {
         const url = e?.messageText || null;
-        const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, '');
+        const text = url?.replace(/<br\s*\/?>|<[^>]*>/g, ' ');
         const matches = text?.match(
           /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
         );

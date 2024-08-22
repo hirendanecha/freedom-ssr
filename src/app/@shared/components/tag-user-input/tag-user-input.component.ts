@@ -140,7 +140,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       this.onClearFile();
     }
 
-    const text = htmlText.replace(/<br\s*\/?>|<[^>]*>/g, '');
+    const text = htmlText.replace(/<br\s*\/?>|<[^>]*>/g, ' ');
     // const matches = text?.match(/(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/);
     const matches = text.match(/(?:https?:\/\/|www\.)[^\s<&]+(?:\.[^\s<&]+)+(?:\.[^\s<]+)?/g);
     const url = matches?.[0];
