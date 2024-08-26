@@ -71,10 +71,10 @@ export class CustomerService {
   }
 
   getProfile(id): Observable<Object> {
-    return this.http.get<Object>(`${this.baseUrl}/profile/${id}`);
+    return this.http.get<Object>(`${this.baseUrl}/profile/${id}?q=${Date.now()}`);
   }
 
-  updateProfile(id, customer: Customer): Observable<Object> {
+  updateProfile(id, customer): Observable<Object> {
     const token = localStorage.getItem('auth-token');
     return this.http.put(`${this.baseUrl}/profile/${id}`, customer, {
       headers: {

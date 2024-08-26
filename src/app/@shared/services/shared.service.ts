@@ -71,14 +71,14 @@ export class SharedService {
     const profileId = localStorage.getItem('profileId');
     if (profileId) {
       this.spinner.show();
-      this.customerService.getProfile(profileId).subscribe({
+      this.customerService.getProfile(+profileId).subscribe({
         next: (res: any) => {
           this.spinner.hide();
           const data = res?.data?.[0];
           if (data) {
             this.userData = data;
             localStorage.setItem('userData', JSON.stringify(this.userData));
-            this.getLoginUserDetails(this.userData);
+            this.getLoginUserDetails(data);
           }
         },
         error: (error) => {

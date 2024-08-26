@@ -8,17 +8,15 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Subject, debounceTime, forkJoin, fromEvent, of } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
 import { ConfirmationModalComponent } from 'src/app/@shared/modals/confirmation-modal/confirmation-modal.component';
 import { Customer } from 'src/app/@shared/constant/customer';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
-import { PostService } from 'src/app/@shared/services/post.service';
 import { SharedService } from 'src/app/@shared/services/shared.service';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
-import { environment } from 'src/environments/environment';
-import { QrScanModalComponent } from 'src/app/@shared/modals/qrscan-modal/qrscan-modal.component';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-profile',
@@ -47,9 +45,25 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     url: '',
   };
   isNotificationSoundEnabled: boolean = true;
-  authToken: string;
-  qrLink = '';
 
+  editForm = new FormGroup({
+    FirstName: new FormControl(''),
+    LastName: new FormControl(''),
+    Username: new FormControl(''),
+    Email: new FormControl({ value: this.customer?.Email || '', disabled: true }),
+    Country: new FormControl(''),
+    Zip: new FormControl(''),
+    State: new FormControl(''),
+    City: new FormControl(''),
+    County: new FormControl(''),
+    MobileNo: new FormControl(''),
+    ProfilePicName: new FormControl(''),
+    CoverPicName: new FormControl(''),
+    UserID: new FormControl<number | null>(null),
+    profileId: new FormControl<number | null>(null),
+    IsActive: new FormControl('Y'),
+  });
+  
   constructor(
     private modalService: NgbModal,
     private route: ActivatedRoute,
@@ -63,19 +77,28 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   ) {
     this.spinner.hide();
     this.userId = +this.route.snapshot.paramMap.get('id');
-    // this.userMail = JSON.parse(localStorage.getItem('userData'))?.Email;
     this.sharedService.loggedInUser$.subscribe((user) => {
       this.customer = user;
       this.userlocalId = user?.UserID;
       this.profileId = user?.profileId;
       this.userMail = user?.Email;
-      console.log(this.customer);
+      this.editForm.patchValue({
+        FirstName: this.customer?.FirstName || '',
+        LastName: this.customer?.LastName || '',
+        Username: this.customer?.Username || '',
+        Email: this.customer?.Email || '',
+        Country: this.customer?.Country || '',
+        Zip: this.customer?.Zip || '',
+        State: this.customer?.State || '',
+        City: this.customer?.City || '',
+        County: this.customer?.County || '',
+        MobileNo: this.customer?.MobileNo || '',
+        ProfilePicName: this.customer?.ProfilePicName || '',
+        CoverPicName: this.customer?.CoverPicName || '',
+        UserID: this.customer?.UserID || +this.userId,
+        profileId: this.profileId || +this.profileId,
+      });
     });
-    if (this.profileId) {
-      // this.getProfile(this.profileId);
-      this.authToken = localStorage.getItem('auth-token');
-    }
-    this.qrLink = `${environment.qrLink}${this.userId}?token=${this.authToken}`;
   }
   ngOnInit(): void {
     if (!this.tokenStorage.getToken()) {
@@ -92,11 +115,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    fromEvent(this.zipCode.nativeElement, 'input')
-      .pipe(debounceTime(1000))
-      .subscribe((event) => {
-        // this.onZipChange(event['target'].value);
-      });
   }
 
   notificationSound() {
@@ -111,34 +129,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     localStorage.setItem('soundPreferences', JSON.stringify(soundOct));
   }
 
-  validatepassword() {
-    const pattern =
-      '(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[a-z])(?=.*[0-9].*[0-9]).{8}';
-    if (!this.customer.Password.match(pattern)) {
-      this.msg =
-        'Password must be a minimum of 8 characters and include one uppercase letter, one lowercase letter and one special character';
-    }
-    if (this.customer.Password !== this.confirm_password) {
-      this.msg = 'Passwords does not match.';
-      return false;
-    }
-
-    return true;
-  }
-
-  changeCountry() {
-    this.customer.Zip = '';
-    this.customer.State = '';
-    this.customer.City = '';
-    this.customer.County = '';
-    // this.customer.Place = '';
-  }
-
-  changetopassword(event) {
-    event.target.setAttribute('type', 'password');
-    this.msg = '';
-  }
-
   getAllCountries() {
     this.customerService.getCountriesData().subscribe({
       next: (result) => {
@@ -146,21 +136,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       },
       error: (error) => {
         console.log(error);
-      },
-    });
-  }
-
-  onZipChange(event) {
-    this.customerService.getZipData(event, this.customer?.Country).subscribe({
-      next: (data) => {
-        let zip_data = data[0];
-        this.customer.State = zip_data ? zip_data.state : '';
-        this.customer.City = zip_data ? zip_data.city : '';
-        this.customer.County = zip_data ? zip_data.places : '';
-        // this.customer.Place = zip_data ? zip_data.places : '';
-      },
-      error: (err) => {
-        console.log(err);
       },
     });
   }
@@ -187,36 +162,29 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   uploadImgAndUpdateCustomer(): void {
     let uploadObs = {};
     if (this.profileImg?.file?.name) {
-      uploadObs['profileImg'] = this.uploadService.uploadFile(
-        this.profileImg?.file
-      );
+      uploadObs['profileImg'] = this.uploadService.uploadFile(this.profileImg?.file);
     }
-
+  
     if (this.profileCoverImg?.file?.name) {
-      uploadObs['profileCoverImg'] = this.uploadService.uploadFile(
-        this.profileCoverImg?.file
-      );
+      uploadObs['profileCoverImg'] = this.uploadService.uploadFile(this.profileCoverImg?.file);
     }
-
+  
     if (Object.keys(uploadObs)?.length > 0) {
       this.spinner.show();
-
       forkJoin(uploadObs).subscribe({
         next: (res: any) => {
           if (res?.profileImg?.body?.url) {
             this.profileImg['file'] = null;
             this.profileImg['url'] = res?.profileImg?.body?.url;
-            this.sharedService['userData']['ProfilePicName'] =
-              this.profileImg['url'];
+            this.sharedService['userData']['ProfilePicName'] = this.profileImg['url'];
+            this.editForm.patchValue({ ProfilePicName: this.profileImg['url'] });
           }
-
           if (res?.profileCoverImg?.body?.url) {
             this.profileCoverImg['file'] = null;
             this.profileCoverImg['url'] = res?.profileCoverImg?.body?.url;
-            this.sharedService['userData']['CoverPicName'] =
-              this.profileCoverImg['url'];
+            this.sharedService['userData']['CoverPicName'] = this.profileCoverImg['url'];
+            this.editForm.patchValue({ CoverPicName: this.profileCoverImg['url'] });
           }
-
           this.updateCustomer();
           this.spinner.hide();
         },
@@ -227,19 +195,13 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     } else {
       this.updateCustomer();
     }
-  }
+  }  
 
   updateCustomer(): void {
     if (this.profileId) {
       this.spinner.show();
-      this.customer.ProfilePicName =
-        this.profileImg?.url || this.customer.ProfilePicName;
-      this.customer.CoverPicName =
-        this.profileCoverImg?.url || this.customer.CoverPicName;
-      this.customer.IsActive = 'Y';
-      this.customer.UserID = +this.userId;
       this.customerService
-        .updateProfile(this.profileId, this.customer)
+        .updateProfile(this.profileId, this.editForm.value)
         .subscribe({
           next: (res: any) => {
             this.spinner.hide();
@@ -258,23 +220,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
         });
     }
   }
-
-  // getProfile(id): void {
-  //   this.spinner.show();
-  //   this.customerService.getProfile(id).subscribe({
-  //     next: (res: any) => {
-  //       this.spinner.hide();
-  //       if (res.data) {
-  //         this.customer = res.data[0];
-  //
-  //       }
-  //     },
-  //     error: (error) => {
-  //       this.spinner.hide();
-  //       console.log(error);
-  //     },
-  //   });
-  // }
 
   onProfileImgChange(event: any): void {
     this.profileImg = event;
@@ -315,31 +260,21 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  onChangeTag(event) {
-    this.customer.Username = event.target.value
-      .replaceAll(' ', '')
-      .replaceAll(/\s*,+\s*/g, ',');
-  }
-  convertToUppercase(event: any) {
-    const inputElement = event.target as HTMLInputElement;
-    let inputValue = inputElement.value;
-    inputValue = inputValue.replace(/\s/g, '');
-    inputElement.value = inputValue.toUpperCase();
-  }
 
-  openAppQR(store: string) {
-    const modalRef = this.modalService.open(QrScanModalComponent, {
-      centered: true,
-      size: 'sm',
+  onChangeTag(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value.replaceAll(' ', '').replaceAll(/\s*,+\s*/g, ',');
+    this.editForm.patchValue({
+      Username: value,
     });
-    if (store === 'googlePlay') {
-      modalRef.componentInstance.store =
-        'https://s3.us-east-1.wasabisys.com/freedom-social/buzz-ring.apk';
-      modalRef.componentInstance.image = '/assets/images/logos/googlePlay.png';
-    } else {
-      modalRef.componentInstance.store =
-        'https://apps.apple.com/us/app/apple-store/id375380948';
-      modalRef.componentInstance.image = '/assets/images/logos/appStore.png';
-    }
+  }
+  
+  convertToUppercase(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    let inputValue = inputElement.value.replace(/\s/g, '');
+    inputElement.value = inputValue.toUpperCase();
+    this.editForm.patchValue({
+      Zip: inputElement.value,
+    });
   }
 }
