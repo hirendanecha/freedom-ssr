@@ -54,12 +54,12 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     Email: new FormControl('', [Validators.required]),
     Password: new FormControl('', [Validators.required]),
     confirm_password: new FormControl('', [Validators.required]),
-    MobileNo: new FormControl('', [Validators.required]),
+    MobileNo: new FormControl(''),
     Country: new FormControl('US', [Validators.required]),
     Zip: new FormControl('', [Validators.required]),
     State: new FormControl('', [Validators.required]),
-    City: new FormControl('', [Validators.required]),
-    County: new FormControl('', [Validators.required]),
+    City: new FormControl(''),
+    County: new FormControl(''),
     TermAndPolicy: new FormControl(false, Validators.required),
     Anonymous: new FormControl(false, Validators.required),
   });
@@ -80,8 +80,6 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`,
     };
     this.theme = localStorage.getItem('theme');
-
-    // this.seoService.updateSeoMetaData(data);
   }
 
   ngOnInit(): void {
@@ -116,13 +114,14 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   }
 
   togglePasswordVisibility(passwordInput: HTMLInputElement) {
-    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type =
+      passwordInput.type === 'password' ? 'text' : 'password';
     this.passwordHidden = !this.passwordHidden;
   }
 
   toggleConfirmPasswordVisibility(confirmpasswordInput: HTMLInputElement) {
     confirmpasswordInput.type =
-    confirmpasswordInput.type === 'password' ? 'text' : 'password';
+      confirmpasswordInput.type === 'password' ? 'text' : 'password';
     this.confirmpasswordHidden = !this.confirmpasswordHidden;
   }
 
@@ -131,9 +130,6 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   }
 
   upload(file: any = {}) {
-    // if (file.size / (1024 * 1024) > 5) {
-    //   return 'Image file size exceeds 5 MB!';
-    // }
     this.spinner.show();
     if (file) {
       this.uploadService.uploadFile(file).subscribe({
@@ -141,12 +137,8 @@ export class SignUpComponent implements OnInit, AfterViewInit {
           this.spinner.hide();
           if (res.body) {
             this.profilePic = res?.body?.url;
-            this.creatProfile(this.registerForm.value);
+            this.createProfile(this.registerForm.value);
           }
-          // if (file?.size < 5120000) {
-          // } else {
-          //   this.toastService.warring('Image is too large!');
-          // }
         },
         error: (err) => {
           this.spinner.hide();
@@ -159,7 +151,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       });
     } else {
       this.spinner.hide();
-      this.creatProfile(this.registerForm.value);
+      this.createProfile(this.registerForm.value);
     }
   }
 
@@ -228,44 +220,25 @@ export class SignUpComponent implements OnInit, AfterViewInit {
 
   onSubmit(): void {
     this.msg = '';
-    if (!this.profileImg?.file?.name) {
-      this.msg = 'Please upload profile picture';
-      this.scrollTop();
-      // return false;
-    }
+    // if (!this.profileImg?.file?.name) {
+    //   this.msg = 'Please upload profile picture';
+    //   this.scrollTop();
+    // return false;
+    // }
+    // this.profileImg?.file?.name &&
     if (
-      this.profileImg?.file?.name &&
       this.registerForm.valid &&
-      this.registerForm.get('TermAndPolicy').value === true &&       
+      this.registerForm.get('TermAndPolicy').value === true &&
       this.registerForm.get('Anonymous').value === true
     ) {
       if (!this.validatepassword()) {
         return;
       }
-
-      const id = this.route.snapshot.paramMap.get('id');
-      if (this.userId) {
-        // this.updateCustomer();
-      } else {
-        // this.submitted = true;
-        this.save();
-      }
+      this.save();
     } else {
       this.msg = 'Please enter mandatory fields(*) data.';
       this.scrollTop();
-      // return false;
     }
-
-    // if (
-    //  this.registerForm.invalid ||
-    //   this.registerForm.get('termAndPolicy')?.value === false ||
-    //   !this.profileImg?.file?.name
-    // ) {
-    //   this.msg =
-    //     'Please enter mandatory fields(*) data and please check terms and conditions.';
-    //   this.scrollTop();
-    //   return false;
-    // }
   }
 
   changeCountry() {
@@ -283,7 +256,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
         this.spinner.hide();
         this.allCountryData = result;
         this.registerForm.get('Zip').enable();
-        this.getAllState(this.defaultCountry)
+        this.getAllState(this.defaultCountry);
       },
       error: (error) => {
         this.spinner.hide();
@@ -296,7 +269,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     const target = event.target as HTMLSelectElement;
     this.getAllState(target.value);
   }
-  
+
   getAllState(selectCountry) {
     // this.spinner.show();
     this.customerService.getStateData(selectCountry).subscribe({
@@ -349,7 +322,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     this.msg = '';
   }
 
-  creatProfile(data) {
+  createProfile(data) {
     this.spinner.show();
     const profile = {
       Username: data?.Username,

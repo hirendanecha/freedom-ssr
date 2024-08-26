@@ -2,26 +2,29 @@
   <div class="col-lg-4 d-flex flex-column align-items-xl-end">
     <div class="mb-3 d-flex justify-content-center mt-17">
       <div class="img-pick d-flex flex-column justify-content-center mb-5">
-      <label class="form-label"
-        >Profile Picture<span class="text-danger">*</span
-      ></label>
-      <app-img-picker classes="h-300-px w-300-px" (onFileChange)="selectFiles($event)" />
-     </div>
+        <label class="form-label"
+          >Profile Picture<span class="text-danger">*</span></label
+        >
+        <app-img-picker
+          classes="h-300-px w-300-px"
+          (onFileChange)="selectFiles($event)"
+        />
+      </div>
     </div>
- 
+
     <div class="d-lg-block d-none banner-sction">
-        <div class="hrero-section">
-          <div class="about-freedom" routerLink="/">
-            <h3 class="text-center">
-              The Umbrella platform for All freedom based projects worldwide
-            </h3>
-            <!-- <img src="/assets/images/banner/freedom-buzz.jpeg" alt="" /> -->
-          </div>
+      <div class="hrero-section">
+        <div class="about-freedom" routerLink="/">
+          <h3 class="text-center">
+            The Umbrella platform for All freedom based projects worldwide
+          </h3>
+          <!-- <img src="/assets/images/banner/freedom-buzz.jpeg" alt="" /> -->
         </div>
+      </div>
     </div>
   </div>
 
-  <div class="col-12 col-lg-6 ">
+  <div class="col-12 col-lg-6">
     <p class="text-2 mb-5">
       Already activated?
       <a class="fw-500" routerLink="/login">Login</a>
@@ -40,7 +43,7 @@
       >
         {{ registrationMessage || msg }}
       </div>
-      <div class="row ">
+      <div class="row">
         <div class="col-12 col-md-6 mb-3">
           <div class="col-12 mb-3">
             <label class="form-label">First Name</label>
@@ -72,12 +75,20 @@
           <app-img-picker (onFileChange)="selectFiles($event)" />
         </div>
         <div class="col-12 col-md-6 mb-3 single-box px-6">
-          <p class="align-items-center text-start my-auto mt-3 font-check">Hide your personal information and remain anonymous on Freedom.buzz.<br>Only your User Name will be displayed</p>
+          <p class="align-items-center text-start my-auto mt-3 font-check">
+            Hide your personal information and remain anonymous on
+            Freedom.buzz.<br />Only your User Name will be displayed
+          </p>
           <div class="d-flex justify-content-end">
-          <input type="checkbox" class="my-3 check-box" formControlName="Anonymous" />
-          <span class="text-danger">*</span>
+            <input
+              type="checkbox"
+              class="my-3 check-box"
+              required
+              formControlName="Anonymous"
+            />
+            <span class="text-danger">*</span>
+          </div>
         </div>
-      </div>
 
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
@@ -149,7 +160,11 @@
               autocomplete="new-password"
               #passwordInput
             />
-            <fa-icon [icon]="passwordHidden ? ['fas', 'eye'] : ['fas', 'eye-slash']" class="font-20-px position-absolute c-pointer" (click)="togglePasswordVisibility(passwordInput)"></fa-icon>
+            <fa-icon
+              [icon]="passwordHidden ? ['fas', 'eye'] : ['fas', 'eye-slash']"
+              class="font-20-px position-absolute c-pointer"
+              (click)="togglePasswordVisibility(passwordInput)"
+            ></fa-icon>
           </div>
           <div
             class="text-danger"
@@ -181,9 +196,11 @@
               #confirmpasswordInput
             />
             <fa-icon
-            [icon]="confirmpasswordHidden ? ['fas', 'eye'] : ['fas', 'eye-slash']"
-            class="font-20-px position-absolute eye-slash c-pointer"
-            (click)="toggleConfirmPasswordVisibility(confirmpasswordInput)"
+              [icon]="
+                confirmpasswordHidden ? ['fas', 'eye'] : ['fas', 'eye-slash']
+              "
+              class="font-20-px position-absolute eye-slash c-pointer"
+              (click)="toggleConfirmPasswordVisibility(confirmpasswordInput)"
             ></fa-icon>
           </div>
           <div
@@ -199,8 +216,9 @@
 
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
-            >Mobile<span class="text-danger">*</span></label
-          >
+            >Mobile
+            <!-- <span class="text-danger">*</span> -->
+          </label>
           <input
             type="number"
             class="input-area"
@@ -208,7 +226,7 @@
             placeholder="Enter your mobile number"
             formControlName="MobileNo"
           />
-          <div
+          <!-- <div
             class="text-danger"
             *ngIf="
               registerForm.get('MobileNo').hasError('required') &&
@@ -216,16 +234,16 @@
             "
           >
             Mobile number is required.
-          </div>
+          </div> -->
         </div>
 
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
-            >Country<span class="text-danger">*</span></label
-          >
+            >Country
+            <span class="text-danger">*</span>
+          </label>
           <select
             id="Country"
-            required
             name="Country"
             class="input-area w-100"
             formControlName="Country"
@@ -244,12 +262,13 @@
 
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
-            >Zip Code<span class="text-danger">*</span></label
-          >
+            >Zip Code
+            <span class="text-danger">*</span>
+          </label>
           <input
             type="text"
             class="input-area"
-            required
+            required=""
             placeholder="Enter your zip code"
             formControlName="Zip"
             name="Zip"
@@ -269,21 +288,20 @@
 
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
-            >State<span class="text-danger">*</span></label
-          >
+            >State
+            <span class="text-danger">*</span>
+          </label>
           <select
-          id="State"
-          required
-          name="State"
-          class="input-area w-100"
-          formControlName="State"
-        >
-          <option
-            *ngFor="let item of allStateData"
+            id="State"
+            name="State"
+            required=""
+            class="input-area w-100"
+            formControlName="State"
           >
-            {{ item.state }}
-          </option>
-        </select>
+            <option *ngFor="let item of allStateData">
+              {{ item.state }}
+            </option>
+          </select>
           <div
             class="text-danger"
             *ngIf="
@@ -297,17 +315,17 @@
 
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
-            >City<span class="text-danger">*</span></label
-          >
+            >City
+            <!-- <span class="text-danger">*</span> -->
+          </label>
           <input
             type="text"
             class="input-area"
-            required
             name="City"
             placeholder="Enter your city"
             formControlName="City"
           />
-          <div
+          <!-- <div
             class="text-danger"
             *ngIf="
               registerForm.get('City').hasError('required') &&
@@ -315,22 +333,23 @@
             "
           >
             City is required.
-          </div>
+          </div> -->
         </div>
 
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
-            >County<span class="text-danger">*</span></label
-          >
+            >County
+            <!-- <span class="text-danger">*</span> -->
+          </label>
+          <!-- required -->
           <input
             type="text"
             class="input-area"
-            required
             name="County"
             placeholder="Enter your County"
             formControlName="County"
           />
-          <div
+          <!-- <div
             class="text-danger"
             *ngIf="
               registerForm.get('County').hasError('required') &&
@@ -338,18 +357,25 @@
             "
           >
             County is required.
-          </div>
+          </div> -->
         </div>
       </div>
-      <div class="form-check ps-0 my-4 d-flex">
+      <!-- <div class="form-check ps-0 my-4 d-flex">
         <div id="captcha" #captcha></div>
-      </div>
+      </div> -->
       <div class="form-check ps-0 my-4 d-flex">
-        <input type="checkbox" class="p-0 check-box" formControlName="TermAndPolicy" />
+        <input
+          type="checkbox"
+          class="p-0 check-box"
+          required
+          formControlName="TermAndPolicy"
+        />
         <label class="form-check-label ms-2 c-pointer">
-          I agree to the Freedom.buzz <a href="/user-agreement" target="_blank">Terms of Use</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
+          I agree to the Freedom.buzz
+          <a href="/user-agreement" target="_blank">Terms of Use</a> and
+          <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
           <span class="text-danger">*</span>
-      </label>      
+        </label>
       </div>
 
       <button
