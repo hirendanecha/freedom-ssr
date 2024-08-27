@@ -89,6 +89,11 @@ export class ProfileMenusModalComponent {
         this.tokenStorageService.signOut();
         return;
       },
+      error: (err) => {
+        if (err.status === 401) {
+          this.tokenStorageService.signOut();
+        }
+      },
     });
     // this.toastService.success('Logout successfully');
     // this.router.navigate(['/auth']);
