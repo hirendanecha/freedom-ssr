@@ -112,9 +112,8 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     //   localStorage.getItem('soundPreferences')
     // )?.notificationSoundEnabled;
     this.sharedService.loginUserInfo.subscribe((user) => {
-      if (user.messageNotificationSound === 'N') {
-        this.isNotificationSoundEnabled = false;
-      }
+      this.isNotificationSoundEnabled =
+        user?.tagNotificationSound === 'Y' ? true : false;
     });
 
     this.getAllCountries();
@@ -132,6 +131,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     //     : 'N';
     // }
     // localStorage.setItem('soundPreferences', JSON.stringify(soundOct));
+    this.isNotificationSoundEnabled != this.isNotificationSoundEnabled;
     const soundObj = {
       property: 'tagNotificationSound',
       value: this.isNotificationSoundEnabled ? 'Y' : 'N',
