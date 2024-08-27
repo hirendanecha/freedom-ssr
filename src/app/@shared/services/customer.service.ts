@@ -71,7 +71,9 @@ export class CustomerService {
   }
 
   getProfile(id): Observable<Object> {
-    return this.http.get<Object>(`${this.baseUrl}/profile/${id}?q=${Date.now()}`);
+    return this.http.get<Object>(
+      `${this.baseUrl}/profile/${id}?q=${Date.now()}`
+    );
   }
 
   updateProfile(id, customer): Observable<Object> {
@@ -121,13 +123,19 @@ export class CustomerService {
     return this.http.get(`${this.baseUrl}/verify-token/${token}`);
   }
 
-  startCallToBuzzRing(callerData: Object): Observable<any>{
-    const url = 'https://ring-api.freedom.buzz/api/v1/customers/call-notification';
+  startCallToBuzzRing(callerData: Object): Observable<any> {
+    const url =
+      'https://ring-api.freedom.buzz/api/v1/customers/call-notification';
     return this.http.post(url, callerData);
   }
 
-  startGroupCallToBuzzRing(callerData: Object): Observable<any>{
-    const url = 'https://ring-api.freedom.buzz/api/v1/customers/group-call-notification';
+  startGroupCallToBuzzRing(callerData: Object): Observable<any> {
+    const url =
+      'https://ring-api.freedom.buzz/api/v1/customers/group-call-notification';
     return this.http.post(url, callerData);
+  }
+
+  updateNotificationSound(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/onOff-notification`, data);
   }
 }

@@ -50,7 +50,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     FirstName: new FormControl(''),
     LastName: new FormControl(''),
     Username: new FormControl(''),
-    Email: new FormControl({ value: this.customer?.Email || '', disabled: true }),
+    Email: new FormControl({
+      value: this.customer?.Email || '',
+      disabled: true,
+    }),
     Country: new FormControl(''),
     Zip: new FormControl(''),
     State: new FormControl(''),
@@ -63,7 +66,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     profileId: new FormControl<number | null>(null),
     IsActive: new FormControl('Y'),
   });
-  
+
   constructor(
     private modalService: NgbModal,
     private route: ActivatedRoute,
@@ -105,28 +108,44 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       this.router.navigate([`/login`]);
     }
     this.modalService.dismissAll();
-    const notificationSound = JSON.parse(
-      localStorage.getItem('soundPreferences')
-    )?.notificationSoundEnabled;
-    if (notificationSound === 'N') {
-      this.isNotificationSoundEnabled = false;
-    }
+    // const notificationSound = JSON.parse(
+    //   localStorage.getItem('soundPreferences')
+    // )?.notificationSoundEnabled;
+    this.sharedService.loginUserInfo.subscribe((user) => {
+      if (user.messageNotificationSound === 'N') {
+        this.isNotificationSoundEnabled = false;
+      }
+    });
+
     this.getAllCountries();
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   notificationSound() {
-    const soundOct = JSON.parse(localStorage.getItem('soundPreferences')) || {};
-    if (soundOct.notificationSoundEnabled === 'Y') {
-      soundOct.notificationSoundEnabled = 'N';
-    } else {
-      soundOct.notificationSoundEnabled = this.isNotificationSoundEnabled
-        ? 'Y'
-        : 'N';
-    }
-    localStorage.setItem('soundPreferences', JSON.stringify(soundOct));
+    // const soundOct = JSON.parse(localStorage.getItem('soundPreferences')) || {};
+    // if (soundOct.notificationSoundEnabled === 'Y') {
+    //   soundOct.notificationSoundEnabled = 'N';
+    // } else {
+    //   soundOct.notificationSoundEnabled = this.isNotificationSoundEnabled
+    //     ? 'Y'
+    //     : 'N';
+    // }
+    // localStorage.setItem('soundPreferences', JSON.stringify(soundOct));
+    const soundObj = {
+      property: 'tagNotificationSound',
+      value: this.isNotificationSoundEnabled ? 'Y' : 'N',
+    };
+    this.customerService.updateNotificationSound(soundObj).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.toastService.success(res.message);
+        this.sharedService.getUserDetails();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   getAllCountries() {
@@ -162,13 +181,17 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   uploadImgAndUpdateCustomer(): void {
     let uploadObs = {};
     if (this.profileImg?.file?.name) {
-      uploadObs['profileImg'] = this.uploadService.uploadFile(this.profileImg?.file);
+      uploadObs['profileImg'] = this.uploadService.uploadFile(
+        this.profileImg?.file
+      );
     }
-  
+
     if (this.profileCoverImg?.file?.name) {
-      uploadObs['profileCoverImg'] = this.uploadService.uploadFile(this.profileCoverImg?.file);
+      uploadObs['profileCoverImg'] = this.uploadService.uploadFile(
+        this.profileCoverImg?.file
+      );
     }
-  
+
     if (Object.keys(uploadObs)?.length > 0) {
       this.spinner.show();
       forkJoin(uploadObs).subscribe({
@@ -176,14 +199,20 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
           if (res?.profileImg?.body?.url) {
             this.profileImg['file'] = null;
             this.profileImg['url'] = res?.profileImg?.body?.url;
-            this.sharedService['userData']['ProfilePicName'] = this.profileImg['url'];
-            this.editForm.patchValue({ ProfilePicName: this.profileImg['url'] });
+            this.sharedService['userData']['ProfilePicName'] =
+              this.profileImg['url'];
+            this.editForm.patchValue({
+              ProfilePicName: this.profileImg['url'],
+            });
           }
           if (res?.profileCoverImg?.body?.url) {
             this.profileCoverImg['file'] = null;
             this.profileCoverImg['url'] = res?.profileCoverImg?.body?.url;
-            this.sharedService['userData']['CoverPicName'] = this.profileCoverImg['url'];
-            this.editForm.patchValue({ CoverPicName: this.profileCoverImg['url'] });
+            this.sharedService['userData']['CoverPicName'] =
+              this.profileCoverImg['url'];
+            this.editForm.patchValue({
+              CoverPicName: this.profileCoverImg['url'],
+            });
           }
           this.updateCustomer();
           this.spinner.hide();
@@ -195,7 +224,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     } else {
       this.updateCustomer();
     }
-  }  
+  }
 
   updateCustomer(): void {
     if (this.profileId) {
@@ -263,12 +292,14 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
 
   onChangeTag(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
-    const value = inputElement.value.replaceAll(' ', '').replaceAll(/\s*,+\s*/g, ',');
+    const value = inputElement.value
+      .replaceAll(' ', '')
+      .replaceAll(/\s*,+\s*/g, ',');
     this.editForm.patchValue({
       Username: value,
     });
   }
-  
+
   convertToUppercase(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     let inputValue = inputElement.value.replace(/\s/g, '');
