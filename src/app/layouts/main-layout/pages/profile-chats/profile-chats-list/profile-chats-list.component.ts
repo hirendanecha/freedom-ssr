@@ -1426,7 +1426,7 @@ export class ProfileChatsListComponent
     if (this.userChat?.groupId) {
       this.relevantMembers = [];
       for (let group of this.filteredMessageList) {
-        this.groupData.memberList.forEach((member) => {
+        this.groupData?.memberList?.forEach((member) => {
           const matchingMessage = group.messages.find(
             (msg) =>
               member?.switchDate < msg.createdDate &&
