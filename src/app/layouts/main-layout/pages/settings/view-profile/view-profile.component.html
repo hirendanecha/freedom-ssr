@@ -42,14 +42,21 @@
           </div>
         </div>
         <div
-          class="col-md-5 profile text-start d-flex align-items-center justify-content-sm-center mt-2 mt-md-0"
+          class="col-md-5 profile text-start d-flex align-items-center justify-content-sm-center mt-2 mt-md-0 position-relative"
         >
           <label for="">Search Profile posts:</label>
           <input
             type="text"
+            [(ngModel)]="searchText"
             class="post-search-input"
             placeholder="Search"
             (input)="searchPosts($event)"
+          />
+          <fa-icon
+            *ngIf="searchText"
+            [icon]="['fas', 'xmark']"
+            class="font-12-px position-absolute close-icon"
+            (click)="searchText = ''"
           />
         </div>
       </div>
