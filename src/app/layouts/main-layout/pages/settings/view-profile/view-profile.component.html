@@ -14,7 +14,7 @@
           />
         </div>
       </div>
-      <div class="row mt-5">
+      <div class="row mt-5 justify-content-between">
         <div class="col-md-4 profile text-start d-flex align-items-center">
           <img
             class="preview-image w-120-px h-120-px"
@@ -40,6 +40,17 @@
               </button>
             </div>
           </div>
+        </div>
+        <div
+          class="col-md-5 profile text-start d-flex align-items-center justify-content-sm-center mt-2 mt-md-0"
+        >
+          <label for="">Search Profile posts:</label>
+          <input
+            type="text"
+            class="post-search-input"
+            placeholder="Search"
+            (input)="searchPosts($event)"
+          />
         </div>
       </div>
       <div class="row mt-8">
@@ -83,9 +94,11 @@
   <div class="d-lg-flex d-block w-100 gap-5 min-vh-100">
     <div class="flex-column mb-15 w-100">
       <ng-container *ngIf="activeTab === 1">
-        <app-post-list class="post-card"
+        <app-post-list
+          class="post-card"
           parentComponent="ViewProfileComponent"
           [id]="profileId"
+          [searchText]="this.searchText"
         />
       </ng-container>
       <ng-container *ngIf="activeTab === 2">
@@ -185,7 +198,7 @@
         </ng-template>
       </ng-container>
       <ng-container *ngIf="activeTab === 3">
-        <ng-container  *ngIf="pdfList.length; else noData">
+        <ng-container *ngIf="pdfList.length; else noData">
           <div class="single-box" *ngFor="let item of pdfList">
             <div class="d-flex p-4 justify-content-between">
               <div class="d-flex">
@@ -207,15 +220,21 @@
                       item?.Username
                     }}</a>
                     <span class="smtxt time-schedule ms-1">
-                    <fa-icon class="ms-2" [icon]="['fas', 'clock']" />
-                      {{ item.postcreationdate | dateDay }}</span>
+                      <fa-icon class="ms-2" [icon]="['fas', 'clock']" />
+                      {{ item.postcreationdate | dateDay }}</span
+                    >
                   </h6>
                   <!-- <span class="ms-1 cursor" (click)="viewUserPost(item.id)">{{ item?.pdfName }} </span> -->
                   <!-- <a class="ms-1 cursor" [routerLink]="'/post/' + item?.id" target="_blank">{{ item?.pdfName }}</a> -->
-                  <a class="ms-1 cursor c-color" [href]="item?.pdfUrl" target="_blank">{{ item?.pdfName }}</a>
+                  <a
+                    class="ms-1 cursor c-color"
+                    [href]="item?.pdfUrl"
+                    target="_blank"
+                    >{{ item?.pdfName }}</a
+                  >
                 </div>
               </div>
-  
+
               <div class="btn-group cus-dropdown d-flex gap-3">
                 <div ngbDropdown class="d-inline-block">
                   <button class="dropdown-btn" ngbDropdownToggle>

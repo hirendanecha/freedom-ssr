@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -31,6 +38,8 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   communityId = '';
   isExpand = false;
   pdfList: any = [];
+  searchText: string = '';
+  hasShownWarning: boolean = false;
   constructor(
     private modalService: NgbActiveModal,
     private modal: NgbModal,
@@ -193,5 +202,20 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       }
     });
+  }
+
+  searchPosts(event): void {
+    if (event.target.value.length > 3) {
+      this.searchText = event.target.value;
+      console.log(this.searchText);
+      this.hasShownWarning = false;
+    } else if (!event.target.value.length) {
+      this.searchText = '';
+    } else {
+      if (!this.hasShownWarning) {
+        this.toastService.warring('Please enter at least 4 characters');
+        this.hasShownWarning = true;
+      }
+    }
   }
 }

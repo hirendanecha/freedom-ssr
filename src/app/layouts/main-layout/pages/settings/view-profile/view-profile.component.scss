@@ -10,6 +10,20 @@
     max-height: 90px;
     border-radius: 10px;
   }
+
+  .post-search-input {
+    max-width: 225px;
+    background-color: unset;
+    border-bottom: 1px solid;
+    border-radius: 0;
+
+    &:focus {
+      box-shadow: unset;
+      border-left: 0;
+      border-right: 0;
+      border-top: 0;
+    }
+  }
 }
 .list-content {
   background: var(--section-1st-color);
@@ -58,6 +72,6 @@
   }
 }
 
-.c-color{
-  color: var( --para-2nd-color);
+.c-color {
+  color: var(--para-2nd-color);
 }
