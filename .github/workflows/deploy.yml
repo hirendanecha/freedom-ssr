@@ -23,6 +23,9 @@ jobs:
     - name: Build client-side and server-side
       run: |
         npm run dev:build:ssr
+        
+    - name: Set Permissions
+      run: | chmod 600 ./config/freedom.pem
 
     - name: Deploy via SFTP with SSH Key
       uses: appleboy/scp-action@v0.1.5
