@@ -16,6 +16,25 @@
     height: 220px;
   }
 
+  .edit-post ::ng-deep {
+    app-tag-user-input .tag-input-div {
+      max-height: 300px;
+      overflow-y: auto;
+      div,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      a,
+      span,
+      p {
+        white-space: normal;
+      }
+    }
+  }
+
   ::ng-deep {
     mention-list {
       top: 70px !important;

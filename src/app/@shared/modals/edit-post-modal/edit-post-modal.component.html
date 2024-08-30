@@ -9,7 +9,7 @@
   />
 </div>
 
-<div class="modal-body text-start">
+<div class="modal-body edit-post text-start">
   <!-- <span>{{ message }}</span> -->
   <div class="d-flex align-items-start">
     <div class="d-center align-items-baseline">
@@ -64,7 +64,6 @@
             <label class="file" *ngIf="!(postMediaData?.[0]?.imageUrl || selectedImage)">
               <input
                 type="file"
-                multiple
                 accept="application/pdf"
                 (change)="onPostFileSelect($event)"
                 [disabled]="postData?.meta?.metaimage"
