@@ -14,7 +14,7 @@ import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { CustomerService } from '../../services/customer.service';
 import { PostService } from '../../services/post.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { SocketService } from '../../services/socket.service';
+import { SharedService } from '../../services/shared.service';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 import { EmojiPaths } from '../../constant/emoji';
@@ -50,18 +50,22 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   copyImage: any;
 
   emojiPaths = EmojiPaths;
+  profileId: number;
 
   constructor(
     private renderer: Renderer2,
     private customerService: CustomerService,
     private postService: PostService,
     private spinner: NgxSpinnerService,
-    private socketService: SocketService,
+    private sharedService: SharedService,
     private messageService: MessageService
   ) {
     this.metaDataSubject.pipe(debounceTime(5)).subscribe(() => {
       this.getMetaDataFromUrlStr();
       this.checkUserTagFlag();
+    });
+    this.sharedService.loggedInUser$.subscribe((data) => {
+      this.profileId = data?.profileId;
     });
   }
 
@@ -275,7 +279,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         .subscribe({
           next: (res: any) => {
             if (res?.data?.length > 0) {
-              this.userList = res.data.map((e) => e);
+              this.userList = res.data.filter((user) => user.Id !== this.profileId);                    
             } else {
               this.clearUserSearchData();
             }
