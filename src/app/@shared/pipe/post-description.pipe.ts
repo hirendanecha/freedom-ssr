@@ -13,9 +13,31 @@ export class TruncatePipe implements PipeTransform {
   name: 'stripHtml'
 })
 export class StripHtmlPipe implements PipeTransform {
+  // transform(value: string): string {
+  //   const div = document.createElement('div');
+  //   div.innerHTML = value;
+  //   if (div.querySelector('[data-id]')) {
+  //     return div.innerHTML;
+  //   }
+  //   return div.innerText || div.textContent || '';
+  // }
   transform(value: string): string {
     const div = document.createElement('div');
     div.innerHTML = value;
-    return div.innerText || div.textContent || '';
+    const processNode = (node: Node): string => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const element = node as HTMLElement;
+        if (element.tagName.toLowerCase() === 'a' && element.hasAttribute('data-id')) {
+          return element.outerHTML;
+        } else {
+          return Array.from(element.childNodes).map(processNode).join('');
+        }
+      } else if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent || '';
+      }
+      return '';
+    };
+    const result = processNode(div);
+    return result || div.textContent || '';
   }
 }

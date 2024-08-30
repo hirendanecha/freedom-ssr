@@ -468,7 +468,7 @@
         line-height: 22px !important;
         margin: unset !important;
         background-color: unset !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
       }
       img,
       svg {
@@ -499,7 +499,6 @@
       h5,
       h6,
       span,
-      a,
       em,
       li {
         font-size: 18px !important;
@@ -511,6 +510,13 @@
       em,
       span {
         color: var(--para-2nd-color) !important;
+      }
+      a{
+        font-size: 18px !important;
+        line-height: normal;
+        margin: unset;
+        background-color: unset !important;
+        font-weight: 600 !important;
       }
       .comment-description {
         img {
