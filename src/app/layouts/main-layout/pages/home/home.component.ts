@@ -156,6 +156,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       return;
     }
+    let existingFileType = '';
+    if (this.postMediaData.length > 0) {
+      existingFileType = this.postMediaData[0].file.type.split('/')[0];
+    }
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const fileData: any = {
@@ -163,6 +167,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         pdfName: null,
         imageUrl: null,
       };
+      const fileType = file.type.split('/')[0]
+      if (existingFileType && fileType !== existingFileType) {
+        this.toastService.warring('Please select only one type of file at a time.');
+        return;
+      }
       if (
         file.type.includes('application/pdf') ||
         file.type.includes('application/msword') ||
@@ -180,7 +189,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (files?.[0]?.type?.includes('application/')) {
       this.postMediaData = this.selectedFiles;
     } else {
-      this.postMediaData = (this.postMediaData || []).concat(this.selectedFiles);
+      this.postMediaData = (this.postMediaData || []).concat(
+        this.selectedFiles
+      );
     }
     // console.log('Selected files:', this.postMediaData);
   }
@@ -301,13 +312,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 // } else {
                 // this.postMediaData['file'] = null;
                 // this.postData['pdfUrl'] = res?.body?.pdfUrl;
-                if (this.postData['imagesList']?.length) {
-                  for (const media of res?.body?.imagesList) {
-                    this.postData['imagesList'].push(media);
-                  }
-                } else {
-                  this.postData['imagesList'] = res?.body?.imagesList;
+                // if (this.postData['imagesList']?.length) {
+                for (const media of res?.body?.imagesList) {
+                  this.postData['imagesList'].push(media);
                 }
+                // } else {
+                // this.postData.imagesList = res?.body?.imagesList;
+                // }
                 this.createOrEditPost();
                 // }
               }
@@ -336,6 +347,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.postData.metadescription = null;
       }
       this.toastService.success('Post created successfully.');
+      console.log(this.postData);
+
       this.socketService?.createOrEditPost(this.postData);
       this.buttonClicked = false;
       this.resetPost();
@@ -568,7 +581,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     modalRef.result.then((res) => {
       if (res.id) {
         this.postData = res;
-        console.log(this.postData);
         this.uploadPostFileAndCreatePost();
       }
     });

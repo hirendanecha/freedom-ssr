@@ -36,6 +36,7 @@ export class EditPostModalComponent implements AfterViewInit {
   selectedImage = '';
 
   postMediaData: any[] = [];
+  selectedFiles: any[] = [];
   editMediaData: any[] = [];
   removeImagesList: any[] = [];
 
@@ -53,7 +54,11 @@ export class EditPostModalComponent implements AfterViewInit {
       this.postData = { ...this.data };
       this.changeDetectorRef.detectChanges();
       // let media = this.postData?.imagesList;
-      this.postMediaData = this.postData?.imagesList;
+      this.postMediaData = this.postData?.imagesList.length
+        ? this.postData.imagesList
+        : this.postData.pdfUrl
+        ? [{ pdfUrl: this.postData.pdfUrl }]
+        : [];
     }
   }
 
@@ -89,7 +94,10 @@ export class EditPostModalComponent implements AfterViewInit {
       );
       return;
     }
-    const selectedFiles: any[] = [];
+    let existingFileType = '';
+    if (this.combinedMediaData.length > 0) {
+      existingFileType = this.combinedMediaData[0].file.type.split('/')[0];
+    }
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const fileData: any = {
@@ -97,6 +105,13 @@ export class EditPostModalComponent implements AfterViewInit {
         pdfName: null,
         imageUrl: null,
       };
+      const fileType = file.type.split('/')[0];
+      if (existingFileType && fileType !== existingFileType) {
+        this.toastService.warring(
+          'Please select only one type of file at a time.'
+        );
+        return;
+      }
       if (
         file.type.includes('application/pdf') ||
         file.type.includes('application/msword') ||
@@ -108,25 +123,33 @@ export class EditPostModalComponent implements AfterViewInit {
       } else if (file.type.includes('image/')) {
         fileData.imageUrl = URL.createObjectURL(file);
       }
-      selectedFiles.push(fileData);
+      this.selectedFiles.push(fileData);
       // console.log(`File ${i + 1}:`, fileData);
     }
-    this.editMediaData = (this.editMediaData || []).concat(selectedFiles);
+    this.editMediaData = (this.editMediaData || []).concat(this.selectedFiles);
     // console.log('Selected files:', this.postMediaData);
   }
 
-  removePostSelectedFile(media: any = {}): void {
-    if (media.id) {
-      this.removeImagesList.push({ id: media.id });
-      this.postMediaData = this.postMediaData.filter(
-        (ele) => ele.id != media.id
-      );
-      console.log(this.removeImagesList);
+  removePostSelectedFile(media: any = {}, type: string): void {
+    if (type === 'pdf') {
+      this.postData.pdfUrl = '';
+      this.postMediaData = [];
+      this.editMediaData = [];
+      this.selectedFiles = [];
+      return;
     } else {
-      this.editMediaData = this.editMediaData.filter(
-        (ele: any) => ele?.file?.name != media?.file?.name
-      );
-      console.log(this.editMediaData);
+      if (media.id) {
+        this.removeImagesList.push({ id: media.id });
+        this.postMediaData = this.postMediaData.filter(
+          (ele) => ele.id != media.id
+        );
+        console.log(this.removeImagesList);
+      } else {
+        this.editMediaData = this.editMediaData.filter(
+          (ele: any) => ele?.file?.name != media?.file?.name
+        );
+        console.log(this.editMediaData);
+      }
     }
   }
 

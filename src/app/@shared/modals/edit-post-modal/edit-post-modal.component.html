@@ -130,7 +130,7 @@
                       [icon]="['fas', 'xmark']"
                       class="position-absolute top-0 start-100 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
                       role="button"
-                      (click)="removePostSelectedFile(media)"
+                      (click)="removePostSelectedFile(media, 'image')"
                     />
                   </div>
                 </ng-container>
@@ -146,7 +146,7 @@
                       [icon]="['fas', 'xmark']"
                       class="position-absolute top-0 translate-middle badge bg-danger p-1 font-12-px c-pointer c-icon-color"
                       role="button"
-                      (click)="removePostSelectedFile(media)"
+                      (click)="removePostSelectedFile(media, 'pdf')"
                     />
                   </div>
                 </ng-container>
