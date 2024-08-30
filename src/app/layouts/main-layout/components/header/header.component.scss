@@ -54,6 +54,17 @@
         top: 30px;
         left: -240px;
       }
+
+      .input-area {
+        border: 1px solid var(--font-icon-color) !important;
+        &:focus-within {
+          outline: unset !important;
+        }
+        &::before {
+            content: attr(placeholder);
+            color: var(--font-icon-color);
+        }
+      }
     }
   }
 }
@@ -67,14 +78,13 @@
       }
     }
   }
-
 }
-.mobile-view{
+.mobile-view {
   display: flex;
   flex-direction: row;
   align-items: center;
 
-  .abs-area{
+  .abs-area {
     right: initial;
     top: 8px;
     left: 9px;

@@ -74,9 +74,10 @@ export class HeaderComponent {
     }
     this.channelId = +localStorage.getItem('channelId');
 
-    this.router.events.subscribe(event => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.hideSubHeader = this.router.url.includes('profile-chats');
+        console.log(this.hideSubHeader);
       }
     });
   }
@@ -187,7 +188,9 @@ export class HeaderComponent {
       redirectUrl += `?channelId=${channelId}`;
     }
     if (this.authToken) {
-      redirectUrl += channelId ? `&authToken=${this.authToken}` : `?authToken=${this.authToken}`;
+      redirectUrl += channelId
+        ? `&authToken=${this.authToken}`
+        : `?authToken=${this.authToken}`;
     }
     window.open(redirectUrl, '_blank');
   }

@@ -42,7 +42,7 @@
                 />
               </div>
               <div
-              *ngIf="tokenService.getCredentials()"
+                *ngIf="tokenService.getCredentials()"
                 class="icon-area d-center position-relative ms-7"
                 (click)="openNotificationsMobileModal()"
               >
@@ -53,7 +53,7 @@
                 <fa-icon [icon]="['fas', 'bell']" class="font-20-px" />
               </div>
               <a
-              *ngIf="tokenService.getCredentials()"
+                *ngIf="tokenService.getCredentials()"
                 class="icon-area d-center position-relative ms-7"
                 [routerLink]="['/profile-chats']"
                 target="_blank"
@@ -63,20 +63,20 @@
                   class="abs-area position-absolute d-center smtxt"
                 ></span> -->
                 <fa-icon [icon]="['fas', 'envelope']" class="font-20-px" />
-            </a>
+              </a>
             </div>
           </div>
         </ng-template>
 
         <div
           class="input-area h-48-px d-md-flex d-none align-items-center"
-          *ngIf="tokenService.getCredentials()"
+          *ngIf="tokenService.getCredentials() && !hideSubHeader"
         >
           <fa-icon [icon]="['fas', 'magnifying-glass']" class="me-1" />
           <input
             type="text"
             name="search"
-            placeholder="Search"
+            placeholder="Search end users"
             [(ngModel)]="searchText"
             autocomplete="off"
             (keyup)="getUserList()"
@@ -143,10 +143,15 @@
         <li>
           <!-- (click)="redirectToTube()" -->
           <a
-          [href]="
-          channelId 
-            ? environment.tubeUrl + '?channelId=' + channelId + (authToken ? '&authToken=' + authToken : '') 
-            : environment.tubeUrl + (authToken ? '?authToken=' + authToken : '')"
+            [href]="
+              channelId
+                ? environment.tubeUrl +
+                  '?channelId=' +
+                  channelId +
+                  (authToken ? '&authToken=' + authToken : '')
+                : environment.tubeUrl +
+                  (authToken ? '?authToken=' + authToken : '')
+            "
             target="_blank"
             routerLinkActive="active"
             class="nav-icon cursor"
@@ -226,7 +231,9 @@
             </button>
           </ng-container>
 
-          <ng-container *ngIf="(breakpointService?.screen | async).xxl.lessThen">
+          <ng-container
+            *ngIf="(breakpointService?.screen | async).xxl.lessThen"
+          >
             <button
               class="button d-flex align-items-center gap-2 ms-5"
               (click)="openRightSidebar()"
