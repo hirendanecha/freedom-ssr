@@ -98,6 +98,7 @@ export class ProfileChatsListComponent
   messageInputValue: string = '';
   firstTimeScroll = false;
   activePage = 1;
+  pageSize = 25;
   hasMoreData = false;
   typingData: any = {};
   isTyping = false;
@@ -1295,7 +1296,7 @@ export class ProfileChatsListComponent
   getMessagesBySocket() {
     const messageObj = {
       page: this.activePage,
-      size: 25,
+      size: this.pageSize,
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
     };
@@ -1463,26 +1464,67 @@ export class ProfileChatsListComponent
   }
 
   scrollToHighlighted(index: number) {
+    // this.messageElements.forEach((element) => {
+    //   const currentHighlighted =
+    //     element.nativeElement.querySelector('.highlighted');
+    //   if (currentHighlighted) {
+    //     this.renderer.removeClass(currentHighlighted, 'highlighted');
+    //   }
+    // });
+    // const highlightedElements = this.messageElements
+    //   .toArray()
+    //   .filter(
+    //     (element) => element.nativeElement.querySelector('.highlight') !== null
+    //   );
+
+    // if (index >= 0 && index < highlightedElements.length) {
+    //   const element = highlightedElements[index];
+    //   const highlightedSpan = element.nativeElement.querySelector('.highlight');
+
+    //   if (highlightedSpan) {
+    //     this.renderer.addClass(highlightedSpan, 'highlighted');
+    //     element.nativeElement.scrollIntoView({
+    //       behavior: 'smooth',
+    //       block: 'center',
+    //     });
+    //   }
+    // }
+
+    // Remove the 'highlighted' class from any currently highlighted element
     this.messageElements.forEach((element) => {
-      const currentHighlighted =
-        element.nativeElement.querySelector('.highlighted');
-      if (currentHighlighted) {
-        this.renderer.removeClass(currentHighlighted, 'highlighted');
-      }
+      // const currentHighlighted =
+      //   element.nativeElement.querySelector('.highlighted');
+      // console.log(element.nativeElement);
+      // if (currentHighlighted) {
+      //   this.renderer.removeClass(currentHighlighted, 'highlighted');
+      // }
+      const highlightedSpans =
+        element.nativeElement.querySelectorAll('.highlighted');
+      highlightedSpans.forEach((span) => {
+        this.renderer.removeClass(span, 'highlighted');
+      });
     });
+
+    // Find all elements that contain highlighted words
     const highlightedElements = this.messageElements
       .toArray()
       .filter(
-        (element) => element.nativeElement.querySelector('.highlight') !== null
+        (element) =>
+          element.nativeElement.querySelectorAll('.highlight').length > 0
       );
 
     if (index >= 0 && index < highlightedElements.length) {
       const element = highlightedElements[index];
-      const highlightedSpan = element.nativeElement.querySelector('.highlight');
+      const highlightedSpans =
+        element.nativeElement.querySelectorAll('.highlight');
 
-      if (highlightedSpan) {
-        this.renderer.addClass(highlightedSpan, 'highlighted');
-        element.nativeElement.scrollIntoView({
+      // Iterate through each highlighted word within the element
+      highlightedSpans.forEach((span) => {
+        this.renderer.addClass(span, 'highlighted');
+      });
+      const firstHighlightedSpan = highlightedSpans[0];
+      if (firstHighlightedSpan) {
+        firstHighlightedSpan.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
         });
