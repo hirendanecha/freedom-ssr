@@ -300,10 +300,6 @@ export class ProfileChatsListComponent
       // console.log(this.sharedService.onlineUserList);
     });
     this.socketService.socket?.emit('online-users');
-    this.socketService.socket?.on('typing', (data) => {
-      // console.log('typingData', data)
-      this.typingData = data;
-    });
     if (this.userChat.groupId) {
       this.socketService.socket.on('read-message-user', (data) => {
         this.readMessagesBy = data?.filter(
@@ -353,6 +349,9 @@ export class ProfileChatsListComponent
     }
     this.messageElements?.changes?.subscribe(() => {
       this.resetIndex();
+    });
+    this.socketService.socket?.on('typing', (data) => {
+      this.typingData = data;
     });
   }
 

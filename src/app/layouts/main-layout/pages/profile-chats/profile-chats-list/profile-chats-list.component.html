@@ -453,7 +453,7 @@
             *ngFor="let msg of filteredMessageList"
           >
             <span class="d-flex w-100 justify-content-center custom-border">
-              {{ msg?.date }}</span
+              {{ msg?.date || 'Today' }}</span
             >
             <ng-container *ngFor="let message of msg?.messages; let i = index">
               <div
