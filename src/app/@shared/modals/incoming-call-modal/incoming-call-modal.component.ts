@@ -1,10 +1,12 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   HostListener,
   Input,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Howl } from 'howler';
@@ -29,6 +31,7 @@ export class IncomingcallModalComponent
   @Input() title: string = 'Incoming call...';
   @Input() calldata: any;
   @Input() sound: any;
+  @ViewChild('focusElement') focusElement!: ElementRef;
   hangUpTimeout: any;
   currentURL: any = [];
   profileId: number;
@@ -69,7 +72,7 @@ export class IncomingcallModalComponent
     // }
     this.sharedService.loginUserInfo.subscribe((user) => {
       const callNotificationSound = user.callNotificationSound;
-      if (callNotificationSound === 'Y') {
+      if (callNotificationSound !== 'N' && this.calldata.id) {
         if (this.sound) {
           this.sound?.play();
         }
@@ -86,6 +89,9 @@ export class IncomingcallModalComponent
         this.activateModal.close('cancel');
       }
     });
+    if (this.focusElement) {
+      this.focusElement.nativeElement.click();
+    }
   }
 
   ngOnInit(): void {
@@ -198,5 +204,7 @@ export class IncomingcallModalComponent
 
   ngOnDestroy(): void {
     this.soundEnabledSubscription?.unsubscribe();
+    this.calldata = null;
+    this.sound = null;
   }
 }

@@ -1,9 +1,11 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   Input,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from '../../services/socket.service';
@@ -25,6 +27,7 @@ export class OutGoingCallModalComponent
   @Input() title: string = 'Outgoing call...';
   @Input() calldata: any;
   @Input() sound: any;
+  @ViewChild('focusElement') focusElement!: ElementRef;
 
   hangUpTimeout: any;
   soundEnabledSubscription: Subscription;
@@ -48,7 +51,7 @@ export class OutGoingCallModalComponent
     // }
     this.sharedService.loginUserInfo.subscribe((user) => {
       const callNotificationSound = user.callNotificationSound;
-      if (callNotificationSound === 'Y') {
+      if (callNotificationSound !== 'N' && this.calldata.id) {
         if (this.sound) {
           this.sound?.play();
         }
@@ -79,6 +82,9 @@ export class OutGoingCallModalComponent
         this.activateModal.close('success');
       }
     });
+    if (this.focusElement) {
+      this.focusElement.nativeElement.click();
+    }
   }
 
   ngOnInit(): void {
@@ -118,5 +124,7 @@ export class OutGoingCallModalComponent
 
   ngOnDestroy(): void {
     this.soundEnabledSubscription?.unsubscribe();
+    this.calldata = null;
+    this.sound = null;
   }
 }
