@@ -66,6 +66,13 @@ export class AppointmentCallComponent implements OnInit {
       },
       enableNoAudioDetection: true,
       enableNoisyMicDetection: true,
+      transcription: {
+        enabled: true,
+        translationLanguages: ['en-US', 'es','dk','fr', 'it', 'ja', 'ko', 'pt-BR', 'ru', 'sv-SE', 'zh-TW','gu'],
+        useAppLanguage: false,
+        preferredLanguage: 'en-US',
+        autoTranscribeOnRecord: true,
+      },
     };
 
     const api = new JitsiMeetExternalAPI(this.domain, this.options);
