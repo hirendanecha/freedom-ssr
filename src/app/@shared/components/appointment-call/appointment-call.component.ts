@@ -56,26 +56,29 @@ export class AppointmentCallComponent implements OnInit {
       };
     }
     const appointmentURLCall =
-      this.route.snapshot['_routerState'].url.split('/buzz-call/')[1];
-    this.options = {
-      roomName: appointmentURLCall,
-      parentNode: document.querySelector('#meet'),
-      configOverwrite: {
-        startWithVideoMuted: true,
-        defaultLanguage: 'en',
-      },
-      enableNoAudioDetection: true,
-      enableNoisyMicDetection: true,
-      transcription: {
-        enabled: true,
-        translationLanguages: ['en-US', 'es','dk','fr', 'it', 'ja', 'ko', 'pt-BR', 'ru', 'sv-SE', 'zh-TW','gu'],
-        useAppLanguage: false,
-        preferredLanguage: 'en-US',
-        autoTranscribeOnRecord: true,
-      },
-    };
-
-    const api = new JitsiMeetExternalAPI(this.domain, this.options);
+    this.route.snapshot['_routerState'].url.split('/buzz-call/')[1];
+  this.options = {
+    roomName: appointmentURLCall,
+    parentNode: document.querySelector('#meet'),
+    configOverwrite: {
+      startWithVideoMuted: true,
+      defaultLanguage: 'en',
+      enableTranscription: true,
+      transcriptionEnabled: true,
+      transcribingEnabled: true,
+    },
+    enableNoAudioDetection: true,
+    enableNoisyMicDetection: true,
+    transcription: {
+      enabled: true,
+      translationLanguages: ['en-US', 'es','dk','fr', 'it', 'ja', 'ko', 'pt-BR', 'ru', 'sv-SE', 'zh-TW','gu'],
+      useAppLanguage: false,
+      preferredLanguage: 'en-US',
+      autoTranscribeOnRecord: true,
+    },
+  };
+  
+  const api = new JitsiMeetExternalAPI(this.domain, this.options);
     const numberOfParticipants = api.getNumberOfParticipants();
     const iframe = api.getIFrame();
     // console.log(numberOfParticipants);
