@@ -92,10 +92,10 @@
                 alt="avatar"
               />
               <div class="d-flex gap-3 align-items-baseline">
-                <p class="cursor mt-2">
+                <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + post.profileid" target="_blank">
                   {{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
-                </p>
-
+                </a>
+                
                 <button>
                   <a
                     class="droplist d-flex align-items-center gap-2"
