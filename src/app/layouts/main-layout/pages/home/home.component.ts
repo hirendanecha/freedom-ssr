@@ -167,9 +167,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         pdfName: null,
         imageUrl: null,
       };
-      const fileType = file.type.split('/')[0]
+      const fileType = file.type.split('/')[0];
       if (existingFileType && fileType !== existingFileType) {
-        this.toastService.warring('Please select only one type of file at a time.');
+        this.toastService.warring(
+          'Please select only one type of file at a time.'
+        );
         return;
       }
       if (
@@ -312,13 +314,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 // } else {
                 // this.postMediaData['file'] = null;
                 // this.postData['pdfUrl'] = res?.body?.pdfUrl;
-                // if (this.postData['imagesList']?.length) {
-                for (const media of res?.body?.imagesList) {
-                  this.postData['imagesList'].push(media);
+                if (this.postData['imagesList']?.length) {
+                  for (const media of res?.body?.imagesList) {
+                    this.postData['imagesList'].push(media);
+                  }
+                } else {
+                  this.postData.imagesList = res?.body?.imagesList;
                 }
-                // } else {
-                // this.postData.imagesList = res?.body?.imagesList;
-                // }
                 this.createOrEditPost();
                 // }
               }
