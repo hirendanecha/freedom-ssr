@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import {
   NgbDropdown,
   NgbModal,
@@ -46,8 +46,8 @@ export class HeaderComponent {
 
   hideSearch = false;
   hideSubHeader: boolean = false;
+  hideOngoingCallButton: boolean = false;
   authToken = localStorage.getItem('auth-token');
-
   constructor(
     private modalService: NgbModal,
     public sharedService: SharedService,
@@ -77,7 +77,10 @@ export class HeaderComponent {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.hideSubHeader = this.router.url.includes('profile-chats');
+        this.hideOngoingCallButton = this.router.url.includes('buzz-call');
         console.log(this.hideSubHeader);
+        this.sharedService.callId = sessionStorage.getItem('callId') || null;
+        console.log(this.sharedService.callId);
       }
     });
   }

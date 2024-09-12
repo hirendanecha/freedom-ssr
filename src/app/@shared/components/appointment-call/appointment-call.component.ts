@@ -62,6 +62,7 @@ export class AppointmentCallComponent implements OnInit {
     }
     const appointmentURLCall =
       this.route.snapshot['_routerState'].url.split('/buzz-call/')[1];
+    sessionStorage.setItem('callId', appointmentURLCall);
     this.screenSubscription = this.breakpointService?.screen.subscribe(
       (screen) => {
         this.isMobileScreen = screen.md?.lessThen ?? false;
@@ -85,6 +86,8 @@ export class AppointmentCallComponent implements OnInit {
     const api = new JitsiMeetExternalAPI(this.domain, this.options);
 
     api.on('readyToClose', () => {
+      this.sharedService.callId = null;
+      sessionStorage.removeItem('callId');
       this.router.navigate(['/profile-chats']).then(() => {
         // api.dispose();
         // console.log('opaaaaa');

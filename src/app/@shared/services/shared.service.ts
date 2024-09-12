@@ -23,7 +23,7 @@ export class SharedService {
     new BehaviorSubject<boolean>(false);
   loginUserInfo = new BehaviorSubject<any>(null);
   loggedInUser$ = this.loginUserInfo.asObservable();
-
+  callId: string;
   constructor(
     public modalService: NgbModal,
     private spinner: NgxSpinnerService,

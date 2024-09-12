@@ -65,6 +65,24 @@
                 <fa-icon [icon]="['fas', 'envelope']" class="font-20-px" />
               </a>
             </div>
+            <div
+              class="single-item ms-5"
+              *ngIf="sharedService.callId && !hideOngoingCallButton"
+            >
+              <div class="ongoing-call d-center position-relative">
+                <a
+                  routerLinkActive="active"
+                  [routerLink]="['/buzz-call/' + sharedService.callId]"
+                  ngbTooltip="On going Call"
+                  placement="bottom"
+                >
+                  <fa-icon
+                    [icon]="['fas', 'phone-volume']"
+                    class="font-20-px"
+                  />
+                </a>
+              </div>
+            </div>
           </div>
         </ng-template>
 
@@ -115,9 +133,9 @@
         <li>
           <!-- (click)="scrollToTop()" -->
           <!-- (dblclick)="reloadPage()" -->
+          <!-- (click)="reloadPage()" -->
           <a
             routerLink="/home"
-            (click)="reloadPage()"
             routerLinkActive="active"
             class="nav-icon home cursor"
             data-toggle="tooltip"
@@ -168,6 +186,24 @@
         class="right-area d-lg-flex d-none justify-content-end align-items-center gap-6 cus-z p-0"
         *ngIf="tokenService.getCredentials()"
       >
+        <div
+          class="single-item"
+          *ngIf="sharedService.callId && !hideOngoingCallButton"
+        >
+          <div class="ongoing-call d-center position-relative">
+            <!-- [routerLink]="['/profile-chats']" -->
+            <a
+              routerLinkActive="active"
+              [routerLink]="['/buzz-call/' + sharedService.callId]"
+            >
+              <fa-icon [icon]="['fas', 'phone-volume']" class="font-20-px" />
+            </a>
+            <!-- <span
+            *ngIf="sharedService.isNotify"
+            class="abs-area position-absolute d-center smtxt"
+          ></span> -->
+          </div>
+        </div>
         <div class="single-item">
           <div class="icon-area d-center position-relative">
             <!-- [routerLink]="['/profile-chats']" -->
