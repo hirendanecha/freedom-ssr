@@ -8,6 +8,8 @@ import { SharedService } from '../../services/shared.service';
 import { MessageService } from '../../services/message.service';
 import { SeoService } from '../../services/seo.service';
 import { TokenStorageService } from '../../services/token-storage.service';
+import { BreakpointService } from '../../services/breakpoint.service';
+import { Subscription } from 'rxjs';
 
 declare var JitsiMeetExternalAPI: any;
 @Component({
@@ -27,6 +29,8 @@ export class AppointmentCallComponent implements OnInit {
   selectedRoomId: number;
   isRoomCreated: boolean = false;
   openChatId: any = {};
+  isMobileScreen: boolean;
+  screenSubscription!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,7 +41,8 @@ export class AppointmentCallComponent implements OnInit {
     private sharedService: SharedService,
     private messageService: MessageService,
     private seoService: SeoService,
-    public tokenService: TokenStorageService
+    public tokenService: TokenStorageService,
+    private breakpointService: BreakpointService
   ) {
     const data = {
       title: 'Buzz Chat',
@@ -56,32 +61,28 @@ export class AppointmentCallComponent implements OnInit {
       };
     }
     const appointmentURLCall =
-    this.route.snapshot['_routerState'].url.split('/buzz-call/')[1];
-  this.options = {
-    roomName: appointmentURLCall,
-    parentNode: document.querySelector('#meet'),
-    configOverwrite: {
-      startWithVideoMuted: true,
-      defaultLanguage: 'en',
-      enableTranscription: true,
-      transcriptionEnabled: true,
-      transcribingEnabled: true,
-    },
-    enableNoAudioDetection: true,
-    enableNoisyMicDetection: true,
-    transcription: {
-      enabled: true,
-      translationLanguages: ['en-US', 'es','dk','fr', 'it', 'ja', 'ko', 'pt-BR', 'ru', 'sv-SE', 'zh-TW','gu'],
-      useAppLanguage: false,
-      preferredLanguage: 'en-US',
-      autoTranscribeOnRecord: true,
-    },
-  };
-  
-  const api = new JitsiMeetExternalAPI(this.domain, this.options);
-    const numberOfParticipants = api.getNumberOfParticipants();
-    const iframe = api.getIFrame();
-    // console.log(numberOfParticipants);
+      this.route.snapshot['_routerState'].url.split('/buzz-call/')[1];
+    this.screenSubscription = this.breakpointService?.screen.subscribe(
+      (screen) => {
+        this.isMobileScreen = screen.md?.lessThen ?? false;
+      }
+    );
+
+    this.options = {
+      roomName: appointmentURLCall,
+      parentNode: document.querySelector('#meet'),
+      configOverwrite: {
+        startWithVideoMuted: true,
+        defaultLanguage: 'en',
+      },
+      enableNoAudioDetection: true,
+      enableNoisyMicDetection: true,
+      interfaceConfigOverwrite: {
+        TOOLBAR_ALWAYS_VISIBLE: this.isMobileScreen ? true : false,
+      },
+    };
+
+    const api = new JitsiMeetExternalAPI(this.domain, this.options);
 
     api.on('readyToClose', () => {
       this.router.navigate(['/profile-chats']).then(() => {
@@ -159,5 +160,11 @@ export class AppointmentCallComponent implements OnInit {
 
   onSelectChat(id) {
     this.selectedRoomId = id;
+  }
+
+  ngOnDestroy(): void {
+    if (this.screenSubscription) {
+      this.screenSubscription.unsubscribe();
+    }
   }
 }
