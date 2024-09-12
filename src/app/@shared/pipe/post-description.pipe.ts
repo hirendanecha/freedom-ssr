@@ -29,6 +29,8 @@ export class StripHtmlPipe implements PipeTransform {
         const element = node as HTMLElement;
         if (element.tagName.toLowerCase() === 'a' && element.hasAttribute('data-id')) {
           return element.outerHTML;
+        } else if (element.tagName.toLowerCase() === 'br') {
+          return '\n';
         } else {
           return Array.from(element.childNodes).map(processNode).join('');
         }
