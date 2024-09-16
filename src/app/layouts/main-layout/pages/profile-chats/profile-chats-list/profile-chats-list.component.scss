@@ -16,10 +16,16 @@
       height: calc(100vh - 310px);
       // min-height: calc(100vh - 350px);
       @media (min-width: 576px) and (max-width: 991px) {
-        height: calc(88vh - 310px) !important;
+        // height: calc(88vh - 310px) !important;
+        height: calc(82vh - 260px) !important;
       }
       @media (max-width: 575px) {
-        height: calc(82vh - 310px) !important;
+        // height: calc(82vh - 310px) !important;
+        height: calc(82vh - 260px) !important;
+      }
+      @media (min-width: 1921px) {
+        // height: calc(82vh - 310px) !important;
+        height: calc(100vh - 410px) !important;
       }
     }
     .c-pdf-show {
@@ -143,6 +149,16 @@
   .bg-color {
     background: var(--section-1st-color);
     box-shadow: var(--box-shadow);
+    bottom: 0;
+    @media (max-width: 579px) {
+      bottom: -25px;
+    }
+    @media (min-width: 580px) and (max-width: 991px) {
+      bottom: -60px;
+    }
+    @media (min-width: 991px) and (max-width: 1440px) {
+      bottom: -10px;
+    }
   }
 
   .box-bg {
