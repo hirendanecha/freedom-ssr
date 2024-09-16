@@ -38,7 +38,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationId: number;
   originalFavicon: HTMLLinkElement;
   currentURL = [];
-  isOnCall = false;
   constructor(
     private sharedService: SharedService,
     private spinner: NgxSpinnerService,
@@ -53,7 +52,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this.checkDocumentFocus();
     this.profileId = +localStorage.getItem('profileId');
-    this.isOnCall = this.router.url.includes('/buzz-call/') || false;
   }
 
   ngOnInit(): void {

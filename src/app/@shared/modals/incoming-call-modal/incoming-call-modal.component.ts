@@ -49,7 +49,8 @@ export class IncomingcallModalComponent
     private sharedService: SharedService
   ) {
     this.profileId = +localStorage.getItem('profileId');
-    this.isOnCall = this.router.url.includes('/buzz-call/') || false;
+    // this.isOnCall = this.router.url.includes('/buzz-call/') || false;
+    this.isOnCall = this.calldata.isOnCall === 'Y' || false;
   }
 
   ngAfterViewInit(): void {
