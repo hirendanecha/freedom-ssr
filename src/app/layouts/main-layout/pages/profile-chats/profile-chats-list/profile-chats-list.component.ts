@@ -45,6 +45,8 @@ import {
 } from 'src/app/@shared/constant/file-extensions';
 import { HttpEventType } from '@angular/common/http';
 import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
+import { IncomingcallModalComponent } from 'src/app/@shared/modals/incoming-call-modal/incoming-call-modal.component';
+import { SoundControlService } from 'src/app/@shared/services/sound-control.service';
 
 @Component({
   selector: 'app-profile-chats-list',
@@ -142,7 +144,8 @@ export class ProfileChatsListComponent
     private cdr: ChangeDetectorRef,
     private seoService: SeoService,
     private renderer: Renderer2,
-    private router: Router
+    private router: Router,
+    private soundControlService: SoundControlService
   ) {
     this.userId = +this.route.snapshot.paramMap.get('id');
     this.profileId = +localStorage.getItem('profileId');
@@ -163,6 +166,37 @@ export class ProfileChatsListComponent
       localStorage.removeItem('callRoomId');
       this.callRoomId = null;
     }
+
+    //
+    const reqObj = {
+      profileId: this.profileId,
+    };
+    this.socketService?.checkCall(reqObj, (data: any) => {
+      if (data?.isOnCall === 'Y' && data?.callLink) {
+        var callSound = new Howl({
+          src: [
+            'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
+          ],
+          loop: true,
+        });
+        this.soundControlService.initTabId();
+        const modalRef = this.modalService.open(IncomingcallModalComponent, {
+          centered: true,
+          size: 'sm',
+          backdrop: 'static',
+        });
+        const callData = {
+          Username: '',
+          link: data?.callLink,
+          roomId: data.roomId,
+          groupId: data.groupId,
+          ProfilePicName: this.sharedService?.userData?.ProfilePicName,
+        };
+        modalRef.componentInstance.calldata = callData;
+        modalRef.componentInstance.sound = callSound;
+        modalRef.componentInstance.title = 'Join existing call...';
+      }
+    });
   }
 
   ngOnInit(): void {
