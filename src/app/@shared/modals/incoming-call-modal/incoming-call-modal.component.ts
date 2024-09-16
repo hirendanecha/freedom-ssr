@@ -50,10 +50,10 @@ export class IncomingcallModalComponent
   ) {
     this.profileId = +localStorage.getItem('profileId');
     // this.isOnCall = this.router.url.includes('/buzz-call/') || false;
-    this.isOnCall = this.calldata.isOnCall === 'Y' || false;
   }
-
+  
   ngAfterViewInit(): void {
+    this.isOnCall = this.calldata?.isOnCall === 'Y' || false;
     this.soundControlService.initStorageListener();
     // this.sound?.close();
     this.soundEnabledSubscription =

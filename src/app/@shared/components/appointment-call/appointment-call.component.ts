@@ -10,6 +10,7 @@ import { SeoService } from '../../services/seo.service';
 import { TokenStorageService } from '../../services/token-storage.service';
 import { BreakpointService } from '../../services/breakpoint.service';
 import { Subscription } from 'rxjs';
+import { SocketService } from '../../services/socket.service';
 
 declare var JitsiMeetExternalAPI: any;
 @Component({
@@ -31,6 +32,7 @@ export class AppointmentCallComponent implements OnInit {
   openChatId: any = {};
   isMobileScreen: boolean;
   screenSubscription!: Subscription;
+  profileId: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +44,8 @@ export class AppointmentCallComponent implements OnInit {
     private messageService: MessageService,
     private seoService: SeoService,
     public tokenService: TokenStorageService,
-    private breakpointService: BreakpointService
+    private breakpointService: BreakpointService,
+    private socketService: SocketService,
   ) {
     const data = {
       title: 'Buzz Chat',
@@ -50,6 +53,7 @@ export class AppointmentCallComponent implements OnInit {
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
+    this.profileId = +localStorage.getItem('profileId');
   }
 
   ngOnInit() {
@@ -88,6 +92,12 @@ export class AppointmentCallComponent implements OnInit {
     api.on('readyToClose', () => {
       this.sharedService.callId = null;
       sessionStorage.removeItem('callId');
+      const data = {
+        profileId: this.profileId,
+        roomId: this.openChatId.roomId,
+        groupId: this.openChatId.groupId,
+      }
+      this.socketService?.endCall(data);
       this.router.navigate(['/profile-chats']).then(() => {
         // api.dispose();
         // console.log('opaaaaa');

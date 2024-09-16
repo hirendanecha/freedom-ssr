@@ -157,6 +157,10 @@ export class SocketService {
     this.socket.emit('pick-up-call', params, callback);
   }
 
+  endCall(params) {
+    this.socket.emit('end-call', params);
+  }
+
   createGroup(params, callback: (data: any) => void) {
     this.socket.emit('create-group', params, callback);
   }
