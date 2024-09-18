@@ -598,7 +598,7 @@ export class PostCardComponent implements OnInit {
       image: this.post?.thumbfilename,
       mute: false,
       autostart: false,
-      volume: 30,
+      volume: 80,
       height: '300px',
       width: 'auto',
       pipIcon: 'disabled',
