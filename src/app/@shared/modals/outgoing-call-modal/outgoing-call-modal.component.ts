@@ -88,6 +88,7 @@ export class OutGoingCallModalComponent
   }
 
   ngOnInit(): void {
+    this.sharedService.generateSessionKey();
     this.socketService.socket?.on('notification', (data: any) => {
       if (data?.actionType === 'SC') {
         this.sound?.stop();

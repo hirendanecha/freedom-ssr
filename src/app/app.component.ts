@@ -183,7 +183,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 roomId: data.roomId || null,
                 groupId: data.groupId || null,
               };
-              if (!window.document.hidden) {
+              if (!window.document.hidden && this.sharedService.isCorrectBrowserSession()) {
                 const callIdMatch = data.link.match(/callId-\d+/);
                 const callId = callIdMatch ? callIdMatch[0] : data.link;
                 this.router.navigate([`/buzz-call/${callId}`], {

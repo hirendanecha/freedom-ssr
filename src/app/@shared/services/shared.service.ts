@@ -175,4 +175,18 @@ export class SharedService {
   getLoginUserDetails(userData: any = {}) {
     this.loginUserInfo.next(userData);
   }
+
+  generateSessionKey(): void {
+    const sessionKey = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    sessionStorage.setItem('uniqueSessionKey', sessionKey);
+  }
+
+  isCorrectBrowserSession(): boolean {
+    const sessionKey = sessionStorage.getItem('uniqueSessionKey');
+    if (sessionKey) {
+      sessionStorage.removeItem('uniqueSessionKey');
+      return true;
+    }
+    return false;
+  }
 }
