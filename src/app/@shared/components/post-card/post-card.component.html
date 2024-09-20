@@ -372,12 +372,12 @@
       [innerHTML]="
         post?.postdescription
           | stripHtml
-          | truncate : (showFullDesc ? -1 : 300)
+          | truncate : (showFullDesc ? -1 : 600)
           | noSanitize
       "
     ></p>
 
-    <ng-container *ngIf="(post?.postdescription | stripHtml).length > 300">
+    <ng-container *ngIf="(post?.postdescription | stripHtml).length > 600">
       <button (click)="showFullDescription()" class="text-danger">
         {{ showFullDesc ? "Read Less" : "Read More" }}
       </button>

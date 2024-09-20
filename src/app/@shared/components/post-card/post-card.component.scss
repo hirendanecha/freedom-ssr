@@ -155,7 +155,8 @@
     }
 
     .post-description {
-      white-space: pre-wrap;
+      white-space: normal;
+      // white-space: pre-wrap;
       max-width: 541px;
       p {
         h1 {
