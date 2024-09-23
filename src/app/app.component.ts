@@ -127,6 +127,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
               ],
               volume: 0.8,
+              html5: true,
+              autoplay: true,
             });
             // const messageSoundOct = JSON.parse(
             //   localStorage.getItem('soundPreferences')
