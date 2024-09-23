@@ -93,13 +93,13 @@
               />
               <div class="d-flex gap-3 align-items-baseline">
                 <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + post.profileid" target="_blank">
-                  {{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
+                  &#64;{{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
                 </a>
                 
                 <button>
                   <a
                     class="droplist d-flex align-items-center gap-2"
-                    [appCopyClipboard]="post.Username"
+                    [appCopyClipboard]="'@' + post.Username"
                   >
                     <fa-icon [icon]="['fas', 'copy']" />
                   </a>
@@ -698,7 +698,7 @@
                 <ul class="friends-list d-flex gap-6 py-2 px-4 m-0">
                   <li class="d-center">
                     <button
-                      class="d-center gap-1 gap-sm-2 font-12-px"
+                      class="d-center gap-1 gap-sm-2 smtxt"
                       [disabled]="!tokenService.getCredentials()"
                       (click)="
                         comment.react == 'L'
@@ -717,11 +717,11 @@
 
                   <li class="d-center">
                     <button
-                      class="d-center gap-1 gap-sm-2 font-12-px"
+                      class="d-center gap-1 gap-sm-2 smtxt"
                       [disabled]="!tokenService.getCredentials()"
                       (click)="showReplySection(comment.id)"
                     >
-                      <fa-icon [icon]="['fas', 'message']" class="font-16-px" />
+                      <fa-icon [icon]="['fas', 'message']" class="smtxt" />
                       Reply
                     </button>
                   </li>
@@ -913,7 +913,7 @@
                         <ul class="friends-list d-flex gap-6 py-2 px-4 m-0">
                           <li class="d-center">
                             <button
-                              class="d-center gap-1 gap-sm-2 font-12-px"
+                              class="d-center gap-1 gap-sm-2 smtxt"
                               [disabled]="!tokenService.getCredentials()"
                               (click)="
                                 reply.react == 'L'
