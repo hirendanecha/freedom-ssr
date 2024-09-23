@@ -53,8 +53,10 @@ export class PostCardComponent implements OnInit {
   commentList: any = [];
   replyCommentList: any = [];
   isReply = false;
+  parentReplayComment: boolean = false;
 
   commentId = null;
+  commentparentReplayId = null;
   commentData: any = {
     file: null,
     url: '',
@@ -443,11 +445,20 @@ export class PostCardComponent implements OnInit {
     });
   }
 
-  showReplySection(id) {
-    this.isReply = this.commentId == id ? false : true;
-    this.commentId = id;
-    if (!this.isReply) {
-      this.commentId = null;
+  showReplySection(commentType, comment) {
+    if (commentType === 'reply') {
+      this.isReply = this.commentId == comment.id ? false : true;
+      this.commentId = comment.id;
+      if (!this.isReply) {
+        this.commentId = null;
+      }
+    } else if (commentType === 'parentReplay') {
+      this.parentReplayComment =
+        this.commentparentReplayId == comment.id ? false : true;
+      this.commentparentReplayId = comment.id;
+      if (!this.parentReplayComment) {
+        this.commentparentReplayId = null;
+      }
     }
   }
 
@@ -551,6 +562,7 @@ export class PostCardComponent implements OnInit {
       }, 100);
       this.commentData = {};
       this.isReply = false;
+      this.parentReplayComment = false;
       this.viewComments(this.post?.id);
     }
     //  else {
