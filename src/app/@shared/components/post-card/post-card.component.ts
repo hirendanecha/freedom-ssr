@@ -755,18 +755,9 @@ export class PostCardComponent implements OnInit {
     return null;
   }
 
-  selectedEmoji(emoji) {
-    this.commentMessageInputValue =
-      this.commentMessageInputValue +
-      `<img src=${emoji} width="60" height="60">`;
-
-    // if (this.commentMessageInputValue) {
-    //   this.commentMessageInputValue =
-    //     this.commentMessageInputValue +
-    //     `<img src=${emoji} width="60" height="60">`;
-    // } else {
-    //   this.commentMessageInputValue = `<img src=${emoji} width="60" height="60">`;
-    // }
+  selectedEmoji(emoji, post) {
+    this.commentData.comment = `<img src=${emoji} width="50" height="50">`;
+    this.commentOnPost(post);
   }
 
   extractLargeImageFromContent(content: string, postId): void {
