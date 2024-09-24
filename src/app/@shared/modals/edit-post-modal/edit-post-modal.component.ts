@@ -188,9 +188,9 @@ export class EditPostModalComponent implements AfterViewInit {
         .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
         const copyImage = imgTag.getAttribute('src');
-        const bytes = copyImage.length;
-        const megabytes = bytes / (1024 * 1024);
-        if (megabytes > 1) {
+        // const bytes = copyImage.length;
+        // const megabytes = bytes / (1024 * 1024);
+        // if (megabytes > 1) {
           // this.postData.comment = content.replace(copyImage, '');
           let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
           this.postData.postdescription = `<div>${content
@@ -213,9 +213,9 @@ export class EditPostModalComponent implements AfterViewInit {
           } catch (error) {
             console.error('Base64 decoding error:', error);
           }
-        } else {
-          this.postData.postdescription = content;
-        }
+        // } else {
+        //   this.postData.postdescription = content;
+        // }
       } else {
         this.postData.postdescription = content;
       }
