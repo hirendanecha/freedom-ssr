@@ -215,8 +215,9 @@
             <li
               class="d-flex align-items-center gap-2 pointer-events"
               cursor
-              (click)="openAlertMessageImg(postImage)"
+              (click)="postImage.click()"
               >
+              <!-- (click)="openAlertMessageImg(postImage)" -->
               <fa-icon [icon]="['fas', 'image']" class="font-20-px" />
               <span>Image</span>
             </li>
