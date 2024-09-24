@@ -167,7 +167,7 @@ export class ProfileChatsListComponent
       this.callRoomId = null;
     }
 
-    if (!this.sidebarClass) {      
+    if (!this.sidebarClass) {
       const reqObj = {
         profileId: this.profileId,
       };
@@ -293,6 +293,8 @@ export class ProfileChatsListComponent
               });
             }
             this.socketService.readGroupMessage(data, (readUsers) => {
+              console.log(readUsers, 'readUsers');
+
               this.readMessagesBy = readUsers.filter(
                 (item) => item.ID !== this.profileId
               );
@@ -557,14 +559,14 @@ export class ProfileChatsListComponent
         this.messageList.push(data);
         this.readMessageRoom = data?.isRead;
         // this.messageIndex = null;
-        if (this.userChat.groupId === data.groupId) {
-          this.readMessagesBy = [];
-          this.socketService.readGroupMessage(data, (readUsers) => {
-            this.readMessagesBy = readUsers.filter(
-              (item) => item.ID !== this.profileId
-            );
-          });
-        }
+        // if (this.userChat.groupId === data.groupId) {
+        //   this.readMessagesBy = [];
+        //   this.socketService.readGroupMessage(data, (readUsers) => {
+        //     this.readMessagesBy = readUsers.filter(
+        //       (item) => item.ID !== this.profileId
+        //     );
+        //   });
+        // }
         if (this.filteredMessageList.length > 0) {
           const lastIndex = this.filteredMessageList.length - 1;
           if (
@@ -1399,6 +1401,7 @@ export class ProfileChatsListComponent
     }
     if (this.userChat?.groupId) {
       this.socketService.socket.on('read-message-user', (data) => {
+        console.log('readUsers', data);
         this.readMessagesBy = data?.filter(
           (item) => item.ID !== this.profileId
         );
@@ -1459,7 +1462,7 @@ export class ProfileChatsListComponent
       }
     }
     if (this.userChat?.groupId) {
-      this.relevantMembers = [];
+      console.log('relevant', this.relevantMembers);
       for (let group of this.filteredMessageList) {
         this.groupData?.memberList?.forEach((member) => {
           const matchingMessage = group.messages.find(
@@ -1471,10 +1474,23 @@ export class ProfileChatsListComponent
 
           if (matchingMessage) {
             member['message'] = matchingMessage;
-            this.relevantMembers.push(member);
+            const existUser = this.relevantMembers.find(
+              (e) => e?.profileId === member?.profileId
+            );
+            console.log(existUser);
+            if (existUser) {
+              this.readMessagesBy = this.readMessagesBy.filter((e) => {
+                return e.ID !== existUser?.profileId;
+              });
+            }
+            if (!existUser) {
+              this.relevantMembers.push(member);
+            }
           }
         });
       }
+      console.log('relevant', this.relevantMembers);
+      console.log('readBy', this.readMessagesBy);
     }
   }
 
