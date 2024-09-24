@@ -594,7 +594,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       const modalRef = this.modalService.open(ConfirmationModalComponent, {
         centered: true,
       });
-      modalRef.componentInstance.title = `Warning message`;
+      modalRef.componentInstance.title = '';
       modalRef.componentInstance.confirmButtonLabel = 'Ok';
       modalRef.componentInstance.cancelButtonLabel = 'Cancel';
       modalRef.componentInstance.message = `Add up to 4 images`;
