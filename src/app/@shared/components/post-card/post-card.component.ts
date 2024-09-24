@@ -601,10 +601,11 @@ export class PostCardComponent implements OnInit {
     this.commentData['imageUrl'] = '';
   }
 
-  playVideo(id: any) {
+  async playVideo(id: any) {
     if (this.player) {
       this.player.remove();
     }
+
     const config = {
       file: this.post?.streamname,
       image: this.post?.thumbfilename,
@@ -622,14 +623,26 @@ export class PostCardComponent implements OnInit {
       },
       controls: true,
     };
-    if (id) {
-      const jwPlayer = jwplayer('jwVideo-' + id);
-      if (jwPlayer) {
-        this.player = jwPlayer?.setup({
-          ...config,
-        });
-        this.player?.load();
+    const elementId = 'jwVideo-' + id;
+    const videoElement = document.getElementById(elementId);
+
+    if (!videoElement) {
+      console.error(`Element with id ${elementId} not found in the DOM`);
+      return;
+    }
+
+    try {
+      const jwPlayerInstance = jwplayer(elementId);
+      if (jwPlayerInstance && typeof jwPlayerInstance.setup === 'function') {
+        this.player = jwPlayerInstance.setup(config);
+        this.player.load();
+      } else {
+        console.error(
+          'jwplayer instance is not initialized or setup is not a function.'
+        );
       }
+    } catch (error) {
+      console.error('Error initializing JW Player:', error);
     }
   }
 
@@ -778,28 +791,28 @@ export class PostCardComponent implements OnInit {
         // const bytes = copyImage.length;
         // const megabytes = bytes / (1024 * 1024);
         // if (megabytes > 1) {
-          // this.commentData.comment = content.replace(copyImage, '');
-          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
-          this.commentData.comment = `<div>${content
-            .replace(copyImage, '')
-            .replace(/\<br\>/gi, '')
-            .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
-          const base64Image = copyImage
-            .trim()
-            .replace(/^data:image\/\w+;base64,/, '');
-          try {
-            const binaryString = window.atob(base64Image);
-            const uint8Array = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-              uint8Array[i] = binaryString.charCodeAt(i);
-            }
-            const blob = new Blob([uint8Array], { type: 'image/jpeg' });
-            const fileName = `copyImage-${new Date().getTime()}.jpg`;
-            const file = new File([blob], fileName, { type: 'image/jpeg' });
-            this.commentData['file'] = file;
-          } catch (error) {
-            console.error('Base64 decoding error:', error);
+        // this.commentData.comment = content.replace(copyImage, '');
+        let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
+        this.commentData.comment = `<div>${content
+          .replace(copyImage, '')
+          .replace(/\<br\>/gi, '')
+          .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+        const base64Image = copyImage
+          .trim()
+          .replace(/^data:image\/\w+;base64,/, '');
+        try {
+          const binaryString = window.atob(base64Image);
+          const uint8Array = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            uint8Array[i] = binaryString.charCodeAt(i);
           }
+          const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+          const fileName = `copyImage-${new Date().getTime()}.jpg`;
+          const file = new File([blob], fileName, { type: 'image/jpeg' });
+          this.commentData['file'] = file;
+        } catch (error) {
+          console.error('Base64 decoding error:', error);
+        }
         // } else {
         //   this.commentData.comment = content;
         // }
