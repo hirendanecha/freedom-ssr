@@ -318,8 +318,9 @@ export class ProfileChatsListComponent
       }
     });
     this.socketService.socket.on('seen-room-message', (data) => {
+      console.log('read-room-message', data);
       this.readMessageRoom = 'Y';
-      this.messageIndex = null;
+      this.unreadMessage = {};
     });
 
     this.socketService.socket?.on('get-users', (data) => {
