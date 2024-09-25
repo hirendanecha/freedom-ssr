@@ -72,7 +72,7 @@ export class NotificationsComponent {
         this.notificationList = this.notificationList.filter(
           (notification) => notification.id !== id
         );
-        if (this.notificationList.length <= 6) {
+        if (this.notificationList.length <= 6 && this.hasMoreData) {
           this.notificationList = [];
           this.loadMoreNotification();
         }
