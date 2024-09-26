@@ -52,9 +52,10 @@ export class StripHtmlPipe implements PipeTransform {
         const tagName = element.tagName.toLowerCase();
         if (tagName === 'a' && element.hasAttribute('data-id')) {
           return element.outerHTML;
-        } else if (tagName.toLowerCase() === 'br') {
-          return '\n';
-        }
+        } 
+        // else if (tagName === 'br') {
+        //   return '\n';
+        // }
         const childContent = Array.from(element.childNodes).map(processNode).join('');
         if (element.childNodes.length === 1 && element.firstChild?.nodeType === Node.ELEMENT_NODE) {
           const firstChildElement = element.firstChild as HTMLElement;
