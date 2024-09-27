@@ -373,8 +373,7 @@
         post?.postdescription
           | stripHtml
           | truncate : (showFullDesc ? -1 : 600)
-          | noSanitize
-      "
+          | noSanitize" hoverDropdown
     ></p>
 
     <ng-container *ngIf="(post?.postdescription | stripHtml).length > 600">
@@ -674,10 +673,10 @@
                   </div>
 
                   <ng-container *ngIf="comment?.comment">
-                    <p
-                      class="mdtxt mb-0 comment-description"
-                      [innerHTML]="comment.comment | noSanitize"
-                    ></p>
+                      <p
+                        class="mdtxt mb-0 comment-description"
+                        [innerHTML]="comment.comment | noSanitize" hoverDropdown
+                      ></p>
                     <ng-container *ngIf="comment.descImg">
                       <app-img-preview
                         [src]="comment.descImg"

@@ -139,6 +139,7 @@ import { QrScanModalComponent } from './modals/qrscan-modal/qrscan-modal.compone
 import { AppQrModalComponent } from './modals/app-qr-modal/app-qr-modal.component';
 import { ForwardChatModalComponent } from './modals/forward-chat-modal/forward-chat-modal.component';
 import { ImgLayoutComponent } from './components/img-layout/img-layout.component';
+import { HoverDropdownDirective } from './directives/hover-dropdown.directive';
 // import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
@@ -153,6 +154,7 @@ const sharedComponents = [
   ImgPreviewComponent,
   InlineLoaderComponent,
   CopyClipboardDirective,
+  HoverDropdownDirective,
   ClaimTokenModalComponent,
   WalletLinkComponent,
   ReplyCommentModalComponent,
