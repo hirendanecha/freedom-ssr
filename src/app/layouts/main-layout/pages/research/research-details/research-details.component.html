@@ -1,12 +1,12 @@
 <div class="research d-flex flex-column">
   <div class="single-box community-details p-5 w-100">
     <img
-      data-src="{{ groupDetails?.CoverPicName }}"
+      data-src="{{ groupDetails?.CoverPicName || '/assets/images/profile-cover.png' }}"
       loading="lazy"
       class="w-100 h-272-px rounded-3 mb-5"
       onerror="this.onerror=null;this.src='/assets/images/profile-cover.png';"
       [alt]="groupDetails?.FirstName"
-    />
+      />
 
     <div class="text-start d-flex align-items-center gap-3">
       <img
@@ -19,16 +19,16 @@
 
       <div class="d-flex flex-column me-auto">
         <h5 class="mb-1">{{ groupDetails?.FirstName }}</h5>
-        <span class="description">Members: 711352</span>
+        <span class="description" *ngIf="groupDetails?.TotalJoinedGroups">Members: {{ groupDetails?.TotalJoinedGroups }}</span>
       </div>
 
-      <button
+      <!-- <button
         *ngIf="tokenService.getCredentials()"
         type="button"
         class="btn btn-sm btn-primary align-self-start"
       >
         Join Group
-      </button>
+      </button> -->
     </div>
 
     <div class="page-details pt-5">
