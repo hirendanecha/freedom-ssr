@@ -1,8 +1,7 @@
-import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import { Directive, HostListener, Renderer2 } from '@angular/core';
 import { CustomerService } from '../services/customer.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../services/toast.service';
-
 @Directive({
   selector: '[hoverDropdown]',
 })
@@ -11,7 +10,6 @@ export class HoverDropdownDirective {
   private static activeDropdown: HoverDropdownDirective | null = null;
 
   constructor(
-    private el: ElementRef,
     private renderer: Renderer2,
     private customerService: CustomerService,
     private router: Router,
@@ -21,28 +19,17 @@ export class HoverDropdownDirective {
   @HostListener('mouseover', ['$event.target']) onMouseHover(
     target: HTMLElement
   ) {
-    const id = +target.getAttribute('data-id');
-    // console.log(target, id);
-    if (target.tagName === 'A' && id) {
+    if (target.tagName === 'A' && target.hasAttribute('data-id')) {
+      const id = +target.getAttribute('data-id');
       this.createDropdown(target, id);
     }
   }
 
-  @HostListener('mouseleave') onMouseLeave() {
-    this.hideDropdown();
-  }
+  // @HostListener('mouseleave') onMouseLeave() {
+  //   this.hideDropdown();
+  // }
 
-  @HostListener('document:click', ['$event'])
-  onClick(event: MouseEvent) {
-    if (
-      this.dropdownElement &&
-      !this.dropdownElement.contains(event.target as Node)
-    ) {
-      this.hideDropdown();
-    }
-  }
-
-  private createDropdown(targetValue: any, id: number) {
+  private createDropdown(anchorElement: HTMLElement, id: number) {
     if (
       HoverDropdownDirective.activeDropdown &&
       HoverDropdownDirective.activeDropdown !== this
@@ -50,21 +37,21 @@ export class HoverDropdownDirective {
       HoverDropdownDirective.activeDropdown.hideDropdown();
     }
     HoverDropdownDirective.activeDropdown = this;
-    if (!this.dropdownElement) {
-      this.dropdownElement = this.renderer.createElement('div');
-      this.renderer.addClass(
-        this.dropdownElement,
-        'hover-directive-box-container'
-      );
+    if (this.dropdownElement) {
+      this.renderer.removeChild(document.body, this.dropdownElement);
+    }
 
-      const paragraphElement = this.el.nativeElement;
-      const anchorElement = paragraphElement.querySelector('a');
-      if (id) {
-        this.customerService.getProfile(id).subscribe({
-          next: (res: any) => {
-            if (res.data && res.data.length > 0) {
-              const profilePicUrl = res.data[0]?.ProfilePicName || '/assets/images/avtar/placeholder-user.png';
-              const content = `
+    this.dropdownElement = this.renderer.createElement('div');
+    this.renderer.addClass(
+      this.dropdownElement,
+      'hover-directive-box-container'
+    );
+
+    this.customerService.getProfile(id).subscribe({
+      next: (res: any) => {
+        if (res.data && res.data.length > 0) {
+          const profilePicUrl = res.data[0]?.ProfilePicName || '/assets/images/avtar/placeholder-user.png';
+          const content = `
                 <div class="d-flex flex-column">
                   <img
                     class="w-48-px h-48-px rounded-4"
@@ -73,7 +60,7 @@ export class HoverDropdownDirective {
                     alt="avatar"
                   />
                   <div class="d-flex gap-3 align-items-baseline">
-                  ${targetValue.outerHTML}
+                  ${anchorElement.outerHTML}
                     <button class="dropdown-button-copy"">
                       <fa-icon class="ng-fa-icon" ng-reflect-icon="fas,copy"><svg role="img" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="copy" class="svg-inline--fa fa-copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"></path></svg></fa-icon>
                     </button>
@@ -87,57 +74,51 @@ export class HoverDropdownDirective {
                   </a>
                 </button>
                 </div>`;
-              this.dropdownElement.innerHTML = content;
-              this.renderer.appendChild(document.body, this.dropdownElement);
-              const anchorRect = anchorElement.getBoundingClientRect();
-              this.renderer.setStyle(
-                this.dropdownElement,
-                'position',
-                'absolute'
-              );
-              this.renderer.setStyle(
-                this.dropdownElement,
-                'top',
-                `${anchorRect.bottom + window.scrollY}px`
-              );
-              this.renderer.setStyle(
-                this.dropdownElement,
-                'left',
-                `${anchorRect.left + window.scrollX}px`
-              );
-              this.renderer.listen(this.dropdownElement, 'mouseleave', () => {
-                this.hideDropdown();
-              });
-              const button = this.dropdownElement.querySelector(
-                '.dropdown-button-copy'
-              );
-              if (button) {
-                button.addEventListener('click', (e) => {
-                  e.stopPropagation();
-                  this.copyToClipboard(
-                    `@${anchorElement.getAttribute('data-username')}`
-                  );
-                });
-              }
-              const msgButton = this.dropdownElement.querySelector(
-                '.dropdown-button-msg'
-              );
-              if (msgButton) {
-                msgButton.addEventListener('click', (e) => {
-                  e.stopPropagation();
-                  this.selectMessaging(res.data[0]);
-                });
-              }
-            }
-          },
-          error: (err) => {
-            console.error('Error fetching profile:', err);
-          },
-        });
-      } else {
-        console.warn('No data-id attribute found on the anchor element.');
-      }
-    }
+          this.dropdownElement.innerHTML = content;
+          this.renderer.appendChild(document.body, this.dropdownElement);
+          const anchorRect = anchorElement.getBoundingClientRect();
+          this.renderer.setStyle(
+            this.dropdownElement, 
+            'position', 
+            'absolute'
+          );
+          this.renderer.setStyle(
+            this.dropdownElement,
+            'top',
+            `${anchorRect.bottom + window.scrollY}px`
+          );
+          this.renderer.setStyle(
+            this.dropdownElement,
+            'left',
+            `${anchorRect.left + window.scrollX}px`
+          );
+          this.renderer.listen(this.dropdownElement, 'mouseleave', () =>
+            this.hideDropdown()
+          );
+          const button = this.dropdownElement.querySelector(
+            '.dropdown-button-copy'
+          );
+          if (button) {
+            button.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.copyToClipboard(`${anchorElement.innerText}`);
+            });
+          }
+          const msgButton = this.dropdownElement.querySelector(
+            '.dropdown-button-msg'
+          );
+          if (msgButton) {
+            msgButton.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.selectMessaging(res.data[0]);
+            });
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching profile:', err);
+      },
+    });
   }
 
   private hideDropdown() {

@@ -890,7 +890,7 @@
                           <ng-container *ngIf="reply?.comment">
                             <p
                               class="mdtxt mb-0 comment-description"
-                              [innerHTML]="reply?.comment | noSanitize"
+                              [innerHTML]="reply?.comment | noSanitize" hoverDropdown
                             ></p>
                             <ng-container *ngIf="reply.descImg">
                               <app-img-preview
