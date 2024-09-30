@@ -38,6 +38,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationId: number;
   originalFavicon: HTMLLinkElement;
   currentURL = [];
+  tagNotificationSound: boolean;
+  messageNotificationSound: boolean;
+  soundEnabled: boolean;
   constructor(
     private sharedService: SharedService,
     private spinner: NgxSpinnerService,
@@ -91,33 +94,45 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.socketService.socket?.connect();
         this.socketService.socket?.emit('online-users');
       }
-
       this.socketService.socket?.on('notification', (data: any) => {
         if (data) {
+          const userData = this.tokenService.getUser();
+          this.sharedService.getLoginUserDetails(userData);
+          this.sharedService.loginUserInfo.subscribe((user) => {
+            this.tagNotificationSound =
+              user.tagNotificationSound === 'Y' || false;
+            this.messageNotificationSound =
+              user.messageNotificationSound === 'Y' || false;
+          });
           if (data?.notificationByProfileId !== this.profileId) {
             this.sharedService.isNotify = true;
             this.originalFavicon.href = '/assets/images/icon-unread.jpg';
           }
+          this.soundControlService.soundEnabled$.subscribe((soundEnabled) => {
+            this.soundEnabled = soundEnabled;
+          });
           this.notificationId = data.id;
           if (data?.actionType === 'T') {
             // const notificationSoundOct = JSON.parse(
             //   localStorage.getItem('soundPreferences')
             // )?.notificationSoundEnabled;
-            this.sharedService.loginUserInfo.subscribe((user) => {
-              const tagNotificationSound = user.tagNotificationSound;
-              if (tagNotificationSound === 'Y') {
-                var sound = new Howl({
-                  src: [
-                    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
-                  ],
-                  volume: 0.8,
-                  html5: true,
+            if (this.tagNotificationSound && this.soundEnabled) {
+              var sound = new Howl({
+                src: [
+                  'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
+                ],
+                volume: 0.8,
+                html5: true,
+                loop: false,
+              });
+              if (sound) {
+                sound?.play();
+                sound.on('end', () => {
+                  console.log('stop');
+                  sound.stop();
                 });
-                if (sound) {
-                  sound?.play();
-                }
               }
-            });
+            }
           }
           if (
             data?.actionType === 'M' &&
@@ -132,21 +147,23 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             //     sound?.play();
             //   }
             // }
-            this.sharedService.loginUserInfo.subscribe((user) => {
-              const messageNotificationSound = user.messageNotificationSound;
-              if (messageNotificationSound === 'Y') {
-                var sound = new Howl({
-                  src: [
-                    'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
-                  ],
-                  volume: 0.8,
-                  html5: true,
+            if (this.messageNotificationSound && this.soundEnabled) {
+              var sound = new Howl({
+                src: [
+                  'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
+                ],
+                volume: 0.8,
+                html5: true,
+                loop: false,
+              });
+              if (sound) {
+                sound?.play();
+                sound.on('end', () => {
+                  console.log('stop');
+                  sound.stop();
                 });
-                if (sound) {
-                  sound?.play();
-                }
               }
-            });
+            }
             this.toasterService.success(data?.notificationDesc);
             return this.sharedService.updateIsRoomCreated(true);
           }
