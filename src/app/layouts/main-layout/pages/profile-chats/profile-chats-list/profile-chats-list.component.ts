@@ -313,7 +313,7 @@ export class ProfileChatsListComponent
         }
         if (this.userChat.roomId === data?.roomId) {
           const readData = {
-            ids: [data.id],
+            ids: [data?.id],
             profileId: data.sentBy,
           };
           this.socketService.readMessage(readData, (res) => {
@@ -1124,6 +1124,14 @@ export class ProfileChatsListComponent
         if (res === 'missCalled') {
           this.chatObj.msgText = 'You have a missed call';
           this.sendMessage();
+
+          const callLogData = {
+            profileId: this.profileId,
+            roomId: this.userChat?.roomId,
+            groupId: this.userChat?.groupId,
+          }
+          this.socketService?.endCall(callLogData);
+
           const uuId = localStorage.getItem('uuId');
 
           const buzzRingData = {
@@ -1145,12 +1153,6 @@ export class ProfileChatsListComponent
               console.log(err);
             },
           });
-          const callLogData = {
-            profileId: this.profileId,
-            roomId: this.userChat?.roomId,
-            groupId: this.userChat?.groupId,
-          }
-          this.socketService?.endCall(callLogData);
         }
       }
     });
