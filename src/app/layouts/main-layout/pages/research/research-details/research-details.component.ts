@@ -19,7 +19,8 @@ export class ResearchDetailsComponent {
     page: 1,
     limit: 12,
   };
-
+  profileId: number;
+  membersIds = [];
   constructor(
     private profileService: ProfileService,
     private spinner: NgxSpinnerService,
@@ -28,6 +29,7 @@ export class ResearchDetailsComponent {
     public tokenService: TokenStorageService
   ) {
     this.GetGroupBasicDetails();
+    this.profileId = +localStorage.getItem('profileId');
   }
 
   GetGroupBasicDetails(): void {
@@ -39,6 +41,11 @@ export class ResearchDetailsComponent {
         next: (res: any) => {
           if (res?.ID) {
             this.groupDetails = res;
+            if (this.groupDetails?.groupMembersList?.length >= 0) {
+              this.membersIds = this.groupDetails?.groupMembersList?.map(
+                (member: any) => member?.profileId
+              );
+            }
             const data = {
               title: `Freedom.Buzz Research ${this.groupDetails?.PageTitle}`,
               url: `${location.href}`,
@@ -105,6 +112,44 @@ export class ResearchDetailsComponent {
   }
 
   joinResearchGroup(): void {
-    
+    this.spinner.show();
+    const data = {
+      researchProfileId: this.groupDetails?.ID,
+      profileId: this.profileId,
+    };
+
+    this.profileService.joinGroup(data).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.spinner.hide();
+          this.GetGroupBasicDetails();
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        this.spinner.hide();
+      },
+    });
+  }
+
+  leaveResearchGroup(): void {
+    this.spinner.show();
+    const data = {
+      researchProfileId: this.groupDetails?.ID,
+      profileId: this.profileId,
+    };
+
+    this.profileService.leaveGroup(data).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.spinner.hide();
+          this.GetGroupBasicDetails();
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        this.spinner.hide();
+      },
+    });
   }
 }

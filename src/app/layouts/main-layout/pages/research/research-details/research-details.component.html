@@ -1,12 +1,14 @@
 <div class="research d-flex flex-column">
   <div class="single-box community-details p-5 w-100">
     <img
-      data-src="{{ groupDetails?.CoverPicName || '/assets/images/profile-cover.png' }}"
+      data-src="{{
+        groupDetails?.CoverPicName || '/assets/images/profile-cover.png'
+      }}"
       loading="lazy"
       class="w-100 h-272-px rounded-3 mb-5"
       onerror="this.onerror=null;this.src='/assets/images/profile-cover.png';"
       [alt]="groupDetails?.FirstName"
-      />
+    />
 
     <div class="text-start d-flex align-items-center gap-3">
       <img
@@ -19,16 +21,28 @@
 
       <div class="d-flex flex-column me-auto">
         <h5 class="mb-1">{{ groupDetails?.FirstName }}</h5>
-        <span class="description" *ngIf="groupDetails?.TotalJoinedGroups">Members: {{ groupDetails?.TotalJoinedGroups }}</span>
+        <span class="description" *ngIf="groupDetails?.TotalJoinedGroups"
+          >Members: {{ groupDetails?.TotalJoinedGroups }}</span
+        >
       </div>
 
       <button
-        *ngIf="tokenService.getCredentials()"
+        *ngIf="tokenService.getCredentials() && !membersIds.includes(profileId)"
         type="button"
         class="btn btn-sm btn-primary align-self-start"
         (click)="joinResearchGroup()"
       >
         Join Group
+        <fa-icon [icon]="['fas', 'sign-in']" class="font-16-px" />
+      </button>
+      <button
+        *ngIf="tokenService.getCredentials() && membersIds.includes(profileId)"
+        type="button"
+        class="btn btn-sm btn-danger align-self-start"
+        (click)="leaveResearchGroup()"
+      >
+        Leave Group
+        <fa-icon [icon]="['fas', 'sign-out']" class="font-16-px" />
       </button>
     </div>
 
@@ -67,13 +81,12 @@
         </li>
 
         <li ngbNavItem>
-          <button
-            ngbNavLink
-            (click)="GetGroupFileResourcesById(groupDetails?.ID)"
-          >
-            Resource
+          <button ngbNavLink>
+            <!-- (click)="GetGroupFileResourcesById(groupDetails?.ID)" -->
+            <!-- Resource -->
+            Members List
           </button>
-          <ng-template ngbNavContent>
+          <!-- <ng-template ngbNavContent>
             <h6 class="text-start mb-2">Uploaded Files</h6>
 
             <div class="row px-3">
@@ -110,15 +123,70 @@
                 </ng-container>
               </ng-container>
             </div>
+          </ng-template> -->
+          <ng-template ngbNavContent>
+            <div
+              class="row"
+              *ngIf="groupDetails.groupMembersList?.length; else noMembers"
+            >
+              <div
+                class="col-md-6 mb-3"
+                *ngFor="let member of groupDetails?.groupMembersList"
+              >
+                <div class="d-flex align-items-center gap-2">
+                  <img
+                    class="w-48-px h-48-px rounded-4"
+                    loading="lazy"
+                    data-src="{{
+                      member?.profilePicName ||
+                        '/assets/images/avtar/placeholder-user.png'
+                    }}"
+                    onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png'"
+                    alt="avatar"
+                  />
+
+                  <div
+                    class="d-flex flex-column justify-content-center align-items-start w-100"
+                  >
+                    <p class="mb-1">{{ member?.Username }}</p>
+                    <span class="font-12-px description">{{
+                      member?.isAdmin === "Y" ? "Admin" : "Member"
+                    }}</span>
+                  </div>
+                  <div ngbDropdown *ngIf="profileId != member.profileId">
+                    <button class="dropdown-btn d-flex" ngbDropdownToggle>
+                      <fa-icon
+                        [icon]="['fas', 'ellipsis']"
+                        class="font-24-px m-0"
+                      />
+                    </button>
+                    <div ngbDropdownMenu class="dropdown-menu">
+                      <button ngbDropdownItem>
+                        <a
+                          [href]="'settings/view-profile/' + member?.profileId"
+                          class="droplist d-flex align-items-center gap-2"
+                        >
+                          <fa-icon [icon]="['fas', 'user']" />
+                          <span>View Profile</span>
+                        </a>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #noMembers>
+              <h6 class="text-center mb-2">No Members Found</h6>
+            </ng-template>
           </ng-template>
         </li>
       </ul>
     </div>
   </div>
 
-  <div class="d-flex gap-6">
+  <div class="">
     <div
-      class="single-box d-flex flex-column gap-3 p-5"
+      class="single-box d-flex flex-column gap-3 p-3"
       [ngbNavOutlet]="nav"
     ></div>
   </div>
