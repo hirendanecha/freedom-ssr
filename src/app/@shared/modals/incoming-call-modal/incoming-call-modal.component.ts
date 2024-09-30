@@ -37,6 +37,7 @@ export class IncomingcallModalComponent
   profileId: number;
   soundEnabledSubscription: Subscription;
   isOnCall = false;
+  soundTrigger: string;
   constructor(
     public activateModal: NgbActiveModal,
     private socketService: SocketService,
@@ -72,13 +73,13 @@ export class IncomingcallModalComponent
     //   }
     // }
     this.sharedService.loginUserInfo.subscribe((user) => {
-      const callNotificationSound = user.callNotificationSound;
-      if (callNotificationSound !== 'N' && this.calldata.id) {
-        if (this.sound) {
-          this.sound?.play();
-        }
-      }
+     this.soundTrigger = user.callNotificationSound
     });
+    if (this.soundTrigger === 'Y' && this.calldata.id) {
+      if (this.sound) {
+        this.sound?.play();
+      }
+    }
     if (!this.hangUpTimeout) {
       this.hangUpTimeout = setTimeout(() => {
         this.hangUpCall(false, '');
@@ -86,7 +87,7 @@ export class IncomingcallModalComponent
     }
     this.socketService.socket?.on('notification', (data: any) => {
       if (data?.actionType === 'DC') {
-        this.sound.stop();
+        this.sound?.stop();
         this.activateModal.close('cancel');
       }
     });

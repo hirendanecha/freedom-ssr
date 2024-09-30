@@ -31,6 +31,7 @@ export class OutGoingCallModalComponent
 
   hangUpTimeout: any;
   soundEnabledSubscription: Subscription;
+  soundTrigger: string;
 
   constructor(
     public activateModal: NgbActiveModal,
@@ -50,13 +51,13 @@ export class OutGoingCallModalComponent
     //   }
     // }
     this.sharedService.loginUserInfo.subscribe((user) => {
-      const callNotificationSound = user.callNotificationSound;
-      if (callNotificationSound !== 'N' && this.calldata.id) {
-        if (this.sound) {
-          this.sound?.play();
-        }
-      }
+      this.soundTrigger = user.callNotificationSound;
     });
+    if (this.soundTrigger === 'Y' && this.calldata.id) {
+      if (this.sound) {
+        this.sound?.play();
+      }
+    }
     if (window.document.hidden) {
       this.soundEnabledSubscription =
         this.soundControlService.soundEnabled$.subscribe((soundEnabled) => {

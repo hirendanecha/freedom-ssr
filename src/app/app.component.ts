@@ -117,21 +117,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             //   localStorage.getItem('soundPreferences')
             // )?.notificationSoundEnabled;
             if (this.tagNotificationSound && this.soundEnabled) {
-              var sound = new Howl({
-                src: [
-                  'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
-                ],
-                volume: 0.8,
-                html5: true,
-                loop: false,
-              });
-              if (sound) {
-                sound?.play();
-                sound.on('end', () => {
-                  console.log('stop');
-                  sound.stop();
-                });
-              }
+              const url =
+                'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3';
+              this.soundIntegration(url);
             }
           }
           if (
@@ -148,21 +136,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             //   }
             // }
             if (this.messageNotificationSound && this.soundEnabled) {
-              var sound = new Howl({
-                src: [
-                  'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3',
-                ],
-                volume: 0.8,
-                html5: true,
-                loop: false,
-              });
-              if (sound) {
-                sound?.play();
-                sound.on('end', () => {
-                  console.log('stop');
-                  sound.stop();
-                });
-              }
+              const url =
+                'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3';
+              this.soundIntegration(url);
             }
             this.toasterService.success(data?.notificationDesc);
             return this.sharedService.updateIsRoomCreated(true);
@@ -274,6 +250,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           // this.socketService.socket?.emit('join', { room: profileId });
         }
       }, 3000);
+    }
+  }
+
+  soundIntegration(soundUrl: string): void {
+    var sound = new Howl({
+      src: [soundUrl],
+      volume: 0.8,
+    });
+    if (sound) {
+      sound?.play();
     }
   }
 

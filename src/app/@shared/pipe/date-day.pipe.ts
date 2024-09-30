@@ -1,11 +1,11 @@
-import { Pipe, PipeTransform, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Pipe, PipeTransform, ChangeDetectorRef, NgZone, OnDestroy } from '@angular/core';
 
 @Pipe({
   name: 'dateDay',
   pure: false
 })
-export class DateDayPipe implements PipeTransform {
-  
+export class DateDayPipe implements PipeTransform, OnDestroy {
+
   private lastUpdate: number;
   private interval: any;
 
@@ -50,6 +50,12 @@ export class DateDayPipe implements PipeTransform {
         }, updateInterval);
       });
       this.lastUpdate = currentDate;
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.interval) {
+      clearTimeout(this.interval);
     }
   }
 }
