@@ -141,7 +141,7 @@ export function app(): express.Express {
           const group: any = await getResearchGroup(id);
           const talent = {
             name: `Freedom.Buzz Research ${group?.PageTitle}`,
-            description: group?.PageDescription,
+            description: group?.PageDescription || group?.PageTitle,
             image: group?.CoverPicName || group?.ProfilePicName
           };
           seo.title = talent.name;

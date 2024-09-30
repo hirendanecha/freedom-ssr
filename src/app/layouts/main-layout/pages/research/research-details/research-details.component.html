@@ -22,13 +22,14 @@
         <span class="description" *ngIf="groupDetails?.TotalJoinedGroups">Members: {{ groupDetails?.TotalJoinedGroups }}</span>
       </div>
 
-      <!-- <button
+      <button
         *ngIf="tokenService.getCredentials()"
         type="button"
         class="btn btn-sm btn-primary align-self-start"
+        (click)="joinResearchGroup()"
       >
         Join Group
-      </button> -->
+      </button>
     </div>
 
     <div class="page-details pt-5">

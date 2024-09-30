@@ -103,4 +103,8 @@ export class ResearchDetailsComponent {
     this.pagination.page += 1;
     this.GetGroupPostById();
   }
+
+  joinResearchGroup(): void {
+    
+  }
 }
