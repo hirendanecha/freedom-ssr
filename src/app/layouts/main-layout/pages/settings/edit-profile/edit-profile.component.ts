@@ -45,6 +45,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     url: '',
   };
   isNotificationSoundEnabled: boolean = true;
+  isMessageSoundEnabled: boolean;
+  isCallSoundEnabled: boolean;
+  isMessageEmailEnabled: boolean;
+  isTagEmailEnabled: boolean;
 
   editForm = new FormGroup({
     FirstName: new FormControl(''),
@@ -114,6 +118,14 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     this.sharedService.loginUserInfo.subscribe((user) => {
       this.isNotificationSoundEnabled =
         user?.tagNotificationSound === 'Y' ? true : false;
+      this.isCallSoundEnabled =
+        user?.callNotificationSound === 'Y' ? true : false;
+      this.isMessageSoundEnabled =
+        user?.messageNotificationSound === 'Y' ? true : false;
+      this.isMessageEmailEnabled =
+        user?.messageNotificationEmail === 'Y' ? true : false;
+      this.isTagEmailEnabled =
+        user?.postNotificationEmail === 'Y' ? true : false;
     });
 
     this.getAllCountries();
@@ -121,20 +133,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {}
 
-  notificationSound() {
-    // const soundOct = JSON.parse(localStorage.getItem('soundPreferences')) || {};
-    // if (soundOct.notificationSoundEnabled === 'Y') {
-    //   soundOct.notificationSoundEnabled = 'N';
-    // } else {
-    //   soundOct.notificationSoundEnabled = this.isNotificationSoundEnabled
-    //     ? 'Y'
-    //     : 'N';
-    // }
-    // localStorage.setItem('soundPreferences', JSON.stringify(soundOct));
-    this.isNotificationSoundEnabled != this.isNotificationSoundEnabled;
+  toggleSoundPreference(property: string, ngModelValue: boolean): void {
     const soundObj = {
-      property: 'tagNotificationSound',
-      value: this.isNotificationSoundEnabled ? 'Y' : 'N',
+      property: property,
+      value: ngModelValue ? 'Y' : 'N',
     };
     this.customerService.updateNotificationSound(soundObj).subscribe({
       next: (res) => {
