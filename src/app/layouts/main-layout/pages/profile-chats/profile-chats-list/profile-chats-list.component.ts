@@ -629,7 +629,7 @@ export class ProfileChatsListComponent
     if (file.type.includes('application/')) {
       this.selectedFile = file;
       this.pdfName = file?.name;
-      this.chatObj.msgText = null;
+      // this.chatObj.msgText = null;
       this.viewUrl = URL.createObjectURL(file);
     } else if (file.type.includes('video/')) {
       this.selectedFile = file;
