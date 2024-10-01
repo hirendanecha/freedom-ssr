@@ -196,7 +196,7 @@ export class SocketService {
   getMessages(params, callback: (data: any) => void) {
     this.socket.emit('get-messages', params, callback);
   }
-  
+
   checkRoom(params, callback: (data: any) => void) {
     this.socket.emit('check-room', params, callback);
   }
@@ -211,5 +211,9 @@ export class SocketService {
 
   endCall(params) {
     this.socket.emit('end-call', params);
+  }
+
+  sendNotificationEmail(params) {
+    this.socket.emit('send-notification-email', params);
   }
 }

@@ -47,6 +47,7 @@ import { HttpEventType } from '@angular/common/http';
 import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 import { IncomingcallModalComponent } from 'src/app/@shared/modals/incoming-call-modal/incoming-call-modal.component';
 import { SoundControlService } from 'src/app/@shared/services/sound-control.service';
+import { getTagUsersFromAnchorTags } from 'src/app/@shared/utils/utils';
 
 @Component({
   selector: 'app-profile-chats-list',
@@ -127,6 +128,7 @@ export class ProfileChatsListComponent
   messageIndex: number;
   unreadMessage: any = {};
   relevantMembers: any = [];
+  postMessageTags: any[];
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   constructor(
     private socketService: SocketService,
@@ -201,10 +203,10 @@ export class ProfileChatsListComponent
                 profileId: this.profileId,
                 roomId: callData?.roomId,
                 groupId: callData?.groupId,
-              }
+              };
               this.socketService?.endCall(callLogData);
             }
-          })
+          });
         }
       });
     }
@@ -465,6 +467,7 @@ export class ProfileChatsListComponent
 
   // send btn
   sendMessage(): void {
+    this.chatObj['tags'] = getTagUsersFromAnchorTags(this.postMessageTags);
     if (this.chatObj.id) {
       // const message =
       //   this.chatObj.msgText !== null
@@ -483,6 +486,7 @@ export class ProfileChatsListComponent
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
         parentMessageId: this.chatObj.parentMessageId || null,
+        tags: this.chatObj?.['tags'],
       };
       this.socketService?.editMessage(data, (editMsg: any) => {
         this.isFileUploadInProgress = false;
@@ -539,6 +543,7 @@ export class ProfileChatsListComponent
         messageMedia: this.chatObj?.msgMedia,
         profileId: this.userChat.profileId,
         parentMessageId: this.chatObj?.parentMessageId || null,
+        tags: this.chatObj?.['tags'],
       };
       this.userChat?.roomId ? (data['isRead'] = 'N') : null;
 
@@ -669,6 +674,8 @@ export class ProfileChatsListComponent
     if (data.html === '') {
       this.resetData();
     }
+    this.postMessageTags = data?.tags;
+    console.log(this.postMessageTags);
   }
 
   uploadPostFileAndCreatePost(): void {
@@ -1129,7 +1136,7 @@ export class ProfileChatsListComponent
             profileId: this.profileId,
             roomId: this.userChat?.roomId,
             groupId: this.userChat?.groupId,
-          }
+          };
           this.socketService?.endCall(callLogData);
 
           const uuId = localStorage.getItem('uuId');
@@ -1479,6 +1486,7 @@ export class ProfileChatsListComponent
           break;
         }
       }
+      this.checkLastMessageOfRoom();
     }
     if (this.userChat?.groupId) {
       console.log('relevant', this.relevantMembers);
@@ -1655,6 +1663,23 @@ export class ProfileChatsListComponent
     const element = event.target;
     if (element.scrollTop < 100 && this.hasMoreData && !this.isLoading) {
       this.loadMoreChats();
+    }
+  }
+
+  checkLastMessageOfRoom(): void {
+    if (this.unreadMessage.message.isRead === 'N') {
+      const lastMessageDate = moment
+        .utc(this.unreadMessage.message.createdDate)
+        .local();
+      const currentDate = moment();
+      const diffInMinutes = currentDate.diff(lastMessageDate, 'minutes');
+      if (diffInMinutes >= 10) {
+        const data = {
+          roomId: this.unreadMessage.message.roomId,
+          profileId: this.userChat.profileId,
+        };
+        this.socketService.sendNotificationEmail(data);
+      }
     }
   }
 }
