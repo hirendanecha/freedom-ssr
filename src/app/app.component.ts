@@ -96,6 +96,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       this.socketService.socket?.on('notification', (data: any) => {
         if (data) {
+          if (data.actionType === 'S') {
+            this.toasterService.danger(data?.notificationDesc);
+            this.logout();
+          }
           const userData = this.tokenService.getUser();
           this.sharedService.getLoginUserDetails(userData);
           this.sharedService.loginUserInfo.subscribe((user) => {
@@ -261,6 +265,36 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     if (sound) {
       sound?.play();
     }
+  }
+
+  logout(): void {
+    // this.isCollapsed = true;
+    this.socketService?.socket?.emit('offline', (data) => {
+      return;
+    });
+    this.socketService?.socket?.on('get-users', (data) => {
+      data.map((ele) => {
+        if (!this.sharedService.onlineUserList.includes(ele.userId)) {
+          this.sharedService.onlineUserList.push(ele.userId);
+        }
+      });
+      // this.onlineUserList = data;
+    });
+    this.customerService.logout().subscribe({
+      next: (res) => {
+        this.tokenService.clearLoginSession(this.profileId);
+        this.tokenService.signOut();
+        return;
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.tokenService.signOut();
+        }
+      },
+    });
+    // this.toastService.success('Logout successfully');
+    // this.router.navigate(['/auth']);
+    // this.isDomain = false;
   }
 
   ngOnDestroy(): void {
