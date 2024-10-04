@@ -161,7 +161,7 @@ export class ProfileChatsListComponent
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
-    this.isOnCall = this.router.url.includes('/buzz-call/') || false;
+    this.isOnCall = this.router.url.includes('/facetime/') || false;
   }
   ngAfterViewInit(): void {
     if (this.callRoomId && !this.sidebarClass) {
@@ -1078,7 +1078,7 @@ export class ProfileChatsListComponent
           this.groupData?.groupName || this.sharedService?.userData?.Username,
         actionType: 'VC',
         notificationByProfileId: this.profileId,
-        link: `${this.webUrl}buzz-call/${originUrl}`,
+        link: `${this.webUrl}facetime/${originUrl}`,
         roomId: this.userChat?.roomId || null,
         groupId: this.userChat?.groupId || null,
         notificationDesc:
@@ -1106,7 +1106,7 @@ export class ProfileChatsListComponent
           this.groupData?.groupName || this.sharedService?.userData?.Username,
         actionType: 'VC',
         notificationByProfileId: this.profileId,
-        link: `${this.webUrl}buzz-call/${originUrl}`,
+        link: `${this.webUrl}facetime/${originUrl}`,
         roomId: this.userChat?.roomId || null,
         groupId: this.userChat?.groupId || null,
         notificationDesc:

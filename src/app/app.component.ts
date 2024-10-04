@@ -202,10 +202,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               ) {
                 const callIdMatch = data.link.match(/callId-\d+/);
                 const callId = callIdMatch ? callIdMatch[0] : data.link;
-                this.router.navigate([`/buzz-call/${callId}`], {
+                this.router.navigate([`/facetime/${callId}`], {
                   state: { chatDataPass },
                 });
-                // this.router.navigate([`/buzz-call/${data.link}`]);
+                // this.router.navigate([`/facetime/${data.link}`]);
               }
               // window.open(`appointment-call/${data.link}`, '_blank');
               // window?.open(data?.link, '_blank');

@@ -72,7 +72,7 @@
               <div class="ongoing-call d-center position-relative">
                 <a
                   routerLinkActive="active"
-                  [routerLink]="['/buzz-call/' + sharedService.callId]"
+                  [routerLink]="['/facetime/' + sharedService.callId]"
                   ngbTooltip="On going Call"
                   placement="bottom"
                 >
@@ -194,7 +194,7 @@
             <!-- [routerLink]="['/profile-chats']" -->
             <a
               routerLinkActive="active"
-              [routerLink]="['/buzz-call/' + sharedService.callId]"
+              [routerLink]="['/facetime/' + sharedService.callId]"
             >
               <fa-icon [icon]="['fas', 'phone-volume']" class="font-20-px" />
             </a>

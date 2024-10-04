@@ -77,7 +77,7 @@ export class HeaderComponent {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.hideSubHeader = this.router.url.includes('profile-chats');
-        this.hideOngoingCallButton = this.router.url.includes('buzz-call');
+        this.hideOngoingCallButton = this.router.url.includes('facetime');
         console.log(this.hideSubHeader);
         this.sharedService.callId = sessionStorage.getItem('callId') || null;
         console.log(this.sharedService.callId);

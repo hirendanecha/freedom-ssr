@@ -97,7 +97,7 @@ const routes: Routes = [
         canActivate: mapToCanActivate([AuthenticationGuard]),
       },
       {
-        path: 'buzz-call/:callId',
+        path: 'facetime/:callId',
         component: AppointmentCallComponent,
         data: {
           isShowLeftSideBar: false,

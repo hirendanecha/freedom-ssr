@@ -30,7 +30,7 @@ export class ConferenceLinkComponent {
   myProp: string;
   hasDisplayedError = false;
   profileId: number;
-  originUrl = 'https://freedom.buzz/buzz-call/'
+  originUrl = 'https://freedom.buzz/facetime/'
   link: string = '';
   constructor(
     private spinner: NgxSpinnerService,

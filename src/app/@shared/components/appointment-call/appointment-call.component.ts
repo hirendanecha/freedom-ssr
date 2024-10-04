@@ -65,7 +65,7 @@ export class AppointmentCallComponent implements OnInit {
       };
     }
     const appointmentURLCall =
-      this.route.snapshot['_routerState'].url.split('/buzz-call/')[1];
+      this.route.snapshot['_routerState'].url.split('/facetime/')[1];
     sessionStorage.setItem('callId', appointmentURLCall);
     this.screenSubscription = this.breakpointService?.screen.subscribe(
       (screen) => {
