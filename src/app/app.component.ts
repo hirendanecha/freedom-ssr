@@ -273,7 +273,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   soundIntegration(soundUrl: string): void {
     var sound = new Howl({
       src: [soundUrl],
-      volume: 0.8,
+      volume: 0.5,
     });
     if (sound) {
       sound?.play();
