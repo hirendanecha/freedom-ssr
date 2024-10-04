@@ -53,7 +53,7 @@ export class OutGoingCallModalComponent
     this.sharedService.loginUserInfo.subscribe((user) => {
       this.soundTrigger = user.callNotificationSound;
     });
-    if (this.soundTrigger === 'Y' && this.calldata.id) {
+    if (this.soundTrigger === 'Y' && this.calldata.link) {
       if (this.sound) {
         this.sound?.play();
       }

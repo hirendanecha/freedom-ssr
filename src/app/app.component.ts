@@ -100,6 +100,19 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.toasterService.danger(data?.notificationDesc);
             this.logout();
           }
+          if (
+            data.actionType === 'EC' &&
+            data.notificationByProfileId !== this.profileId &&
+            sessionStorage.getItem('callId')
+          ) {
+            this.sharedService.callId = null;
+            sessionStorage.removeItem('callId');
+            const endCall = {
+              profileId: this.profileId,
+              roomId: data.roomId,
+            };
+            this.socketService?.endCall(endCall);
+          }
           const userData = this.tokenService.getUser();
           this.sharedService.getLoginUserDetails(userData);
           this.sharedService.loginUserInfo.subscribe((user) => {
