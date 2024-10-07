@@ -146,9 +146,11 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     }
 
     const text = htmlText.replace(/<br\s*\/?>|<[^>]*>/g, ' ');
+    const extractedLinks = [...htmlText.matchAll(/<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*?href=["']([^"']*)["']/gi)]
+    .map(match => match[1]);
     // const matches = text?.match(/(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/);
     const matches = text.match(/(?:https?:\/\/|www\.)[^\s<&]+(?:\.[^\s<&]+)+(?:\.[^\s<]+)?/g);
-    const url = matches?.[0];
+    const url = matches?.[0] || extractedLinks?.[0];
     if (url) {
       if (url !== this.metaData?.url) {
         // this.isMetaLoader = true;
@@ -332,7 +334,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       this.value = `${htmlText}`.replace(
         /(?:<div><br><\/div>\s*)+/gi,
         '<div><br></div>'
-      );
+      ).replace( /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,'$1');
       this.onDataChange?.emit({
         html: this.value,
         tags: this.tagInputDiv?.nativeElement?.children,
