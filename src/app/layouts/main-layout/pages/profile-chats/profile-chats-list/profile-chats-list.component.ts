@@ -397,9 +397,9 @@ export class ProfileChatsListComponent
       });
       this.findUserStatus(this.userChat.profileId);
     }
-    this.messageElements?.changes?.subscribe(() => {
-      this.resetIndex();
-    });
+    // this.messageElements?.changes?.subscribe(() => {
+    //   this.resetIndex();
+    // });
     this.socketService.socket?.on('typing', (data) => {
       this.typingData = data;
     });
@@ -830,7 +830,7 @@ export class ProfileChatsListComponent
     const tagUserInput = document.querySelector(
       'app-tag-user-input .tag-input-div'
     ) as HTMLInputElement;
-    if (tagUserInput) {
+    if (tagUserInput && !this.isSearch) {
       tagUserInput.focus();
     }
   }
@@ -1626,11 +1626,18 @@ export class ProfileChatsListComponent
       .filter(
         (element) => element.nativeElement.querySelector('.highlight') !== null
       );
-
-    if (highlightedElements.length > 0) {
+    if (!this.currentHighlightedIndex) {
+      this.loadMoreChats();
+      this.currentHighlightedIndex = this.currentHighlightedIndex + 1;
+      this.scrollToHighlighted(this.currentHighlightedIndex);
+    } else if (highlightedElements.length > 0) {
       this.currentHighlightedIndex =
         (this.currentHighlightedIndex - 1 + highlightedElements.length) %
         highlightedElements.length;
+      this.scrollToHighlighted(this.currentHighlightedIndex);
+    } else {
+      this.loadMoreChats();
+      this.currentHighlightedIndex = this.currentHighlightedIndex + 1;
       this.scrollToHighlighted(this.currentHighlightedIndex);
     }
   }
