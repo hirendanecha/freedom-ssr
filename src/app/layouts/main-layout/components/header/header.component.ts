@@ -49,6 +49,7 @@ export class HeaderComponent {
   hideSubHeader: boolean = false;
   hideOngoingCallButton: boolean = false;
   authToken = localStorage.getItem('auth-token');
+  showUserGuideBtn: boolean = false;
   constructor(
     private modalService: NgbModal,
     public sharedService: SharedService,
@@ -78,6 +79,7 @@ export class HeaderComponent {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.hideSubHeader = this.router.url.includes('profile-chats');
+        this.showUserGuideBtn = this.router.url.includes('home');
         this.hideOngoingCallButton = this.router.url.includes('facetime');
         console.log(this.hideSubHeader);
         this.sharedService.callId = sessionStorage.getItem('callId') || null;

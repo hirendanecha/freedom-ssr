@@ -249,7 +249,7 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-sm btn-outline-primary rounded-circle h-32-px w-32-px ms-2 userguidebtn" (click)="openUserGuide()">?</button>
+      <button class="btn btn-sm btn-outline-primary rounded-circle h-32-px w-32-px ms-2 userguidebtn" *ngIf="showUserGuideBtn" (click)="openUserGuide()">?</button>
     </nav>
   </div>
 
