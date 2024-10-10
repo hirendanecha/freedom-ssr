@@ -16,6 +16,7 @@ import { LeftSidebarComponent } from '../../components/left-sidebar/left-sidebar
 import { environment } from 'src/environments/environment';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
+import { UserGuideModalComponent } from 'src/app/@shared/modals/userguide-modal/userguide-modal.component';
 
 @Component({
   selector: 'app-header',
@@ -196,5 +197,12 @@ export class HeaderComponent {
         : `?authToken=${this.authToken}`;
     }
     window.open(redirectUrl, '_blank');
+  }
+
+  openUserGuide(){
+    this.modalService.open(UserGuideModalComponent, {
+      centered: true,
+      size: 'lg',
+    });
   }
 }

@@ -90,6 +90,21 @@
       }
     }
   }
+
+  .userguidebtn {
+    position: absolute;
+    left: 100%;
+
+    @media (min-width: 1250px) {
+      left: calc(100% + 30px);
+    }
+    @media (min-width: 992px) and (max-width:1040px) {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
 }
 
 @media (max-width: 768px) {
