@@ -276,6 +276,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       next: (result) => {
         this.spinner.hide();
         this.allStateData = result;
+        this.registerForm.get('State').setValue(result[0]?.state);
       },
       error: (error) => {
         this.spinner.hide();
