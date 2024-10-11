@@ -61,7 +61,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     City: new FormControl(''),
     County: new FormControl(''),
     TermAndPolicy: new FormControl(false, Validators.required),
-    Anonymous: new FormControl(false, Validators.required),
+    Anonymous: new FormControl(false),
   });
   @ViewChild('captcha', { static: false }) captchaElement: ElementRef;
   constructor(

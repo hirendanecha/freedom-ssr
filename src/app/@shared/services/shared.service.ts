@@ -6,6 +6,8 @@ import { CommunityService } from './community.service';
 import { PostService } from './post.service';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { TokenStorageService } from './token-storage.service';
+import { SocketService } from './socket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +32,9 @@ export class SharedService {
     private customerService: CustomerService,
     private communityService: CommunityService,
     private postService: PostService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private tokenStorageService: TokenStorageService,
+    private socketService: SocketService
   ) {
     this.route.paramMap.subscribe((paramMap) => {
       const name = paramMap.get('name');
@@ -77,7 +81,7 @@ export class SharedService {
           const data = res?.data?.[0];
           if (data) {
             this.userData = data;
-            localStorage.setItem('userData', JSON.stringify(this.userData));
+            // localStorage.setItem('userData', JSON.stringify(this.userData));
             this.getLoginUserDetails(data);
           }
         },
@@ -177,7 +181,8 @@ export class SharedService {
   }
 
   generateSessionKey(): void {
-    const sessionKey = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    const sessionKey =
+      Math.random().toString(36).substring(2) + Date.now().toString(36);
     sessionStorage.setItem('uniqueSessionKey', sessionKey);
   }
 
@@ -188,5 +193,31 @@ export class SharedService {
       return true;
     }
     return false;
+  }
+
+  logOut(): void {
+    this.socketService?.socket?.emit('offline', (data) => {
+      return;
+    });
+    this.socketService?.socket?.on('get-users', (data) => {
+      data.map((ele) => {
+        if (!this.onlineUserList.includes(ele.userId)) {
+          this.onlineUserList.push(ele.userId);
+        }
+      });
+      // this.onlineUserList = data;
+    });
+    this.customerService.logout().subscribe({
+      next: (res) => {
+        this.tokenStorageService.clearLoginSession(this.userData.profileId);
+        this.tokenStorageService.signOut();
+        return;
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.tokenStorageService.signOut();
+        }
+      },
+    });
   }
 }
