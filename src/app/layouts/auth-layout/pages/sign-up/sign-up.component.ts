@@ -226,10 +226,10 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     // return false;
     // }
     // this.profileImg?.file?.name &&
+    // && this.registerForm.get('Anonymous').value === true
     if (
       this.registerForm.valid &&
-      this.registerForm.get('TermAndPolicy').value === true &&
-      this.registerForm.get('Anonymous').value === true
+      this.registerForm.get('TermAndPolicy').value === true 
     ) {
       if (!this.validatepassword()) {
         return;
