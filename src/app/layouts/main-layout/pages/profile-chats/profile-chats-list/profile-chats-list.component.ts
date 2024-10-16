@@ -1487,7 +1487,7 @@ export class ProfileChatsListComponent
           break;
         }
       }
-      this.checkLastMessageOfRoom();
+      // this.checkLastMessageOfRoom();
     }
     if (this.userChat?.groupId) {
       console.log('relevant', this.relevantMembers);
