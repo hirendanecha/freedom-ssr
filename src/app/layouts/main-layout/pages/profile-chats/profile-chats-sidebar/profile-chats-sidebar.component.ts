@@ -50,8 +50,8 @@ export class ProfileChatsSidebarComponent
   selectedChatUser: any;
   showUserProfile: boolean = false;
 
-  isMessageSoundEnabled: boolean;
-  isCallSoundEnabled: boolean;
+  isMessageSoundEnabled: boolean = true;
+  isCallSoundEnabled: boolean = true;
   backCanvas: boolean = true;
   isChatLoader = false;
   selectedButton: string = 'chats';
@@ -84,12 +84,6 @@ export class ProfileChatsSidebarComponent
     // if (notificationSound?.callSoundEnabled === 'N') {
     //   this.isCallSoundEnabled = false;
     // }
-    this.sharedService.loginUserInfo.subscribe((user) => {
-      this.isCallSoundEnabled =
-        user?.callNotificationSound === 'Y' ? true : false;
-      this.isMessageSoundEnabled =
-        user?.messageNotificationSound === 'Y' ? true : false;
-    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -108,6 +102,12 @@ export class ProfileChatsSidebarComponent
 
   ngOnInit(): void {
     // this.chatData = history.state.chatUserData;
+    this.sharedService.loginUserInfo.subscribe((user) => {
+      this.isCallSoundEnabled =
+        user?.callNotificationSound === 'Y' ? true : false;
+      this.isMessageSoundEnabled =
+        user?.messageNotificationSound === 'Y' ? true : false;
+    });
     this.route.queryParams.subscribe((params) => {
       if (params['chatUserData']) {
         this.chatData = JSON.parse(decodeURIComponent(params['chatUserData']));
