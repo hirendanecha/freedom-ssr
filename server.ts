@@ -2,7 +2,7 @@ import 'zone.js/node';
 
 import { APP_BASE_HREF } from '@angular/common';
 import { ngExpressEngine } from '@nguniversal/express-engine';
-import * as express from 'express';
+import express from 'express';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import fetch from 'node-fetch';
@@ -130,7 +130,11 @@ export function app(): express.Express {
           const talent = {
             name: post?.title || post?.albumname || 'Freedom.Buzz Post',
             description: pdhtml?.textContent || 'Post content',
-            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
+            image:
+              post?.thumbfilename ||
+              post?.metaimage ||
+              post?.imageUrl ||
+              'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
           };
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
@@ -142,7 +146,7 @@ export function app(): express.Express {
           const talent = {
             name: `Freedom.Buzz Research ${group?.PageTitle}`,
             description: group?.PageDescription || group?.PageTitle,
-            image: group?.CoverPicName || group?.ProfilePicName
+            image: group?.CoverPicName || group?.ProfilePicName,
           };
           seo.title = talent.name;
           seo.description = talent.description;
@@ -172,9 +176,7 @@ export function app(): express.Express {
 }
 
 async function getCommunity(id: any) {
-  return fetch(api_url + 'community/bySlug/' + id).then((resp) =>
-    resp.json()
-  );
+  return fetch(api_url + 'community/bySlug/' + id).then((resp) => resp.json());
 }
 
 async function getPost(id: any) {
@@ -187,8 +189,8 @@ async function getProfile(id: any) {
 }
 
 async function getResearchGroup(id: any) {
-  return fetch(api_url + 'profile/getGroupBasicDetails/' + id).then((resp: any) =>
-    resp.json()
+  return fetch(api_url + 'profile/getGroupBasicDetails/' + id).then(
+    (resp: any) => resp.json()
   );
 }
 

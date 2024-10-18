@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationModalComponent } from './modals/confirmation-modal/confirmation-modal.component';
@@ -143,7 +143,6 @@ import { ForwardChatModalComponent } from './modals/forward-chat-modal/forward-c
 import { ImgLayoutComponent } from './components/img-layout/img-layout.component';
 import { HoverDropdownDirective } from './directives/hover-dropdown.directive';
 import { UserGuideModalComponent } from './modals/userguide-modal/userguide-modal.component';
-// import { ProfileChartsModule } from '../layouts/main-layout/pages/profile-chats/profile-chats.module';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -180,7 +179,7 @@ const sharedComponents = [
   AppQrModalComponent,
   ForwardChatModalComponent,
   ImgLayoutComponent,
-  UserGuideModalComponent
+  UserGuideModalComponent,
 ];
 
 const sharedModules = [
@@ -198,13 +197,11 @@ const sharedModules = [
   PipeModule,
   MentionModule,
   QRCodeModule,
-  // ProfileChartsModule
-  // PdfViewerModule
 ];
 
 @NgModule({
-  declarations: [sharedComponents],
   imports: [sharedModules],
+  declarations: [sharedComponents],
   exports: [...sharedModules, ...sharedComponents],
   providers: [
     NgbActiveModal,

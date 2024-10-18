@@ -13,7 +13,7 @@ import { SocketService } from 'src/app/@shared/services/socket.service';
 import { ConfirmationModalComponent } from 'src/app/@shared/modals/confirmation-modal/confirmation-modal.component';
 import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { take } from 'rxjs';
-import * as moment from 'moment';
+import moment from 'moment';
 import { AppQrModalComponent } from 'src/app/@shared/modals/app-qr-modal/app-qr-modal.component';
 import { ConferenceLinkComponent } from 'src/app/@shared/modals/create-conference-link/conference-link-modal.component';
 import { Router } from '@angular/router';

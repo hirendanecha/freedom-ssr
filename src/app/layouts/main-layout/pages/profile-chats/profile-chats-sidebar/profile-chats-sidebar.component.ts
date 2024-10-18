@@ -21,7 +21,7 @@ import { SharedService } from 'src/app/@shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EncryptDecryptService } from 'src/app/@shared/services/encrypt-decrypt.service';
 import { CreateGroupModalComponent } from 'src/app/@shared/modals/create-group-modal/create-group-modal.component';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { QrScanModalComponent } from 'src/app/@shared/modals/qrscan-modal/qrscan-modal.component';
 import { AppQrModalComponent } from 'src/app/@shared/modals/app-qr-modal/app-qr-modal.component';

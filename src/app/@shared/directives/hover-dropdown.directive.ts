@@ -20,8 +20,11 @@ export class HoverDropdownDirective {
     target: HTMLElement
   ) {
     if (target.tagName === 'A' && target.hasAttribute('data-id')) {
+      const profileId = +localStorage.getItem('profileId');
       const id = +target.getAttribute('data-id');
-      this.createDropdown(target, id);
+      if (id !== profileId) {
+        this.createDropdown(target, id);
+      }
     }
   }
 
@@ -50,7 +53,9 @@ export class HoverDropdownDirective {
     this.customerService.getProfile(id).subscribe({
       next: (res: any) => {
         if (res.data && res.data.length > 0) {
-          const profilePicUrl = res.data[0]?.ProfilePicName || '/assets/images/avtar/placeholder-user.png';
+          const profilePicUrl =
+            res.data[0]?.ProfilePicName ||
+            '/assets/images/avtar/placeholder-user.png';
           const content = `
                 <div class="d-flex flex-column">
                   <img
@@ -77,11 +82,7 @@ export class HoverDropdownDirective {
           this.dropdownElement.innerHTML = content;
           this.renderer.appendChild(document.body, this.dropdownElement);
           const anchorRect = anchorElement.getBoundingClientRect();
-          this.renderer.setStyle(
-            this.dropdownElement, 
-            'position', 
-            'absolute'
-          );
+          this.renderer.setStyle(this.dropdownElement, 'position', 'absolute');
           this.renderer.setStyle(
             this.dropdownElement,
             'top',
@@ -154,5 +155,10 @@ export class HoverDropdownDirective {
       })
       .toString();
     window.open(url, '_blank');
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick() {
+    this.hideDropdown();
   }
 }

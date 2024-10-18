@@ -17,7 +17,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import * as moment from 'moment';
+import moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, take, takeUntil } from 'rxjs';
 import { OutGoingCallModalComponent } from 'src/app/@shared/modals/outgoing-call-modal/outgoing-call-modal.component';

@@ -96,7 +96,7 @@ export class EditPostModalComponent implements AfterViewInit {
     }
     let existingFileType = '';
     if (this.combinedMediaData.length > 0) {
-      existingFileType = this.combinedMediaData[0].file.type.split('/')[0];
+      existingFileType = this.combinedMediaData[0]?.file?.type.split('/')[0];
     }
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
