@@ -129,15 +129,15 @@ export class PostCardComponent implements OnInit {
   ngOnInit(): void {
     // this.socketListner();
     this.viewComments(this.post?.id);
+    this.descriptionimageUrl = this.extractImageUrlFromContent(
+      this.post.postdescription
+    );
   }
 
   ngAfterViewInit(): void {
     // if (this.post?.posttype === 'V') {
     //   this.playVideo(this.post?.id);
     // }
-    this.descriptionimageUrl = this.extractImageUrlFromContent(
-      this.post.postdescription
-    );
     const path = this.route.snapshot.routeConfig.path;
     if (path === 'view-profile/:id' || path === 'post/:id') {
       this.shareButton = true;
@@ -454,8 +454,8 @@ export class PostCardComponent implements OnInit {
       } else {
         this.commentparentReplayId = null;
         setTimeout(() => {
-        this.focusTagInput(comment.id);
-      }, 10);
+          this.focusTagInput(comment.id);
+        }, 10);
       }
     } else if (commentType === 'parentReplay') {
       this.parentReplayComment =
@@ -466,8 +466,8 @@ export class PostCardComponent implements OnInit {
       } else {
         this.commentId = null;
         setTimeout(() => {
-        this.focusTagInput(comment.parentCommentId);
-      }, 10);
+          this.focusTagInput(comment.parentCommentId);
+        }, 10);
       }
     }
   }
