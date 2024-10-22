@@ -14,7 +14,7 @@ import {
   HTTP_INTERCEPTORS,
   HttpClientModule,
   provideHttpClient,
-  withFetch,
+  withInterceptorsFromDi,
 } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CookieService } from 'ngx-cookie-service';
@@ -37,7 +37,7 @@ import { AuthInterceptor } from './@shared/intersaptor/auth.interceptor';
     CookieService,
     Meta,
     provideClientHydration(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

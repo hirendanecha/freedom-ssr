@@ -263,19 +263,18 @@
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
             >Zip Code
-            <span class="text-danger">*</span>
+            <!-- <span class="text-danger">*</span> -->
           </label>
           <input
             type="text"
             class="input-area"
-            required=""
             placeholder="Enter your zip code"
             formControlName="Zip"
             name="Zip"
             #zipCode
             (input)="convertToUppercase($event)"
           />
-          <div
+          <!-- <div
             class="text-danger"
             *ngIf="
               registerForm.get('Zip').hasError('required') &&
@@ -283,26 +282,26 @@
             "
           >
             Zip code is required.
-          </div>
+          </div> -->
         </div>
 
         <div class="col-12 col-md-6 mb-3">
           <label class="form-label"
             >State
-            <span class="text-danger">*</span>
+            <!-- <span class="text-danger">*</span> -->
           </label>
           <select
             id="State"
             name="State"
-            required=""
             class="input-area w-100"
             formControlName="State"
           >
             <option *ngFor="let item of allStateData">
               {{ item.state }}
             </option>
+            <option value="Other">Other</option>
           </select>
-          <div
+          <!-- <div
             class="text-danger"
             *ngIf="
               registerForm.get('State').hasError('required') &&
@@ -310,7 +309,7 @@
             "
           >
             State is required.
-          </div>
+          </div> -->
         </div>
 
         <div class="col-12 col-md-6 mb-3">

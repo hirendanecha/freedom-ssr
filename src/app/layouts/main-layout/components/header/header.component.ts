@@ -82,7 +82,7 @@ export class HeaderComponent {
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.hideSubHeader = this.router.url.includes('profile-chats');
+        this.hideSubHeader = this.router.url.includes('profile-chats') || this.router.url.includes('facetime');
         this.showUserGuideBtn = this.router.url.includes('home');
         const profileId = +localStorage.getItem('profileId');
         const reqObj = {
