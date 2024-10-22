@@ -1,3 +1,6 @@
+<div class="d-flex justify-content-end me-2 btn btn-sm" *ngIf="title === 'Join existing call...'">
+  <fa-icon [icon]="['fas', 'xmark']" class="font-24-px" role="button" (click)="activateModal.close('cancel')" />
+</div>
 <div class="modal-body text-start" #focusElement>
   <div class="text-center">
     <img

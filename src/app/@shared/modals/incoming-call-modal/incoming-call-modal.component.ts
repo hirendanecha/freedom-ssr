@@ -28,6 +28,7 @@ export class IncomingcallModalComponent
 {
   @Input() cancelButtonLabel: string = 'Hangup';
   @Input() confirmButtonLabel: string = 'Join';
+  @Input() showCloseButton: boolean = false;
   @Input() title: string = 'Incoming call...';
   @Input() calldata: any;
   @Input() sound: any;

@@ -91,43 +91,46 @@ export class HeaderComponent {
         this.socketService?.checkCall(reqObj, (data: any) => {
           if (data?.isOnCall === 'Y' && data?.callLink) {
             this.sharedService.callId =
-              sessionStorage.getItem('callId') || null;
+            sessionStorage.getItem('callId') || null;
             this.hideOngoingCallButton = this.router.url.includes('facetime');
-            var callSound = new Howl({
-              src: [
-                'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
-              ],
-              loop: true,
-            });
-            this.soundControlService.initTabId();
-            const modalRef = this.modalService.open(
-              IncomingcallModalComponent,
-              {
-                centered: true,
-                size: 'sm',
-                backdrop: 'static',
-              }
-            );
-            const callData = {
-              Username: '',
-              link: data?.callLink,
-              roomId: data.roomId,
-              groupId: data.groupId,
-              ProfilePicName: this.sharedService?.userData?.ProfilePicName,
-            };
-            modalRef.componentInstance.calldata = callData;
-            modalRef.componentInstance.sound = callSound;
-            modalRef.componentInstance.title = 'Join existing call...';
-            modalRef.result.then((res) => {
-              if (res === 'cancel') {
-                const callLogData = {
-                  profileId: profileId,
-                  roomId: callData?.roomId,
-                  groupId: callData?.groupId,
-                };
-                this.socketService?.endCall(callLogData);
-              }
-            });
+            if (!this.hideOngoingCallButton) {
+              var callSound = new Howl({
+                src: [
+                  'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
+                ],
+                loop: true,
+              });
+              this.soundControlService.initTabId();
+              const modalRef = this.modalService.open(
+                IncomingcallModalComponent,
+                {
+                  centered: true,
+                  size: 'sm',
+                  backdrop: 'static',
+                }
+              );
+              const callData = {
+                Username: '',
+                link: data?.callLink,
+                roomId: data.roomId,
+                groupId: data.groupId,
+                ProfilePicName: this.sharedService?.userData?.ProfilePicName,
+              };
+              modalRef.componentInstance.calldata = callData;
+              modalRef.componentInstance.sound = callSound;
+              modalRef.componentInstance.showCloseButton = true;
+              modalRef.componentInstance.title = 'Join existing call...';
+              modalRef.result.then((res) => {
+                if (res === 'cancel') {
+                  const callLogData = {
+                    profileId: profileId,
+                    roomId: callData?.roomId,
+                    groupId: callData?.groupId,
+                  };
+                  this.socketService?.endCall(callLogData);
+                }
+              });
+            }
           } else {
             sessionStorage.removeItem('callId');
             this.sharedService.callId = null;
