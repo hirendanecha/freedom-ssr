@@ -143,6 +143,7 @@ import { ForwardChatModalComponent } from './modals/forward-chat-modal/forward-c
 import { ImgLayoutComponent } from './components/img-layout/img-layout.component';
 import { HoverDropdownDirective } from './directives/hover-dropdown.directive';
 import { UserGuideModalComponent } from './modals/userguide-modal/userguide-modal.component';
+import { InvitePeopleForChatModalComponent } from './modals/invite-people-for-chat/invite-people-for-chat-modal.component';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -180,6 +181,7 @@ const sharedComponents = [
   ForwardChatModalComponent,
   ImgLayoutComponent,
   UserGuideModalComponent,
+  InvitePeopleForChatModalComponent,
 ];
 
 const sharedModules = [
