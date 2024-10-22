@@ -169,47 +169,47 @@ export class ProfileChatsListComponent
       this.callRoomId = null;
     }
 
-    if (!this.sidebarClass) {
-      const reqObj = {
-        profileId: this.profileId,
-      };
-      this.socketService?.checkCall(reqObj, (data: any) => {
-        if (data?.isOnCall === 'Y' && data?.callLink) {
-          var callSound = new Howl({
-            src: [
-              'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
-            ],
-            loop: true,
-          });
-          this.soundControlService.initTabId();
-          const modalRef = this.modalService.open(IncomingcallModalComponent, {
-            centered: true,
-            size: 'sm',
-            backdrop: 'static',
-          });
-          const callData = {
-            Username: '',
-            link: data?.callLink,
-            roomId: data.roomId,
-            groupId: data.groupId,
-            ProfilePicName: this.sharedService?.userData?.ProfilePicName,
-          };
-          modalRef.componentInstance.calldata = callData;
-          modalRef.componentInstance.sound = callSound;
-          modalRef.componentInstance.title = 'Join existing call...';
-          modalRef.result.then((res) => {
-            if (res === 'cancel') {
-              const callLogData = {
-                profileId: this.profileId,
-                roomId: callData?.roomId,
-                groupId: callData?.groupId,
-              };
-              this.socketService?.endCall(callLogData);
-            }
-          });
-        }
-      });
-    }
+    // if (!this.sidebarClass) {
+    //   const reqObj = {
+    //     profileId: this.profileId,
+    //   };
+    //   this.socketService?.checkCall(reqObj, (data: any) => {
+    //     if (data?.isOnCall === 'Y' && data?.callLink) {
+    //       var callSound = new Howl({
+    //         src: [
+    //           'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
+    //         ],
+    //         loop: true,
+    //       });
+    //       this.soundControlService.initTabId();
+    //       const modalRef = this.modalService.open(IncomingcallModalComponent, {
+    //         centered: true,
+    //         size: 'sm',
+    //         backdrop: 'static',
+    //       });
+    //       const callData = {
+    //         Username: '',
+    //         link: data?.callLink,
+    //         roomId: data.roomId,
+    //         groupId: data.groupId,
+    //         ProfilePicName: this.sharedService?.userData?.ProfilePicName,
+    //       };
+    //       modalRef.componentInstance.calldata = callData;
+    //       modalRef.componentInstance.sound = callSound;
+    //       modalRef.componentInstance.title = 'Join existing call...';
+    //       modalRef.result.then((res) => {
+    //         if (res === 'cancel') {
+    //           const callLogData = {
+    //             profileId: this.profileId,
+    //             roomId: callData?.roomId,
+    //             groupId: callData?.groupId,
+    //           };
+    //           this.socketService?.endCall(callLogData);
+    //         }
+    //       });
+    //     }
+    //   });
+    // }
   }
 
   ngOnInit(): void {

@@ -17,6 +17,9 @@ import { environment } from 'src/environments/environment';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 import { SocketService } from 'src/app/@shared/services/socket.service';
 import { UserGuideModalComponent } from 'src/app/@shared/modals/userguide-modal/userguide-modal.component';
+import { IncomingcallModalComponent } from 'src/app/@shared/modals/incoming-call-modal/incoming-call-modal.component';
+import { SoundControlService } from 'src/app/@shared/services/sound-control.service';
+import { Howl } from 'howler';
 
 @Component({
   selector: 'app-header',
@@ -58,7 +61,8 @@ export class HeaderComponent {
     public breakpointService: BreakpointService,
     private offcanvasService: NgbOffcanvas,
     public tokenService: TokenStorageService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private soundControlService: SoundControlService
   ) {
     this.originalFavicon = document.querySelector('link[rel="icon"]');
     this.socketService?.socket?.on('isReadNotification_ack', (data) => {
@@ -80,10 +84,56 @@ export class HeaderComponent {
       if (event instanceof NavigationEnd) {
         this.hideSubHeader = this.router.url.includes('profile-chats');
         this.showUserGuideBtn = this.router.url.includes('home');
-        this.hideOngoingCallButton = this.router.url.includes('facetime');
-        console.log(this.hideSubHeader);
-        this.sharedService.callId = sessionStorage.getItem('callId') || null;
-        console.log(this.sharedService.callId);
+        const profileId = +localStorage.getItem('profileId');
+        const reqObj = {
+          profileId: profileId,
+        };
+        this.socketService?.checkCall(reqObj, (data: any) => {
+          if (data?.isOnCall === 'Y' && data?.callLink) {
+            this.sharedService.callId =
+              sessionStorage.getItem('callId') || null;
+            this.hideOngoingCallButton = this.router.url.includes('facetime');
+            var callSound = new Howl({
+              src: [
+                'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
+              ],
+              loop: true,
+            });
+            this.soundControlService.initTabId();
+            const modalRef = this.modalService.open(
+              IncomingcallModalComponent,
+              {
+                centered: true,
+                size: 'sm',
+                backdrop: 'static',
+              }
+            );
+            const callData = {
+              Username: '',
+              link: data?.callLink,
+              roomId: data.roomId,
+              groupId: data.groupId,
+              ProfilePicName: this.sharedService?.userData?.ProfilePicName,
+            };
+            modalRef.componentInstance.calldata = callData;
+            modalRef.componentInstance.sound = callSound;
+            modalRef.componentInstance.title = 'Join existing call...';
+            modalRef.result.then((res) => {
+              if (res === 'cancel') {
+                const callLogData = {
+                  profileId: profileId,
+                  roomId: callData?.roomId,
+                  groupId: callData?.groupId,
+                };
+                this.socketService?.endCall(callLogData);
+              }
+            });
+          } else {
+            sessionStorage.removeItem('callId');
+            this.sharedService.callId = null;
+            this.hideOngoingCallButton = true;
+          }
+        });
       }
     });
   }
@@ -201,7 +251,7 @@ export class HeaderComponent {
     window.open(redirectUrl, '_blank');
   }
 
-  openUserGuide(){
+  openUserGuide() {
     this.modalService.open(UserGuideModalComponent, {
       centered: true,
       size: 'lg',
