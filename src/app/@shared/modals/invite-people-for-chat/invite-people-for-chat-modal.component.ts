@@ -21,7 +21,7 @@ import { SharedService } from '../../services/shared.service';
 export class InvitePeopleForChatModalComponent {
   @Input() cancelButtonLabel: string = 'Cancel';
   @Input() confirmButtonLabel: string = 'Invite';
-  @Input() title: string = 'Invite people for chat';
+  @Input() title: string = 'Invite people to chat';
   @Input() chatList: any = [];
   @Input() pendingChatList: any = [];
 
