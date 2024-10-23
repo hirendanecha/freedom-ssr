@@ -194,7 +194,7 @@
         </div>
       </div>
       <!-- <span class="m-1">Search for end users to message:</span> -->
-      <div class="py-2 d-flex align-items-center justify-content-center">
+      <div class="pt-1 d-flex align-items-center justify-content-center">
         <!-- <fa-icon [icon]="['fas', 'search']" class="font-20-px m-1" />
         <input
           type="text"
@@ -203,9 +203,9 @@
           autocomplete="off"
           (keyup)="getUserList()"
         /> -->
-        <button class="btn btn-success" (click)="invitePeople()">
+        <button class="btn btn-success btn-sm d-flex align-items-center justify-content-center h-36-px" (click)="invitePeople()">
           <fa-icon [icon]="['fas', 'plus-circle']" class="font-20-px m-1" />
-          Invite people for chat
+          Invite people to chat
         </button>
       </div>
       <ng-container *ngIf="searchText">

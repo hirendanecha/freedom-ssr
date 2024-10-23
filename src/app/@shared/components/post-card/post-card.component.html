@@ -377,7 +377,7 @@
     ></p>
 
     <ng-container *ngIf="(post?.postdescription | stripHtml).length > 600">
-      <button (click)="showFullDescription()" class="text-danger">
+      <button (click)="showFullDescription()" class="c-text-color fw-bold">
         {{ showFullDesc ? "Read Less" : "Read More" }}
       </button>
     </ng-container>
