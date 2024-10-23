@@ -328,15 +328,47 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     }
   }
 
+  handlePaste(event: ClipboardEvent) {
+    event.preventDefault();
+    const clipboardData = event.clipboardData ||  (window as any).clipboardData;
+    const pastedData = clipboardData?.getData('text/html') || clipboardData?.getData('text/plain');
+    if (pastedData) {
+      const sanitizedData = this.sanitizeHTML(pastedData);
+      document.execCommand('insertHTML', false, sanitizedData);
+    }
+  }
+
+  sanitizeHTML(html: string): string {
+    return `${html}`
+      .replace(/<br[^>]*>\s*/gi, '<br>')
+      .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>')
+      .replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>')
+      .replace(/<a\s+([^>]*?)>/gi, function(match, p1) {
+        const hrefMatch = p1.match(/\bhref=["'][^"']*["']/);
+        const classMatch = p1.match(/\bclass=["'][^"']*["']/);
+        const dataIdMatch = p1.match(/\bdata-id=["'][^"']*["']/);
+        let allowedAttrs = '';
+        if (hrefMatch) allowedAttrs += ` ${hrefMatch[0]}`;
+        if (classMatch) allowedAttrs += ` ${classMatch[0]}`;
+        if (dataIdMatch) allowedAttrs += ` ${dataIdMatch[0]}`;
+        return `<a${allowedAttrs}>`;
+      })
+      .replace(/<\/?[^>]+(>|$)/gi, function(match) {
+        return /<\/?(a|br|div)(\s+[^>]*)?>/i.test(match) ? match : '';
+      }).replace(/^(?:&nbsp;|\s)+/gi, '');
+  }
+  
+
   emitChangeEvent(): void {
     if (this.tagInputDiv) {
       const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
-      this.value = `${htmlText}`.replace(/<br[^>]*>\s*/gi, '<br>')
-      .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>')
-      .replace(/(?:<div><br><\/div>\s*)+/gi,'<div><br></div>'
-      ).replace( /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,'$1');
+      // this.value = `${htmlText}`
+      // .replace(/<br[^>]*>\s*/gi, '<br>')
+      // .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>')
+      // .replace(/(?:<div><br><\/div>\s*)+/gi,'<div><br></div>'
+      // ).replace( /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,'$1');
       this.onDataChange?.emit({
-        html: this.value,
+        html: htmlText,
         tags: this.tagInputDiv?.nativeElement?.children,
         meta: this.metaData,
       });
