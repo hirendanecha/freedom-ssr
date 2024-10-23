@@ -330,7 +330,24 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   handlePaste(event: ClipboardEvent) {
     event.preventDefault();
-    const clipboardData = event.clipboardData ||  (window as any).clipboardData;
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const items = clipboardData?.items;
+    if (items) {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.type.indexOf('image') !== -1) {
+          const blob = item.getAsFile();
+          const reader = new FileReader();
+          reader.onload = (event: any) => {
+            const base64Image = event.target.result;
+            const imgTag = `<img src="${base64Image}" alt="Pasted Image" />`;
+            document.execCommand('insertHTML', false, imgTag);
+          };
+          reader.readAsDataURL(blob);
+          return;
+        }
+      }
+    }
     const pastedData = clipboardData?.getData('text/html') || clipboardData?.getData('text/plain');
     if (pastedData) {
       const sanitizedData = this.sanitizeHTML(pastedData);
