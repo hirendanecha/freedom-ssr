@@ -367,15 +367,14 @@
       </div>
     </ng-container>
 
-    <p
+    <p *ngIf="post?.postdescription else addDummySpace"
       class="post-description mdtxt m-0 mt-4 pb-3"
       [innerHTML]="
         post?.postdescription
-          | stripHtml
           | truncate : (showFullDesc ? -1 : 600)
           | noSanitize" hoverDropdown
     ></p>
-
+    <ng-template #addDummySpace><div class="mt-4 pb-3"></div></ng-template>
     <ng-container *ngIf="(post?.postdescription | stripHtml).length > 600">
       <button (click)="showFullDescription()" class="c-text-color fw-bold">
         {{ showFullDesc ? "Read Less" : "Read More" }}
