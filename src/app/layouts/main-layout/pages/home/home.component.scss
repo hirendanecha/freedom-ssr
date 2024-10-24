@@ -205,10 +205,12 @@
     span,
     p {
       color: var(--input-text) !important;
+      white-space: normal;
     }
     a {
       color: var(--bs-danger-rgb) !important;
       font-weight: 600 !important;
+      white-space: normal;
     }
   }
   .tag-input-div {

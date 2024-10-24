@@ -354,22 +354,25 @@
       margin-top: 24px;
     }
   }
-  
+
   // .custom-width-comment{
   //  .file-custom{
   //   @media (max-width: 575px) {
   //   position: relative;
   //   right: 50px;
   //   }
-  //  } 
+  //  }
   // }
-  // .custom-width-comment ::ng-deep app-tag-user-input {
-  //   .tag-input-div {
-  //     @media (max-width: 575px) {
-  //       width: 100%;
-  //       z-index: 1;
-  //     }
-  //   }
+  .custom-width-comment {
+    .set-icons {
+      top: 10px;
+    }
+    ::ng-deep app-tag-user-input {
+      .tag-input-div {
+        max-width: calc(100% - 108px);
+      }
+    }
+  }
   //   .select-emaojies {
   //     @media (max-width: 575px) {
   //       right: 80px;
@@ -402,31 +405,31 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 8px;
-  
+
     .single {
       flex: 1;
       img {
         width: 100%;
         height: auto;
       }
-  
+
       &.d-grid {
         display: grid;
         gap: 8px;
       }
-  
+
       &:nth-child(2) {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(2, 1fr);
       }
-  
+
       &:nth-child(3) {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(2, 1fr);
       }
-  
+
       &:nth-child(4) {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -435,7 +438,7 @@
     }
   }
 
-  
+
   ::ng-deep {
     .post-description {
       h1,
@@ -460,6 +463,7 @@
         font-weight: 500 !important;
         color: unset !important;
         text-wrap: unset !important;
+        white-space: normal;
       }
       .video-player {
         display: none !important;

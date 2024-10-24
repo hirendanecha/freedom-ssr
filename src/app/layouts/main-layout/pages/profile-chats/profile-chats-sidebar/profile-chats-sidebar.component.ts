@@ -122,6 +122,10 @@ export class ProfileChatsSidebarComponent
     if (this.chatData && !this.backCanvas) {
       this.checkRoom();
     }
+
+    this.sharedService.openModal$.subscribe(() => {
+      this.invitePeople();
+    });
   }
 
   ngAfterViewInit(): void {

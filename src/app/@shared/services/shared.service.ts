@@ -26,6 +26,11 @@ export class SharedService {
   private bc = new BroadcastChannel('user_data_channel');
   loginUserInfo = new BehaviorSubject<any>(null);
   loggedInUser$ = this.loginUserInfo.asObservable();
+
+   //trigger invite to chat modal
+   private openModalSubject = new Subject<void>();
+   openModal$ = this.openModalSubject.asObservable();
+
   callId: string;
   constructor(
     public modalService: NgbModal,
@@ -224,5 +229,9 @@ export class SharedService {
         }
       },
     });
+  }
+
+  triggerOpenModal() {
+    this.openModalSubject.next();
   }
 }

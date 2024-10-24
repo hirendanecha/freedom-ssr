@@ -46,11 +46,13 @@
                 class="d-flex align-items-center"
                 (mouseover)="showHoverBox = true"
               >
+              <a class="h6 m-0" [href]="webUrl + 'settings/view-profile/' + post.profileid" target="_blank">
                 {{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
+              </a>
                 <!-- [ngbTooltip]="post.postcreationdate | date : ' h:mm a MMM d, y'" -->
                 <div>
                   <fa-icon
-                    class="ms-2 me-sm-1 font-12-px cursor"
+                    class="ms-2 me-sm-1 font-12-px"
                     [icon]="['fas', 'clock']"
                     placement="bottom"
                   />
@@ -371,6 +373,7 @@
       class="post-description mdtxt m-0 mt-4 pb-3"
       [innerHTML]="
         post?.postdescription
+          | stripHtml
           | truncate : (showFullDesc ? -1 : 600)
           | noSanitize" hoverDropdown
     ></p>
@@ -529,7 +532,7 @@
               (onDataChange)="onTagUserInputChangeEvent($event, post.id)"
             />
 
-            <div class="d-flex gap-2 lign-items-center align-items-center">
+            <div class="d-flex gap-2 position-absolute end-0 align-items-center set-icons">
               <!-- Emojis -->
               <!-- <div ngbDropdown placement="top-end" class="d-inline-block">
                 <button type="button" id="emojiModel" ngbDropdownToggle title="Emojis">

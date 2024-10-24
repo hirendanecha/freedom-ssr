@@ -228,6 +228,10 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     });
   }
 
+  invitePeople(): void {
+    this.sharedService.triggerOpenModal();
+  }
+
   ngOnDestroy(): void {
     this.isRoomCreated = false;
     window.removeEventListener('resize', this.onResize.bind(this));

@@ -357,6 +357,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   sanitizeHTML(html: string): string {
     return `${html}`
+      .replace(/<div[^>]*>\s*/gi, '<div>')
+      .replace(/<br[^>]*>\s*/gi, '<br>')
+      .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>')
+      .replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>')
       .replace(/<a\s+([^>]*?)>/gi, function(match, p1) {
         const hrefMatch = p1.match(/\bhref=["'][^"']*["']/);
         const classMatch = p1.match(/\bclass=["'][^"']*["']/);
@@ -368,7 +372,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         return `<a${allowedAttrs}>`;
       })
       .replace(/<\/?[^>]+(>|$)/gi, function(match) {
-        return /<\/?(a)(\s+[^>]*)?>/i.test(match) ? match : '';
+        return /<\/?(a|br|div)(\s+[^>]*)?>/i.test(match) ? match : '';
       }).replace(/^(?:&nbsp;|\s)+/gi, '');
   }
   

@@ -13,36 +13,6 @@ export class TruncatePipe implements PipeTransform {
   name: 'stripHtml'
 })
 export class StripHtmlPipe implements PipeTransform {
-  // transform(value: string): string {
-  //   const div = document.createElement('div');
-  //   div.innerHTML = value;
-  //   if (div.querySelector('[data-id]')) {
-  //     return div.innerHTML;
-  //   }
-  //   return div.innerText || div.textContent || '';
-  // }
-  // convert into single tag
-  // transform(value: string): string {
-  //   const div = document.createElement('div');
-  //   div.innerHTML = value;
-  //   const processNode = (node: Node): string => {
-  //     if (node.nodeType === Node.ELEMENT_NODE) {
-  //       const element = node as HTMLElement;
-  //       if (element.tagName.toLowerCase() === 'a' && element.hasAttribute('data-id')) {
-  //         return element.outerHTML;
-  //       } else if (element.tagName.toLowerCase() === 'br') {
-  //         return '\n';
-  //       } else {
-  //         return Array.from(element.childNodes).map(processNode).join('');
-  //       }
-  //     } else if (node.nodeType === Node.TEXT_NODE) {
-  //       return node.textContent || '';
-  //     }
-  //     return '';
-  //   };
-  //   const result = processNode(div);
-  //   return result || div.textContent || '';
-  // }
   transform(value: string): string {
     const div = document.createElement('div');
     div.innerHTML = value;
@@ -52,16 +22,16 @@ export class StripHtmlPipe implements PipeTransform {
         const tagName = element.tagName.toLowerCase();
         if (tagName === 'a' && element.hasAttribute('data-id')) {
           return element.outerHTML;
-        } 
-        // else if (tagName === 'br') {
-        //   return '\n';
-        // }
-        const childContent = Array.from(element.childNodes).map(processNode).join('');
-        if (element.childNodes.length === 1 && element.firstChild?.nodeType === Node.ELEMENT_NODE) {
-          const firstChildElement = element.firstChild as HTMLElement;
-          if (firstChildElement.tagName.toLowerCase() === tagName) {
-            return childContent;
-          }
+        }
+        Array.from(element.attributes).forEach(attr => element.removeAttribute(attr.name));
+        const childContent = Array.from(element.childNodes)
+          .map(processNode)
+          .join('');
+        if (tagName === 'br') {
+          return '<br>';
+        }
+        if (tagName === 'div') {
+          return `<div>${childContent}</div>`;
         }
         return `<${tagName}>${childContent}</${tagName}>`;
       } else if (node.nodeType === Node.TEXT_NODE) {
@@ -70,6 +40,10 @@ export class StripHtmlPipe implements PipeTransform {
       return '';
     };
     const result = processNode(div);
-    return result;
+    const normalizedResult = result
+      .replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>')
+      .replace(/(\n\s*)+/g, '\n')
+      .trim();
+    return normalizedResult;
   }
 }
