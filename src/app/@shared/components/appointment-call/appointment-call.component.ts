@@ -91,7 +91,7 @@ export class AppointmentCallComponent implements OnInit {
 
     api.on('readyToClose', () => {
       this.sharedService.callId = null;
-      sessionStorage.removeItem('callId');
+      localStorage.removeItem('callId');
       const data = {
         profileId: this.profileId,
         roomId: this.openChatId.roomId,
