@@ -4,7 +4,7 @@
     items: userList,
     labelKey: 'Username',
     triggerChar: '@',
-  }" [mentionListTemplate]="mentionListTemplate" (itemSelected)="selectTagUser($event)" (paste)="handlePaste($event)"></div>
+  }" [mentionListTemplate]="mentionListTemplate" (itemSelected)="selectTagUser($event)"></div>
 <ng-container *ngIf="isShowEmojis">
   <!-- <div ngbDropdown placement="bottom-end" class="select-emaojies"> -->
   <div ngbDropdown [placement]="placement" class="select-emaojies">
