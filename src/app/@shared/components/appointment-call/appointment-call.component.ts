@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbActiveOffcanvas, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
@@ -45,7 +45,7 @@ export class AppointmentCallComponent implements OnInit {
     private seoService: SeoService,
     public tokenService: TokenStorageService,
     private breakpointService: BreakpointService,
-    private socketService: SocketService,
+    private socketService: SocketService
   ) {
     const data = {
       title: 'Buzz Chat',
@@ -66,7 +66,7 @@ export class AppointmentCallComponent implements OnInit {
     }
     const appointmentURLCall =
       this.route.snapshot['_routerState'].url.split('/facetime/')[1];
-    sessionStorage.setItem('callId', appointmentURLCall);
+    localStorage.setItem('callId', appointmentURLCall);
     this.screenSubscription = this.breakpointService?.screen.subscribe(
       (screen) => {
         this.isMobileScreen = screen.md?.lessThen ?? false;
@@ -96,7 +96,7 @@ export class AppointmentCallComponent implements OnInit {
         profileId: this.profileId,
         roomId: this.openChatId.roomId,
         groupId: this.openChatId.groupId,
-      }
+      };
       this.socketService?.endCall(data);
       this.router.navigate(['/profile-chats']).then(() => {
         // api.dispose();
@@ -179,5 +179,13 @@ export class AppointmentCallComponent implements OnInit {
     if (this.screenSubscription) {
       this.screenSubscription.unsubscribe();
     }
+    localStorage.removeItem('callId');
+    this.sharedService.callId = null;
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHandler(event: Event) {
+    localStorage.removeItem('callId');
+    this.sharedService.callId = null;
   }
 }

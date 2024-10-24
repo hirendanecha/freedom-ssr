@@ -82,25 +82,33 @@ export class HeaderComponent {
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.hideSubHeader = this.router.url.includes('profile-chats') || this.router.url.includes('facetime');
-        this.showUserGuideBtn = this.router.url.includes('home');
-        const profileId = +localStorage.getItem('profileId');
-        const reqObj = {
-          profileId: profileId,
-        };
+        const currentUrl = this.router.url;
+        const profileId = +localStorage.getItem('profileId') || null;
+
+        this.hideSubHeader =
+          currentUrl.includes('profile-chats') ||
+          currentUrl.includes('facetime');
+        this.showUserGuideBtn = currentUrl.includes('home');
+        this.hideOngoingCallButton = currentUrl.includes('facetime');
+        this.sharedService.callId = localStorage.getItem('callId') || null;
+
+        if (!profileId) return;
+
+        const reqObj = { profileId };
         this.socketService?.checkCall(reqObj, (data: any) => {
-          if (data?.isOnCall === 'Y' && data?.callLink) {
-            this.sharedService.callId =
-            sessionStorage.getItem('callId') || null;
-            this.hideOngoingCallButton = this.router.url.includes('facetime');
+          const isOnCall = data?.isOnCall === 'Y';
+          const hasCallLink = data?.callLink;
+
+          if (isOnCall && hasCallLink && !this.sharedService.callId) {
             if (!this.hideOngoingCallButton) {
-              var callSound = new Howl({
+              const callSound = new Howl({
                 src: [
                   'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
                 ],
                 loop: true,
               });
               this.soundControlService.initTabId();
+
               const modalRef = this.modalService.open(
                 IncomingcallModalComponent,
                 {
@@ -109,21 +117,24 @@ export class HeaderComponent {
                   backdrop: 'static',
                 }
               );
+
               const callData = {
                 Username: '',
-                link: data?.callLink,
+                link: data.callLink,
                 roomId: data.roomId,
                 groupId: data.groupId,
                 ProfilePicName: this.sharedService?.userData?.ProfilePicName,
               };
+
               modalRef.componentInstance.calldata = callData;
               modalRef.componentInstance.sound = callSound;
               modalRef.componentInstance.showCloseButton = true;
               modalRef.componentInstance.title = 'Join existing call...';
+
               modalRef.result.then((res) => {
                 if (res === 'cancel') {
                   const callLogData = {
-                    profileId: profileId,
+                    profileId,
                     roomId: callData?.roomId,
                     groupId: callData?.groupId,
                   };
@@ -132,8 +143,6 @@ export class HeaderComponent {
               });
             }
           } else {
-            sessionStorage.removeItem('callId');
-            this.sharedService.callId = null;
             this.hideOngoingCallButton = true;
           }
         });
