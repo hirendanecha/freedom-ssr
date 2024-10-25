@@ -12,7 +12,7 @@
     max-width: 541px;
     width: calc(100% - 60px);
     overflow: hidden;
-    white-space: pre-wrap;
+    // white-space: pre-wrap;
     overflow-wrap: anywhere;
 
     @media (max-width: 767px) {

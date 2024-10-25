@@ -328,6 +328,83 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     }
   }
 
+  handlePaste(event: ClipboardEvent) {
+    event.preventDefault();
+    const pastedData = event.clipboardData?.getData('text/html') || event.clipboardData?.getData('text/plain');
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const items = clipboardData?.items;
+    if (items) {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.type.indexOf('image') !== -1) {
+          const blob = item.getAsFile();
+          const reader = new FileReader();
+          reader.onload = (event: any) => {
+            const base64Image = event.target.result;
+            const imgTag = `<img src="${base64Image}" alt="Pasted Image" />`;
+            document.execCommand('insertHTML', false, imgTag);
+          };
+          reader.readAsDataURL(blob);
+          return;
+        }
+      }
+    }
+    if (pastedData) {
+      const isPlainText = !/<[^>]+>/.test(pastedData);
+    if (isPlainText) {
+      document.execCommand('insertText', false, pastedData);
+      return;
+    }
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = this.cleanPastedData(pastedData);
+      this.removeInlineStyles(tempDiv);
+      document.execCommand('insertHTML', false, tempDiv.innerHTML);
+    }
+  }
+  cleanPastedData(data: string): string {
+    return data
+      .replace(/<!--.*?-->/gs, '') // Remove all HTML comments
+      .replace(/<!DOCTYPE.*?>/gs, '') // Remove DOCTYPE declarations
+      .replace(/<xml.*?<\/xml>/gs, '') // Remove XML tags and their content
+      .replace(/<o:.*?<\/o:.+?>/gs, '') // Remove specific Office tags
+      .replace(/<w:.*?>.*?<\/w:.+?>/gs, '') // Remove Word-specific tags
+      .replace(/<m:.*?>.*?<\/m:.+?>/gs, '') // Remove Math-specific tags
+      .replace(/<!--[if.*?]>([\s\S]*?)<!\[endif]-->/gs, '') // Remove conditional comments
+      .replace(/<w:LatentStyles.*?<\/w:LatentStyles>/gs, '') // Remove specific LatentStyles tag
+      .replace(/<style.*?<\/style>/gs, '') // Remove <style> tags and their content
+      .trim(); // Trim any extra whitespace
+  }
+  removeInlineStyles(element: HTMLElement) {
+    const elementsWithStyle = element.querySelectorAll('[style]');
+    for (let i = 0; i < elementsWithStyle.length; i++) {
+      elementsWithStyle[i].removeAttribute('style');
+    }
+
+    const tagsToConvert = [
+      'B',   // Bold
+      'I',   // Italic
+      'U',   // Underline
+      'STRONG', // Strong
+      'EM',   // Emphasis
+      'MARK', // Marked text
+      'SMALL', // Small text
+      'S',    // Strikethrough
+      'DEL',  // Deleted text
+      'INS',  // Inserted text
+      'SUB',  // Subscript
+      'SUP'   // Superscript
+    ];
+    tagsToConvert.forEach(tag => {
+      const elements = element.getElementsByTagName(tag);
+      const elementsArray = Array.from(elements);
+      elementsArray.forEach(el => {
+        const span = document.createElement('span');
+        span.innerHTML = el.innerHTML;
+        el.parentNode?.replaceChild(span, el);
+      });
+    });
+  }
+  
   emitChangeEvent(): void {
     if (this.tagInputDiv) {
       const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
