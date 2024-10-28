@@ -26,6 +26,12 @@ export class StripHtmlPipe implements PipeTransform {
         if (tagName === 'a' && element.hasAttribute('data-id')) {
           return element.outerHTML;
         }
+        if (tagName === 'img' && element.hasAttribute('src')) {
+          const src = element.getAttribute('src');
+          const width = element.getAttribute('width');
+          const height = element.getAttribute('height');
+          return `<img src="${src}"${width ? ` width="${width}"` : ''}${height ? ` height="${height}"` : ''}>`;
+        }
         const childContent = Array.from(element.childNodes).map(processNode).join('');
         if (element.childNodes.length === 1 && element.firstChild?.nodeType === Node.ELEMENT_NODE) {
           const firstChildElement = element.firstChild as HTMLElement;

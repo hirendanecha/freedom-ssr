@@ -402,7 +402,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   selectEmoji(emoji: any): void {
     let htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
-    const text = `${htmlText} <img src=${emoji} width="50" height="50">`;
+    htmlText = htmlText.replace(/^(<br\s*\/?>)+/i, '');
+    const text = `${htmlText}<img src=${emoji} width="50" height="50">`;
     this.setTagInputDivValue(text);
     this.emitChangeEvent();
   }
