@@ -116,26 +116,58 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     this.userList = [];
     if (this.isAllowTagUser) {
       let htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
+  
+      // Remove HTML tags to get the clean text content
       htmlText = htmlText.replace(/<[^>]*>/g, '');
-
-      const atSymbolIndex = htmlText.lastIndexOf('@');
-      const validUserName = /^[A-Za-z0-9_]+$/.test('');
-      if (atSymbolIndex !== -1) {
-        this.userNameSearch = htmlText.substring(atSymbolIndex + 1);
-        // if (this.isCustomeSearch && this.userNameSearch.length > 0 && !validUserName) {
-        if (this.isCustomeSearch && !validUserName) {
-          this.getUserList('');
-        } else {
-          if (this.userNameSearch.length > 2 && !validUserName) {
-            this.getUserList(this.userNameSearch);
-          } else {
-            this.clearUserSearchData();
+  
+      const atSymbolRegex = /@/g;
+      const matches = [...htmlText.matchAll(atSymbolRegex)];
+      const cursorPosition = this.getCursorPosition(); // Get cursor position
+  
+      if (matches.length > 0) {
+        // Iterate through all the @ matches
+        for (const match of matches) {
+          const atSymbolIndex = match.index;
+  
+          // Only check the text between the @ symbol and the cursor
+          if (cursorPosition > atSymbolIndex) {
+            const currentPositionValue = htmlText
+              .substring(atSymbolIndex + 1, cursorPosition) // Text after @ up to cursor
+              .trim(); // Remove extra spaces
+  
+            // Proceed if there is actual content typed after the @ symbol
+            if (currentPositionValue.length > 0) {
+              this.userNameSearch = currentPositionValue; // This is the user name search text
+              console.log('username:', this.userNameSearch);
+            }
           }
         }
+  
+        // After checking for @ and capturing the text, proceed to fetch user list
+        if (this.userNameSearch && this.userNameSearch.length > 2) {
+          this.getUserList(this.userNameSearch); // Fetch the user list based on search
+        } else {
+          this.clearUserSearchData(); // Clear the search data if the input is too short
+        }
       } else {
-        this.clearUserSearchData();
+        console.log('No "@" symbol found.');
       }
     }
+  }
+  
+  
+
+  // Method to get the cursor position
+  getCursorPosition(): number {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const preCaretRange = range.cloneRange(); // Create a clone of the current selection range
+      preCaretRange.selectNodeContents(this.tagInputDiv.nativeElement); // Select the contents of the contenteditable div
+      preCaretRange.setEnd(range.endContainer, range.endOffset); // Set the end to the current selection position
+      return preCaretRange.toString().length; // Return the length of the text up to the cursor position
+    }
+    return -1; // If no selection, return -1
   }
 
   getMetaDataFromUrlStr(): void {
@@ -146,10 +178,15 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     }
 
     const text = htmlText.replace(/<br\s*\/?>|<[^>]*>/g, ' ');
-    const extractedLinks = [...htmlText.matchAll(/<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*?href=["']([^"']*)["']/gi)]
-    .map(match => match[1]);
+    const extractedLinks = [
+      ...htmlText.matchAll(
+        /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*?href=["']([^"']*)["']/gi
+      ),
+    ].map((match) => match[1]);
     // const matches = text?.match(/(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/);
-    const matches = text.match(/(?:https?:\/\/|www\.)[^\s<&]+(?:\.[^\s<&]+)+(?:\.[^\s<]+)?/g);
+    const matches = text.match(
+      /(?:https?:\/\/|www\.)[^\s<&]+(?:\.[^\s<&]+)+(?:\.[^\s<]+)?/g
+    );
     const url = matches?.[0] || extractedLinks?.[0];
     if (url) {
       if (url !== this.metaData?.url) {
@@ -226,45 +263,141 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     selection.addRange(range);
   }
 
+  // selectTagUser(user: any): void {
+  //   const htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
+  //   // const text = htmlText.replace(
+  //   //   `@${this.userNameSearch}`,
+  //   //   `<a href="/settings/view-profile/${user?.Id
+  //   //   }" class="text-danger" data-id="${user?.Id}">@${user?.Username.split(
+  //   //     ' '
+  //   //   ).join('')}</a>`
+  //   // );
+  //   const replaceUsernamesInTextNodes = (
+  //     html: string,
+  //     userName: string,
+  //     userId: string,
+  //     displayName: string
+  //   ) => {
+  //     const parser = new DOMParser();
+  //     const doc = parser.parseFromString(html, 'text/html');
+  //     const walk = (node: Node) => {
+  //       if (node.nodeType === Node.TEXT_NODE) {
+  //         // const regex = /@/g;
+  //         const regex = /@(\w*)/g;
+  //         const replacement = `<a href="/settings/view-profile/${userId}" class="text-danger" data-id="${userId}">@${displayName}</a>`;
+  //         let replacedText = node.nodeValue?.replace(regex, replacement);
+  //         const textRegex = new RegExp(`(?<=<\/a>)${userName}`, 'g');
+  //         replacedText = replacedText?.replace(textRegex, '');
+  //         if (replacedText !== node.nodeValue) {
+  //           const span = document.createElement('span');
+  //           span.innerHTML = replacedText!;
+  //           while (span.firstChild) {
+  //             node.parentNode?.insertBefore(span.firstChild, node);
+  //           }
+  //           node.parentNode?.removeChild(node);
+  //         }
+  //       } else if (
+  //         node.nodeType === Node.ELEMENT_NODE &&
+  //         node.nodeName.toLowerCase() !== 'a'
+  //       ) {
+  //         node.childNodes.forEach((child) => walk(child));
+  //       }
+  //     };
+  //     doc.body.childNodes.forEach((child) => walk(child));
+  //     return doc.body.innerHTML;
+  //   };
+  //   const text = replaceUsernamesInTextNodes(
+  //     htmlText,
+  //     this.userNameSearch,
+  //     user?.Id,
+  //     user?.Username.split(' ').join('')
+  //   );
+  //   this.setTagInputDivValue(text);
+  //   this.emitChangeEvent();
+  //   this.moveCursorToEnd();
+  // }
+
   selectTagUser(user: any): void {
     const htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
-    // const text = htmlText.replace(
-    //   `@${this.userNameSearch}`,
-    //   `<a href="/settings/view-profile/${user?.Id
-    //   }" class="text-danger" data-id="${user?.Id}">@${user?.Username.split(
-    //     ' '
-    //   ).join('')}</a>`
-    // );
-    const replaceUsernamesInTextNodes = (html: string, userName: string, userId: string, displayName: string) => {
+
+    // Save the cursor position
+    const savedRange = this.saveCursorPosition();
+
+    const replaceUsernamesInTextNodesAtCursor = (
+      html: string,
+      userName: string,
+      userId: string,
+      displayName: string
+    ) => {
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
       const walk = (node: Node) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          // const regex = /@/g;
-          const regex = /@(\w*)/g;
-          const replacement = `<a href="/settings/view-profile/${userId}" class="text-danger" data-id="${userId}">@${displayName}</a>`;
-          let replacedText = node.nodeValue?.replace(regex, replacement);
-          const textRegex = new RegExp(`(?<=<\/a>)${userName}`, 'g');
-          replacedText = replacedText?.replace(textRegex, '');
-          if (replacedText !== node.nodeValue) {
+          const cursorPosition = this.getCursorPosition(); // Get the cursor position in the text
+
+          // Find the nearest @ mention before the cursor
+          const regex = /@/g;
+          const match = regex.exec(node.nodeValue || '');
+
+          if (match && match.index <= cursorPosition) {
+            const atSymbolIndex = match.index;
+
+            // Replace only at the position of the found @ mention
+            const replacement = `<a href="/settings/view-profile/${userId}" class="text-danger" data-id="${userId}">@${displayName}</a>`;
+            const beforeText = node.nodeValue?.substring(0, atSymbolIndex);
+            const afterText = node.nodeValue?.substring(cursorPosition);
+
+            // Replace @ mention with the link
+            const replacedText = `${beforeText}${replacement}${afterText}`;
             const span = document.createElement('span');
-            span.innerHTML = replacedText!;
+            span.innerHTML = replacedText;
+
+            // Insert the new HTML in place of the text node
             while (span.firstChild) {
               node.parentNode?.insertBefore(span.firstChild, node);
             }
             node.parentNode?.removeChild(node);
           }
-        } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName.toLowerCase() !== 'a') {
-          node.childNodes.forEach(child => walk(child));
+        } else if (
+          node.nodeType === Node.ELEMENT_NODE &&
+          node.nodeName.toLowerCase() !== 'a'
+        ) {
+          node.childNodes.forEach((child) => walk(child));
         }
       };
-      doc.body.childNodes.forEach(child => walk(child));
+
+      doc.body.childNodes.forEach((child) => walk(child));
       return doc.body.innerHTML;
     };
-    const text = replaceUsernamesInTextNodes(htmlText, this.userNameSearch, user?.Id, user?.Username.split(' ').join(''));
+
+    // Call the function to replace @ mention at the current cursor position
+    const text = replaceUsernamesInTextNodesAtCursor(
+      htmlText,
+      this.userNameSearch,
+      user?.Id,
+      user?.Username.split(' ').join('')
+    );
     this.setTagInputDivValue(text);
+    this.restoreCursorPosition(savedRange);
     this.emitChangeEvent();
     this.moveCursorToEnd();
+  }
+
+  saveCursorPosition(): Range | null {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      return selection.getRangeAt(0).cloneRange(); // Clone the range to save it
+    }
+    return null;
+  }
+
+  // Restore saved cursor position
+  restoreCursorPosition(savedRange: Range | null): void {
+    if (savedRange) {
+      const selection = window.getSelection();
+      selection.removeAllRanges(); // Clear any existing ranges
+      selection.addRange(savedRange); // Restore the saved range
+    }
   }
 
   selectEmoji(emoji: any): void {
@@ -281,7 +414,9 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         .subscribe({
           next: (res: any) => {
             if (res?.data?.length > 0) {
-              this.userList = res.data.filter((user) => user.Id !== this.profileId);                    
+              this.userList = res.data.filter(
+                (user) => user.Id !== this.profileId
+              );
             } else {
               this.clearUserSearchData();
             }
@@ -330,7 +465,9 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   handlePaste(event: ClipboardEvent) {
     event.preventDefault();
-    const pastedData = event.clipboardData?.getData('text/html') || event.clipboardData?.getData('text/plain');
+    const pastedData =
+      event.clipboardData?.getData('text/html') ||
+      event.clipboardData?.getData('text/plain');
     const clipboardData = event.clipboardData || (window as any).clipboardData;
     const items = clipboardData?.items;
     if (items) {
@@ -351,10 +488,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     }
     if (pastedData) {
       const isPlainText = !/<[^>]+>/.test(pastedData);
-    if (isPlainText) {
-      document.execCommand('insertText', false, pastedData);
-      return;
-    }
+      if (isPlainText) {
+        document.execCommand('insertText', false, pastedData);
+        return;
+      }
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = this.cleanPastedData(pastedData);
       this.removeInlineStyles(tempDiv);
@@ -381,37 +518,41 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     }
 
     const tagsToConvert = [
-      'B',   // Bold
-      'I',   // Italic
-      'U',   // Underline
+      'B', // Bold
+      'I', // Italic
+      'U', // Underline
       'STRONG', // Strong
-      'EM',   // Emphasis
+      'EM', // Emphasis
       'MARK', // Marked text
       'SMALL', // Small text
-      'S',    // Strikethrough
-      'DEL',  // Deleted text
-      'INS',  // Inserted text
-      'SUB',  // Subscript
-      'SUP'   // Superscript
+      'S', // Strikethrough
+      'DEL', // Deleted text
+      'INS', // Inserted text
+      'SUB', // Subscript
+      'SUP', // Superscript
     ];
-    tagsToConvert.forEach(tag => {
+    tagsToConvert.forEach((tag) => {
       const elements = element.getElementsByTagName(tag);
       const elementsArray = Array.from(elements);
-      elementsArray.forEach(el => {
+      elementsArray.forEach((el) => {
         const span = document.createElement('span');
         span.innerHTML = el.innerHTML;
         el.parentNode?.replaceChild(span, el);
       });
     });
   }
-  
+
   emitChangeEvent(): void {
     if (this.tagInputDiv) {
       const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
-      this.value = `${htmlText}`.replace(/<br[^>]*>\s*/gi, '<br>')
-      .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>')
-      .replace(/(?:<div><br><\/div>\s*)+/gi,'<div><br></div>'
-      ).replace( /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,'$1');
+      this.value = `${htmlText}`
+        .replace(/<br[^>]*>\s*/gi, '<br>')
+        .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>')
+        .replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>')
+        .replace(
+          /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,
+          '$1'
+        );
       this.onDataChange?.emit({
         html: this.value,
         tags: this.tagInputDiv?.nativeElement?.children,

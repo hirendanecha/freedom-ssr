@@ -125,7 +125,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       'new-post-added',
       (res: any) => {
         this.spinner.hide();
-        this.resetPost();
+        // this.resetPost();
       },
       (error: any) => {
         this.spinner.hide();
