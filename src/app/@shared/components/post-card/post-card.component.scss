@@ -355,6 +355,12 @@
     }
   }
 
+  .subscribe-btns {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: var(--font-icon-color);
+  }
+
   // .custom-width-comment{
   //  .file-custom{
   //   @media (max-width: 575px) {

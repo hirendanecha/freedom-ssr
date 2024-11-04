@@ -109,7 +109,7 @@
               </div>
 
               <div
-                class="d-flex"
+                class="d-flex p-3 subscribe-button"
                 *ngIf="
                   profileId != post.profileid && tokenService.getCredentials()
                 "
@@ -314,7 +314,7 @@
       </div>
     </div>
     <div
-      class="d-none d-lg-flex text-center justify-content-center align-items-center h-24-px w-100 mt-lg-4 ms-2 ms-lg-0"
+      class="subscribe-btns d-none d-lg-flex text-center justify-content-center align-items-center h-24-px w-100 mt-lg-4 ms-2 ms-lg-0"
       *ngIf="profileId != post.profileid && tokenService.getCredentials()"
     >
       <button>
