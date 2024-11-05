@@ -116,46 +116,63 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     this.userList = [];
     if (this.isAllowTagUser) {
       let htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
-  
+
       // Remove HTML tags to get the clean text content
-      htmlText = htmlText.replace(/<[^>]*>/g, '');
-  
+      const anchorTagRegex =
+        /<a\s+href="\/settings\/view-profile\/(\d+)"\s+class="text-danger"\s+data-id="\d+">@([\w\s]+)<\/a>/g;
+
+      // Remove anchor tags with @username (ignore them)
+      htmlText = htmlText.replace(anchorTagRegex, '');
+
       const atSymbolRegex = /@/g;
       const matches = [...htmlText.matchAll(atSymbolRegex)];
       const cursorPosition = this.getCursorPosition(); // Get cursor position
-  
+
       if (matches.length > 0) {
+        let foundValidTag = false; // Flag to track if a valid tag is found
+
         // Iterate through all the @ matches
         for (const match of matches) {
           const atSymbolIndex = match.index;
-  
+
           // Only check the text between the @ symbol and the cursor
+          console.log('Index==>',cursorPosition, atSymbolIndex);
+
           if (cursorPosition > atSymbolIndex) {
-            const currentPositionValue = htmlText
-              .substring(atSymbolIndex + 1, cursorPosition) // Text after @ up to cursor
-              .trim(); // Remove extra spaces
-  
+            // Extract text from the @ symbol to the cursor or to the next space
+            let textAfterAt = htmlText.substring(
+              atSymbolIndex + 1,
+              cursorPosition
+            ).trim();
+            textAfterAt = textAfterAt.replace(/<[^>]*>/g, ''); // Remove HTML tags
+            textAfterAt = textAfterAt.replace(/[^\w\s]/g, ''); // Remove special characters except alphanumeric and spaces
+            const currentPositionValue = textAfterAt.split(' ')[0].trim(); // Stop at the first space
+
             // Proceed if there is actual content typed after the @ symbol
             if (currentPositionValue.length > 0) {
               this.userNameSearch = currentPositionValue; // This is the user name search text
               console.log('username:', this.userNameSearch);
+
+              foundValidTag = true;
             }
           }
         }
-  
+
         // After checking for @ and capturing the text, proceed to fetch user list
-        if (this.userNameSearch && this.userNameSearch.length > 2) {
+        if (
+          foundValidTag &&
+          this.userNameSearch &&
+          this.userNameSearch.length > 2
+        ) {
           this.getUserList(this.userNameSearch); // Fetch the user list based on search
         } else {
-          this.clearUserSearchData(); // Clear the search data if the input is too short
+          this.clearUserSearchData(); // Clear the search data if no valid tag or input is too short
         }
       } else {
         console.log('No "@" symbol found.');
       }
     }
   }
-  
-  
 
   // Method to get the cursor position
   getCursorPosition(): number {
