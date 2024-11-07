@@ -136,14 +136,13 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
           const atSymbolIndex = match.index;
 
           // Only check the text between the @ symbol and the cursor
-          console.log('Index==>',cursorPosition, atSymbolIndex);
+          console.log('Index==>', cursorPosition, atSymbolIndex);
 
           if (cursorPosition > atSymbolIndex) {
             // Extract text from the @ symbol to the cursor or to the next space
-            let textAfterAt = htmlText.substring(
-              atSymbolIndex + 1,
-              cursorPosition
-            ).trim();
+            let textAfterAt = htmlText
+              .substring(atSymbolIndex + 1, cursorPosition)
+              .trim();
             textAfterAt = textAfterAt.replace(/<[^>]*>/g, ''); // Remove HTML tags
             textAfterAt = textAfterAt.replace(/[^\w\s]/g, ''); // Remove special characters except alphanumeric and spaces
             const currentPositionValue = textAfterAt.split(' ')[0].trim(); // Stop at the first space
@@ -154,6 +153,24 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
               console.log('username:', this.userNameSearch);
 
               foundValidTag = true;
+            }
+          } else {
+            const atSymbolIndex = htmlText.lastIndexOf('@');
+            if (atSymbolIndex !== -1) {
+              let textAfterAt = htmlText.substring(atSymbolIndex + 1).trim();
+              textAfterAt = textAfterAt.replace(/<[^>]*>/g, ''); // Remove HTML tags
+              textAfterAt = textAfterAt.replace(/[^\w\s]/g, '');
+              this.userNameSearch = textAfterAt.split(' ')[0].trim();
+              console.log(this.userNameSearch);
+
+              foundValidTag = true;
+              // if (this.userNameSearch?.length > 2) {
+              //   this.getUserList(this.userNameSearch);
+              // } else {
+              //   this.clearUserSearchData();
+              // }
+            } else {
+              this.clearUserSearchData();
             }
           }
         }
