@@ -111,9 +111,9 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
         profileId: this.profileId || +this.profileId,
         tagNotificationSound: user?.tagNotificationSound || null,
         postNotificationEmail: user?.postNotificationEmail || null,
-        messageNotificationSound: user.messageNotificationSound || null,
-        callNotificationSound: user.callNotificationSound || null,
-        messageNotificationEmail: user.messageNotificationEmail || null
+        messageNotificationSound: user?.messageNotificationSound || null,
+        callNotificationSound: user?.callNotificationSound || null,
+        messageNotificationEmail: user?.messageNotificationEmail || null
       });
     });
   }
