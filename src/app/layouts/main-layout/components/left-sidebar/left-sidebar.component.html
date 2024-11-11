@@ -10,7 +10,7 @@
         <img
           class="avatar-img max-un"
           loading="lazy"
-          data-src="{{ sharedService?.userData?.ProfilePicName }}"
+          data-src="{{ sharedService?.userData?.ProfilePicName || '/assets/images/avtar/placeholder-user.png' }}"
           onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
           alt="avatar"
         />

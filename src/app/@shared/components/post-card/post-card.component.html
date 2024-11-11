@@ -13,7 +13,7 @@
   <img
     class="w-48-px h-48-px rounded-4 d-none d-lg-block"
     loading="lazy"
-    data-src="{{ post.ProfilePicName }}"
+    data-src="{{ post.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
     onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
     alt="avatar"
   />
@@ -24,7 +24,7 @@
         <img
           class="w-48-px h-48-px rounded-4"
           loading="lazy"
-          data-src="{{ post.ProfilePicName }}"
+          data-src="{{ post.ProfilePicName || '/assets/images/avtar/placeholder-user.png' }}"
           onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
           alt="avatar"
         />
@@ -89,7 +89,7 @@
               <img
                 class="w-48-px h-48-px rounded-4"
                 loading="lazy"
-                data-src="{{ post?.ProfilePicName }}"
+                data-src="{{ post?.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                 alt="avatar"
               />
@@ -507,7 +507,7 @@
       <div class="d-flex mt-5 gap-3 align-items-start">
         <img
           loading="lazy"
-          data-src="{{ sharedService?.userData?.ProfilePicName }}"
+          data-src="{{ sharedService?.userData?.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
           class="w-40-px h-40-px rounded-3 d-none d-sm-flex"
           alt="icon"
         />
@@ -578,7 +578,7 @@
             <div class="position-relative w-56-px h-56-px mt-2">
               <img
                 loading="lazy"
-                data-src="{{ commentData?.imageUrl }}"
+                data-src="{{ commentData?.imageUrl || '/assets/images/avtar/placeholder-user.png' }}"
                 class="w-56-px h-56-px rounded-4"
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                 alt="icon"
@@ -609,7 +609,7 @@
                 <img
                   loading="lazy"
                   class="w-40-px h-40-px rounded-3"
-                  data-src="{{ comment?.ProfilePicName }}"
+                  data-src="{{ comment?.ProfilePicName || '/assets/images/avtar/placeholder-user.png' }}"
                   onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                   alt="avatar"
                 />
@@ -790,7 +790,7 @@
                     <div class="position-relative w-52-px h-52-px mb-2 mt-2">
                       <img
                         loading="lazy"
-                        data-src="{{ commentData?.imageUrl }}"
+                        data-src="{{ commentData?.imageUrl || '/assets/images/avtar/placeholder-user.png' }}"
                         class="w-100 h-100 rounded-4"
                         onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                         alt="icon"
@@ -818,7 +818,7 @@
                     >
                       <img
                         loading="lazy"
-                        data-src="{{ reply.ProfilePicName }}"
+                        data-src="{{ reply.ProfilePicName || '/assets/images/avtar/placeholder-user.png' }}"
                         class="w-40-px h-40-px rounded-3"
                         alt="icon"
                         onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
@@ -999,7 +999,7 @@
                       <div class="position-relative w-52-px h-52-px mb-2 mt-2">
                         <img
                           loading="lazy"
-                          data-src="{{ commentData?.imageUrl }}"
+                          data-src="{{ commentData?.imageUrl || '/assets/images/avtar/placeholder-user.png'}}"
                           class="w-100 h-100 rounded-4"
                           onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                           alt="icon"

@@ -29,7 +29,7 @@
                   *ngIf="sharedService?.userData?.ProfilePicName"
                   class="w-48-px h-48-px rounded-3"
                   loading="lazy"
-                  data-src="{{ sharedService?.userData?.ProfilePicName }}"
+                  data-src="{{ sharedService?.userData?.ProfilePicName || '/assets/images/avtar/placeholder-user.png' }}"
                   onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                   alt="avatar"
                 />
@@ -114,7 +114,7 @@
                   <img
                     loading="lazy"
                     class="w-32-px h-32-px rounded"
-                    data-src="{{ user.ProfilePicName }}"
+                    data-src="{{ user.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
                     [alt]="user.Username"
                     onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                   />
@@ -243,7 +243,7 @@
             <img
               class="w-100 h-100 rounded-3"
               loading="lazy"
-              data-src="{{ sharedService?.userData?.ProfilePicName }}"
+              data-src="{{ sharedService?.userData?.ProfilePicName || '/assets/images/avtar/placeholder-user.png' }}"
               onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
               alt="avatar"
             />
