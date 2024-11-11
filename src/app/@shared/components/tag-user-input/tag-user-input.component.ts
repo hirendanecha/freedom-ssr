@@ -120,11 +120,12 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       // Remove HTML tags to get the clean text content
       const anchorTagRegex =
         /<a\s+href="\/settings\/view-profile\/(\d+)"\s+class="text-danger"\s+data-id="\d+">@([\w\s]+)<\/a>/g;
-
+      
       // Remove anchor tags with @username (ignore them)
       htmlText = htmlText.replace(anchorTagRegex, '');
 
-      const atSymbolRegex = /@/g;
+      // const atSymbolRegex = /@/g;
+      const atSymbolRegex = /@(\w*)/g;
       const matches = [...htmlText.matchAll(atSymbolRegex)];
       const cursorPosition = this.getCursorPosition(); // Get cursor position
 
@@ -169,8 +170,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
               // } else {
               //   this.clearUserSearchData();
               // }
-            } else {
-              this.clearUserSearchData();
+            // } else {
+            //   this.clearUserSearchData();
             }
           }
         }
@@ -179,9 +180,11 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         if (
           foundValidTag &&
           this.userNameSearch &&
-          this.userNameSearch.length > 2
+          this.userNameSearch.length > 2 && !this.isCustomeSearch
         ) {
           this.getUserList(this.userNameSearch); // Fetch the user list based on search
+        } else if (this.isCustomeSearch) {
+          this.getUserList('');
         } else {
           this.clearUserSearchData(); // Clear the search data if no valid tag or input is too short
         }
@@ -582,7 +585,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
       this.value = `${htmlText}`
         .replace(/<br[^>]*>\s*/gi, '<br>')
-        .replace(/(<br\s*\/?>\s*){2,}/gi, '<div><br></div>')
+        .replace(/(<br\s*\/?>\s*){4,}/gi, '<div><br><br><br><br></div>')
         .replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>')
         .replace(
           /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,
