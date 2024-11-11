@@ -69,6 +69,11 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     UserID: new FormControl<number | null>(null),
     profileId: new FormControl<number | null>(null),
     IsActive: new FormControl('Y'),
+    messageNotificationEmail: new FormControl(''),
+    postNotificationEmail: new FormControl(''),
+    tagNotificationSound: new FormControl(''),
+    messageNotificationSound: new FormControl(''),
+    callNotificationSound: new FormControl(''),
   });
 
   constructor(
@@ -104,6 +109,11 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
         CoverPicName: this.customer?.CoverPicName || '',
         UserID: this.customer?.UserID || +this.userId,
         profileId: this.profileId || +this.profileId,
+        tagNotificationSound: user?.tagNotificationSound || null,
+        postNotificationEmail: user?.postNotificationEmail || null,
+        messageNotificationSound: user.messageNotificationSound || null,
+        callNotificationSound: user.callNotificationSound || null,
+        messageNotificationEmail: user.messageNotificationEmail || null
       });
     });
   }
