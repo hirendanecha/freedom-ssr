@@ -55,17 +55,24 @@ export class NotificationsModalComponent implements AfterViewInit {
   }
 
   selectMessaging(data) {
-    const userData = {
-      Id: data.notificationByProfileId,
-      ProfilePicName: data.ProfilePicName,
-      Username: data.Username,
-    };
-    const encodedUserData = encodeURIComponent(JSON.stringify(userData));
-    const url = this.router
-      .createUrlTree(['/profile-chats'], {
-        queryParams: { chatUserData: encodedUserData },
-      })
-      .toString();
-    window.open(url, '_blank');
+    if (!data?.groupId) {
+      const userData = {
+        Id: data.notificationByProfileId,
+        ProfilePicName: data.ProfilePicName,
+        Username: data.Username,
+      };
+      const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+      const url = this.router
+        .createUrlTree(['/profile-chats'], {
+          queryParams: { chatUserData: encodedUserData },
+        })
+        .toString();
+      window.open(url, '_blank');
+    } else {
+      const url = this.router.serializeUrl(
+        this.router.createUrlTree([`/profile-chats`])
+      );
+      window.open(url, '_blank');
+    }
   }
 }

@@ -97,7 +97,7 @@ export class NotificationsComponent {
   }
 
   selectMessaging(data) {
-    if (!data?.postId) {
+    if (!data?.postId && !data?.groupId) {
       const userData = {
         Id: data.notificationByProfileId,
         ProfilePicName: data.ProfilePicName,
@@ -110,8 +110,11 @@ export class NotificationsComponent {
         })
         .toString();
       window.open(url, '_blank');
-    } else {
-      this.router.navigate([`post/${data?.postId}`])
+    } else if (!data?.postId && data?.groupId) {
+      const url = this.router.serializeUrl(
+        this.router.createUrlTree([`/profile-chats`])
+      );
+      window.open(url, '_blank');
     }
   }
 }

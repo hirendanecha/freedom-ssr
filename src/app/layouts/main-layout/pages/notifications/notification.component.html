@@ -9,8 +9,8 @@
       >
         <a
         (click)="selectMessaging(notification)"
-        [routerLink]="notification.postId ? 'post/' + notification.postId : null"
-        [attr.target]="notification.postId ? '_blank' : null"
+        [routerLink]="notification.postId ? '/post/' + notification.postId : null"
+        [target]="notification.postId ? '_blank' : null"
         >
           <div class="d-flex top-review-wrapper gap-3 align-items-center">
             <div class="avatar-item">
