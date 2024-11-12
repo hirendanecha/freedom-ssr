@@ -5,14 +5,12 @@
   <ng-container *ngIf="notificationList.length > 0">
     <ng-container *ngFor="let notification of notificationList">
       <div
-        class="notification-single d-center p-5 gap-5 justify-content-between"
+        class="notification-single d-center p-5 gap-5 justify-content-between cursor"
       >
         <a
-          [routerLink]="
-            notification?.postId === null
-              ? '/profile-chats'
-              : '/post/' + notification?.postId
-          "
+        (click)="selectMessaging(notification)"
+        [routerLink]="notification.postId ? 'post/' + notification.postId : null"
+        [attr.target]="notification.postId ? '_blank' : null"
         >
           <div class="d-flex top-review-wrapper gap-3 align-items-center">
             <div class="avatar-item">
@@ -29,7 +27,7 @@
             </div>
             <div class="single-item notification-area text-area text-start">
               <h6 class="m-0 mb-1">
-                <a class="cursor" (click)="viewUserPost(notification.postId)">{{
+                <a>{{
                   notification?.Username
                 }}</a>
                 <span class="ms-1">{{ notification?.notificationDesc }} </span>

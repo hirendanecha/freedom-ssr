@@ -59,9 +59,9 @@ export class NotificationsComponent {
     });
   }
 
-  viewUserPost(id) {
-    this.router.navigate([`post/${id}`]);
-  }
+  // viewUserPost(id) {
+  //   this.router.navigate([`post/${id}`]);
+  // }
 
   removeNotification(id: number): void {
     this.customerService.deleteNotification(id).subscribe({
@@ -94,5 +94,24 @@ export class NotificationsComponent {
   loadMoreNotification(): void {
     this.activePage = this.activePage + 1;
     this.getNotificationList();
+  }
+
+  selectMessaging(data) {
+    if (!data?.postId) {
+      const userData = {
+        Id: data.notificationByProfileId,
+        ProfilePicName: data.ProfilePicName,
+        Username: data.Username,
+      };
+      const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+      const url = this.router
+        .createUrlTree(['/profile-chats'], {
+          queryParams: { chatUserData: encodedUserData },
+        })
+        .toString();
+      window.open(url, '_blank');
+    } else {
+      this.router.navigate([`post/${data?.postId}`])
+    }
   }
 }
