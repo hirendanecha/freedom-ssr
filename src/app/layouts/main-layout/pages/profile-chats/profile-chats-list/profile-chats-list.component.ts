@@ -525,12 +525,12 @@ export class ProfileChatsListComponent
       //     : null;
       const message =
         this.chatObj.msgText !== null
-          ? this.prepareMessage(this.chatObj.msgText)
-          : null;
-      const data = {
-        messageText: message,
-        // roomId: this.uploadTo.roomId ?? this.userChat?.roomId ?? null,
-        // groupId: this.uploadTo.groupId ?? this.userChat?.groupId ?? null,
+        ? this.prepareMessage(this.chatObj.msgText)
+        : null;
+        const data = {
+          messageText: message,
+          // roomId: this.uploadTo.roomId ?? this.userChat?.roomId ?? null,
+          // groupId: this.uploadTo.groupId ?? this.userChat?.groupId ?? null,
         roomId:
           this.uploadTo.roomId ??
           (this.uploadTo.groupId ? null : this.userChat?.roomId) ??
@@ -539,12 +539,12 @@ export class ProfileChatsListComponent
           this.uploadTo.groupId ??
           (this.uploadTo.roomId ? null : this.userChat?.groupId) ??
           null,
-        sentBy: this.profileId,
-        messageMedia: this.chatObj?.msgMedia,
-        profileId: this.userChat.profileId,
-        parentMessageId: this.chatObj?.parentMessageId || null,
-        tags: this.chatObj?.['tags'],
-      };
+          sentBy: this.profileId,
+          messageMedia: this.chatObj?.msgMedia,
+          profileId: this.userChat.profileId,
+          parentMessageId: this.chatObj?.parentMessageId || null,
+          tags: this.chatObj?.['tags'],
+        };
       this.userChat?.roomId ? (data['isRead'] = 'N') : null;
 
       this.socketService.sendMessage(data, async (data: any) => {
@@ -702,7 +702,8 @@ export class ProfileChatsListComponent
                 } else if (event.type === HttpEventType.Response) {
                   if (event?.body?.roomId !== this.userChat?.roomId) {
                     this.uploadTo.roomId = event.body.roomId;
-                  } else if (event?.body?.groupId !== this.userChat?.groupId) {
+                  } 
+                  if (event?.body?.groupId !== this.userChat?.groupId) {
                     this.uploadTo.groupId = event.body.groupId;
                   }
                   this.isFileUploadInProgress = false;
