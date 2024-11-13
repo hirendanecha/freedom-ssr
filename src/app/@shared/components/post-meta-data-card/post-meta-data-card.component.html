@@ -10,13 +10,19 @@
 <div class="border rounded-3 mb-3 chat-meta-card" *ngIf="post?.metaimage">
   <a [href]="post.metalink.startsWith('www') ? 'http://' + post.metalink : post.metalink" target="_blank" class="post-img w-100">
     <img
-      *ngIf="validateImageUrl(post?.metaimage)"
+      *ngIf="validateImageUrl(post?.metaimage) else showLinkOnly"
       loading="lazy"
       data-src="{{ post?.metaimage }}"
       class="w-100 rounded-top-3"
       alt="image"
       onerror="this.onerror=null;this.src='/assets/images/banner/freedom-buzz-high-res.jpeg';"
     />
+    <ng-template #showLinkOnly><a
+      class="post-description post-meta-description mdtxt pt-0 pb-1 text-start"
+      [href]="post.metalink.startsWith('www') ? 'http://' + post.metalink : post.metalink"
+      target="_blank"
+      >{{ post.metalink }}</a
+    ></ng-template>
     <p class="post-description text-start m-2">{{ post?.title }}</p>
     <p class="post-description text-start m-2">
       {{ post?.metadescription }}
