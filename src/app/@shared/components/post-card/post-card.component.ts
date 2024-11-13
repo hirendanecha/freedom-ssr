@@ -860,4 +860,12 @@ export class PostCardComponent implements OnInit {
       }
     }
   }
+
+  opyData(post): string {
+    return `<a href="/settings/view-profile/${
+      post.profileid || post.profileId
+    }" class="text-danger" data-id="${post.profileid || post.profileId}">@${
+      post.Username
+    }</a>`;
+  }
 }

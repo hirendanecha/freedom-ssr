@@ -102,7 +102,7 @@ export class HoverDropdownDirective {
           if (button) {
             button.addEventListener('click', (e) => {
               e.stopPropagation();
-              this.copyToClipboard(`${anchorElement.innerText}`);
+              this.copyToClipboard(anchorElement);
             });
           }
           const msgButton = this.dropdownElement.querySelector(
@@ -132,14 +132,21 @@ export class HoverDropdownDirective {
     }
   }
 
-  private copyToClipboard(text: string) {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    this.toastService.success('Link has been copied to clipboard');
+  private copyToClipboard(text) {
+    const linkHref = text.getAttribute('href');
+    const linkText = text.textContent;
+    if (linkHref && linkText) {
+      const trimmedLink = linkHref.split('/settings/view-profile/')[1];
+      const finalLink = `/settings/view-profile/${trimmedLink}`;
+      const finalAnchorTag = `<a href="${finalLink}" class="text-danger" data-id="${trimmedLink}">${linkText}</a>`;
+      const textarea = document.createElement('textarea');
+      textarea.value = finalAnchorTag;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      this.toastService.success('Link has been copied to clipboard');
+    }
   }
 
   private selectMessaging(data) {

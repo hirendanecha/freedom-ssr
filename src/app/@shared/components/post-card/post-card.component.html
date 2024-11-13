@@ -101,7 +101,7 @@
                 <button>
                   <a
                     class="droplist d-flex align-items-center gap-2"
-                    [appCopyClipboard]="'@' + post.Username"
+                    [appCopyClipboard]="opyData(post)"
                   >
                     <fa-icon [icon]="['fas', 'copy']" />
                   </a>
@@ -644,7 +644,7 @@
                             &#64;{{ (comment?.Username || comment?.FirstName)?.split(" ")?.join("") }}
                           </a>
                           <button>
-                            <a class="droplist d-flex align-items-center gap-2" [appCopyClipboard]="'@' + comment.Username">
+                            <a class="droplist d-flex align-items-center gap-2" [appCopyClipboard]="opyData(comment)">
                               <fa-icon [icon]="['fas', 'copy']" />
                             </a>
                           </button>
@@ -891,7 +891,7 @@
                                   &#64;{{ (reply?.Username || reply?.FirstName)?.split(" ")?.join("") }}
                                 </a>
                                 <button>
-                                  <a class="droplist d-flex align-items-center gap-2" [appCopyClipboard]="'@' + reply.Username">
+                                  <a class="droplist d-flex align-items-center gap-2" [appCopyClipboard]="opyData(reply)">
                                     <fa-icon [icon]="['fas', 'copy']" />
                                   </a>
                                 </button>

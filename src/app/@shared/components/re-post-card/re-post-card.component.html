@@ -51,7 +51,7 @@
              <button>
                <a
                  class="droplist d-flex align-items-center gap-2"
-                 [appCopyClipboard]="'@' + post.Username"
+                 [appCopyClipboard]="opyData(post)"
                >
                  <fa-icon [icon]="['fas', 'copy']" />
                </a>
@@ -87,7 +87,7 @@
          </div>
        </div>
     </div>
-    <div class="p-2" (click)="redirectToParentProfile(post)">
+    <div class="p-2 cursor" (click)="redirectToParentProfile(post)">
       <p
         class="post-description mdtxt m-0"
         [innerHTML]="post.postdescription | noSanitize" hoverDropdown
