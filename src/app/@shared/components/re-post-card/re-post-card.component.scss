@@ -13,6 +13,36 @@
     line-break: anywhere;
   }
 
+  .hover-box-container {
+    min-width: 267px;
+    min-height: 125px;
+    z-index: 4;
+    background: var(--body-color);
+    border-radius: 15px;
+    padding: 10px 10px;
+    position: absolute;
+    top: 17px;
+    left: 0;
+    margin: 10px 40px 40px 0px;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.3s ease-in-out;
+
+    p,
+    span {
+      color: var(--para-2nd-color);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    ::ng-deep svg path {
+      fill: var(--para-2nd-color);
+    }
+  }
+  .hover-box-container.show {
+    display: unset;
+    opacity: 1;
+  }
+
   ::ng-deep {
     .post-description {
       h1,
@@ -50,4 +80,14 @@
       }
     }
   }
+}
+
+.hover-directive-box-container {
+  min-width: 267px;
+  min-height: 125px;
+  z-index: 3;
+  background: var(--body-color);
+  border-radius: 15px;
+  padding: 10px 10px;
+  margin: 0px 40px 40px 0px;
 }

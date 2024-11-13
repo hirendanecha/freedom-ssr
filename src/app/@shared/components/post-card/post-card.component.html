@@ -619,9 +619,9 @@
                   class="top-area px-4 py-3 d-flex flex-column gap-2 align-items-start justify-content-start"
                 >
                   <div
-                    class="d-flex justify-content-between align-items-center w-100"
+                    class="d-flex justify-content-between align-items-center w-100 position-relative" (mouseout)="showCommentHoverBox = null"
                   >
-                    <h6 class="m-0 text-transform">
+                    <h6 class="m-0 text-transform cursor" (mouseover)="showCommentHoverBox = comment.id">
                       {{
                         (comment.Username || comment.FirstName)
                           .split(" ")
@@ -632,6 +632,40 @@
                         {{ comment.createdDate | dateDay }}</span
                       >
                     </h6>
+                    <!-- commenthoverbox -->
+                    <div [class.show]="showCommentHoverBox === comment.id" class="hover-box-container shadow" (mouseover)="showCommentHoverBox = comment.id"
+                      *ngIf="(breakpointService?.screen | async).lg.gatherThen">
+                      <div class="d-flex flex-column">
+                        <img class="w-48-px h-48-px rounded-4" loading="lazy"
+                          data-src="{{ comment?.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
+                          onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" alt="avatar" />
+                        <div class="d-flex gap-3 align-items-baseline">
+                          <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + comment.profileid" target="_blank">
+                            &#64;{{ (comment?.Username || comment?.FirstName)?.split(" ")?.join("") }}
+                          </a>
+                          <button>
+                            <a class="droplist d-flex align-items-center gap-2" [appCopyClipboard]="'@' + comment.Username">
+                              <fa-icon [icon]="['fas', 'copy']" />
+                            </a>
+                          </button>
+                        </div>
+                        <div class="d-flex mt-2" *ngIf="profileId != comment.profileId && tokenService.getCredentials()">
+                          <button>
+                            <a class="droplist d-flex align-items-center gap-2" (click)="selectMessaging(comment)">
+                              <fa-icon [icon]="['fas', 'envelope']" />
+                              <span>Messaging</span>
+                            </a>
+                          </button>
+                          <span class="me-2 ms-2">|</span>
+                          <button>
+                            <a class="droplist d-flex align-items-center gap-2" routerLink="/platforms" target="_blank">
+                              <fa-icon [icon]="['fas', 'table-list']" />
+                              <span>Platforms</span>
+                            </a>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
 
                     <ng-container
                       *ngIf="
@@ -826,12 +860,12 @@
 
                       <div class="info-item w-100">
                         <div
-                          class="top-area px-4 py-3 d-flex flex-column gap-2 align-items-start justify-content-start"
+                          class="top-area px-4 py-3 d-flex flex-column gap-2 align-items-start justify-content-start position-relative"
                         >
                           <div
-                            class="d-flex justify-content-between align-items-center w-100"
+                            class="d-flex justify-content-between align-items-center w-100 reply-hover" (mouseout)="showCommentHoverBox = null"
                           >
-                            <h6 class="m-0 align-items-center text-transform">
+                            <h6 class="m-0 align-items-center text-transform cursor" (mouseover)="showCommentHoverBox = reply.id">
                               {{
                                 (reply.Username || reply.FirstName)
                                   .split(" ")
@@ -845,6 +879,40 @@
                                 {{ reply?.createdDate | dateDay }}</span
                               >
                             </h6>
+                            <!-- replycommenthoverbox -->
+                            <div [class.show]="showCommentHoverBox === reply.id" class="hover-box-container shadow" (mouseover)="showCommentHoverBox = reply.id"
+                            *ngIf="(breakpointService?.screen | async).lg.gatherThen">
+                            <div class="d-flex flex-column">
+                              <img class="w-48-px h-48-px rounded-4" loading="lazy"
+                                data-src="{{ reply?.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
+                                onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" alt="avatar" />
+                              <div class="d-flex gap-3 align-items-baseline">
+                                <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + reply.profileid" target="_blank">
+                                  &#64;{{ (reply?.Username || reply?.FirstName)?.split(" ")?.join("") }}
+                                </a>
+                                <button>
+                                  <a class="droplist d-flex align-items-center gap-2" [appCopyClipboard]="'@' + reply.Username">
+                                    <fa-icon [icon]="['fas', 'copy']" />
+                                  </a>
+                                </button>
+                              </div>
+                              <div class="d-flex mt-2" *ngIf="profileId != reply.profileId && tokenService.getCredentials()">
+                                <button>
+                                  <a class="droplist d-flex align-items-center gap-2" (click)="selectMessaging(reply)">
+                                    <fa-icon [icon]="['fas', 'envelope']" />
+                                    <span>Messaging</span>
+                                  </a>
+                                </button>
+                                <span class="me-2 ms-2">|</span>
+                                <button>
+                                  <a class="droplist d-flex align-items-center gap-2" routerLink="/platforms" target="_blank">
+                                    <fa-icon [icon]="['fas', 'table-list']" />
+                                    <span>Platforms</span>
+                                  </a>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
 
                             <ng-container
                               *ngIf="

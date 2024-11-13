@@ -1,6 +1,6 @@
 <div class="mt-2 border rounded">
   <ng-container *ngIf="post; else noPost">
-    <div class="d-flex p-2" (click)="redirectToParentProfile(post)">
+    <div class="d-flex p-2 position-relative" (mouseout)="showHoverBox = false">
       <img
         class="w-24-px h-24-px rounded"
         loading="lazy"
@@ -15,7 +15,7 @@
         <div
           class="d-flex align-items-center cursor c-padding posted-wrap-text"
         >
-          <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center" (mouseover)="showHoverBox = true">
             {{ post?.Username || post?.FirstName }}
             <div>
               <fa-icon
@@ -28,11 +28,69 @@
           </div>
         </div>
       </div>
+         <!-- hoverbox -->
+         <div
+         [class.show]="showHoverBox"
+         class="hover-box-container shadow"
+         (mouseover)="showHoverBox = true"
+         *ngIf="(breakpointService?.screen | async).lg.gatherThen"
+       >
+         <div class="d-flex flex-column">
+           <img
+             class="w-48-px h-48-px rounded-4"
+             loading="lazy"
+             data-src="{{ post?.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
+             onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
+             alt="avatar"
+           />
+           <div class="d-flex gap-3 align-items-baseline">
+             <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + post.profileid" target="_blank">
+               &#64;{{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
+             </a>
+             
+             <button>
+               <a
+                 class="droplist d-flex align-items-center gap-2"
+                 [appCopyClipboard]="'@' + post.Username"
+               >
+                 <fa-icon [icon]="['fas', 'copy']" />
+               </a>
+             </button>
+           </div>
+           <div
+             class="d-flex mt-2"
+             *ngIf="
+               profileId != post.profileid && tokenService.getCredentials()
+             "
+           >
+             <button>
+               <a
+                 class="droplist d-flex align-items-center gap-2"
+                 (click)="selectMessaging(post)"
+               >
+                 <fa-icon [icon]="['fas', 'envelope']" />
+                 <span>Messaging</span>
+               </a>
+             </button>
+             <span class="me-2 ms-2">|</span>
+             <button>
+               <a
+                 class="droplist d-flex align-items-center gap-2"
+                 routerLink="/platforms"
+                 target="_blank"
+               >
+                 <fa-icon [icon]="['fas', 'table-list']" />
+                 <span>Platforms</span>
+               </a>
+             </button>
+           </div>
+         </div>
+       </div>
     </div>
-    <div class="p-2">
+    <div class="p-2" (click)="redirectToParentProfile(post)">
       <p
         class="post-description mdtxt m-0"
-        [innerHTML]="post.postdescription | noSanitize"
+        [innerHTML]="post.postdescription | noSanitize" hoverDropdown
       ></p>
       <ng-container *ngIf="descriptionimageUrl">
         <app-img-preview [src]="descriptionimageUrl" classes="w-100" />

@@ -2,6 +2,9 @@ import { AfterViewInit, Component, Input, OnInit, afterNextRender } from '@angul
 import { PostService } from '../../services/post.service';
 import { environment } from 'src/environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { TokenStorageService } from '../../services/token-storage.service';
+import { BreakpointService } from '../../services/breakpoint.service';
+import { Router } from '@angular/router';
 
 declare var jwplayer: any;
 @Component({
@@ -20,10 +23,15 @@ export class RePostCardComponent implements AfterViewInit, OnInit {
 
   sharedPost: string
   player: any
+  showHoverBox = false;
+  profileId = '';
 
   constructor(private postService: PostService,
-    private spinner: NgxSpinnerService) {
-  }
+    private spinner: NgxSpinnerService,
+    public tokenService: TokenStorageService,
+    public breakpointService: BreakpointService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.getPostById();
@@ -53,6 +61,21 @@ export class RePostCardComponent implements AfterViewInit, OnInit {
       this.sharedPost = this.webUrl + 'post/' + post.id;
     }
     const url = this.sharedPost;
+    window.open(url, '_blank');
+  }
+
+  selectMessaging(data) {
+    const userData = {
+      Id: data.profileid,
+      ProfilePicName: data.ProfilePicName,
+      Username: data.Username,
+    };
+    const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+    const url = this.router
+      .createUrlTree(['/profile-chats'], {
+        queryParams: { chatUserData: encodedUserData },
+      })
+      .toString();
     window.open(url, '_blank');
   }
 }

@@ -53,6 +53,17 @@
       display: unset;
       opacity: 1;
     }
+
+    .comments-area {
+      .hover-box-container {
+        top: 17px;
+      }
+    
+      .reply-hover .hover-box-container {
+        top: 25px;
+      }
+    }    
+
     .post-description {
       p {
         h1 {

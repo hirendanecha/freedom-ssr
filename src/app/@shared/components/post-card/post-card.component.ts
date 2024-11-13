@@ -78,6 +78,7 @@ export class PostCardComponent implements OnInit {
   replaycommentMessageInputValue: string = '';
   commentMessageTags: any[];
   showHoverBox = false;
+  showCommentHoverBox: number | null = null;
   unSubscribeProfileIds: any = [];
 
   descriptionimageUrl: string;
