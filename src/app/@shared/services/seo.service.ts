@@ -18,8 +18,10 @@ export class SeoService {
   ) { }
 
   updateTitle(title: string): void {
-    this.title.setTitle(title);
-  }
+    const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+    const formattedTitle = capitalizeFirstLetter(title);
+    this.title.setTitle(formattedTitle);
+  }  
 
   updateMetaTags(metaTags: MetaDefinition[]): void {
     metaTags.forEach((m) => {

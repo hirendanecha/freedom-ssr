@@ -10,6 +10,7 @@
 <div class="border rounded-3 mb-3 chat-meta-card" *ngIf="post?.metaimage">
   <a [href]="post.metalink.startsWith('www') ? 'http://' + post.metalink : post.metalink" target="_blank" class="post-img w-100">
     <img
+      *ngIf="validateImageUrl(post?.metaimage)"
       loading="lazy"
       data-src="{{ post?.metaimage }}"
       class="w-100 rounded-top-3"

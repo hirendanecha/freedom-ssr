@@ -133,9 +133,10 @@ export function app(): express.Express {
             image:
               post?.thumbfilename ||
               post?.metaimage ||
-              post?.imageUrl ||
-              'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
-          };
+              post?.imageUrl || 
+              null,
+            };
+            //  || 'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
           seo.image = talent.image;
