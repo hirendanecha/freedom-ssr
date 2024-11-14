@@ -688,6 +688,10 @@ export class ProfileChatsListComponent
             groupId: this.userChat?.groupId,
           };
           this.scrollToBottom();
+          if (this.chatObj?.msgText) {
+            this.chatObj.msgMedia = '';
+            this.sendMessage();
+          };
           this.uploadFilesService
             .uploadFile(this.selectedFile, param)
             .pipe(takeUntil(this.cancelUpload$))

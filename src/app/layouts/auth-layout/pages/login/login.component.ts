@@ -116,7 +116,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     if (!token) {
       this.msg = 'Invalid captcha kindly try again!';
       this.type = 'danger';
-      return;
+      // return;
     }
     if (this.loginForm.valid) {
       this.spinner.show();
@@ -144,6 +144,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
             });
             // Redirect to a new page after reload
             this.toastService.success('Logged in successfully');
+            this.setCookiesForTube();
             window.location.reload();
             this.router.navigate([`/home`]);
           } else {
@@ -198,5 +199,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.type = 'success';
       }
     });
+  }
+
+  setCookiesForTube() {
+    const authToken = localStorage.getItem('auth-token');
+    if (authToken) {
+      // const cookieValue = `authToken=${authToken}; path=/; secure; samesite=None; max-age=86400`; // expires in 1 day
+      const cookieValue = `authToken=${authToken}; domain=.freedom.buzz; path=/; secure; samesite=None; max-age=86400`;
+      document.cookie = cookieValue;
+    }
   }
 }

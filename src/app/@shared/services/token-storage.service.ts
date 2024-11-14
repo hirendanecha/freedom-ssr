@@ -29,7 +29,7 @@ export class TokenStorageService {
     const theme = localStorage.getItem('theme');
     localStorage.clear();
     this.cookieService.delete('userData', '/', environment.domain);
-    // this.cookieService.deleteAll('/');
+    this.cookieService.deleteAll('/');
     localStorage.setItem('theme', theme);
     this.toastService.success('Successfully Logged Out');
     this.router.navigate(['/']);
