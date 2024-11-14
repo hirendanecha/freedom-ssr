@@ -136,23 +136,20 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         for (const match of matches) {
           const atSymbolIndex = match.index;
 
-          // Only check the text between the @ symbol and the cursor
-          console.log('Index==>', cursorPosition, atSymbolIndex);
-
           if (cursorPosition > atSymbolIndex) {
             // Extract text from the @ symbol to the cursor or to the next space
             let textAfterAt = htmlText
               .substring(atSymbolIndex + 1, cursorPosition)
               .trim();
             textAfterAt = textAfterAt.replace(/<[^>]*>/g, ''); // Remove HTML tags
-            textAfterAt = textAfterAt.replace(/[^\w\s]/g, ''); // Remove special characters except alphanumeric and spaces
+            textAfterAt = textAfterAt.replace(/[^\w\s\-_\.]/g, ''); // Remove special characters except alphanumeric and spaces
             const currentPositionValue = textAfterAt.split(' ')[0].trim(); // Stop at the first space
 
             // Proceed if there is actual content typed after the @ symbol
             if (currentPositionValue.length > 0) {
               this.userNameSearch = currentPositionValue; // This is the user name search text
               console.log('username:', this.userNameSearch);
-
+              
               foundValidTag = true;
             }
           } else {
@@ -160,10 +157,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
             if (atSymbolIndex !== -1) {
               let textAfterAt = htmlText.substring(atSymbolIndex + 1).trim();
               textAfterAt = textAfterAt.replace(/<[^>]*>/g, ''); // Remove HTML tags
-              textAfterAt = textAfterAt.replace(/[^\w\s]/g, '');
+              textAfterAt = textAfterAt.replace(/[^\w\s\-_\.]/g, '');
               this.userNameSearch = textAfterAt.split(' ')[0].trim();
-              console.log(this.userNameSearch);
-
               foundValidTag = true;
               // if (this.userNameSearch?.length > 2) {
               //   this.getUserList(this.userNameSearch);
@@ -180,7 +175,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         if (
           foundValidTag &&
           this.userNameSearch &&
-          this.userNameSearch.length > 2 && !this.isCustomeSearch
+          this.userNameSearch.length > 1 && !this.isCustomeSearch
         ) {
           this.getUserList(this.userNameSearch); // Fetch the user list based on search
         } else if (this.isCustomeSearch) {
