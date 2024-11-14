@@ -455,8 +455,13 @@
     }
   }
 
-
+  
   ::ng-deep {
+    app-post-meta-data-card a {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--link-color);
+    }
     .post-description {
       h1,
       h2,
