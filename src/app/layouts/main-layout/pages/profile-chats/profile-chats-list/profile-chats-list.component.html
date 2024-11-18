@@ -1329,6 +1329,15 @@
           class="p-2 message-content"
           [ngClass]="!sidebarClass ? 'p-sm-3' : ''"
         >
+        <ng-container *ngIf="showButton">
+          <button
+            class="scrollToBottom d-flex justify-content-center align-items-center"
+            (click)="scrollToBottom()"
+            [ngClass]="sidebarClass ? 'active' : ''"
+          >
+            <fa-icon class="c-icon-color" [icon]="['fas', 'angles-up']"></fa-icon>
+          </button>
+        </ng-container>
           <div
             class="d-flex align-items-sm-center align-items-end flex-column flex-sm-row mt-2 gap-3"
           >

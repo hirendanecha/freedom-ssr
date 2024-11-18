@@ -129,6 +129,8 @@ export class ProfileChatsListComponent
   unreadMessage: any = {};
   relevantMembers: any = [];
   postMessageTags: any[];
+  showButton = true;
+
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   constructor(
     private socketService: SocketService,
@@ -1676,6 +1678,11 @@ export class ProfileChatsListComponent
     const element = event.target;
     if (element.scrollTop < 100 && this.hasMoreData && !this.isLoading) {
       this.loadMoreChats();
+    }
+    if (element.scrollTop < element.scrollHeight - element.clientHeight - 200) {
+      this.showButton = true;
+    } else{
+      this.showButton = false;
     }
   }
 
