@@ -9,7 +9,7 @@
     background: var(--section-1st-color);
     height: 100vh;
     max-height: calc(100vh - 220px);
-    
+
     @media (max-width:990px) {
       max-height: calc(100dvh - 150px);
     }
@@ -278,6 +278,31 @@
     }
     .abs-invisible {
       background: rgb(156, 155, 155);
+    }
+  }
+
+  .scrollToBottom {
+    position: absolute;
+    bottom: 90px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    color: var(--body-color);
+
+    @media (max-width: 575px) {
+      bottom: 120px;
+      right: 20px;
+    }
+
+    &.active {
+      bottom: 120px;
+      right: 15px;
+    }
+
+    .c-icon-color {
+      transform: rotate(180deg);
     }
   }
 }
