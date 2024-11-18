@@ -1342,6 +1342,7 @@
                     <input
                       type="file"
                       [(ngModel)]="chatObj.msgMedia"
+                      [ngModelOptions]="{ standalone: true }"
                       name="doc"
                       accept="application/*"
                       (change)="onPostFileSelect($event)"
@@ -1359,6 +1360,7 @@
                     <input
                       type="file"
                       [(ngModel)]="chatObj.msgMedia"
+                      [ngModelOptions]="{ standalone: true }"
                       name="image"
                       accept="image/*"
                       (change)="onPostFileSelect($event)"
@@ -1373,6 +1375,7 @@
                     <input
                       type="file"
                       [(ngModel)]="chatObj.msgMedia"
+                      [ngModelOptions]="{ standalone: true }"
                       id="fileInput"
                       (change)="onPostFileSelect($event)"
                       accept="video/*"
@@ -1474,6 +1477,7 @@
                 <input
                   type="file"
                   [(ngModel)]="chatObj.msgMedia"
+                  [ngModelOptions]="{ standalone: true }"
                   name="doc"
                   accept="application/*"
                   (change)="onPostFileSelect($event)"
@@ -1489,6 +1493,7 @@
                 <input
                   type="file"
                   [(ngModel)]="chatObj.msgMedia"
+                  [ngModelOptions]="{ standalone: true }"
                   name="image"
                   accept="image/*"
                   (change)="onPostFileSelect($event)"
@@ -1504,6 +1509,7 @@
                 <input
                   type="file"
                   [(ngModel)]="chatObj.msgMedia"
+                  [ngModelOptions]="{ standalone: true }"
                   id="fileInput"
                   (change)="onPostFileSelect($event)"
                   accept="video/*"
