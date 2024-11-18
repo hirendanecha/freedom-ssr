@@ -63,7 +63,7 @@
                 <div class="d-none d-sm-flex ms-2 mt-1">
                   <span>posted on</span>&nbsp;
                   <a 
-                    [href]="post?.groupLink ? '/research/detail/grpm/' + post?.groupLink : post?.pageType === 'community' ? '/communities/' : '/pages/' + post?.slug"
+                    [href]="post?.groupLink ? '/research/detail/grpm/' + post?.groupLink : post?.pageType === 'community' ? '/communities/' + post?.slug : '/pages/' + post?.slug"
                     target="_blank" 
                     class="m-0"
                   >

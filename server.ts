@@ -131,7 +131,7 @@ export function app(): express.Express {
             name: post?.title || post?.albumname || 'Freedom.Buzz Post',
             description: pdhtml?.textContent || 'Post content',
             image:
-              post?.logoImg ||
+              post?.coverImg ||
               post?.thumbfilename ||
               post?.metaimage ||
               post?.imageUrl ||
