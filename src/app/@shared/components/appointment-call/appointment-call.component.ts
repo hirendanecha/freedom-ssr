@@ -67,6 +67,13 @@ export class AppointmentCallComponent implements OnInit {
     const appointmentURLCall =
       this.route.snapshot['_routerState'].url.split('/facetime/')[1];
     localStorage.setItem('callId', appointmentURLCall);
+    // prevent the browser's back button from working
+    window.history.pushState(null, '', window.location.href);
+    window.history.replaceState(null, '', window.location.href);
+    window.onpopstate = () => {
+      window.history.go(1);
+    };
+
     this.screenSubscription = this.breakpointService?.screen.subscribe(
       (screen) => {
         this.isMobileScreen = screen.md?.lessThen ?? false;
@@ -84,6 +91,9 @@ export class AppointmentCallComponent implements OnInit {
       enableNoisyMicDetection: true,
       interfaceConfigOverwrite: {
         TOOLBAR_ALWAYS_VISIBLE: this.isMobileScreen ? true : false,
+        TOOLBAR_BUTTONS: this.isMobileScreen ? [
+          'microphone', 'camera', 'tileview', 'hangup', 'settings', 'videoquality',
+        ] : '',
       },
     };
 

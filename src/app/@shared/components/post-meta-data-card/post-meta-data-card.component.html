@@ -3,7 +3,7 @@
   [ngClass]="post?.metaimage ? 'chat-meta-link' : ''"
   [href]="post.metalink.startsWith('www') ? 'http://' + post.metalink : post.metalink"
   target="_blank"
-  *ngIf="post?.metalink"
+  *ngIf="post?.metalink && !post?.metaimage"
   >{{ post.metalink }}</a
 >
 
@@ -17,12 +17,6 @@
       alt="image"
       onerror="this.onerror=null;this.src='/assets/images/banner/freedom-buzz-high-res.jpeg';"
     />
-    <ng-template #showLinkOnly><a
-      class="post-description post-meta-description mdtxt pt-0 pb-1 text-start"
-      [href]="post.metalink.startsWith('www') ? 'http://' + post.metalink : post.metalink"
-      target="_blank"
-      >{{ post.metalink }}</a
-    ></ng-template>
     <p class="post-description text-start m-2">{{ post?.title }}</p>
     <p class="post-description text-start m-2">
       {{ post?.metadescription }}

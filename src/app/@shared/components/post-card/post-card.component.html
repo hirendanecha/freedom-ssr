@@ -59,21 +59,22 @@
                   {{ post?.postcreationdate | dateDay }}
                 </div>
               </div>
-              <ng-container *ngIf="post?.groupName">
+              <ng-container *ngIf="post?.groupName || post?.communityName">
                 <div class="d-none d-sm-flex ms-2 mt-1">
                   <span>posted on</span>&nbsp;
-                  <a
-                    [href]="'/research/detail/grpm/' + post?.groupLink"
-                    target="_blank"
+                  <a 
+                    [href]="post?.groupLink ? '/research/detail/grpm/' + post?.groupLink : post?.pageType === 'community' ? '/communities/' : '/pages/' + post?.slug"
+                    target="_blank" 
                     class="m-0"
                   >
-                    <span
+                    <span 
                       class="fw-bold m-0 posted-group-text align-items-center"
-                      [title]="post?.groupName"
-                      >{{ post?.groupName }}</span
+                      [title]="post?.groupName || post?.communityName">{{ post?.groupName ||
+                      post?.communityName}}</span
                     >
                   </a>
-                  &nbsp;<span>Group</span>
+                  &nbsp;<span>{{post?.groupName ? 'Group' : post?.pageType === 'community' ? 'Community' : 'Page'
+                    }}</span>
                 </div>
               </ng-container>
             </div>
