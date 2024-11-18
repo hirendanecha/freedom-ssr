@@ -104,7 +104,7 @@
           <a
             class="nav-link d-center"
             [ngClass]="activeCommunityTab === 2 ? 'active' : ''"
-            >Admin</a
+            >Members</a
           >
         </li>
       </ul>
@@ -320,7 +320,7 @@
   *ngIf="activeCommunityTab === 2 && communityDetails?.memberList?.length > 0"
 >
   <ng-container *ngIf="communityDetails?.adminIds.includes(+profileId)">
-    <span> Add new admin: </span>
+    <span> Add new members: </span>
     <div class="input-area h-48-px d-flex align-items-center mb-3">
       <fa-icon [icon]="['fas', 'magnifying-glass']" class="me-1" />
       <input
