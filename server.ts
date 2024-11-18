@@ -131,12 +131,13 @@ export function app(): express.Express {
             name: post?.title || post?.albumname || 'Freedom.Buzz Post',
             description: pdhtml?.textContent || 'Post content',
             image:
+              post?.logoImg ||
               post?.thumbfilename ||
               post?.metaimage ||
-              post?.imageUrl || 
+              post?.imageUrl ||
               null,
-            };
-            //  || 'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
+          };
+          //  || 'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
           seo.image = talent.image;
