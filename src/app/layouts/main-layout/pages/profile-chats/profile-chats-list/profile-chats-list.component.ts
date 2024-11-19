@@ -682,7 +682,7 @@ export class ProfileChatsListComponent
 
   uploadPostFileAndCreatePost(): void {
     if (!this.isFileUploadInProgress) {
-      if (this.chatObj.msgText || this.selectedFile.name) {
+      if (this.chatObj?.msgText || this.selectedFile?.name) {
         if (this.selectedFile) {
           this.isFileUploadInProgress = true;
           const param = {
@@ -989,51 +989,53 @@ export class ProfileChatsListComponent
       this.isMetaLoader = true;
       this.ngUnsubscribe.next();
       const unsubscribe$ = new Subject<void>();
-      this.postService
-        .getMetaData({ url })
-        .pipe(takeUntil(unsubscribe$))
-        .subscribe({
-          next: (res: any) => {
-            this.isMetaLoader = false;
-            const meta = res.meta || {};
-            const imageUrl = Array.isArray(meta.image?.url)
-              ? meta.image.url[0]
-              : meta.image?.url;
-            const metaTitle = Array.isArray(meta.title)
-              ? meta.title[0]
-              : meta.title;
-            const metaDescription =
-              meta.description === 'undefined'
-                ? 'Post content'
-                : meta.description;
-
-            const metaData = {
-              title: metaTitle,
-              metadescription:
-                metaDescription === 'undefined'
+      setTimeout(() => {
+        this.postService
+          .getMetaData({ url })
+          .pipe(takeUntil(unsubscribe$))
+          .subscribe({
+            next: (res: any) => {
+              this.isMetaLoader = false;
+              const meta = res.meta || {};
+              const imageUrl = Array.isArray(meta.image?.url)
+                ? meta.image.url[0]
+                : meta.image?.url;
+              const metaTitle = Array.isArray(meta.title)
+                ? meta.title[0]
+                : meta.title;
+              const metaDescription =
+                meta.description === 'undefined'
                   ? 'Post content'
-                  : metaDescription,
-              metaimage: imageUrl,
-              metalink: url,
-              url: url,
-            };
-            this.metaData = metaData;
-            resolve(metaData);
-          },
-          error: (err) => {
-            this.isMetaLoader = false;
-            // reject(err);
-            const metaUrl = {
-              metalink: url,
-              url: url,
-            };
-            resolve(metaUrl);
-          },
-          complete: () => {
-            unsubscribe$.next();
-            unsubscribe$.complete();
-          },
-        });
+                  : meta.description;
+
+              const metaData = {
+                title: metaTitle,
+                metadescription:
+                  metaDescription === 'undefined'
+                    ? 'Post content'
+                    : metaDescription,
+                metaimage: imageUrl,
+                metalink: url,
+                url: url,
+              };
+              this.metaData = metaData;
+              resolve(metaData);
+            },
+            error: (err) => {
+              this.isMetaLoader = false;
+              // reject(err);
+              const metaUrl = {
+                metalink: url,
+                url: url,
+              };
+              resolve(metaUrl);
+            },
+            complete: () => {
+              unsubscribe$.next();
+              unsubscribe$.complete();
+            },
+          });
+      }, 100);
     });
   }
 
@@ -1314,7 +1316,7 @@ export class ProfileChatsListComponent
   delayedStartTypingChat() {
     setTimeout(() => {
       this.startTypingChat(false);
-    }, 3000);
+    }, 100);
   }
 
   notificationNavigation() {
@@ -1681,7 +1683,7 @@ export class ProfileChatsListComponent
     }
     if (element.scrollTop < element.scrollHeight - element.clientHeight - 200) {
       this.showButton = true;
-    } else{
+    } else {
       this.showButton = false;
     }
   }
