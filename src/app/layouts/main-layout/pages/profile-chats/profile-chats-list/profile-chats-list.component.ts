@@ -228,6 +228,7 @@ export class ProfileChatsListComponent
           this.userChat?.groupId === data?.groupId) &&
         data?.sentBy !== this.profileId
       ) {
+        this.scrollToBottom();
         let index = this.messageList?.findIndex((obj) => obj?.id === data?.id);
         if (data?.isDeleted) {
           this.messageList = this.messageList.filter(
@@ -270,7 +271,6 @@ export class ProfileChatsListComponent
               data?.messageText
             );
           }
-          this.scrollToBottom();
           if (data !== null) {
             // this.messageList.push(data);
             const url = data?.messageText || null;
