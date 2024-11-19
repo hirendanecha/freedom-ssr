@@ -205,10 +205,10 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   }
 
   validatepassword(): boolean {
-    const pattern = '[a-zA-Z0-9]{5,}';
+    // const pattern = '[a-zA-Z0-9]{5,}';
     // const pattern =
     //   '(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[a-z])(?=.*[0-9].*[0-9]).{8}';
-
+    const pattern = '.{5,}';
     if (!this.registerForm.get('Password').value.match(pattern)) {
       this.msg = 'Password must be a minimum of 5 characters';
       // this.msg =
