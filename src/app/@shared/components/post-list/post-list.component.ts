@@ -131,7 +131,9 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
           this.isPostLoader = false;
           this.isLoading = false;
           if (res?.data.data.length > 0) {
-            this.postList = [...this.postList, ...res?.data.data];
+            this.postList = [...this.postList, ...res?.data.data]?.filter((post, index, self) =>
+              index === self?.findIndex((p) => p?.id === post?.id)
+            );
           } else {
             this.hasMoreData = true;
           }
@@ -154,7 +156,9 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
           this.isPostLoader = false;
           this.isLoading = false;
           if (res?.data.data.length > 0) {
-            this.postList = [...this.postList, ...res?.data.data];
+            this.postList = [...this.postList, ...res?.data.data]?.filter((post, index, self) =>
+              index === self?.findIndex((p) => p?.id === post?.id)
+            );
           } else {
             this.hasMoreData = true;
           }
@@ -279,5 +283,9 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
         console.log(err);
       },
     });
+  }
+
+  trackByPostId(index: number, post: any): number | string {
+    return post.id;
   }
 }
