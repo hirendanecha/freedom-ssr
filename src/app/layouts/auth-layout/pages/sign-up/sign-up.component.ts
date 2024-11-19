@@ -87,14 +87,14 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    fromEvent(this.zipCode.nativeElement, 'input')
-      .pipe(debounceTime(1000))
-      .subscribe((event) => {
-        const val = event['target'].value;
-        if (val.length > 3) {
-          // this.onZipChange(val);
-        }
-      });
+    // fromEvent(this.zipCode.nativeElement, 'input')
+    //   .pipe(debounceTime(1000))
+    //   .subscribe((event) => {
+    //     const val = event['target'].value;
+    //     if (val.length > 3) {
+    //        this.onZipChange(val);
+    //     }
+    //   });
     this.loadCloudFlareWidget();
   }
 
@@ -193,6 +193,17 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     }
   }
 
+  validateEmail() {
+    const emailControl = this.registerForm.get('Email');
+    const emailError = Validators.email(emailControl);
+    if (emailError) {
+      this.msg = 'Please enter a valid email address.';
+      this.scrollTop();
+      return false;
+    }
+    return true;
+  }
+
   validatepassword(): boolean {
     const pattern = '[a-zA-Z0-9]{5,}';
     // const pattern =
@@ -231,6 +242,9 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       this.registerForm.valid &&
       this.registerForm.get('TermAndPolicy').value === true 
     ) {
+      if (!this.validateEmail()) {
+        return;
+      }
       if (!this.validatepassword()) {
         return;
       }
