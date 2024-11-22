@@ -68,11 +68,12 @@ export class NotificationsModalComponent implements AfterViewInit {
         })
         .toString();
       window.open(url, '_blank');
-    } else {
-      const url = this.router.serializeUrl(
-        this.router.createUrlTree([`/profile-chats`])
-      );
-      window.open(url, '_blank');
     }
+    //  else {
+    //   const url = this.router.serializeUrl(
+    //     this.router.createUrlTree([`/profile-chats`])
+    //   );
+    //   window.open(url, '_blank');
+    // }
   }
 }
