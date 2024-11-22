@@ -28,7 +28,7 @@ export class SharedService {
   loggedInUser$ = this.loginUserInfo.asObservable();
 
    //trigger invite to chat modal
-   private openModalSubject = new Subject<void>();
+   public openModalSubject = new Subject<void>();
    openModal$ = this.openModalSubject.asObservable();
 
   callId: string;
@@ -166,10 +166,7 @@ export class SharedService {
           metalink: meta?.url || url,
           url: url,
         };
-        // if (res?.meta?.meta?.image) {
-        // }
         this.advertizementLink.push(linkMetaData);
-        console.log(this.advertizementLink);
       },
       error: (err) => {
         console.log(err);

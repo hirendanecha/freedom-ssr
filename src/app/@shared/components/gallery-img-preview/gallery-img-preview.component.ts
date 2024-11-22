@@ -67,7 +67,6 @@ export class GalleryImgPreviewComponent implements OnInit {
         } else {
           this.hasMoreData = false;
         }
-        // console.log(this.mediaList, this.currentIndex);
       },
       error: (error) => {
         console.log(error);

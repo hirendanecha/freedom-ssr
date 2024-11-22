@@ -104,7 +104,6 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       theme: this.theme === 'dark' ? 'light' : 'dark',
       callback: function (token) {
         localStorage.setItem('captcha-token', token);
-        console.log(`Challenge Success ${token}`);
         if (!token) {
           this.msg = 'invalid captcha kindly try again!';
           this.type = 'danger';

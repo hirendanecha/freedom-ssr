@@ -61,7 +61,6 @@ export class OutGoingCallModalComponent
     if (window.document.hidden) {
       this.soundEnabledSubscription =
         this.soundControlService.soundEnabled$.subscribe((soundEnabled) => {
-          console.log(soundEnabled);
           if (soundEnabled === false) {
             this.sound?.stop();
           }
@@ -112,10 +111,10 @@ export class OutGoingCallModalComponent
     this.sound?.stop();
     clearTimeout(this.hangUpTimeout);
     const data = {
-      notificationToProfileId: this.calldata.notificationToProfileId,
+      notificationToProfileId: this.calldata?.notificationToProfileId,
       roomId: this.calldata?.roomId,
       groupId: this.calldata?.groupId,
-      notificationByProfileId: this.calldata.notificationByProfileId,
+      notificationByProfileId: this.calldata?.notificationByProfileId,
       message: msg || 'Call declined',
     };
     this.socketService?.hangUpCall(data, (data: any) => {

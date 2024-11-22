@@ -109,8 +109,6 @@ export class AppointmentCallComponent implements OnInit {
       };
       this.socketService?.endCall(data);
       this.router.navigate(['/profile-chats']).then(() => {
-        // api.dispose();
-        // console.log('opaaaaa');
       });
     });
 
@@ -118,12 +116,10 @@ export class AppointmentCallComponent implements OnInit {
   }
 
   initialChat() {
-    // console.log('opendChat', this.openChatId);
     if (this.openChatId.roomId) {
       this.messageService.getRoomById(this.openChatId.roomId).subscribe({
         next: (res: any) => {
           this.userChat = res.data[0];
-          // console.log(this.userChat);
         },
         error: () => {},
       });
@@ -133,7 +129,6 @@ export class AppointmentCallComponent implements OnInit {
         next: (res: any) => {
           this.userChat = res.data;
           this.userChat['isAccepted'] = 'Y';
-          // console.log(this.userChat);
         },
         error: () => {},
       });

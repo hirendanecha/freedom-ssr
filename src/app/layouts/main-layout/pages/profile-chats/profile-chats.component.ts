@@ -114,7 +114,6 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
   }
 
   onChatPost(userName: any) {
-    // console.log('old-user-chat', this.userChat);
     if (this.userChat?.groupId) {
       const date = moment(new Date()).utc();
       this.oldChat = {
@@ -122,13 +121,9 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
         groupId: this.userChat.groupId,
         date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
       };
-      this.socketService.switchChat(this.oldChat, (data) => {
-        console.log(data);
-      });
+      this.socketService.switchChat(this.oldChat, (data) => {});
     }
-
     this.userChat = userName;
-    // console.log('new-user-chat', this.userChat);
   }
 
   onNewChatRoom(isRoomCreated) {

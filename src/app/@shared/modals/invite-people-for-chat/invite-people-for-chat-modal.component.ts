@@ -85,4 +85,9 @@ export class InvitePeopleForChatModalComponent {
     //   (user) => user.Id !== item.Id
     // );
   }
+
+  closeModal(): void {
+    this.activeModal.close('cancel');
+    this.sharedService.openModalSubject.next(null);
+  }
 }

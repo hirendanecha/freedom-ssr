@@ -116,47 +116,34 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     this.userList = [];
     if (this.isAllowTagUser) {
       let htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
-
-      // Remove HTML tags to get the clean text content
       const anchorTagRegex =
         /<a\s+href="\/settings\/view-profile\/(\d+)"\s+class="text-danger"\s+data-id="\d+">@([\w\s]+)<\/a>/g;
-      
-      // Remove anchor tags with @username (ignore them)
       htmlText = htmlText.replace(anchorTagRegex, '');
-
-      // const atSymbolRegex = /@/g;
       const atSymbolRegex = /@(\w*)/g;
       const matches = [...htmlText.matchAll(atSymbolRegex)];
-      const cursorPosition = this.getCursorPosition(); // Get cursor position
+      const cursorPosition = this.getCursorPosition();
 
       if (matches.length > 0) {
-        let foundValidTag = false; // Flag to track if a valid tag is found
-
-        // Iterate through all the @ matches
+        let foundValidTag = false;
         for (const match of matches) {
           const atSymbolIndex = match.index;
 
           if (cursorPosition > atSymbolIndex) {
-            // Extract text from the @ symbol to the cursor or to the next space
             let textAfterAt = htmlText
               .substring(atSymbolIndex + 1, cursorPosition)
               .trim();
-            textAfterAt = textAfterAt.replace(/<[^>]*>/g, ''); // Remove HTML tags
-            textAfterAt = textAfterAt.replace(/[^\w\s\-_\.]/g, ''); // Remove special characters except alphanumeric and spaces
-            const currentPositionValue = textAfterAt.split(' ')[0].trim(); // Stop at the first space
-
-            // Proceed if there is actual content typed after the @ symbol
+            textAfterAt = textAfterAt.replace(/<[^>]*>/g, '');
+            textAfterAt = textAfterAt.replace(/[^\w\s\-_\.]/g, '');
+            const currentPositionValue = textAfterAt.split(' ')[0].trim();
             if (currentPositionValue.length > 0) {
-              this.userNameSearch = currentPositionValue; // This is the user name search text
-              console.log('username:', this.userNameSearch);
-              
+              this.userNameSearch = currentPositionValue;
               foundValidTag = true;
             }
           } else {
             const atSymbolIndex = htmlText.lastIndexOf('@');
             if (atSymbolIndex !== -1) {
               let textAfterAt = htmlText.substring(atSymbolIndex + 1).trim();
-              textAfterAt = textAfterAt.replace(/<[^>]*>/g, ''); // Remove HTML tags
+              textAfterAt = textAfterAt.replace(/<[^>]*>/g, '');
               textAfterAt = textAfterAt.replace(/[^\w\s\-_\.]/g, '');
               this.userNameSearch = textAfterAt.split(' ')[0].trim();
               foundValidTag = true;
@@ -165,8 +152,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
               // } else {
               //   this.clearUserSearchData();
               // }
-            // } else {
-            //   this.clearUserSearchData();
+              // } else {
+              //   this.clearUserSearchData();
             }
           }
         }
@@ -175,7 +162,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         if (
           foundValidTag &&
           this.userNameSearch &&
-          this.userNameSearch.length > 1 && !this.isCustomeSearch
+          this.userNameSearch.length > 1 &&
+          !this.isCustomeSearch
         ) {
           this.getUserList(this.userNameSearch); // Fetch the user list based on search
         } else if (this.isCustomeSearch) {
@@ -184,7 +172,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
           this.clearUserSearchData(); // Clear the search data if no valid tag or input is too short
         }
       } else {
-        console.log('No "@" symbol found.');
+        return;
       }
     }
   }

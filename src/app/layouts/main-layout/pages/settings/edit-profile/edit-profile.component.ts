@@ -150,7 +150,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     };
     this.customerService.updateNotificationSound(soundObj).subscribe({
       next: (res) => {
-        console.log(res);
         this.toastService.success(res.message);
         this.sharedService.getUserDetails();
       },

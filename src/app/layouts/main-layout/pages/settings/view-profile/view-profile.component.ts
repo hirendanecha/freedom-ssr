@@ -76,7 +76,6 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {}
 
   getProfile(id): void {
-    console.log('in>>>>>>>>>>>>>', id);
 
     this.spinner.show();
     this.customerService.getProfile(id).subscribe({
@@ -207,7 +206,6 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   searchPosts(event): void {
     if (event.target.value.length > 3) {
       this.searchText = event.target.value;
-      console.log(this.searchText);
       this.hasShownWarning = false;
     } else if (!event.target.value.length) {
       this.searchText = '';

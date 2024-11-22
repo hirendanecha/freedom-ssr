@@ -220,7 +220,6 @@ export class ProfileChatsSidebarComponent
     };
     this.customerService.updateNotificationSound(soundObj).subscribe({
       next: (res) => {
-        console.log(res);
         this.toasterService.success(res.message);
         this.sharedService.getUserDetails();
       },
@@ -231,7 +230,8 @@ export class ProfileChatsSidebarComponent
   }
 
   clearChatList() {
-    this.onNewChat?.emit({});
+    this.onNewChat?.emit(null);
+    this.selectedChatUser = null;
   }
 
   selectButton(buttonType: string): void {
@@ -306,7 +306,7 @@ export class ProfileChatsSidebarComponent
       this.socketService?.deleteRoom(data, (data: any) => {
         this.getChatList();
         this.getGroupList();
-        this.onNewChat?.emit({});
+        this.onNewChat?.emit(null);
       });
     } else if (item.groupId) {
       const data = {
@@ -316,7 +316,7 @@ export class ProfileChatsSidebarComponent
       this.socketService.removeGroupMember(data, (res) => {
         this.getChatList();
         this.getGroupList();
-        this.onNewChat?.emit({});
+        this.onNewChat?.emit(null);
       });
     }
   }
@@ -336,7 +336,7 @@ export class ProfileChatsSidebarComponent
         this.socketService?.resendChatInvite(data, (data: any) => {
           this.getChatList();
           this.getGroupList();
-          this.onNewChat?.emit({});
+          this.onNewChat?.emit(null);
           this.toasterService.success('invitation sent successfully.');
         });
       } else {
@@ -423,7 +423,6 @@ export class ProfileChatsSidebarComponent
     modalRef.result.then((res) => {
       if (res !== 'cancel') {
         this.onChat(res);
-        console.log(res);
       }
     });
   }

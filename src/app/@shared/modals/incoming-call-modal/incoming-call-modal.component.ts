@@ -60,7 +60,6 @@ export class IncomingcallModalComponent
     this.soundEnabledSubscription =
       this.soundControlService.soundEnabled$.subscribe((soundEnabled) => {
         if (soundEnabled === false) {
-          // console.log(soundEnabled);
           this.sound?.stop();
         }
       });
@@ -156,9 +155,7 @@ export class IncomingcallModalComponent
       domain: 'freedom.buzz',
     };
     this.customerService.startCallToBuzzRing(buzzRingData).subscribe({
-      next: (data: any) => {
-        console.log(data);
-      },
+      next: (data: any) => {},
       error: (err) => {
         console.log(err);
       },

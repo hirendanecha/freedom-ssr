@@ -102,7 +102,6 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {
     this.getPostList();
     this.getadvertizements();
-    console.log(this.searchText);
   }
 
   getPostList(): void {

@@ -207,8 +207,6 @@ export class PostCardComponent implements OnInit {
     });
   }
   showFullDescription() {
-    console.log(this.post.postdescription?.length);
-
     this.showFullDesc = !this.showFullDesc;
   }
 

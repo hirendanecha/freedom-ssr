@@ -302,13 +302,9 @@ export class ProfileChatsListComponent
                 groupId: data?.groupId,
                 date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
               };
-              this.socketService.switchChat(oldChat, (data) => {
-                console.log(data);
-              });
+              this.socketService.switchChat(oldChat, (data) => {});
             }
             this.socketService.readGroupMessage(data, (readUsers) => {
-              console.log(readUsers, 'readUsers');
-
               this.readMessagesBy = readUsers.filter(
                 (item) => item.ID !== this.profileId
               );
@@ -325,14 +321,12 @@ export class ProfileChatsListComponent
               this.originalFavicon['href'] = '/assets/images/icon.jpg';
               this.sharedService.isNotify = false;
             }
-            // console.log(res);
             return;
           });
         }
       }
     });
     this.socketService.socket.on('seen-room-message', (data) => {
-      console.log('read-room-message', data);
       this.readMessageRoom = 'Y';
       this.unreadMessage = {};
     });
@@ -349,7 +343,6 @@ export class ProfileChatsListComponent
           });
         });
       }
-      // console.log(this.sharedService.onlineUserList);
     });
     this.socketService.socket?.emit('online-users');
     if (this.userChat.groupId) {
@@ -364,8 +357,6 @@ export class ProfileChatsListComponent
   ngOnChanges(changes: SimpleChanges): void {
     this.originalFavicon = document.querySelector('link[rel="icon"]');
     if (this.userChat?.groupId) {
-      console.log('group-chat==>', this.userChat);
-
       this.activePage = 1;
       this.messageList = [];
       this.filteredMessageList = [];
@@ -395,7 +386,6 @@ export class ProfileChatsListComponent
             });
           });
         }
-        // console.log(this.sharedService.onlineUserList);
       });
       this.findUserStatus(this.userChat.profileId);
     }
@@ -424,7 +414,6 @@ export class ProfileChatsListComponent
         profileId2: this.userChat?.Id || this.userChat?.profileId,
       },
       (data: any) => {
-        // console.log(data);
         this.userChat = { ...data?.room };
         this.newRoomCreated.emit(true);
       }
@@ -677,7 +666,6 @@ export class ProfileChatsListComponent
       this.resetData();
     }
     this.postMessageTags = data?.tags;
-    console.log(this.postMessageTags);
   }
 
   uploadPostFileAndCreatePost(): void {
@@ -1076,7 +1064,6 @@ export class ProfileChatsListComponent
     // } else {
     // }
     let uuId = uuid();
-    console.log(uuId);
     localStorage.setItem('uuId', uuId);
     if (this.userChat?.roomId) {
       const buzzRingData = {
@@ -1273,8 +1260,6 @@ export class ProfileChatsListComponent
   }
 
   groupEditDetails(data): void {
-    console.log(data);
-
     const modalRef = this.modalService.open(EditGroupModalComponent, {
       centered: true,
       size: 'md',
@@ -1283,7 +1268,6 @@ export class ProfileChatsListComponent
     modalRef.componentInstance.groupId = this.userChat?.groupId;
     modalRef.result.then((res) => {
       if (res !== 'cancel') {
-        console.log(res);
         if (Object.keys(res).includes('isUpdate')) {
           this.socketService?.createGroup(res, (data: any) => {
             this.groupData = data;
@@ -1437,7 +1421,6 @@ export class ProfileChatsListComponent
     }
     if (this.userChat?.groupId) {
       this.socketService.socket.on('read-message-user', (data) => {
-        console.log('readUsers', data);
         this.readMessagesBy = data?.filter(
           (item) => item.ID !== this.profileId
         );
@@ -1498,36 +1481,60 @@ export class ProfileChatsListComponent
       }
       // this.checkLastMessageOfRoom();
     }
+    // if (this.userChat?.groupId) {
+    //   for (let group of this.filteredMessageList) {
+    //     this.groupData?.memberList?.forEach((member) => {
+    //       const matchingMessage = group.messages.find(
+    //         (msg) =>
+    //           member?.switchDate < msg.createdDate &&
+    //           member?.profileId !== this.profileId &&
+    //           msg.sentBy == this.profileId
+    //       );
+
+    //       if (matchingMessage) {
+    //         member['message'] = matchingMessage;
+    //         const existUser = this.relevantMembers.find(
+    //           (e) => e?.profileId === member?.profileId
+    //         );
+    //         if (existUser) {
+    //           this.readMessagesBy = this.readMessagesBy.filter((e) => {
+    //             return e.ID !== existUser?.profileId;
+    //           });
+    //         }
+    //         if (!existUser) {
+    //           this.relevantMembers.push(member);
+    //         }
+    //       }
+    //     });
+    //   }
+    // }
     if (this.userChat?.groupId) {
-      console.log('relevant', this.relevantMembers);
       for (let group of this.filteredMessageList) {
         this.groupData?.memberList?.forEach((member) => {
           const matchingMessage = group.messages.find(
             (msg) =>
               member?.switchDate < msg.createdDate &&
               member?.profileId !== this.profileId &&
-              msg.sentBy == this.profileId
+              msg.sentBy === this.profileId
           );
 
           if (matchingMessage) {
             member['message'] = matchingMessage;
-            const existUser = this.relevantMembers.find(
+            const existingUserIndex = this.relevantMembers.findIndex(
               (e) => e?.profileId === member?.profileId
             );
-            console.log(existUser);
-            if (existUser) {
-              this.readMessagesBy = this.readMessagesBy.filter((e) => {
-                return e.ID !== existUser?.profileId;
-              });
-            }
-            if (!existUser) {
+
+            if (existingUserIndex > -1) {
+              this.readMessagesBy = this.readMessagesBy.filter(
+                (e) =>
+                  e.ID !== this.relevantMembers[existingUserIndex]?.profileId
+              );
+            } else {
               this.relevantMembers.push(member);
             }
           }
         });
       }
-      console.log('relevant', this.relevantMembers);
-      console.log('readBy', this.readMessagesBy);
     }
   }
 
@@ -1581,7 +1588,6 @@ export class ProfileChatsListComponent
     this.messageElements.forEach((element) => {
       // const currentHighlighted =
       //   element.nativeElement.querySelector('.highlighted');
-      // console.log(element.nativeElement);
       // if (currentHighlighted) {
       //   this.renderer.removeClass(currentHighlighted, 'highlighted');
       // }
@@ -1620,8 +1626,6 @@ export class ProfileChatsListComponent
   }
 
   onSearch(event): void {
-    // this.searchQuery = event.target.value;
-    // console.log(event.target.value);
     if (event.target.value) {
       this.scrollToHighlighted(this.currentHighlightedIndex);
     } else {
@@ -1662,7 +1666,6 @@ export class ProfileChatsListComponent
     if (highlightedElements.length > 0) {
       this.currentHighlightedIndex =
         (this.currentHighlightedIndex + 1) % highlightedElements.length;
-      // console.log(this.currentHighlightedIndex);
 
       this.scrollToHighlighted(this.currentHighlightedIndex);
     }

@@ -55,7 +55,6 @@ export class ResearchDetailsComponent {
                 this.groupDetails?.ProfilePicName,
             };
             this.seoService.updateSeoMetaData(data);
-            console.log(this.groupDetails);
             this.GetGroupPostById();
           }
           this.spinner.hide();
