@@ -60,16 +60,16 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     private sharedService: SharedService,
     private messageService: MessageService
   ) {
-    this.metaDataSubject.pipe(debounceTime(5)).subscribe(() => {
-      this.getMetaDataFromUrlStr();
-      this.checkUserTagFlag();
-    });
     this.sharedService.loggedInUser$.subscribe((data) => {
       this.profileId = data?.profileId;
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.metaDataSubject.pipe(debounceTime(200)).subscribe(() => {
+      this.getMetaDataFromUrlStr();
+      this.checkUserTagFlag();
+    });
     const val = changes?.value?.currentValue;
     this.setTagInputDivValue(val);
 
@@ -353,26 +353,30 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       const doc = parser.parseFromString(html, 'text/html');
       const walk = (node: Node) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          const cursorPosition = this.getCursorPosition(); // Get the cursor position in the text
-
-          // Find the nearest @ mention before the cursor
+          const cursorPosition = this.getCursorPosition();
           const regex = /@/g;
           const match = regex.exec(node.nodeValue || '');
 
           if (match && match.index <= cursorPosition) {
             const atSymbolIndex = match.index;
+            const selection = window.getSelection();
 
-            // Replace only at the position of the found @ mention
+            const range = selection.getRangeAt(0);
+            const cursorOffset = range.startOffset;
             const replacement = `<a href="/settings/view-profile/${userId}" class="text-danger" data-id="${userId}">@${displayName}</a>`;
             const beforeText = node.nodeValue?.substring(0, atSymbolIndex);
-            const afterText = node.nodeValue?.substring(cursorPosition);
+            const afterText = node.nodeValue?.substring(cursorOffset);
 
-            // Replace @ mention with the link
             const replacedText = `${beforeText}${replacement}${afterText}`;
+            console.log(
+              `replacedText======> ${replacement}`,
+              `before==> ${beforeText}`,
+              `after==> ${afterText}`
+            );
+
             const span = document.createElement('span');
             span.innerHTML = replacedText;
 
-            // Insert the new HTML in place of the text node
             while (span.firstChild) {
               node.parentNode?.insertBefore(span.firstChild, node);
             }
@@ -565,20 +569,22 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   emitChangeEvent(): void {
     if (this.tagInputDiv) {
-      const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
-      this.value = `${htmlText}`
-        .replace(/<br[^>]*>\s*/gi, '<br>')
-        .replace(/(<br\s*\/?>\s*){4,}/gi, '<div><br><br><br><br></div>')
-        .replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>')
-        .replace(
-          /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,
-          '$1'
-        );
-      this.onDataChange?.emit({
-        html: this.value,
-        tags: this.tagInputDiv?.nativeElement?.children,
-        meta: this.metaData,
-      });
+      setTimeout(() => {
+        const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
+        this.value = `${htmlText}`
+          .replace(/<br[^>]*>\s*/gi, '<br>')
+          .replace(/(<br\s*\/?>\s*){4,}/gi, '<div><br><br><br><br></div>')
+          .replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>')
+          .replace(
+            /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,
+            '$1'
+          );
+        this.onDataChange?.emit({
+          html: this.value,
+          tags: this.tagInputDiv?.nativeElement?.children,
+          meta: this.metaData,
+        });
+      }, 100);
     }
   }
 

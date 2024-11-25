@@ -1451,7 +1451,7 @@
                   "
                   (onDataChange)="onTagUserInputChangeEvent($event)"
                   (keypress)="startTypingChat(true)"
-                  (keydown.enter)="uploadPostFileAndCreatePost()"
+                  (keydown.enter)="this.chatObj.msgText !== null ? uploadPostFileAndCreatePost() : null"
                   (keydown.shift.enter)="$event.stopPropagation()"
                 />
                 <!-- (keydown)="delayedStartTypingChat()" -->
