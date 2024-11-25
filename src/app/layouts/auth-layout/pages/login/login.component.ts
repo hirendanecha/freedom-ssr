@@ -204,7 +204,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     const authToken = localStorage.getItem('auth-token');
     if (authToken) {
       // const cookieValue = `authToken=${authToken}; path=/; secure; samesite=None; max-age=86400`; // expires in 1 day
-      const cookieValue = `authToken=${authToken}; domain=.freedom.buzz; path=/; secure; samesite=None; max-age=86400`;
+      const cookieValue = `authToken=${authToken}; domain=.freedom.buzz; path=/; secure; samesite=None; max-age=2592000`; //expires in 1 month
       document.cookie = cookieValue;
     }
   }
