@@ -376,6 +376,7 @@
         post?.postdescription
           | stripHtml
           | truncate : (showFullDesc ? -1 : 600)
+          | linkify
           | noSanitize" hoverDropdown
     ></p>
     <ng-template #addDummySpace><div class="mt-4 pb-3"></div></ng-template>
@@ -712,7 +713,7 @@
                   <ng-container *ngIf="comment?.comment">
                       <p
                         class="mdtxt mb-0 comment-description"
-                        [innerHTML]="comment.comment | noSanitize" hoverDropdown
+                        [innerHTML]="comment.comment | linkify | noSanitize" hoverDropdown
                       ></p>
                     <ng-container *ngIf="comment.descImg">
                       <app-img-preview
@@ -961,7 +962,7 @@
                           <ng-container *ngIf="reply?.comment">
                             <p
                               class="mdtxt mb-0 comment-description"
-                              [innerHTML]="reply?.comment | noSanitize" hoverDropdown
+                              [innerHTML]="reply?.comment | linkify | noSanitize" hoverDropdown
                             ></p>
                             <ng-container *ngIf="reply.descImg">
                               <app-img-preview
