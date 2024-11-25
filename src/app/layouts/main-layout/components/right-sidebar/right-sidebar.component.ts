@@ -19,6 +19,7 @@ export class RightSidebarComponent implements OnInit {
   communities = [];
   isCommunitiesLoader: boolean = false;
   counts: any = {};
+  isSettingMenuCollapse = true;
 
   constructor(
     private router: Router,
@@ -84,7 +85,7 @@ export class RightSidebarComponent implements OnInit {
 
   goToCommunityDetails(community: any): void {
     this.closeSidebar();
-    this.router.navigate(['communities', community?.slug]);
+    this.router.navigate([community?.pageType, community?.slug]);
   }
 
   closeSidebar(): void {
