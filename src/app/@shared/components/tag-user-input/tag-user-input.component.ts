@@ -63,13 +63,13 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     this.sharedService.loggedInUser$.subscribe((data) => {
       this.profileId = data?.profileId;
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
     this.metaDataSubject.pipe(debounceTime(200)).subscribe(() => {
       this.getMetaDataFromUrlStr();
       this.checkUserTagFlag();
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
     const val = changes?.value?.currentValue;
     this.setTagInputDivValue(val);
 
@@ -569,22 +569,20 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   emitChangeEvent(): void {
     if (this.tagInputDiv) {
-      setTimeout(() => {
-        const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
-        this.value = `${htmlText}`
-          .replace(/<br[^>]*>\s*/gi, '<br>')
-          .replace(/(<br\s*\/?>\s*){4,}/gi, '<div><br><br><br><br></div>')
-          .replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>')
-          .replace(
-            /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,
-            '$1'
-          );
-        this.onDataChange?.emit({
-          html: this.value,
-          tags: this.tagInputDiv?.nativeElement?.children,
-          meta: this.metaData,
-        });
-      }, 100);
+      const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
+      this.value = `${htmlText}`
+        .replace(/<br[^>]*>\s*/gi, '<br>')
+        .replace(/(<br\s*\/?>\s*){4,}/gi, '<div><br><br><br><br></div>')
+        .replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>')
+        .replace(
+          /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,
+          '$1'
+        );
+      this.onDataChange?.emit({
+        html: this.value,
+        tags: this.tagInputDiv?.nativeElement?.children,
+        meta: this.metaData,
+      });
     }
   }
 
