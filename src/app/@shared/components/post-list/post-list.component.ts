@@ -51,9 +51,19 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
     private socketService: SocketService,
     private seeFirstUserService: SeeFirstUserService,
     private route: ActivatedRoute,
-    private unsubscribeProfileService: UnsubscribeProfileService
+    private unsubscribeProfileService: UnsubscribeProfileService,
+    private router: Router
   ) {
-    this.userId = this.route.snapshot.params.id;
+    this.router.events.subscribe((event: any) => {
+      if (event?.routerEvent?.url.includes('/settings/view-profile')) {
+        const id = event?.routerEvent?.url.split('/')[3];
+        this.userId = id;
+        if (id) {
+          this.getPostList();
+        }
+      }
+    });
+    // this.userId = this.route.snapshot.params.id;
     this.profileId = localStorage.getItem('profileId');
     this.getUnsubscribeProfiles();
   }
@@ -218,8 +228,9 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
           this.isLoading = false;
           this.isPostLoader = false;
           if (res?.data?.length > 0) {
-            this.postList = [...this.postList, ...res?.data]?.filter((post, index, self) =>
-              index === self?.findIndex((p) => p?.id === post?.id)
+            this.postList = [...this.postList, ...res?.data]?.filter(
+              (post, index, self) =>
+                index === self?.findIndex((p) => p?.id === post?.id)
             );
           } else {
             this.hasMoreData = true;
