@@ -438,15 +438,8 @@ export class ProfileChatsListComponent
       /<img\s+[^>]*src="data:image\/.*?;base64,[^\s]*"[^>]*>|<img\s+[^>]*src=""[^>]*>/g;
     cleanedText = cleanedText.replace(regex, '');
     const divregex = /<div\s*>\s*<\/div>/g;
-    if (
-      cleanedText
-        .replace(divregex, '')
-        .replace(/<[^>]*>/g, '')
-        .replace(/&nbsp;/gi, '')
-        .replace(/\s+/g, '')
-        .trim() === ''
-    )
-      return null;
+    if (cleanedText.replace(divregex, '').replace(/<(?!img\b)[^>]*>/gi, '')
+      .replace(/&nbsp;/gi, '').replace(/\s+/g, '').trim() === '') return null;
     return this.encryptDecryptService?.encryptUsingAES256(cleanedText) || null;
   }
 
@@ -694,7 +687,7 @@ export class ProfileChatsListComponent
           };
           this.scrollToBottom();
           const existingChat = this.chatObj?.msgText;
-          if (existingChat.replace(/<br\s*\/?>|\s+/g, '').length > 0) {
+          if (existingChat?.replace(/<br\s*\/?>|\s+/g, '')?.length > 0) {
             this.chatObj.msgMedia = '';
             this.sendMessage();
           }
