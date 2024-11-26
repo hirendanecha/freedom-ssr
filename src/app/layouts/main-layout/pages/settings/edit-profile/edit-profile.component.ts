@@ -24,6 +24,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./edit-profile.component.scss'],
 })
 export class EditProfileComponent implements OnInit, AfterViewInit {
+  resetImageClosebtn = true;
   customer: Customer = new Customer();
   allCountryData: any;
   confirm_password = '';
@@ -248,6 +249,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
             if (!res.error) {
               this.toastService.success(res.message);
               this.sharedService.getUserDetails();
+              this.resetImageClosebtn = false;
             } else {
               this.toastService.danger(res?.message);
             }
@@ -263,10 +265,12 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
 
   onProfileImgChange(event: any): void {
     this.profileImg = event;
+    this.resetImageClosebtn = true;
   }
 
   onProfileCoverImgChange(event: any): void {
     this.profileCoverImg = event;
+    this.resetImageClosebtn = true;
   }
 
   deleteAccount(): void {
