@@ -686,7 +686,7 @@ export class ProfileChatsListComponent
           };
           this.scrollToBottom();
           const existingChat = this.chatObj?.msgText;
-          if (existingChat.replace(/<br\s*\/?>|\s+/g, '').length > 0) {
+          if (existingChat?.replace(/<br\s*\/?>|\s+/g, '')?.length > 0) {
             this.chatObj.msgMedia = '';
             this.sendMessage();
           }
