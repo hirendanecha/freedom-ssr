@@ -156,7 +156,6 @@ export class ProfileChatsListComponent
     this.callRoomId = +localStorage.getItem('callRoomId');
     // const authToken = localStorage.getItem('auth-token')
     // this.qrLink = `${environment.qrLink}${this.profileId}?token=${authToken}`;
-
     const data = {
       title: 'Buzz Chat',
       url: `${location.href}`,
@@ -166,6 +165,7 @@ export class ProfileChatsListComponent
     this.isOnCall = this.router.url.includes('/facetime/') || false;
   }
   ngAfterViewInit(): void {
+    this.originalFavicon = document.querySelector('link[rel="icon"]');
     if (this.callRoomId && !this.sidebarClass) {
       localStorage.removeItem('callRoomId');
       this.callRoomId = null;
@@ -252,11 +252,11 @@ export class ProfileChatsListComponent
           );
           this.messageList[index] = data;
           this.filteredMessageList?.forEach((ele: any) => {
-            const indext = ele.messages?.findIndex(
+            const index = ele.messages?.findIndex(
               (obj) => obj?.id === data?.id
             );
-            if (ele.messages[indext]) {
-              ele.messages[indext] = data;
+            if (ele.messages[index]) {
+              ele.messages[index] = data;
             }
           });
         } else {
@@ -317,11 +317,7 @@ export class ProfileChatsListComponent
             profileId: data?.sentBy,
           };
           this.socketService.readMessage(readData, (res) => {
-            if (res && this.sharedService.isNotify) {
-              this.originalFavicon['href'] = '/assets/images/icon.jpg';
-              this.sharedService.isNotify = false;
-            }
-            return;
+            this.notificationNavigation();
           });
         }
       }
@@ -355,7 +351,6 @@ export class ProfileChatsListComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.originalFavicon = document.querySelector('link[rel="icon"]');
     if (this.userChat?.groupId) {
       this.activePage = 1;
       this.messageList = [];
@@ -367,7 +362,7 @@ export class ProfileChatsListComponent
       this.groupData = null;
     }
     if (this.userChat?.roomId || this.userChat?.groupId) {
-      this.notificationNavigation();
+      // this.notificationNavigation();
       this.activePage = 1;
       this.messageList = [];
       this.filteredMessageList = [];
@@ -1318,7 +1313,7 @@ export class ProfileChatsListComponent
   notificationNavigation() {
     const isRead = localStorage.getItem('isRead');
     if (isRead === 'Y') {
-      this.originalFavicon['href'] = '/assets/images/icon.jpg';
+      this.originalFavicon.href = '/assets/images/icon.jpg';
       this.sharedService.isNotify = false;
       // localStorage.setItem('isRead', 'Y');
     }

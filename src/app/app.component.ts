@@ -229,6 +229,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       const isRead = localStorage.getItem('isRead');
       if (isRead === 'N') {
         this.sharedService.isNotify = true;
+        this.originalFavicon.href = '/assets/images/icon-unread.jpg';
       }
     }
   }

@@ -162,7 +162,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         if (
           foundValidTag &&
           this.userNameSearch &&
-          this.userNameSearch.length > 1 &&
+          this.userNameSearch.length >= 0 &&
           !this.isCustomeSearch
         ) {
           this.getUserList(this.userNameSearch); // Fetch the user list based on search

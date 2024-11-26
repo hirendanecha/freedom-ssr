@@ -67,9 +67,9 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     private toasterService: ToastService
   ) {
     this.profileId = +localStorage.getItem('profileId');
-    if (this.sharedService.isNotify) {
-      this.sharedService.isNotify = false;
-    }
+    // if (this.sharedService.isNotify) {
+    //   this.sharedService.isNotify = false;
+    // }
     // const data = this.tokenStorageService.getUser();
     // this.sharedService.getLoginUserDetails(data);
   }
