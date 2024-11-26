@@ -27,9 +27,14 @@ export class SharedService {
   loginUserInfo = new BehaviorSubject<any>(null);
   loggedInUser$ = this.loginUserInfo.asObservable();
 
-   //trigger invite to chat modal
-   public openModalSubject = new Subject<void>();
-   openModal$ = this.openModalSubject.asObservable();
+  //trigger invite to chat modal
+  public openModalSubject = new Subject<void>();
+  openModal$ = this.openModalSubject.asObservable();
+
+  private isNotifySubject = new BehaviorSubject<boolean>(false);
+
+  // Expose as an observable
+  isNotify$ = this.isNotifySubject.asObservable();
 
   callId: string;
   constructor(
@@ -230,5 +235,14 @@ export class SharedService {
 
   triggerOpenModal() {
     this.openModalSubject.next();
+  }
+
+  setNotify(value: boolean): void {
+    this.isNotifySubject.next(value);
+  }
+
+  // Method to get the current value
+  getNotify(): boolean {
+    return this.isNotifySubject.getValue();
   }
 }

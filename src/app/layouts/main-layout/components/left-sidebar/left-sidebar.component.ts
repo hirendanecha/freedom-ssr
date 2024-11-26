@@ -24,15 +24,15 @@ import { PostService } from 'src/app/@shared/services/post.service';
 export class LeftSidebarComponent implements OnInit, AfterViewInit {
   isSettingMenuCollapse = true;
   user: any = {};
-  isRead: any
+  isRead: any;
   sidebar: any = {
     isShowLeftSideBar: true,
     isShowRightSideBar: true,
     isShowResearchLeftSideBar: false,
   };
-  profileId: number
-  linkMetaData: {}
-  communitySlug = ''
+  profileId: number;
+  linkMetaData: {};
+  communitySlug = '';
   originalFavicon: HTMLLinkElement;
 
   constructor(
@@ -56,8 +56,7 @@ export class LeftSidebarComponent implements OnInit, AfterViewInit {
     this.originalFavicon = document.querySelector('link[rel="icon"]');
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   openWalletPopUp() {
     this.closeSidebar();
@@ -106,7 +105,8 @@ export class LeftSidebarComponent implements OnInit, AfterViewInit {
     // this.originalFavicon.href = '/assets/images/icon-unread.jpg';
     if (this.isRead === 'N') {
       localStorage.setItem('isRead', 'Y');
-      this.sharedService.isNotify = false;
+      // this.sharedService.isNotify = false;
+      this.sharedService.setNotify(false);
     }
   }
 
@@ -115,7 +115,7 @@ export class LeftSidebarComponent implements OnInit, AfterViewInit {
     window.scrollTo(0, 0);
     this.router.navigate(['home']).then(() => {
       location.reload();
-    })
+    });
   }
 
   closeSidebar(): void {
@@ -137,5 +137,4 @@ export class LeftSidebarComponent implements OnInit, AfterViewInit {
     });
     this.closeSidebar();
   }
-
 }

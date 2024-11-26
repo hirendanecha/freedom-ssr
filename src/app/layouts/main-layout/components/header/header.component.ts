@@ -20,6 +20,7 @@ import { UserGuideModalComponent } from 'src/app/@shared/modals/userguide-modal/
 import { IncomingcallModalComponent } from 'src/app/@shared/modals/incoming-call-modal/incoming-call-modal.component';
 import { SoundControlService } from 'src/app/@shared/services/sound-control.service';
 import { Howl } from 'howler';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -53,6 +54,7 @@ export class HeaderComponent {
   hideOngoingCallButton: boolean = false;
   authToken = localStorage.getItem('auth-token');
   showUserGuideBtn: boolean = false;
+  private subscription: Subscription;
   constructor(
     private modalService: NgbModal,
     public sharedService: SharedService,
@@ -65,18 +67,24 @@ export class HeaderComponent {
     private soundControlService: SoundControlService
   ) {
     this.originalFavicon = document.querySelector('link[rel="icon"]');
+    this.subscription = this.sharedService.isNotify$.subscribe(
+      (value) => (this.sharedService.isNotify = value)
+    );
     this.socketService?.socket?.on('isReadNotification_ack', (data) => {
       if (data?.profileId) {
-        this.sharedService.isNotify = false;
+        // this.sharedService.isNotify = false;
+        this.sharedService.setNotify(false);
         localStorage.setItem('isRead', data?.isRead);
         this.originalFavicon.href = '/assets/images/icon.jpg';
       }
     });
     const isRead = localStorage.getItem('isRead');
     if (isRead === 'N') {
-      this.sharedService.isNotify = true;
+      // this.sharedService.isNotify = true;
+      this.sharedService.setNotify(true);
     } else {
-      this.sharedService.isNotify = false;
+      // this.sharedService.isNotify = false;
+      this.sharedService.setNotify(false);
     }
     this.channelId = +localStorage.getItem('channelId');
 
@@ -268,5 +276,9 @@ export class HeaderComponent {
       centered: true,
       size: 'lg',
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

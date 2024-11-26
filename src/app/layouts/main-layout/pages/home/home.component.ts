@@ -119,7 +119,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     const isRead = localStorage.getItem('isRead');
     if (isRead === 'N') {
-      this.sharedService.isNotify = true;
+      // this.sharedService.isNotify = true;
+      this.sharedService.setNotify(true);
     }
     this.socketService.socket?.on(
       'new-post-added',

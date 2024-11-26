@@ -123,7 +123,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               user.messageNotificationSound === 'Y' || false;
           });
           if (data?.notificationByProfileId !== this.profileId) {
-            this.sharedService.isNotify = true;
+            this.sharedService.setNotify(true);
+            // this.sharedService.isNotify = true;
             this.originalFavicon.href = '/assets/images/icon-unread.jpg';
           }
           this.soundControlService.soundEnabled$.subscribe((soundEnabled) => {
@@ -228,7 +229,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       const isRead = localStorage.getItem('isRead');
       if (isRead === 'N') {
-        this.sharedService.isNotify = true;
+        // this.sharedService.isNotify = true;
+        this.sharedService.setNotify(true);
         this.originalFavicon.href = '/assets/images/icon-unread.jpg';
       }
     }

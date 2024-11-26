@@ -438,7 +438,15 @@ export class ProfileChatsListComponent
       /<img\s+[^>]*src="data:image\/.*?;base64,[^\s]*"[^>]*>|<img\s+[^>]*src=""[^>]*>/g;
     cleanedText = cleanedText.replace(regex, '');
     const divregex = /<div\s*>\s*<\/div>/g;
-    if (cleanedText.replace(divregex, '').replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, '').replace(/\s+/g, '').trim() === '') return null;
+    if (
+      cleanedText
+        .replace(divregex, '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/&nbsp;/gi, '')
+        .replace(/\s+/g, '')
+        .trim() === ''
+    )
+      return null;
     return this.encryptDecryptService?.encryptUsingAES256(cleanedText) || null;
   }
 
@@ -474,7 +482,7 @@ export class ProfileChatsListComponent
         parentMessageId: this.chatObj.parentMessageId || null,
         tags: this.chatObj?.['tags'],
       };
-      if (!data.messageMedia && !data.messageText && !data.parentMessageId) {
+      if (!data.messageMedia || !data.messageText || !data.parentMessageId) {
         this.isFileUploadInProgress = false;
         this.isLoading = false;
         return this.toastService.danger('please enter message!');
@@ -686,7 +694,7 @@ export class ProfileChatsListComponent
           };
           this.scrollToBottom();
           const existingChat = this.chatObj?.msgText;
-          if (existingChat?.replace(/<br\s*\/?>|\s+/g, '')?.length > 0) {
+          if (existingChat.replace(/<br\s*\/?>|\s+/g, '').length > 0) {
             this.chatObj.msgMedia = '';
             this.sendMessage();
           }
@@ -1315,7 +1323,8 @@ export class ProfileChatsListComponent
     const isRead = localStorage.getItem('isRead');
     if (isRead === 'Y') {
       this.originalFavicon.href = '/assets/images/icon.jpg';
-      this.sharedService.isNotify = false;
+      // this.sharedService.isNotify = false;
+      this.sharedService.setNotify(false);
       // localStorage.setItem('isRead', 'Y');
     }
   }
