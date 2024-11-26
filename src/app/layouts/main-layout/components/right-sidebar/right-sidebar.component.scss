@@ -39,8 +39,8 @@
         bottom: 0;
         height: 2px;
         width: calc(90% - 10px);
-        // background-color: var(--para-2nd-color);
-        border-top: 2px dashed var(--para-2nd-color);
+        background-color: var(--para-2nd-color);
+        // border-top: 2px dashed var(--para-2nd-color);
       }
   
       &::before {

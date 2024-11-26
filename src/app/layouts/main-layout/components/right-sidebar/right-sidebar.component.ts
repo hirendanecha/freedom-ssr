@@ -19,7 +19,7 @@ export class RightSidebarComponent implements OnInit {
   communities = [];
   isCommunitiesLoader: boolean = false;
   counts: any = {};
-  isSettingMenuCollapse = true;
+  isSettingMenuCollapse = false;
 
   constructor(
     private router: Router,
