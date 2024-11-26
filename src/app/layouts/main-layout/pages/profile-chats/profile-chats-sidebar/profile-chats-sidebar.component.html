@@ -453,9 +453,12 @@
                   "
                   >{{ item?.unReadMessage }}</span
                 >
-                <span class="font-12-px">
+                <span class="font-12-px" *ngIf="item?.lastMessageText !== null; else whileAgo">
                   {{ item?.updatedDate | messageTime }}
                 </span>
+                <ng-template #whileAgo>
+                 <span class="font-12-px">while ago</span>
+                </ng-template>
               </div>
             </div>
           </div>
