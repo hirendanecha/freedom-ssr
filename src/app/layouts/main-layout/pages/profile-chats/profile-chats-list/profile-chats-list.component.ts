@@ -475,11 +475,11 @@ export class ProfileChatsListComponent
         parentMessageId: this.chatObj.parentMessageId || null,
         tags: this.chatObj?.['tags'],
       };
-      if (!data.messageMedia || !data.messageText || !data.parentMessageId) {
-        this.isFileUploadInProgress = false;
-        this.isLoading = false;
-        return this.toastService.danger('please enter message!');
-      }
+      // if (!data.messageMedia || !data.messageText || !data.parentMessageId) {
+      //   this.isFileUploadInProgress = false;
+      //   this.isLoading = false;
+      //   return this.toastService.danger('please enter message!');
+      // }
       this.socketService?.editMessage(data, (editMsg: any) => {
         this.isFileUploadInProgress = false;
         if (editMsg) {
@@ -538,67 +538,66 @@ export class ProfileChatsListComponent
         tags: this.chatObj?.['tags'],
       };
       this.userChat?.roomId ? (data['isRead'] = 'N') : null;
-      if (!data.messageMedia && !data.messageText && !data.parentMessageId) {
+      // if (!data.messageMedia && !data.messageText && !data.parentMessageId) {
+      //   this.isFileUploadInProgress = false;
+      //   this.isLoading = false;
+      //   return this.toastService.danger('please enter message!');
+      // } else { }
+      this.socketService.sendMessage(data, async (data: any) => {
         this.isFileUploadInProgress = false;
-        this.isLoading = false;
-        return this.toastService.danger('please enter message!');
-      } else {
-        this.socketService.sendMessage(data, async (data: any) => {
-          this.isFileUploadInProgress = false;
-          this.scrollToBottom();
-          this.newRoomCreated?.emit(true);
+        this.scrollToBottom();
+        this.newRoomCreated?.emit(true);
 
-          if (this.filteredMessageList.length > 0) {
-            data.messageText =
-              data.messageText != null
-                ? this.encryptDecryptService?.decryptUsingAES256(
-                    data.messageText
-                  )
-                : null;
-            if (data.parentMessage?.messageText) {
-              data.parentMessage.messageText =
-                this.encryptDecryptService?.decryptUsingAES256(
-                  data.parentMessage?.messageText
-                );
-            }
-            const text = data.messageText?.replace(/<br\s*\/?>|<[^>]*>/g, ' ');
-            const matches = text?.match(
-              /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
-            );
-            if (matches?.[0]) {
-              data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
-              this.scrollToBottom();
-            }
+        if (this.filteredMessageList.length > 0) {
+          data.messageText =
+            data.messageText != null
+              ? this.encryptDecryptService?.decryptUsingAES256(
+                  data.messageText
+                )
+              : null;
+          if (data.parentMessage?.messageText) {
+            data.parentMessage.messageText =
+              this.encryptDecryptService?.decryptUsingAES256(
+                data.parentMessage?.messageText
+              );
           }
-          this.messageList.push(data);
-          this.readMessageRoom = data?.isRead;
-          // this.messageIndex = null;
-          // if (this.userChat.groupId === data.groupId) {
-          //   this.readMessagesBy = [];
-          //   this.socketService.readGroupMessage(data, (readUsers) => {
-          //     this.readMessagesBy = readUsers.filter(
-          //       (item) => item.ID !== this.profileId
-          //     );
-          //   });
-          // }
-          if (this.filteredMessageList.length > 0) {
-            const lastIndex = this.filteredMessageList.length - 1;
-            if (
-              this.filteredMessageList[lastIndex] &&
-              !this.uploadTo.roomId &&
-              !this.uploadTo.groupId
-            ) {
-              this.filteredMessageList[lastIndex]?.['messages'].push(data);
-            }
-          } else {
-            const array = new MessageDatePipe(
-              this.encryptDecryptService
-            ).transform([data]);
-            this.filteredMessageList = array;
+          const text = data.messageText?.replace(/<br\s*\/?>|<[^>]*>/g, ' ');
+          const matches = text?.match(
+            /(?:https?:\/\/|www\.)[^\s<]+(?:\s|<br\s*\/?>|$)/
+          );
+          if (matches?.[0]) {
+            data['metaData'] = await this.getMetaDataFromUrlStr(matches?.[0]);
+            this.scrollToBottom();
           }
-          this.resetData();
-        });
-      }
+        }
+        this.messageList.push(data);
+        this.readMessageRoom = data?.isRead;
+        // this.messageIndex = null;
+        // if (this.userChat.groupId === data.groupId) {
+        //   this.readMessagesBy = [];
+        //   this.socketService.readGroupMessage(data, (readUsers) => {
+        //     this.readMessagesBy = readUsers.filter(
+        //       (item) => item.ID !== this.profileId
+        //     );
+        //   });
+        // }
+        if (this.filteredMessageList.length > 0) {
+          const lastIndex = this.filteredMessageList.length - 1;
+          if (
+            this.filteredMessageList[lastIndex] &&
+            !this.uploadTo.roomId &&
+            !this.uploadTo.groupId
+          ) {
+            this.filteredMessageList[lastIndex]?.['messages'].push(data);
+          }
+        } else {
+          const array = new MessageDatePipe(
+            this.encryptDecryptService
+          ).transform([data]);
+          this.filteredMessageList = array;
+        }
+        this.resetData();
+      });
     }
     this.startTypingChat(false);
   }
