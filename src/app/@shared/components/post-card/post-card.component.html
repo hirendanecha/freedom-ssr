@@ -642,7 +642,7 @@
                           data-src="{{ comment?.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
                           onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" alt="avatar" />
                         <div class="d-flex gap-3 align-items-baseline">
-                          <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + comment.profileid" target="_blank">
+                          <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + comment.profileId" target="_blank">
                             &#64;{{ (comment?.Username || comment?.FirstName)?.split(" ")?.join("") }}
                           </a>
                           <button>
@@ -889,7 +889,7 @@
                                 data-src="{{ reply?.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
                                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" alt="avatar" />
                               <div class="d-flex gap-3 align-items-baseline">
-                                <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + reply.profileid" target="_blank">
+                                <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + reply.profileId" target="_blank">
                                   &#64;{{ (reply?.Username || reply?.FirstName)?.split(" ")?.join("") }}
                                 </a>
                                 <button>
