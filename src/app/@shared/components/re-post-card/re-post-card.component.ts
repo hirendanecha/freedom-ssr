@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, Input, OnInit, afterNextRender } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+  afterNextRender,
+} from '@angular/core';
 import { PostService } from '../../services/post.service';
 import { environment } from 'src/environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -21,24 +27,36 @@ export class RePostCardComponent implements AfterViewInit, OnInit {
   webUrl = environment.webUrl;
   tubeUrl = environment.tubeUrl;
 
-  sharedPost: string
-  player: any
+  sharedPost: string;
+  player: any;
   showHoverBox = false;
   profileId = '';
 
-  constructor(private postService: PostService,
+  isCommentsLoader: boolean = false;
+  editCommentsLoader: boolean = false;
+  isOpenCommentsPostId: number = null;
+  commentDescriptionimageUrl: string;
+  replayCommentDescriptionimageUrl: string;
+  commentList: any = [];
+  replyCommentList: any = [];
+  isReply = false;
+  parentReplayComment: boolean = false;
+  showFullDesc: boolean = false;
+
+
+  constructor(
+    private postService: PostService,
     private spinner: NgxSpinnerService,
     public tokenService: TokenStorageService,
     public breakpointService: BreakpointService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.getPostById();
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   getPostById(): void {
     this.spinner.show();
@@ -46,6 +64,7 @@ export class RePostCardComponent implements AfterViewInit, OnInit {
       next: (res: any) => {
         this.spinner.hide();
         this.post = res[0];
+        this.viewComments(this.id);
       },
       error: (err) => {
         this.spinner.hide();
@@ -85,5 +104,81 @@ export class RePostCardComponent implements AfterViewInit, OnInit {
     }" class="text-danger" data-id="${post.profileid || post.profileId}">@${
       post.Username
     }</a>`;
+  }
+
+  viewComments(id: number): void {
+    if (this.post.id === id) {
+      this.editCommentsLoader = true;
+      this.isOpenCommentsPostId = id;
+      this.isCommentsLoader = true;
+      const data = {
+        postId: id,
+        profileId: this.profileId,
+      };
+      this.postService.getComments(data).subscribe({
+        next: (res) => {
+          if (res) {
+            this.post.commentCount = res.data?.count;
+            res.data.commmentsList.filter((ele: any) => {
+              ele.descImg = this.extractImageUrlFromContent(ele.comment);
+            });
+            this.commentList = res.data.commmentsList.map((ele: any) => ({
+              ...ele,
+              replyCommnetsList: res.data.replyCommnetsList.filter(
+                (ele1: any) => {
+                  ele1.descImg = this.extractImageUrlFromContent(ele1.comment);
+                  return ele.id === ele1.parentCommentId;
+                }
+              ),
+            }));
+            this.editCommentsLoader = false;
+
+            this.commentList.forEach((element) => {
+              this.commentDescriptionimageUrl = this.extractImageUrlFromContent(
+                element.comment
+              );
+            });
+
+            this.commentList.forEach((element) => {
+              element.replyCommnetsList.forEach((ele) => {
+                this.replayCommentDescriptionimageUrl =
+                  this.extractImageUrlFromContent(ele.comment);
+              });
+            });
+          }
+        },
+        error: (error) => {
+          console.log(error);
+          this.editCommentsLoader = false;
+        },
+        complete: () => {
+          this.isCommentsLoader = false;
+          this.editCommentsLoader = false;
+        },
+      });
+    }
+  }
+
+  extractImageUrlFromContent(content: string): string | null {
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = content;
+    const imgTag = contentContainer.querySelector('img');
+
+    if (imgTag) {
+      const imgTitle = imgTag.getAttribute('title');
+      const imgStyle = imgTag.getAttribute('style');
+      const imageGif = imgTag
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
+      if (!imgTitle && !imgStyle && !imageGif) {
+        return imgTag.getAttribute('src');
+      }
+    }
+    return null;
+  }
+
+  showFullDescription() {
+    this.showFullDesc = !this.showFullDesc;
   }
 }
