@@ -63,7 +63,7 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
         }
       }
     });
-    // this.userId = this.route.snapshot.params.id;
+    this.userId = this.route.snapshot.params.id;
     this.profileId = localStorage.getItem('profileId');
     this.getUnsubscribeProfiles();
   }
@@ -140,7 +140,10 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
           this.isPostLoader = false;
           this.isLoading = false;
           if (res?.data.data.length > 0) {
-            this.postList = [...this.postList, ...res?.data.data];
+            this.postList = [...this.postList, ...res?.data.data]?.filter(
+              (post, index, self) =>
+                index === self?.findIndex((p) => p?.id === post?.id)
+            );
           } else {
             this.hasMoreData = true;
           }
@@ -163,7 +166,10 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
           this.isPostLoader = false;
           this.isLoading = false;
           if (res?.data.data.length > 0) {
-            this.postList = [...this.postList, ...res?.data.data];
+            this.postList = [...this.postList, ...res?.data.data]?.filter(
+              (post, index, self) =>
+                index === self?.findIndex((p) => p?.id === post?.id)
+            );
           } else {
             this.hasMoreData = true;
           }
