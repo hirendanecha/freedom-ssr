@@ -109,12 +109,12 @@ export class NotificationsComponent {
           queryParams: { chatUserData: encodedUserData },
         })
         .toString();
-      window.open(url, '_blank');
+      window.location.href = url;
     } else if (!data?.postId && data?.groupId) {
       const url = this.router.serializeUrl(
         this.router.createUrlTree([`/profile-chats`])
       );
-      window.open(url, '_blank');
+      window.location.href = url;
     }
   }
 }

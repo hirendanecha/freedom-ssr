@@ -67,7 +67,7 @@ export class NotificationsModalComponent implements AfterViewInit {
           queryParams: { chatUserData: encodedUserData },
         })
         .toString();
-      window.open(url, '_blank');
+      window.location.href = url;
     }
     //  else {
     //   const url = this.router.serializeUrl(

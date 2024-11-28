@@ -6,8 +6,8 @@
         class="d-flex justify-content-between align-items-center"
         (click)="readUnreadNotification(notification.postId, notification)"
         [routerLink]="notification.postId ? '/post/' + notification.postId : notification?.groupId ? '/profile-chats' : null"
-        [target]="notification?.postId || notification?.groupId ? '_blank' : null"
-      >
+        >
+        <!-- [target]="notification?.postId || notification?.groupId ? '_blank' : null" -->
         <div class="left-item position-relative d-inline-flex gap-3">
           <div class="avatar position-relative d-inline-flex">
             <img
