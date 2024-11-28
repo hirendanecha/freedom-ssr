@@ -19,18 +19,19 @@
             Get paid 1 1776 Token to Post, Reactions, Share and View and Refer
             family and friends to Freedom!
           </span>
-          <h6 class="h5 d-inline-flex mt-4 mb-0">{{isSettingMenuCollapse? '1776 Dashboard':'My Pages & Communities'}}</h6>
+          <h6 class="d-inline-flex mt-4 mb-0">{{!isSettingMenuCollapse? '1776 Dashboard':'My Pages & Communities'}}</h6>
           <fa-icon
-            [icon]="[
-              'fas',
-              isSettingMenuCollapse ? 'chevron-up' : 'chevron-down'
-            ]"
+          [icon]="[
+            'fas',
+            isSettingMenuCollapse ? 'chevron-up' : 'chevron-down'
+          ]"
             [title]="
               !isSettingMenuCollapse
-                ? 'Hide My Pages & Communities'
-                : 'Show My Pages & Communities'
-            "
+              ? 'Hide My Pages & Communities'
+              : 'Show My Pages & Communities'
+              "
           />
+          <h6 class="h5 d-inline-flex mb-0">{{isSettingMenuCollapse? '1776 Dashboard':'My Pages & Communities'}}</h6>
         </div>
 
         <div #collapse="ngbCollapse" [(ngbCollapse)]="isSettingMenuCollapse">
