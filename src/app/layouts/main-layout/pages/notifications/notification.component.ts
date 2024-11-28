@@ -97,11 +97,13 @@ export class NotificationsComponent {
   }
 
   selectMessaging(data) {
-    if (!data?.postId && !data?.groupId) {
+    if (!data?.postId) {
       const userData = {
         Id: data.notificationByProfileId,
-        ProfilePicName: data.ProfilePicName,
+        ProfilePicName: data.profileImage || data.ProfilePicName || '/assets/images/avtar/placeholder-user.png',
         Username: data.Username,
+        GroupId: data.groupId,
+        GroupName: data.groupName,
       };
       const encodedUserData = encodeURIComponent(JSON.stringify(userData));
       const url = this.router
@@ -109,12 +111,13 @@ export class NotificationsComponent {
           queryParams: { chatUserData: encodedUserData },
         })
         .toString();
-      window.location.href = url;
-    } else if (!data?.postId && data?.groupId) {
-      const url = this.router.serializeUrl(
-        this.router.createUrlTree([`/profile-chats`])
-      );
-      window.location.href = url;
+        this.router.navigateByUrl(url);
     }
+    //  else if (!data?.postId && data?.groupId) {
+    //   const url = this.router.serializeUrl(
+    //     this.router.createUrlTree([`/profile-chats`])
+    //   );
+    //   window.location.href = url;
+    // }
   }
 }

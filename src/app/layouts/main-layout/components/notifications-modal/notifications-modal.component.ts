@@ -55,21 +55,25 @@ export class NotificationsModalComponent implements AfterViewInit {
   }
 
   selectMessaging(data) {
-    if (!data?.groupId) {
-      const userData = {
-        Id: data.notificationByProfileId,
-        ProfilePicName: data.ProfilePicName,
-        Username: data.Username,
-      };
-      const encodedUserData = encodeURIComponent(JSON.stringify(userData));
-      const url = this.router
-        .createUrlTree(['/profile-chats'], {
-          queryParams: { chatUserData: encodedUserData },
-        })
-        .toString();
-      window.location.href = url;
-    }
-    //  else {
+    const userData = {
+      Id: data.notificationByProfileId,
+      ProfilePicName:
+        data.profileImage ||
+        data.ProfilePicName ||
+        '/assets/images/avtar/placeholder-user.png',
+      Username: data.Username,
+      GroupId: data.groupId,
+      GroupName: data.groupName,
+    };
+    const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+    const url = this.router
+      .createUrlTree(['/profile-chats'], {
+        queryParams: { chatUserData: encodedUserData },
+      })
+      .toString();
+      this.router.navigateByUrl(url);
+    // if (!data?.groupId) {
+    // } else {
     //   const url = this.router.serializeUrl(
     //     this.router.createUrlTree([`/profile-chats`])
     //   );

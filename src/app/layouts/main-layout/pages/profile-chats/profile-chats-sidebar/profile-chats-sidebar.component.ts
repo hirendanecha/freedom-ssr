@@ -380,14 +380,14 @@ export class ProfileChatsSidebarComponent
     return status;
   }
 
-  checkRoom(): void {
+  checkRoom(): void { 
     const oldUserChat = {
       profileId1: this.profileId,
       profileId2: this.chatData.Id,
     };
     this.socketService.checkRoom(oldUserChat, (res: any) => {
       const data = res.find((obj) => obj.isDeleted === 'N');
-      if (data && data.id) {
+      if (data && data.id && !this.chatData.GroupId) {
         const existingUser = {
           roomId: data.id,
           profileId: data.profileId1,
@@ -400,6 +400,17 @@ export class ProfileChatsSidebarComponent
         };
         this.selectedChatUser = existingUser.roomId;
         this.onNewChat?.emit(existingUser);
+      } else if (this.chatData.GroupId) {
+        const redirectToGroup ={
+          groupId: this.chatData.GroupId,
+          groupName: this.chatData.GroupName,
+          isAccepted: this.chatData?.isAccepted || 'Y',
+          lastMessageText: this.chatData?.lastMessageText,
+          profileImage: this.chatData?.ProfilePicName,
+          ProfilePicName: this.chatData?.ProfilePicName,
+          createdBy: this.chatData?.Id,
+        }
+        this.onNewChat?.emit(redirectToGroup);
       } else {
         const newUser = {
           Id: this.chatData.Id,
