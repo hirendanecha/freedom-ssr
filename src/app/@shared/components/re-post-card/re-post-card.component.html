@@ -193,7 +193,7 @@
 
     <ng-container *ngIf="isOpenCommentsPostId === post.id">
       <ng-container *ngIf="commentList.length; else elseNoCommentsFound">
-        <div class="comments-area mt-5">
+        <div class="comments-area mt-5" (click)="$event.stopPropagation()">
           <div
             class="single-comment-area ms-xxl-15"
             *ngFor="let comment of commentList"
