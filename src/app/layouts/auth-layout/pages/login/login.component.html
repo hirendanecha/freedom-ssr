@@ -64,7 +64,7 @@
             <label class="form-label"
               >Password<span class="text-danger">*</span></label
             >
-            <a class="fw-500 c-pointer" (click)="forgotPasswordOpen()"
+            <a class="h6 fw-bold c-pointer custom-primary" (click)="forgotPasswordOpen()"
               >Forgot Password ?</a
             >
           </div>
@@ -103,9 +103,11 @@
     </div>
   </div>
   <div class="text-center mt-3">
-    <p class="text-danger">
+    <p class="h6 fw-light">
       If you are having technical issues, email
-      <a href="mailto:support@Freedom.Buzz">{{ "support@Freedom.Buzz" }}</a>
+      <a class="h5 c-pointer custom-primary" (click)="onClick($event)">{{ "support@freedom.buzz" }}
+        <fa-icon class="font-16-px ms-1" [icon]="['fas', 'copy']" />
+      </a>
     </p>
   </div>
 </div>

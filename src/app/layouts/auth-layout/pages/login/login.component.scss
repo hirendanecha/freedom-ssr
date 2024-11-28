@@ -15,6 +15,9 @@
       align-content: center;
     }
   }
+  .custom-primary{
+    color: var(--link-color) !important;
+  }
 }
 .captcha-btn{
   display: flex;
