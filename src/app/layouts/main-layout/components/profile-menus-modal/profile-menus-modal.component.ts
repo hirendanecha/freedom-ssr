@@ -102,11 +102,9 @@ export class ProfileMenusModalComponent {
 
   goToSetting() {
     this.router.navigate([`settings/edit-profile/${this.userId}`]);
-    // window.open(`settings/edit-profile/${userId}`, '_blank')
   }
 
   goToViewProfile() {
-    // window.open(`settings/view-profile/${profileId}`, '_blank')
     this.router.navigate([`settings/view-profile/${this.profileId}`]);
   }
   goToSupport() {

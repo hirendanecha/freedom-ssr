@@ -43,7 +43,6 @@ export class RePostCardComponent implements AfterViewInit, OnInit {
   parentReplayComment: boolean = false;
   showFullDesc: boolean = false;
 
-
   constructor(
     private postService: PostService,
     private spinner: NgxSpinnerService,
@@ -95,7 +94,8 @@ export class RePostCardComponent implements AfterViewInit, OnInit {
         queryParams: { chatUserData: encodedUserData },
       })
       .toString();
-    window.open(url, '_blank');
+    // window.open(url, '_blank');
+    window.location.href = url;
   }
 
   opyData(post): string {

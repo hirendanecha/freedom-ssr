@@ -242,7 +242,7 @@ export class PostCardComponent implements OnInit {
         queryParams: { chatUserData: encodedUserData },
       })
       .toString();
-    window.open(url, '_blank');
+    window.location.href = url;
   }
   goToViewProfile(id: any): void {
     this.router.navigate([`settings/view-profile/${id}`]);
@@ -585,7 +585,12 @@ export class PostCardComponent implements OnInit {
     // }
   }
 
-  onPostFileSelect(event: any, type: string, postId: number, commentId?: number): void {
+  onPostFileSelect(
+    event: any,
+    type: string,
+    postId: number,
+    commentId?: number
+  ): void {
     if (type === 'parent') {
       this.isParent = true;
     } else {

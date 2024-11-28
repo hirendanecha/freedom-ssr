@@ -161,7 +161,8 @@ export class HoverDropdownDirective {
         queryParams: { chatUserData: encodedUserData },
       })
       .toString();
-    window.open(url, '_blank');
+    // window.open(url, '_blank');
+    window.location.href = url;
   }
 
   @HostListener('document:click', ['$event'])

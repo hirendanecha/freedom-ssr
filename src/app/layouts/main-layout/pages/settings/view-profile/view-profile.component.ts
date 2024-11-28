@@ -76,7 +76,6 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {}
 
   getProfile(id): void {
-
     this.spinner.show();
     this.customerService.getProfile(id).subscribe({
       next: (res: any) => {
@@ -164,8 +163,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   viewUserPost(id) {
-    // this.router.navigate([`post/${id}`]);
-    window.open(`post/${id}`, '_blank');
+    this.router.navigate([`post/${id}`]);
   }
 
   downloadPdf(pdf): void {

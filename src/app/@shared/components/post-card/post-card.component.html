@@ -46,7 +46,7 @@
                 class="d-flex align-items-center"
                 (mouseover)="showHoverBox = true"
               >
-              <a class="h6 m-0" [href]="webUrl + 'settings/view-profile/' + post.profileid" target="_blank">
+              <a class="h6 m-0" [href]="webUrl + 'settings/view-profile/' + post.profileid">
                 {{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
               </a>
                 <!-- [ngbTooltip]="post.postcreationdate | date : ' h:mm a MMM d, y'" -->
@@ -63,8 +63,7 @@
                 <div class="d-none d-sm-flex ms-2 mt-1">
                   <span>posted on</span>&nbsp;
                   <a 
-                    [href]="post?.groupLink ? '/research/detail/grpm/' + post?.groupLink : post?.pageType === 'community' ? '/communities/' + post?.slug : '/pages/' + post?.slug"
-                    target="_blank" 
+                    [href]="post?.groupLink ? '/research/detail/grpm/' + post?.groupLink : post?.pageType === 'community' ? '/communities/' + post?.slug : '/pages/' + post?.slug" 
                     class="m-0"
                   >
                     <span 
@@ -95,7 +94,7 @@
                 alt="avatar"
               />
               <div class="d-flex gap-3 align-items-baseline">
-                <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + post.profileid" target="_blank">
+                <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + post.profileid">
                   &#64;{{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
                 </a>
                 
@@ -164,7 +163,6 @@
                   <a
                     class="droplist d-flex align-items-center gap-2"
                     routerLink="/platforms"
-                    target="_blank"
                   >
                     <fa-icon [icon]="['fas', 'table-list']" />
                     <span>Platforms</span>
@@ -218,7 +216,6 @@
                 <a
                   class="droplist d-flex align-items-center gap-2"
                   [href]="tubeUrl + '/video/' + post.id"
-                  target="_blank"
                 >
                   <fa-icon [icon]="['fas', 'play']" />
                   <span>Large Player</span>
@@ -352,7 +349,6 @@
         <span>posted on</span>&nbsp;
         <a
           [href]="'/research/detail/grpm/' + post?.groupLink"
-          target="_blank"
           class="m-0"
         >
           <span
@@ -642,7 +638,7 @@
                           data-src="{{ comment?.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
                           onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" alt="avatar" />
                         <div class="d-flex gap-3 align-items-baseline">
-                          <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + comment.profileId" target="_blank">
+                          <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + comment.profileId">
                             &#64;{{ (comment?.Username || comment?.FirstName)?.split(" ")?.join("") }}
                           </a>
                           <button>
@@ -660,7 +656,7 @@
                           </button>
                           <span class="me-2 ms-2">|</span>
                           <button>
-                            <a class="droplist d-flex align-items-center gap-2" routerLink="/platforms" target="_blank">
+                            <a class="droplist d-flex align-items-center gap-2" routerLink="/platforms">
                               <fa-icon [icon]="['fas', 'table-list']" />
                               <span>Platforms</span>
                             </a>
@@ -889,7 +885,7 @@
                                 data-src="{{ reply?.ProfilePicName || '/assets/images/avtar/placeholder-user.png'}}"
                                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" alt="avatar" />
                               <div class="d-flex gap-3 align-items-baseline">
-                                <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + reply.profileId" target="_blank">
+                                <a class="h6 cursor mt-2" [href]="webUrl + 'settings/view-profile/' + reply.profileId">
                                   &#64;{{ (reply?.Username || reply?.FirstName)?.split(" ")?.join("") }}
                                 </a>
                                 <button>
@@ -907,7 +903,7 @@
                                 </button>
                                 <span class="me-2 ms-2">|</span>
                                 <button>
-                                  <a class="droplist d-flex align-items-center gap-2" routerLink="/platforms" target="_blank">
+                                  <a class="droplist d-flex align-items-center gap-2" routerLink="/platforms">
                                     <fa-icon [icon]="['fas', 'table-list']" />
                                     <span>Platforms</span>
                                   </a>
