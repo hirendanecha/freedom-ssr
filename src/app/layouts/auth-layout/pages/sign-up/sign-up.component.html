@@ -362,18 +362,17 @@
       <div class="form-check ps-0 my-4 d-flex">
         <div id="captcha" #captcha></div>
       </div>
-      <div class="form-check ps-0 my-4 d-flex">
+      <div class="form-check ps-0 my-4 align-items-center d-flex">
         <input
           type="checkbox"
           class="p-0 check-box"
           required
           formControlName="TermAndPolicy"
         />
-        <label class="form-check-label ms-2 c-pointer">
+        <label class="form-check-label ms-2 c-pointer fw-light">
           I agree to the Freedom.buzz
-          <a href="/user-agreement" >Terms of Use</a> and
-          <a href="/privacy-policy" >Privacy Policy</a>.
-          <span class="text-danger">*</span>
+          <a class="custom-primary fw-bold" href="/user-agreement" >Terms of Use</a> and
+          <a class="custom-primary fw-bold" href="/privacy-policy" >Privacy Policy.<span class="text-danger">*</span></a>
         </label>
       </div>
 
@@ -388,8 +387,10 @@
   </div>
 </div>
 <div class="text-center mt-3">
-  <p class="text-danger">
+  <p class="h6 fw-light">
     If you are having technical issues, email
-    <a href="mailto:support@Freedom.Buzz">{{ "support@Freedom.Buzz" }}</a>
+    <a class="h5 c-pointer custom-primary" (click)="onClick($event)">{{ "support@freedom.buzz" }}
+      <fa-icon class="font-16-px ms-1" [icon]="['fas', 'copy']" />
+    </a>
   </p>
 </div>

@@ -53,6 +53,10 @@
   .form-check-label{
     text-transform: none;
   }
+
+  .custom-primary{
+    color: var(--link-color) !important;
+  }
 }
 .check-box{
   width: 20px;
