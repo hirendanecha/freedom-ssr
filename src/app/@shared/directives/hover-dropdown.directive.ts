@@ -162,7 +162,7 @@ export class HoverDropdownDirective {
       })
       .toString();
     // window.open(url, '_blank');
-    window.location.href = url;
+    this.router.navigateByUrl(url);
   }
 
   @HostListener('document:click', ['$event'])

@@ -95,7 +95,7 @@ export class RePostCardComponent implements AfterViewInit, OnInit {
       })
       .toString();
     // window.open(url, '_blank');
-    window.location.href = url;
+    this.router.navigateByUrl(url);
   }
 
   opyData(post): string {

@@ -242,7 +242,7 @@ export class PostCardComponent implements OnInit {
         queryParams: { chatUserData: encodedUserData },
       })
       .toString();
-    window.location.href = url;
+    this.router.navigateByUrl(url);
   }
   goToViewProfile(id: any): void {
     this.router.navigate([`settings/view-profile/${id}`]);
