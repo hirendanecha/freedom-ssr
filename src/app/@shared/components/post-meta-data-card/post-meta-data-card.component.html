@@ -7,7 +7,7 @@
   >{{ post.metalink }}</a
 >
 
-<div class="border rounded-3 mb-3 chat-meta-card" *ngIf="post?.metaimage">
+<div class="border rounded-3 mb-3 chat-meta-card border-dark-subtle" *ngIf="post?.metaimage">
   <a [href]="post.metalink.startsWith('www') ? 'http://' + post.metalink : post.metalink" target="_blank" class="post-img w-100">
     <img
       *ngIf="validateImageUrl(post?.metaimage)"
