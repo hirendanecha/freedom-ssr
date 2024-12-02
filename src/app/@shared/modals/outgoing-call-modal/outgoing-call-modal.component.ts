@@ -115,7 +115,7 @@ export class OutGoingCallModalComponent
       roomId: this.calldata?.roomId,
       groupId: this.calldata?.groupId,
       notificationByProfileId: this.calldata?.notificationByProfileId,
-      message: msg || 'Call declined',
+      message: msg || 'Missed Call',
     };
     this.socketService?.hangUpCall(data, (data: any) => {
       return;
