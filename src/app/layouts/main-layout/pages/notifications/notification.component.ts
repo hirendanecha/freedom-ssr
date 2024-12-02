@@ -15,6 +15,7 @@ export class NotificationsComponent {
   notificationList: any[] = [];
   activePage = 1;
   hasMoreData = false;
+  profileId: number = +localStorage.getItem('profileId');
   constructor(
     private customerService: CustomerService,
     private spinner: NgxSpinnerService,
@@ -29,8 +30,10 @@ export class NotificationsComponent {
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
-    const profileId = +localStorage.getItem('profileId');
-    this.socketService.readNotification({ profileId }, (data) => {});
+    this.socketService.readNotification(
+      { profileId: this.profileId },
+      (data) => {}
+    );
   }
 
   ngOnInit(): void {
@@ -100,7 +103,10 @@ export class NotificationsComponent {
     if (!data?.postId) {
       const userData = {
         Id: data.notificationByProfileId,
-        ProfilePicName: data.profileImage || data.ProfilePicName || '/assets/images/avtar/placeholder-user.png',
+        ProfilePicName:
+          data.profileImage ||
+          data.ProfilePicName ||
+          '/assets/images/avtar/placeholder-user.png',
         Username: data.Username,
         GroupId: data.groupId,
         GroupName: data.groupName,
@@ -111,7 +117,7 @@ export class NotificationsComponent {
           queryParams: { chatUserData: encodedUserData },
         })
         .toString();
-        this.router.navigateByUrl(url);
+      this.router.navigateByUrl(url);
     }
     //  else if (!data?.postId && data?.groupId) {
     //   const url = this.router.serializeUrl(
@@ -119,5 +125,33 @@ export class NotificationsComponent {
     //   );
     //   window.location.href = url;
     // }
+  }
+
+  readAllNotifications(): void {
+    this.customerService.readAllNotification(this.profileId).subscribe({
+      next: (res) => {
+        this.toastService.success(res.message);
+        this.notificationList = [];
+        this.getNotificationList();
+      },
+      error: (error) => {
+        console.log(error);
+        this.toastService.danger(error.message);
+      },
+    });
+  }
+
+  deleteAllNotifications(): void {
+    this.customerService.deleteAllNotification(this.profileId).subscribe({
+      next: (res) => {
+        this.toastService.success(res.message);
+        this.notificationList = [];
+        this.getNotificationList();
+      },
+      error: (error) => {
+        console.log(error);
+        this.toastService.danger(error.message);
+      },
+    });
   }
 }

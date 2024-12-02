@@ -191,6 +191,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             data?.actionType === 'SC' &&
             data?.notificationByProfileId !== this.profileId
           ) {
+            this.sharedService.setNotify(false);
             if (!this.currentURL.includes(data?.link)) {
               this.currentURL.push(data.link);
               this.modalService.dismissAll();

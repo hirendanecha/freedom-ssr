@@ -105,6 +105,11 @@ export class PostListComponent implements OnInit, OnChanges, AfterViewInit {
         console.log(error);
       }
     );
+    this.socketService.socket?.on('deleted-post', (res: any) => {
+      if (res) {
+        this.postList = this.postList.filter((post) => post.id !== res.id);
+      }
+    });
   }
 
   ngOnInit(): void {}

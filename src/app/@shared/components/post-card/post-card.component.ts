@@ -323,17 +323,18 @@ export class PostCardComponent implements OnInit {
       'Are you sure want to delete this post?';
     modalRef.result.then((res) => {
       if (res === 'success') {
-        this.postService.deletePost(post.id).subscribe({
-          next: (res: any) => {
-            if (res) {
-              this.toastService.success(res.message);
-              this.getPostList?.emit();
-            }
-          },
-          error: (error) => {
-            console.log('error : ', error);
-          },
-        });
+        // this.socketService.delePosts(post.id).subscribe({
+        //   next: (res: any) => {
+        //     if (res) {
+        //       this.toastService.success(res.message);
+        //     }
+        //   },
+        //   error: (error) => {
+        //     console.log('error : ', error);
+        //   },
+        // });
+        this.socketService.delePosts({ id: post.id });
+        this.getPostList?.emit();
       }
     });
   }
