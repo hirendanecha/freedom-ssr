@@ -141,12 +141,12 @@
         ></video>
       </ng-container>
 
-      <app-post-meta-data-card [post]="post" />
+      <app-post-meta-data-card [post]="post" (click)="$event.stopPropagation()" />
       <ng-container *ngIf="post?.imagesList">
-        <app-img-layout [post]="post" />
+        <app-img-layout [post]="post" (click)="$event.stopPropagation()" />
       </ng-container>
       <ng-container *ngIf="post?.imageUrl">
-        <app-img-preview [src]="post?.imageUrl" classes="w-100" />
+        <app-img-preview [src]="post?.imageUrl" classes="w-100" (click)="$event.stopPropagation()" />
       </ng-container>
       <!-- <ng-container *ngIf="post?.streamname">
         <app-img-preview [src]="post?.thumbfilename" classes="w-100" />
