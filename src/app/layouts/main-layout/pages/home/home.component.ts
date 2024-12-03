@@ -68,6 +68,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   currentImageIndex: number = this.postMediaData.length - 1;
   currentIndex: any;
   selectedFiles: any[] = [];
+  marketingSlug: string;
   constructor(
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
@@ -90,7 +91,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.route.paramMap.subscribe((paramMap) => {
         const name = paramMap.get('name');
-
+        
         if (name) {
           this.communitySlug = name;
           this.getCommunityDetailsBySlug();
@@ -110,6 +111,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
+      const navigationEndEvent = event as any;
+      const prepareSlug = navigationEndEvent?.routerEvent?.urlAfterRedirects;
+      this.marketingSlug = `${environment.webUrl.replace(/\/+$/, '')}/${prepareSlug?.replace(/^\/+/, '')}`;
       if (event instanceof NavigationEnd) {
         window.scrollTo(0, 0);
       }
