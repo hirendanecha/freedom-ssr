@@ -654,7 +654,7 @@
                               </div>
                             </ng-container>
                             <ng-template #fileReplay>
-                              <div class="w-100-px h-100-px">
+                              <div class="w-100-px h-100-px" (click)="downloadMedia(message?.parentMessage?.messageMedia)">
                                 <fa-icon
                                   [icon]="['fas', 'file']"
                                   class="c-pointer close-icon font-40-px"
@@ -1038,7 +1038,7 @@
                               </div>
                             </ng-container>
                             <ng-template #fileReplay>
-                              <div class="w-100-px h-100-px">
+                              <div class="w-100-px h-100-px" (click)="downloadMedia(message?.parentMessage?.messageMedia)">
                                 <fa-icon
                                   [icon]="['fas', 'file']"
                                   class="c-pointer close-icon font-40-px"
