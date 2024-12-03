@@ -696,12 +696,13 @@
                       <!-- [title]="displayLocalTime(message?.createdDate)" -->
                       <div class="d-flex flex-column">
                         <p
-                          *ngIf="message.messageText !== null"
-                          class="m-0 message-text-custom"
-                          [innerHTML]="
-                            message?.messageText | highlight : searchQuery
-                          "
-                        ></p>
+                        *ngIf="message.messageText !== null"
+                        class="m-0 message-text-custom"
+                        [innerHTML]="
+                          (message?.messageText === 'Declined call' && userChat.groupId 
+                            ? '@' + message?.Username + '&nbsp;' 
+                            : '') + (message?.messageText | highlight: searchQuery)"
+                      ></p>
                         <!-- encryptDecryptService.decryptUsingAES256(
                           ) -->
 

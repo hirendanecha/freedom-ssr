@@ -68,7 +68,7 @@ export class OutGoingCallModalComponent
     }
     if (!this.hangUpTimeout) {
       this.hangUpTimeout = setTimeout(() => {
-        this.hangUpCall('You have missed call');
+        this.hangUpCall('You have a missed call');
         // this.activateModal.close('missCalled');
       }, 60000);
     }
