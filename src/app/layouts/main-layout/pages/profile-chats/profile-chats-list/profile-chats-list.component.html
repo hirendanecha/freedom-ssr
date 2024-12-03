@@ -700,7 +700,7 @@
                         class="m-0 message-text-custom"
                         [innerHTML]="
                           (message?.messageText | highlight: searchQuery) + 
-                          (message?.messageText === 'Declined call' || message?.messageText === 'Missed call' && userChat.groupId
+                          ((message?.messageText === 'Declined call' || message?.messageText === 'Missed call') && userChat.groupId
                             ? '&nbsp;from&nbsp;' + '@' + message?.Username
                             : '')
                         "
