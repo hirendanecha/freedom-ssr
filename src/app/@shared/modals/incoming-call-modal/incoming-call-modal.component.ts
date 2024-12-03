@@ -176,7 +176,7 @@ export class IncomingcallModalComponent
       groupId: this.calldata?.groupId,
       notificationByProfileId:
         this.calldata.notificationToProfileId || this.profileId,
-      message: isCallCut ? 'Missed Call' : 'No Answer',
+      message: isCallCut ? 'Missed call' : 'No Answer',
     };
     this.socketService?.hangUpCall(data, (data: any) => {
       if (isCallCut && messageText) {

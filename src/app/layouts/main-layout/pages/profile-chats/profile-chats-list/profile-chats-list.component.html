@@ -699,10 +699,12 @@
                         *ngIf="message.messageText !== null"
                         class="m-0 message-text-custom"
                         [innerHTML]="
-                          (message?.messageText === 'Declined call' && userChat.groupId 
-                            ? '@' + message?.Username + '&nbsp;' 
-                            : '') + (message?.messageText | highlight: searchQuery)"
-                      ></p>
+                          (message?.messageText | highlight: searchQuery) + 
+                          (message?.messageText === 'Declined call' || message?.messageText === 'Missed call' && userChat.groupId
+                            ? '&nbsp;from&nbsp;' + '@' + message?.Username
+                            : '')
+                        "
+                      ></p>                      
                         <!-- encryptDecryptService.decryptUsingAES256(
                           ) -->
 
@@ -1082,7 +1084,7 @@
                           *ngIf="message?.messageText !== null"
                           class="m-0 message-text-custom"
                           [innerHTML]="
-                            message?.messageText === 'You have a missed call'
+                            message?.messageText === 'Missed call'
                               ? 'No answer'
                               : (message.messageText | highlight : searchQuery)
                           "

@@ -1136,7 +1136,7 @@ export class ProfileChatsListComponent
     modalRef.result.then((res) => {
       if (!window.document.hidden) {
         if (res === 'missCalled') {
-          this.chatObj.msgText = 'You have a missed call';
+          this.chatObj.msgText = 'Missed call';
           this.sendMessage();
 
           const callLogData = {
