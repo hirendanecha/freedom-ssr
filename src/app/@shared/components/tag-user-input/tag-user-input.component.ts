@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -58,12 +59,13 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     private postService: PostService,
     private spinner: NgxSpinnerService,
     private sharedService: SharedService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef
   ) {
     this.sharedService.loggedInUser$.subscribe((data) => {
       this.profileId = data?.profileId;
     });
-    this.metaDataSubject.pipe(debounceTime(200)).subscribe(() => {
+    this.metaDataSubject.pipe(debounceTime(50)).subscribe(() => {
       this.getMetaDataFromUrlStr();
       this.checkUserTagFlag();
     });
@@ -90,6 +92,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   }
 
   messageOnKeyEvent(): void {
+    this.cdr.detectChanges();
     this.metaDataSubject.next();
     this.emitChangeEvent();
   }
@@ -376,7 +379,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
             const span = document.createElement('span');
             span.innerHTML = replacedText;
-
+            this.userList = [];
+            this.clearUserSearchData();
             while (span.firstChild) {
               node.parentNode?.insertBefore(span.firstChild, node);
             }
@@ -433,7 +437,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   }
 
   getUserList(search: string): void {
+    this.cdr.markForCheck();
     if (this.isCustomeSearch) {
+      console.log(search);
+
       this.messageService
         .getRoomProfileList(search, this.isCustomeSearch)
         .subscribe({
@@ -442,6 +449,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
               this.userList = res.data.filter(
                 (user) => user.Id !== this.profileId
               );
+              console.log(this.userList);
             } else {
               this.clearUserSearchData();
             }
@@ -455,6 +463,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         next: (res: any) => {
           if (res?.data?.length > 0) {
             this.userList = res.data.map((e) => e);
+            console.log(this.userList);
             // this.userSearchNgbDropdown.open();
           } else {
             this.clearUserSearchData();
@@ -583,6 +592,9 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         tags: this.tagInputDiv?.nativeElement?.children,
         meta: this.metaData,
       });
+      if (this.isCustomeSearch) {
+        this.cdr.detach();
+      }
     }
   }
 

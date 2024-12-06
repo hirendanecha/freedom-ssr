@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   NgZone,
@@ -25,6 +26,7 @@ import { ToastService } from 'src/app/@shared/services/toast.service';
   selector: 'app-profile-chat-list',
   templateUrl: './profile-chats.component.html',
   styleUrls: ['./profile-chats.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileChartsComponent implements OnInit, OnDestroy {
   activeIdTab: string = 'local';
