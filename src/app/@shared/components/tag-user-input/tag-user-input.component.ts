@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -58,7 +59,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     private postService: PostService,
     private spinner: NgxSpinnerService,
     private sharedService: SharedService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef
   ) {
     this.sharedService.loggedInUser$.subscribe((data) => {
       this.profileId = data?.profileId;
@@ -90,6 +92,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   }
 
   messageOnKeyEvent(): void {
+    this.cdr.detectChanges();
     this.metaDataSubject.next();
     this.emitChangeEvent();
   }
@@ -368,12 +371,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
             const afterText = node.nodeValue?.substring(cursorOffset);
 
             const replacedText = `${beforeText}${replacement}${afterText}`;
-            console.log(
-              `replacedText======> ${replacement}`,
-              `before==> ${beforeText}`,
-              `after==> ${afterText}`
-            );
-
+            this.clearUserSearchData();
             const span = document.createElement('span');
             span.innerHTML = replacedText;
 
@@ -583,6 +581,9 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         tags: this.tagInputDiv?.nativeElement?.children,
         meta: this.metaData,
       });
+      if (this.isCustomeSearch) {
+        this.cdr.detach();
+      }
     }
   }
 

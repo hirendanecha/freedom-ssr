@@ -328,20 +328,27 @@
           margin-left: 5px;
           // white-space: pre-wrap;
           margin-bottom: 5px;
+
+          .drop-options {
+            .options {
+              padding-right: 6px;
+            }
+          }
         }
         li.me {
           text-align: start;
           margin-right: 5px;
           // white-space: pre-wrap;
           margin-bottom: 5px;
-          .message {
-            // background: var(--box-1st-color);
+          .drop-options {
+            flex-direction: row-reverse;
+            .options {
+              padding-left: 6px;
+            }
           }
-          p {
-            // color: var(--heading-1st-color);
-          }
-          span {
-            // color: var(--heading-1st-color);
+          .replay-message-media {
+            border: 1px solid #00a3ff;
+            border-radius: 7px;
           }
         }
       }
