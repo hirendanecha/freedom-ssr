@@ -1903,6 +1903,7 @@ export class ProfileChatsListComponent
   goToFirstPage(): void {
     this.activePage = 1;
     this.showButton = false;
+    this.isScrollUp = false;
     this.getMessagesBySocket();
   }
 }
