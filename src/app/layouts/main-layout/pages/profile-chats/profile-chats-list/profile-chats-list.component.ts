@@ -130,7 +130,7 @@ export class ProfileChatsListComponent
   relevantMembers: any = [];
   postMessageTags: any[];
   showButton = true;
-
+  isScrollUp = false;
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   private scrollSubject = new Subject<any>();
 
@@ -445,8 +445,15 @@ export class ProfileChatsListComponent
       /<img\s+[^>]*src="data:image\/.*?;base64,[^\s]*"[^>]*>|<img\s+[^>]*src=""[^>]*>/g;
     cleanedText = cleanedText.replace(regex, '');
     const divregex = /<div\s*>\s*<\/div>/g;
-    if (cleanedText.replace(divregex, '').replace(/<(?!img\b)[^>]*>/gi, '')
-      .replace(/&nbsp;/gi, '').replace(/\s+/g, '').trim() === '') return null;
+    if (
+      cleanedText
+        .replace(divregex, '')
+        .replace(/<(?!img\b)[^>]*>/gi, '')
+        .replace(/&nbsp;/gi, '')
+        .replace(/\s+/g, '')
+        .trim() === ''
+    )
+      return null;
     return this.encryptDecryptService?.encryptUsingAES256(cleanedText) || null;
   }
 
@@ -1584,12 +1591,34 @@ export class ProfileChatsListComponent
     this.cdr.detectChanges();
   }
 
+  // private updateScrollPosition(): void {
+  //   if (this.activePage === 1 && !this.isScrollUp) {
+  //     this.scrollToBottom();
+  //   }
+  //   if (this.activePage > 1 && this.isScrollUp) {
+  //     this.chatContent.nativeElement.scrollTop = new Number(
+  //       this.chatContent.nativeElement.scrollHeight -
+  //         this.chatContent.nativeElement.clientWidth -
+  //         350
+  //     );
+  //   } else {
+  //     this.chatContent.nativeElement.scrollTop = 350;
+  //   }
+  // }
+
   private updateScrollPosition(): void {
-    if (this.activePage === 1) {
-      this.scrollToBottom();
-    } else {
-      this.chatContent.nativeElement.scrollTop = 350;
-    }
+    setTimeout(() => {
+      const chatElement = this.chatContent.nativeElement;
+      if (this.activePage > 1 && this.isScrollUp) {
+        chatElement.scrollTop =
+          chatElement.scrollHeight - chatElement.clientHeight - 350;
+      } else if (this.activePage === 1 && !this.isScrollUp) {
+        chatElement.scrollTop =
+          chatElement.scrollHeight - chatElement.clientHeight;
+      } else {
+        chatElement.scrollTop = 350;
+      }
+    }, 0);
   }
 
   private processMessageData(data): void {
@@ -1835,12 +1864,14 @@ export class ProfileChatsListComponent
   handleScroll(event: any): void {
     const element = event.target;
     if (element.scrollTop < 48 && this.activePage) {
+      this.isScrollUp = true;
       this.loadMoreChats();
     }
     if (
       element.scrollTop + element.clientHeight >= element.scrollHeight - 48 &&
       this.activePage > 1
     ) {
+      this.isScrollUp = false;
       this.activePage -= 1;
       this.getMessageList();
     }
