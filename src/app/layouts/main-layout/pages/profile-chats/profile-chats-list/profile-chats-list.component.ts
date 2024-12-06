@@ -356,23 +356,25 @@ export class ProfileChatsListComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.userChat?.groupId) {
-      this.activePage = 1;
-      this.messageList = [];
-      this.filteredMessageList = [];
-      this.hasMoreData = false;
-      this.getGroupDetails(this.userChat.groupId);
-      this.resetData();
-    } else {
-      this.groupData = null;
-    }
+    // if (this.userChat?.groupId) {
+    //   // this.activePage = 1;
+    //   this.messageList = [];
+    //   this.filteredMessageList = [];
+    //   this.hasMoreData = false;
+    //   this.getGroupDetails(this.userChat.groupId);
+    //   this.resetData();
+    // } else {
+    //   this.groupData = null;
+    // }
     if (this.userChat?.roomId || this.userChat?.groupId) {
       // this.notificationNavigation();
-      this.activePage = 1;
+      // this.activePage = 1;
       this.messageList = [];
       this.filteredMessageList = [];
       this.resetData();
-      this.getMessageList();
+      this.getGroupDetails(this.userChat?.groupId);
+      this.goToFirstPage();
+      // this.getMessageList();
       this.hasMoreData = false;
       this.socketService.socket?.on('get-users', (data) => {
         const index = data.findIndex((ele) => {
@@ -607,6 +609,7 @@ export class ProfileChatsListComponent
         });
       }
     }
+    this.goToFirstPage();
     this.startTypingChat(false);
   }
 
@@ -1585,7 +1588,7 @@ export class ProfileChatsListComponent
     if (this.activePage === 1) {
       this.scrollToBottom();
     } else {
-      this.chatContent.nativeElement.scrollTop = 500;
+      this.chatContent.nativeElement.scrollTop = 350;
     }
   }
 
@@ -1868,6 +1871,7 @@ export class ProfileChatsListComponent
 
   goToFirstPage(): void {
     this.activePage = 1;
+    this.showButton = false;
     this.getMessagesBySocket();
   }
 }

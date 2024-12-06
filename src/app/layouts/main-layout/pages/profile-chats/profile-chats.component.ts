@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   NgZone,
@@ -66,7 +67,8 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
     private router: Router,
     private customerService: CustomerService,
     private tokenStorageService: TokenStorageService,
-    private toasterService: ToastService
+    private toasterService: ToastService,
+    private cdr : ChangeDetectorRef
   ) {
     this.profileId = +localStorage.getItem('profileId');
     // if (this.sharedService.isNotify) {
@@ -126,6 +128,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
       this.socketService.switchChat(this.oldChat, (data) => {});
     }
     this.userChat = userName;
+    this.cdr.markForCheck();
   }
 
   onNewChatRoom(isRoomCreated) {
@@ -160,6 +163,7 @@ export class ProfileChartsComponent implements OnInit, OnDestroy {
       .catch((reason) => {
         this.isSidebarOpen = false;
       });
+    this.cdr.markForCheck();
   }
 
   mobileShortCutPopup() {
