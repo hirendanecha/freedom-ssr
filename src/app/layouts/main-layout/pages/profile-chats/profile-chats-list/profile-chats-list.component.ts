@@ -616,7 +616,9 @@ export class ProfileChatsListComponent
         });
       }
     }
-    this.goToFirstPage();
+    if (this.activePage > 1) {
+      this.goToFirstPage();
+    }
     this.startTypingChat(false);
   }
 
@@ -1622,13 +1624,12 @@ export class ProfileChatsListComponent
 
   private processMessageData(data): void {
     if (this.activePage === data.pagination.totalPages) {
-      this.messageList = [...this.messageList, ...data.data];
+      this.messageList = [...data.data, ...this.messageList];
     } else {
       this.filteredMessageList = [];
       this.messageList = [];
       this.messageList = data.data;
     }
-    // this.messageList = data.data;
     this.messageList.sort(
       (a, b) =>
         new Date(a?.createdDate).getTime() - new Date(b?.createdDate).getTime()
@@ -1638,7 +1639,7 @@ export class ProfileChatsListComponent
     );
     const newMessages = new MessageDatePipe(
       this.encryptDecryptService
-    ).transform(data.data);
+    ).transform(this.messageList);
     for (const dateObj of newMessages) {
       const existingDateObj = this.filteredMessageList.find(
         (existing) => existing.date === dateObj.date
