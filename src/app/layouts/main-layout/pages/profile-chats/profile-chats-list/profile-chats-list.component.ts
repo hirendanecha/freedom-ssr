@@ -1609,12 +1609,11 @@ export class ProfileChatsListComponent
   private updateScrollPosition(): void {
     setTimeout(() => {
       const chatElement = this.chatContent.nativeElement;
-      if (this.activePage > 1 && this.isScrollUp) {
+      if (this.activePage === 1) {
+        chatElement.scrollTop = chatElement.scrollHeight;
+      } else if (this.activePage > 1 && this.isScrollUp) {
         chatElement.scrollTop =
           chatElement.scrollHeight - chatElement.clientHeight - 350;
-      } else if (this.activePage === 1 && !this.isScrollUp) {
-        chatElement.scrollTop =
-          chatElement.scrollHeight - chatElement.clientHeight;
       } else {
         chatElement.scrollTop = 350;
       }
@@ -1622,9 +1621,15 @@ export class ProfileChatsListComponent
   }
 
   private processMessageData(data): void {
-    this.filteredMessageList = [];
-    this.messageList = data.data;
-    data.data.sort(
+    if (this.activePage === data.pagination.totalPages) {
+      this.messageList = [...this.messageList, ...data.data];
+    } else {
+      this.filteredMessageList = [];
+      this.messageList = [];
+      this.messageList = data.data;
+    }
+    // this.messageList = data.data;
+    this.messageList.sort(
       (a, b) =>
         new Date(a?.createdDate).getTime() - new Date(b?.createdDate).getTime()
     );
