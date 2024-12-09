@@ -456,11 +456,13 @@
               {{ msg?.date || "Today" }}</span
             >
             <ng-container *ngFor="let message of msg?.messages; let i = index">
-              <div class="d-flex" [ngClass]="message?.sentBy === profileId ? 'flex-row-reverse' : 'flex-row'">
-                <span class="font-12-px data-text-color" [ngClass]="message?.sentBy === profileId ? 'me-3' : 'ms-3'">
-                  <span class="font-12-px" *ngIf="message?.sentBy !== profileId">{{ message?.Username }},</span>
-                  {{ displayLocalTime(message?.createdDate) }}</span>
-              </div>
+              <ng-container *ngIf="message?.createdDate">
+                <div class="d-flex" [ngClass]="message?.sentBy === profileId ? 'flex-row-reverse' : 'flex-row'">
+                  <span class="font-12-px data-text-color" [ngClass]="message?.sentBy === profileId ? 'me-3' : 'ms-3'">
+                    <span class="font-12-px" *ngIf="message?.sentBy !== profileId">{{ message?.Username }},</span>
+                    {{ displayLocalTime(message?.createdDate) }}</span>
+                </div>
+              </ng-container>
 
               <li [class.you]="message?.sentBy !== profileId" [class.me]="message?.sentBy === profileId" #message
                 [class.highlighted]="i === currentHighlightedIndex">

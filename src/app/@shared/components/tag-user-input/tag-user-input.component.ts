@@ -92,7 +92,9 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   }
 
   messageOnKeyEvent(): void {
-    this.cdr.detectChanges();
+    if (this.isCustomeSearch) {
+      this.cdr.detectChanges();
+    };
     this.metaDataSubject.next();
     this.emitChangeEvent();
   }
@@ -432,6 +434,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   getUserList(search: string): void {
     if (this.isCustomeSearch) {
+      this.cdr.detach();
       this.messageService
         .getRoomProfileList(search, this.isCustomeSearch)
         .subscribe({
@@ -469,6 +472,9 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     this.userNameSearch = '';
     this.userList = [];
     // this.userSearchNgbDropdown?.close();
+    if (this.isCustomeSearch) {
+      this.cdr.reattach();
+    }
   }
 
   clearMetaData(): void {
@@ -581,9 +587,6 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         tags: this.tagInputDiv?.nativeElement?.children,
         meta: this.metaData,
       });
-      if (this.isCustomeSearch) {
-        this.cdr.detach();
-      }
     }
   }
 
