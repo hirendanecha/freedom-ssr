@@ -202,7 +202,7 @@ export class ProfileChatsListComponent
             );
           });
         } else if (this.messageList[index]) {
-          if (data?.parentMessage) {
+          if (data?.parentMessage?.messageText) {
             data.parentMessage.messageText =
               this.encryptDecryptService?.decryptUsingAES256(
                 data?.parentMessage?.messageText
@@ -221,7 +221,7 @@ export class ProfileChatsListComponent
             }
           });
         } else {
-          if (data?.parentMessage) {
+          if (data?.parentMessage?.messageText) {
             data.parentMessage.messageText =
               this.encryptDecryptService?.decryptUsingAES256(
                 data?.parentMessage?.messageText
