@@ -156,8 +156,6 @@ export class ProfileChatsListComponent
     this.userId = +this.route.snapshot.paramMap.get('id');
     this.profileId = +localStorage.getItem('profileId');
     this.callRoomId = +localStorage.getItem('callRoomId');
-    // const authToken = localStorage.getItem('auth-token')
-    // this.qrLink = `${environment.qrLink}${this.profileId}?token=${authToken}`;
     const data = {
       title: 'Buzz Chat',
       url: `${location.href}`,
@@ -175,48 +173,6 @@ export class ProfileChatsListComponent
       localStorage.removeItem('callRoomId');
       this.callRoomId = null;
     }
-
-    // if (!this.sidebarClass) {
-    //   const reqObj = {
-    //     profileId: this.profileId,
-    //   };
-    //   this.socketService?.checkCall(reqObj, (data: any) => {
-    //     if (data?.isOnCall === 'Y' && data?.callLink) {
-    //       var callSound = new Howl({
-    //         src: [
-    //           'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
-    //         ],
-    //         loop: true,
-    //       });
-    //       this.soundControlService.initTabId();
-    //       const modalRef = this.modalService.open(IncomingcallModalComponent, {
-    //         centered: true,
-    //         size: 'sm',
-    //         backdrop: 'static',
-    //       });
-    //       const callData = {
-    //         Username: '',
-    //         link: data?.callLink,
-    //         roomId: data.roomId,
-    //         groupId: data.groupId,
-    //         ProfilePicName: this.sharedService?.userData?.ProfilePicName,
-    //       };
-    //       modalRef.componentInstance.calldata = callData;
-    //       modalRef.componentInstance.sound = callSound;
-    //       modalRef.componentInstance.title = 'Join existing call...';
-    //       modalRef.result.then((res) => {
-    //         if (res === 'cancel') {
-    //           const callLogData = {
-    //             profileId: this.profileId,
-    //             roomId: callData?.roomId,
-    //             groupId: callData?.groupId,
-    //           };
-    //           this.socketService?.endCall(callLogData);
-    //         }
-    //       });
-    //     }
-    //   });
-    // }
   }
 
   ngOnInit(): void {
@@ -457,23 +413,9 @@ export class ProfileChatsListComponent
     return this.encryptDecryptService?.encryptUsingAES256(cleanedText) || null;
   }
 
-  // prepareMessage(text: string): string | null {
-  //   const regex =
-  //     /<img\s+[^>]*src="data:image\/.*?;base64,[^\s]*"[^>]*>|<img\s+[^>]*src=""[^>]*>/g;
-  //   let cleanedText = text.replace(regex, '');
-  //   const divregex = /<div\s*>\s*<\/div>/g;
-  //   if (cleanedText.replace(divregex, '').trim() === '') return null;
-  //   return this.encryptDecryptService?.encryptUsingAES256(cleanedText);
-  // }
-
-  // send btn
   sendMessage(): void {
     this.chatObj['tags'] = getTagUsersFromAnchorTags(this.postMessageTags);
     if (this.chatObj.id) {
-      // const message =
-      //   this.chatObj.msgText !== null
-      //     ? this.encryptDecryptService?.encryptUsingAES256(this.chatObj.msgText)
-      //     : null;
       const message =
         this.chatObj.msgText !== null
           ? this.prepareMessage(this.chatObj.msgText)
@@ -931,75 +873,7 @@ export class ProfileChatsListComponent
     );
   }
 
-  // getMetaDataFromUrlStr(url: string): Promise<any> {
-  //   return new Promise((resolve, reject) => {
-  //     if (url !== this.metaData?.url) {
-  //       this.isMetaLoader = true;
-  //       this.ngUnsubscribe.next();
-  //       const unsubscribe$ = new Subject<void>();
-
-  //       this.postService
-  //         .getMetaData({ url })
-  //         .pipe(takeUntil(unsubscribe$))
-  //         .subscribe({
-  //           next: (res: any) => {
-  //             this.isMetaLoader = false;
-  //             if (res?.meta?.image) {
-  //               const urls = res.meta?.image?.url;
-  //               const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
-
-  //               const metatitles = res?.meta?.title;
-  //               const metatitle = Array.isArray(metatitles)
-  //                 ? metatitles?.[0]
-  //                 : metatitles;
-
-  //               const metaursl = Array.isArray(url) ? url?.[0] : url;
-  //               this.metaData = {
-  //                 title: metatitle,
-  //                 metadescription: res?.meta?.description,
-  //                 metaimage: imgUrl,
-  //                 metalink: metaursl,
-  //                 url: url,
-  //               };
-  //               resolve(this.metaData);
-  //             } else {
-  //               const metatitles = res?.meta?.title;
-  //               const metatitle = Array.isArray(metatitles)
-  //                 ? metatitles?.[0]
-  //                 : metatitles;
-  //               const metaursl = Array.isArray(url) ? url?.[0] : url;
-  //               const metaLinkData = {
-  //                 title: metatitle,
-  //                 metadescription: res?.meta?.description,
-  //                 metalink: metaursl,
-  //                 url: url,
-  //               };
-  //               resolve(metaLinkData);
-  //             }
-  //           },
-  //           error: (err) => {
-  //             this.metaData.metalink = url;
-  //             this.isMetaLoader = false;
-  //             this.spinner.hide();
-  //             reject(err);
-  //           },
-  //           complete: () => {
-  //             unsubscribe$.next();
-  //             unsubscribe$.complete();
-  //           },
-  //         });
-  //     } else {
-  //       resolve(this.metaData);
-  //     }
-  //   });
-  // }
-
   getMetaDataFromUrlStr(url: string): Promise<any> {
-    // return new Promise((resolve, reject) => {
-    // if (url === this.metaData?.url) {
-    //   resolve(this.metaData);
-    //   return;
-    // }
     return new Promise((resolve) => {
       if (url === this.metaData?.url) {
         resolve(this.metaData);
@@ -1590,6 +1464,7 @@ export class ProfileChatsListComponent
     this.processUnreadMessages();
     this.processGroupMessages();
     this.processMetaData();
+    this.readMessages();
     this.cdr.detectChanges();
   }
 
@@ -1717,6 +1592,45 @@ export class ProfileChatsListComponent
               this.relevantMembers.push(member);
             }
           }
+        });
+      }
+    }
+  }
+
+  private readMessages(): void {
+    if (this.userChat?.groupId) {
+      this.socketService.socket.on('read-message-user', (data) => {
+        this.readMessagesBy = data?.filter(
+          (item) => item.ID !== this.profileId
+        );
+        this.messageIndex = null;
+      });
+      const date = moment(new Date()).utc();
+      const oldChat = {
+        profileId: this.profileId,
+        groupId: this.userChat.groupId,
+        date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+      };
+      this.socketService.switchChat(oldChat, (data) => {});
+    } else {
+      const ids = [];
+      this.filteredMessageList.map((element) => {
+        element.messages.map((e: any) => {
+          if (e.isRead === 'N' && e.sentBy !== this.profileId) {
+            return ids.push(e.id);
+          } else {
+            return e;
+          }
+        });
+      });
+      if (ids.length) {
+        const data = {
+          ids: ids,
+          profileId: this.userChat.profileId,
+        };
+        console.log(data);
+        this.socketService.readMessage(data, (res) => {
+          return;
         });
       }
     }
