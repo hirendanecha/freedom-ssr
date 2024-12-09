@@ -352,6 +352,7 @@ export class ProfileChatsListComponent
     // });
     this.socketService.socket?.on('typing', (data) => {
       this.typingData = data;
+      this.cdr.markForCheck();
     });
   }
 
