@@ -1499,23 +1499,38 @@ export class ProfileChatsListComponent
   }
 
   private processMessageData(data): void {
-    if (this.activePage === data.pagination.totalPages) {
-      this.messageList = [...data.data, ...this.messageList];
-    } else {
-      this.filteredMessageList = [];
-      this.messageList = [];
-      this.messageList = data.data;
-    }
-    this.messageList.sort(
+    const isActivePage = this.activePage === data.pagination.totalPages;
+    const sortedData = data.data.sort(
       (a, b) =>
         new Date(a?.createdDate).getTime() - new Date(b?.createdDate).getTime()
     );
+    if (isActivePage) {
+      this.mergeMessagesIntoFilteredList(
+        new MessageDatePipe(this.encryptDecryptService).transform(sortedData)
+      );
+    } else {
+      this.messageList = sortedData;
+      this.filteredMessageList = [];
+      this.mergeMessagesIntoFilteredList(
+        new MessageDatePipe(this.encryptDecryptService).transform(
+          this.messageList
+        )
+      );
+    }
+    this.filteredMessageList.sort((a, b) => this.compareDates(a.date, b.date));
     this.readMessagesBy = data?.readUsers?.filter(
       (item) => item.ID !== this.profileId
     );
-    const newMessages = new MessageDatePipe(
-      this.encryptDecryptService
-    ).transform(this.messageList);
+  }
+
+  private compareDates(dateA: string, dateB: string): number {
+    const today = new Date();
+    const parsedDateA = dateA === "Today" ? today : new Date(dateA);
+    const parsedDateB = dateB === "Today" ? today : new Date(dateB);
+    return parsedDateA.getTime() - parsedDateB.getTime();
+  }
+
+  private mergeMessagesIntoFilteredList(newMessages: any[]): void {
     for (const dateObj of newMessages) {
       const existingDateObj = this.filteredMessageList.find(
         (existing) => existing.date === dateObj.date
@@ -1529,11 +1544,7 @@ export class ProfileChatsListComponent
         this.filteredMessageList.push(dateObj);
       }
     }
-    this.filteredMessageList.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
   }
-
   private processMetaData(): void {
     if (this.filteredMessageList.length) {
       this.filteredMessageList.map((element) => {
