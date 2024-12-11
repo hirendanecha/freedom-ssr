@@ -73,6 +73,7 @@ export class PostCardComponent implements OnInit {
   player: any;
   isExpand = false;
   showFullDesc: boolean = false;
+  showFullDescMap: { [commentId: number]: boolean } = {};
   commentCount = 0;
   commentMessageInputValue: string = '';
   replaycommentMessageInputValue: string = '';
@@ -206,8 +207,14 @@ export class PostCardComponent implements OnInit {
       }
     });
   }
-  showFullDescription() {
-    this.showFullDesc = !this.showFullDesc;
+  showFullDescription(type?, commentId?): void {
+    if (type === 'comment') {
+      this.showFullDescMap[commentId] = !this.showFullDescMap[commentId];
+    } else if (type === 'reply') {
+      this.showFullDescMap[commentId] = !this.showFullDescMap[commentId];
+    } else {
+      this.showFullDesc = !this.showFullDesc;
+    }
   }
 
   unsubscribe(post: any): void {

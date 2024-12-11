@@ -706,11 +706,19 @@
                     </ng-container>
                   </div>
 
-                  <ng-container *ngIf="comment?.comment">
-                      <p
-                        class="mdtxt mb-0 comment-description"
-                        [innerHTML]="comment.comment | linkify | noSanitize" hoverDropdown
-                      ></p>
+                 <ng-container *ngIf="comment?.comment">
+                  <p
+                    class="mdtxt mb-0 comment-description"
+                    [innerHTML]="comment.comment | stripHtml
+                    | truncate : (showFullDescMap[comment?.id] ? -1 : 450)
+                    | linkify | noSanitize"
+                    hoverDropdown
+                  ></p>
+                  <ng-container *ngIf="(comment.comment | stripHtml).length > 450">
+                    <button (click)="showFullDescription('comment', comment?.id)" class="c-text-color fw-bold">
+                      {{ showFullDescMap[comment?.id] ? "Read Less" : "Read More" }}
+                    </button>
+                  </ng-container>
                     <ng-container *ngIf="comment.descImg">
                       <app-img-preview
                         [src]="comment.descImg"
@@ -957,9 +965,17 @@
 
                           <ng-container *ngIf="reply?.comment">
                             <p
-                              class="mdtxt mb-0 comment-description"
-                              [innerHTML]="reply?.comment | linkify | noSanitize" hoverDropdown
-                            ></p>
+                            class="mdtxt mb-0 comment-description"
+                            [innerHTML]="reply?.comment | stripHtml
+                            | truncate : (showFullDescMap[reply?.id] ? -1 : 450)
+                            | linkify | noSanitize"
+                            hoverDropdown
+                          ></p>
+                          <ng-container *ngIf="(reply.comment | stripHtml).length > 450">
+                            <button (click)="showFullDescription('reply', reply?.id)" class="c-text-color fw-bold">
+                              {{ showFullDescMap[reply?.id] ? "Read Less" : "Read More" }}
+                            </button>
+                          </ng-container>
                             <ng-container *ngIf="reply.descImg">
                               <app-img-preview
                                 [src]="reply.descImg"

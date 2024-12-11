@@ -552,7 +552,7 @@
                                 ((message?.messageText === 'Declined call' || message?.messageText === 'Missed call') && userChat.groupId 
                                   ? '&nbsp;from&nbsp;' + '@' + message?.Username 
                                   : '')
-                            )" 
+                            ) | linkify" 
                         ></p>                        
 
                         <div class="chat-meta" *ngIf="message?.metaData">
