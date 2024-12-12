@@ -102,11 +102,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           if (
             data.actionType === 'EC' &&
-            data.notificationByProfileId !== this.profileId &&
-            localStorage.getItem('callId')
+            data.notificationByProfileId !== this.profileId
           ) {
-            this.sharedService.callId = null;
-            localStorage.removeItem('callId');
             const endCall = {
               profileId: this.profileId,
               roomId: data.roomId,

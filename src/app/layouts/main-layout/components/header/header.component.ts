@@ -54,6 +54,7 @@ export class HeaderComponent {
   hideOngoingCallButton: boolean = false;
   authToken = localStorage.getItem('auth-token');
   showUserGuideBtn: boolean = false;
+  isOnCall: boolean = false;
   private subscription: Subscription;
   constructor(
     private modalService: NgbModal,
@@ -98,61 +99,66 @@ export class HeaderComponent {
           currentUrl.includes('facetime');
         this.showUserGuideBtn = currentUrl.includes('home');
         this.hideOngoingCallButton = currentUrl.includes('facetime');
-        this.sharedService.callId = localStorage.getItem('callId') || null;
 
         if (!profileId) return;
 
         const reqObj = { profileId };
         this.socketService?.checkCall(reqObj, (data: any) => {
-          const isOnCall = data?.isOnCall === 'Y';
-          const hasCallLink = data?.callLink;
-
-          if (isOnCall && hasCallLink && !this.sharedService.callId) {
-            if (!this.hideOngoingCallButton) {
-              const callSound = new Howl({
-                src: [
-                  'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
-                ],
-                loop: true,
-              });
-              this.soundControlService.initTabId();
-
-              const modalRef = this.modalService.open(
-                IncomingcallModalComponent,
-                {
-                  centered: true,
-                  size: 'sm',
-                  backdrop: 'static',
-                }
-              );
-
-              const callData = {
-                Username: '',
-                link: data.callLink,
-                roomId: data.roomId,
-                groupId: data.groupId,
-                ProfilePicName: this.sharedService?.userData?.ProfilePicName,
-              };
-
-              modalRef.componentInstance.calldata = callData;
-              modalRef.componentInstance.sound = callSound;
-              modalRef.componentInstance.showCloseButton = true;
-              modalRef.componentInstance.title = 'Join existing call...';
-
-              modalRef.result.then((res) => {
-                if (res === 'cancel') {
-                  const callLogData = {
-                    profileId,
-                    roomId: callData?.roomId,
-                    groupId: callData?.groupId,
-                  };
-                  this.socketService?.endCall(callLogData);
-                }
-              });
-            }
+          if (data) {
+            this.sharedService.setExistingCallData(data);
+            this.isOnCall = this.sharedService.getExistingCallData().isOnCall === 'Y';
           } else {
-            this.hideOngoingCallButton = true;
+            this.isOnCall = false;
           }
+          
+          // const hasCallLink = data?.callLink;
+          this.isOnCall = data.isOnCall === 'Y';
+          // if (isOnCall && hasCallLink && !this.sharedService.callId) {
+          //   if (!this.hideOngoingCallButton) {
+          //     const callSound = new Howl({
+          //       src: [
+          //         'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
+          //       ],
+          //       loop: true,
+          //     });
+          //     this.soundControlService.initTabId();
+
+          //     const modalRef = this.modalService.open(
+          //       IncomingcallModalComponent,
+          //       {
+          //         centered: true,
+          //         size: 'sm',
+          //         backdrop: 'static',
+          //       }
+          //     );
+
+          //     const callData = {
+          //       Username: '',
+          //       link: data.callLink,
+          //       roomId: data.roomId,
+          //       groupId: data.groupId,
+          //       ProfilePicName: this.sharedService?.userData?.ProfilePicName,
+          //     };
+
+          //     modalRef.componentInstance.calldata = callData;
+          //     modalRef.componentInstance.sound = callSound;
+          //     modalRef.componentInstance.showCloseButton = true;
+          //     modalRef.componentInstance.title = 'Join existing call...';
+
+          //     modalRef.result.then((res) => {
+          //       if (res === 'cancel') {
+          //         const callLogData = {
+          //           profileId,
+          //           roomId: callData?.roomId,
+          //           groupId: callData?.groupId,
+          //         };
+          //         this.socketService?.endCall(callLogData);
+          //       }
+          //     });
+          //   }
+          // } else {
+          //   this.hideOngoingCallButton = true;
+          // }
         });
       }
     });
@@ -280,5 +286,9 @@ export class HeaderComponent {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  goToOnGoingCall(): void {
+    this.router.navigate([`/facetime/${this.sharedService.getExistingCallData()?.callLink}`]);
   }
 }

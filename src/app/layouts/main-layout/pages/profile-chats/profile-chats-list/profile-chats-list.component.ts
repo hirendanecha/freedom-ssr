@@ -1834,9 +1834,11 @@ export class ProfileChatsListComponent
   }
 
   goToFirstPage(): void {
-    this.activePage = 1;
-    this.showButton = false;
-    this.isScrollUp = false;
-    this.getMessagesBySocket();
+    if (this.activePage >= 1) {      
+      this.activePage = 1;
+      this.getMessagesBySocket();
+      this.showButton = false;
+      this.isScrollUp = false;
+    }
   }
 }
