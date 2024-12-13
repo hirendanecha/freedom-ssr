@@ -109,7 +109,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               roomId: data.roomId,
             };
             this.socketService?.endCall(endCall);
-            this.router.navigate(['/profile-chats']);
+            // this.router.navigate(['/profile-chats']);
           }
           // const userData = this.tokenService.getUser();
           // this.sharedService.getLoginUserDetails(userData);

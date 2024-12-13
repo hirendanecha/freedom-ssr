@@ -672,11 +672,13 @@ export class PostCardComponent implements OnInit {
     this.extractLargeImageFromContent(data.html, postId, commentId);
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
+    this.isParent = true;
   }
   onTagUserReplayInputChangeEvent(data: any, postId, commentId?: number): void {
     this.extractLargeImageFromContent(data.html, postId, commentId);
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
+    this.isParent = false;
   }
 
   socketListner(): void {
@@ -831,6 +833,7 @@ export class PostCardComponent implements OnInit {
           const blob = new Blob([uint8Array], { type: 'image/jpeg' });
           const fileName = `copyImage-${new Date().getTime()}.jpg`;
           const file = new File([blob], fileName, { type: 'image/jpeg' });
+          this.commentData['imageUrl'] = URL.createObjectURL(file);
           this.commentData['file'] = file;
         } catch (error) {
           console.error('Base64 decoding error:', error);
