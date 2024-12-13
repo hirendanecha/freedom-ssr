@@ -133,6 +133,7 @@ export class ProfileChatsListComponent
   isScrollUp = false;
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   private scrollSubject = new Subject<any>();
+  isCallNotification: boolean = false;
 
   constructor(
     private socketService: SocketService,
@@ -494,6 +495,7 @@ export class ProfileChatsListComponent
         profileId: this.userChat.profileId,
         parentMessageId: this.chatObj?.parentMessageId || null,
         tags: this.chatObj?.['tags'],
+        messageType: this.isCallNotification ? 'C' : null,
       };
       this.userChat?.roomId ? (data['isRead'] = 'N') : null;
       if (!data.messageMedia && !data.messageText && !data.parentMessageId) {
@@ -712,6 +714,7 @@ export class ProfileChatsListComponent
     this.isSearch = false;
     this.uploadTo.roomId = null;
     this.uploadTo.groupId = null;
+    this.isCallNotification = false;
     if (this.messageInputValue !== null) {
       setTimeout(() => {
         this.messageInputValue = null;
@@ -1032,6 +1035,7 @@ export class ProfileChatsListComponent
       if (!window.document.hidden) {
         if (res === 'missCalled') {
           this.chatObj.msgText = 'Missed call';
+          this.isCallNotification = true;
           this.sendMessage();
 
           const callLogData = {

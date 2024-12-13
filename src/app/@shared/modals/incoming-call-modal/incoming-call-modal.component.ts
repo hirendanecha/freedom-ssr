@@ -177,6 +177,7 @@ export class IncomingcallModalComponent
       notificationByProfileId:
         this.calldata.notificationToProfileId || this.profileId,
       message: isCallCut ? 'Missed call' : 'No Answer',
+      messageType: 'C',
     };
     this.socketService?.hangUpCall(data, (data: any) => {
       if (isCallCut && messageText) {
