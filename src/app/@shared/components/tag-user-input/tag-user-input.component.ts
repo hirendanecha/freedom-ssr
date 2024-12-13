@@ -455,7 +455,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       this.customerService.getProfileList(search).subscribe({
         next: (res: any) => {
           if (res?.data?.length > 0) {
-            this.userList = res.data.map((e) => e);
+            this.userList = res.data.map((e) => e.Username.replace(/\s+/g, ''));
             // this.userSearchNgbDropdown.open();
           } else {
             this.clearUserSearchData();
