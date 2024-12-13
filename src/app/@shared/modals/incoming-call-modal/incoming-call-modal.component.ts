@@ -194,6 +194,7 @@ export class IncomingcallModalComponent
       groupId: this.calldata?.groupId || null,
       sentBy: this.calldata.notificationToProfileId || this.profileId,
       profileId: this.calldata.notificationByProfileId || this.profileId,
+      messageType: 'D',
     };
     if (!window.document.hidden) {
       this.socketService.sendMessage(data, async (data: any) => {});

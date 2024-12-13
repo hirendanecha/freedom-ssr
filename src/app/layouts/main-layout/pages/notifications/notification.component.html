@@ -59,7 +59,8 @@
             <div class="single-item notification-area text-area text-start">
               <h6 class="m-0 mb-1">
                 <a>{{ notification?.Username }}</a>
-                <span class="ms-1">{{ notification?.notificationDesc }} </span>
+                <span class="ms-1">{{ customName(notification) }} </span>
+                <!-- <span class="ms-1">{{ notification?.notificationDesc }} </span> -->
                 <span
                   *ngIf="notification.isRead === 'N'"
                   class="unread-notification smtxt"

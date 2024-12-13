@@ -80,4 +80,13 @@ export class NotificationsModalComponent implements AfterViewInit {
     //   window.open(url, '_blank');
     // }
   }
+
+  customName(notification): string {
+    if (!notification?.notificationDesc || !notification?.Username) {
+      return notification?.notificationDesc || '';
+    }
+    const username = notification.Username;
+    const boldUsername = `<b>${username}</b>`;
+    return notification.notificationDesc.replace(new RegExp(`\\b${username}\\b`, 'g'), boldUsername);
+  }  
 }

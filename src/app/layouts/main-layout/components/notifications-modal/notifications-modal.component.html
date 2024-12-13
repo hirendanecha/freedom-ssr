@@ -32,7 +32,8 @@
                 {{ notification?.createDate | dateDay }}</span
               >
             </h6>
-            <p class="mdtxt">{{ notification?.notificationDesc }}</p>
+            <!-- <p class="mdtxt">{{ notification?.notificationDesc }}</p> -->
+            <p class="mdtxt" [innerHTML]="customName(notification)"></p>
           </div>
         </div>
       </a>
