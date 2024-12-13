@@ -56,7 +56,7 @@ export class AppointmentCallComponent implements OnInit {
     this.profileId = +localStorage.getItem('profileId');
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     const stateData = window.history.state.chatDataPass;
     if (stateData) {
       this.openChatId = {
@@ -91,9 +91,16 @@ export class AppointmentCallComponent implements OnInit {
       enableNoisyMicDetection: true,
       interfaceConfigOverwrite: {
         TOOLBAR_ALWAYS_VISIBLE: this.isMobileScreen ? true : false,
-        TOOLBAR_BUTTONS: this.isMobileScreen ? [
-          'microphone', 'camera', 'tileview', 'hangup', 'settings', 'videoquality',
-        ] : '',
+        TOOLBAR_BUTTONS: this.isMobileScreen
+          ? [
+              'microphone',
+              'camera',
+              'tileview',
+              'hangup',
+              'settings',
+              'videoquality',
+            ]
+          : '',
       },
     };
 
@@ -105,11 +112,10 @@ export class AppointmentCallComponent implements OnInit {
       const data = {
         profileId: this.profileId,
         roomId: this.openChatId.roomId || existingCall?.roomId,
-        groupId: this.openChatId.groupId ||existingCall?.groupId,
+        groupId: this.openChatId.groupId || existingCall?.groupId,
       };
       this.socketService?.endCall(data);
-      this.router.navigate(['/profile-chats']).then(() => {
-      });
+      this.router.navigate(['/profile-chats']).then(() => {});
     });
 
     this.initialChat();
