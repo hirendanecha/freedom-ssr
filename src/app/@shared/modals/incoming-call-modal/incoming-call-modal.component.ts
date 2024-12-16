@@ -128,10 +128,12 @@ export class IncomingcallModalComponent
         const parts = window.location.href.split('/');
         // const callId = parts[parts.length - 1];
         const callId = localStorage.getItem('callId');
+
         this.calldata.link = callId;
-        this.router.navigate([`/facetime/${callId}`], {
-          state: { chatDataPass },
-        });
+        this.activateModal.close();
+        // this.router.navigate([`/facetime/${callId}`], {
+        //   state: { chatDataPass },
+        // });
       } else {
         const callId = this.calldata.link.replace('https://facetime.tube/', '');
         this.router.navigate([`/facetime/${callId}`], {
