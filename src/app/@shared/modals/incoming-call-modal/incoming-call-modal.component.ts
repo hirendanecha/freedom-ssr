@@ -126,7 +126,8 @@ export class IncomingcallModalComponent
       }
       if (this.isOnCall) {
         const parts = window.location.href.split('/');
-        const callId = parts[parts.length - 1];
+        // const callId = parts[parts.length - 1];
+        const callId = localStorage.getItem('callId');
         this.calldata.link = callId;
         this.router.navigate([`/facetime/${callId}`], {
           state: { chatDataPass },
