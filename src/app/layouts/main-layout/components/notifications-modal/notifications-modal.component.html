@@ -1,4 +1,4 @@
-<div class="main-area p-5 notification-content modal-height">
+<div #notificationArea class="main-area p-5 notification-content modal-height">
   <h5 class="mb-8">Notifications</h5>
   <ng-container *ngFor="let notification of sharedService.notificationList">
     <div class="single-box p-0 mb-7" *ngIf="notification">
