@@ -183,28 +183,16 @@
       </ul>
 
       <div
-      class="right-area d-lg-flex d-none justify-content-end align-items-center gap-6 cus-z p-0"
-      *ngIf="tokenService.getCredentials()"
+        class="right-area d-lg-flex d-none justify-content-end align-items-center gap-6 cus-z p-0"
+        *ngIf="tokenService.getCredentials()"
       >
-      <button class="btn btn-sm font-20-px p-0 rounded-circle h-36-px w-36-px fw-bold userguidebtn" *ngIf="showUserGuideBtn" (click)="openUserGuide()">?</button>
-        <div
-          class="single-item"
-          *ngIf="isOnCall && !hideOngoingCallButton"
+        <button
+          class="btn btn-sm font-20-px p-0 rounded-circle h-36-px w-36-px fw-bold userguidebtn"
+          *ngIf="showUserGuideBtn"
+          (click)="openUserGuide()"
         >
-          <div class="ongoing-call d-center position-relative">
-            <!-- [routerLink]="['/profile-chats']" -->
-            <a
-              routerLinkActive="active"
-              (click)="goToOnGoingCall()"
-            >
-              <fa-icon [icon]="['fas', 'phone-volume']" class="font-20-px" />
-            </a>
-            <!-- <span
-            *ngIf="sharedService.isNotify"
-            class="abs-area position-absolute d-center smtxt"
-          ></span> -->
-          </div>
-        </div>
+          ?
+        </button>
         <div class="single-item">
           <div class="icon-area d-center position-relative">
             <!-- [routerLink]="['/profile-chats']" -->

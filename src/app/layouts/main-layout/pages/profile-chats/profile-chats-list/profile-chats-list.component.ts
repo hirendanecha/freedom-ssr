@@ -122,7 +122,7 @@ export class ProfileChatsListComponent
     groupId: null,
     roomId: null,
   };
-  isOnCall = false;
+  // isOnCall = false;
   callRoomId: number;
   isLoading: boolean = false;
   messageIndex: number;
@@ -134,6 +134,9 @@ export class ProfileChatsListComponent
   @ViewChildren('message') messageElements: QueryList<ElementRef>;
   private scrollSubject = new Subject<any>();
   isCallNotification: boolean = false;
+  isCallWindowOpen: boolean = false;
+  isOnCall: boolean = false;
+  callId: string = '';
 
   constructor(
     private socketService: SocketService,
@@ -163,7 +166,7 @@ export class ProfileChatsListComponent
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
-    this.isOnCall = this.router.url.includes('/facetime/') || false;
+    this.isCallWindowOpen = this.router.url.includes('/facetime/') || false;
     this.scrollSubject
       .pipe(debounceTime(200))
       .subscribe((event) => this.handleScroll(event));
@@ -329,6 +332,8 @@ export class ProfileChatsListComponent
       this.messageList = [];
       this.filteredMessageList = [];
       this.resetData();
+      this.callId = localStorage.getItem('callId');
+      this.checkOngoingCall();
       this.getGroupDetails(this.userChat?.groupId);
       this.goToFirstPage();
       // this.getMessageList();
@@ -952,7 +957,7 @@ export class ProfileChatsListComponent
       roomId: this.userChat?.roomId || null,
       groupId: this.userChat?.groupId || null,
       notificationByProfileId: this.profileId,
-      link: this.isOnCall ? lastParam : originUrl,
+      link: this.isCallWindowOpen ? lastParam : originUrl,
     };
     localStorage.setItem('callRoomId', data?.roomId || data.groupId);
     if (!data?.groupId) {
@@ -1530,8 +1535,8 @@ export class ProfileChatsListComponent
 
   private compareDates(dateA: string, dateB: string): number {
     const today = new Date();
-    const parsedDateA = dateA === "Today" ? today : new Date(dateA);
-    const parsedDateB = dateB === "Today" ? today : new Date(dateB);
+    const parsedDateA = dateA === 'Today' ? today : new Date(dateA);
+    const parsedDateB = dateB === 'Today' ? today : new Date(dateB);
     return parsedDateA.getTime() - parsedDateB.getTime();
   }
 
@@ -1838,11 +1843,42 @@ export class ProfileChatsListComponent
   }
 
   goToFirstPage(): void {
-    if (this.activePage >= 1) {      
+    if (this.activePage >= 1) {
       this.activePage = 1;
       this.getMessagesBySocket();
       this.showButton = false;
       this.isScrollUp = false;
     }
+  }
+
+  checkOngoingCall(): void {
+    const reqObj = {
+      roomId: this.userChat?.roomId || null,
+      groupId: this.userChat?.groupId || null,
+    };
+    if (reqObj) {
+      this.socketService?.checkCall(reqObj, (data: any) => {
+        if (data) {
+          console.log('ongoingCall==>', data);
+          this.sharedService.setExistingCallData(data);
+          this.isOnCall = data.isOnCall === 'Y';
+        } else {
+          this.isOnCall = false;
+        }
+      });
+    }
+  }
+
+  goToOnGoingCall(): void {
+    const data = {
+      roomId: this.userChat?.roomId,
+      groupId: this.userChat?.groupId,
+      link: this.sharedService.getExistingCallData()?.callLink,
+      members: this.sharedService.getExistingCallData()?.members + 1,
+    };
+    this.socketService?.pickUpCall(data, (data: any) => {});
+    this.router.navigate([
+      `/facetime/${this.sharedService.getExistingCallData()?.callLink}`,
+    ]);
   }
 }

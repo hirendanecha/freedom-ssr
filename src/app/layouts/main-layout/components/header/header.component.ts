@@ -64,8 +64,7 @@ export class HeaderComponent {
     public breakpointService: BreakpointService,
     private offcanvasService: NgbOffcanvas,
     public tokenService: TokenStorageService,
-    private socketService: SocketService,
-    private soundControlService: SoundControlService
+    private socketService: SocketService
   ) {
     this.originalFavicon = document.querySelector('link[rel="icon"]');
     this.subscription = this.sharedService.isNotify$.subscribe(
@@ -73,7 +72,6 @@ export class HeaderComponent {
     );
     this.socketService?.socket?.on('isReadNotification_ack', (data) => {
       if (data?.profileId) {
-        // this.sharedService.isNotify = false;
         this.sharedService.setNotify(false);
         localStorage.setItem('isRead', data?.isRead);
         this.originalFavicon.href = '/assets/images/icon.jpg';
@@ -81,94 +79,19 @@ export class HeaderComponent {
     });
     const isRead = localStorage.getItem('isRead');
     if (isRead === 'N') {
-      // this.sharedService.isNotify = true;
       this.sharedService.setNotify(true);
     } else {
-      // this.sharedService.isNotify = false;
       this.sharedService.setNotify(false);
     }
     this.channelId = +localStorage.getItem('channelId');
-    this.setupRouterSubscription();
-    this.setupLocalStorageListener();
-    // this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationEnd) {
-    //     const currentUrl = this.router.url;
-    //     const profileId = +localStorage.getItem('profileId') || null;
-
-    //     this.hideSubHeader =
-    //       currentUrl.includes('profile-chats') ||
-    //       currentUrl.includes('facetime');
-    //     this.showUserGuideBtn = currentUrl.includes('home');
-    //     this.hideOngoingCallButton = currentUrl.includes('facetime') || false;
-
-    //     if (!profileId) return;
-
-    //     const reqObj = { profileId };
-    //     this.socketService?.checkCall(reqObj, (data: any) => {
-    //       if (data) {
-    //         this.sharedService.setExistingCallData(data);
-    //         this.isOnCall = this.sharedService.getExistingCallData().isOnCall === 'Y';
-    //       } else {
-    //         this.isOnCall = false;
-    //       }
-
-    //     });
-    //   }
-    // });
-    // const hasCallLink = data?.callLink;
-    // this.isOnCall = data?.isOnCall === 'Y';
-    // if (isOnCall && hasCallLink && !this.sharedService.callId) {
-    //   if (!this.hideOngoingCallButton) {
-    //     const callSound = new Howl({
-    //       src: [
-    //         'https://s3.us-east-1.wasabisys.com/freedom-social/famous_ringtone.mp3',
-    //       ],
-    //       loop: true,
-    //     });
-    //     this.soundControlService.initTabId();
-
-    //     const modalRef = this.modalService.open(
-    //       IncomingcallModalComponent,
-    //       {
-    //         centered: true,
-    //         size: 'sm',
-    //         backdrop: 'static',
-    //       }
-    //     );
-
-    //     const callData = {
-    //       Username: '',
-    //       link: data.callLink,
-    //       roomId: data.roomId,
-    //       groupId: data.groupId,
-    //       ProfilePicName: this.sharedService?.userData?.ProfilePicName,
-    //     };
-
-    //     modalRef.componentInstance.calldata = callData;
-    //     modalRef.componentInstance.sound = callSound;
-    //     modalRef.componentInstance.showCloseButton = true;
-    //     modalRef.componentInstance.title = 'Join existing call...';
-
-    //     modalRef.result.then((res) => {
-    //       if (res === 'cancel') {
-    //         const callLogData = {
-    //           profileId,
-    //           roomId: callData?.roomId,
-    //           groupId: callData?.groupId,
-    //         };
-    //         this.socketService?.endCall(callLogData);
-    //       }
-    //     });
-    //   }
-    // } else {
-    //   this.hideOngoingCallButton = true;
-    // }
+    // this.setupRouterSubscription();
+    // this.setupLocalStorageListener();
   }
 
   private setupRouterSubscription() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.handleRouteChange();
+        // this.handleRouteChange();
       }
     });
   }
@@ -211,7 +134,6 @@ export class HeaderComponent {
 
         if (callState) {
           this.isOnCall = callState.isOnCall || false;
-          // Optionally, update shared service if required
           this.sharedService.setExistingCallData({
             isOnCall: callState.isOnCall,
           });

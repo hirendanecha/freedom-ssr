@@ -108,12 +108,21 @@ export class AppointmentCallComponent implements OnInit {
 
     api.on('readyToClose', () => {
       this.sharedService.callId = null;
+      const numberOfParticipants = Number(api.getNumberOfParticipants());
       const existingCall = this.sharedService.getExistingCallData();
       const data = {
-        profileId: this.profileId,
-        roomId: this.openChatId.roomId || existingCall?.roomId,
-        groupId: this.openChatId.groupId || existingCall?.groupId,
+        // profileId: this.profileId,
+        roomId: this.openChatId?.roomId || existingCall?.roomId,
+        groupId: this.openChatId?.groupId || existingCall?.groupId,
+        callLink: localStorage.getItem('callId'),
       };
+      if (numberOfParticipants === 0 || data.roomId) {
+        data['members'] = 0;
+        data['isOnCall'] = 'N';
+      } else {
+        data['members'] = existingCall?.members - 1;
+        data['isOnCall'] = 'Y';
+      }
       this.socketService?.endCall(data);
       this.router.navigate(['/profile-chats']).then(() => {});
     });
@@ -190,13 +199,13 @@ export class AppointmentCallComponent implements OnInit {
     if (this.screenSubscription) {
       this.screenSubscription.unsubscribe();
     }
-    // localStorage.removeItem('callId');
+    localStorage.removeItem('callId');
     this.sharedService.callId = null;
   }
 
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: Event) {
-    // localStorage.removeItem('callId');
+    localStorage.removeItem('callId');
     this.sharedService.callId = null;
   }
 }
