@@ -1224,6 +1224,7 @@ export class ProfileChatsListComponent
       this.originalFavicon.href = '/assets/images/icon.jpg';
       // this.sharedService.isNotify = false;
       this.sharedService.setNotify(false);
+      this.socketService.readNotification({ profileId: this.profileId }, (data) => { });
       // localStorage.setItem('isRead', 'Y');
     }
   }

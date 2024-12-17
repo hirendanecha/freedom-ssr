@@ -64,6 +64,7 @@ export class ProfileChatsSidebarComponent
   @Input('isRoomCreated') isRoomCreated: boolean = false;
   @Input('selectedRoomId') selectedRoomId: number = null;
   userStatus: string;
+  originalFavicon: HTMLLinkElement;
   constructor(
     private customerService: CustomerService,
     private socketService: SocketService,
@@ -104,6 +105,7 @@ export class ProfileChatsSidebarComponent
   }
 
   ngOnInit(): void {
+    this.originalFavicon = document.querySelector('link[rel="icon"]');
     // this.chatData = history.state.chatUserData;
     this.sharedService.loginUserInfo.subscribe((user) => {
       this.isCallSoundEnabled =
@@ -201,12 +203,21 @@ export class ProfileChatsSidebarComponent
     if (item.groupId) {
       item.isAccepted = 'Y';
     }
-    // this.notificationNavigation()
+    this.notificationNavigation();
     this.onNewChat?.emit(item);
     if (this.searchText) {
       this.searchText = null;
     }
     this.cdr.markForCheck();
+  }
+
+  notificationNavigation() {
+    const isRead = localStorage.getItem('isRead');
+    if (isRead === 'Y') {
+      this.originalFavicon.href = '/assets/images/icon.jpg';
+      this.sharedService.setNotify(false);
+      this.socketService.readNotification({ profileId: this.profileId }, (data) => { });
+    }
   }
 
   goToViewProfile(): void {
