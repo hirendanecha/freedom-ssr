@@ -69,6 +69,9 @@
     }
   }
 }
+.text-color {
+  color: #11134d !important;
+}
 .bg-color {
   background: #11134d;
 }
@@ -76,6 +79,13 @@
   @media (max-width: 560px) {
     // justify-content: center;
   }
+}
+
+.image-box{
+  height: 100%;
+  width: 100%;
+  max-width: 308px;
+  max-height: 308px;
 }
 .answers_main {
   padding: 30px 0;
