@@ -216,7 +216,7 @@ export class ProfileChatsSidebarComponent
     if (isRead === 'Y') {
       this.originalFavicon.href = '/assets/images/icon.jpg';
       this.sharedService.setNotify(false);
-      this.socketService.readNotification({ profileId: this.profileId }, (data) => { });
+      // this.socketService.readNotification({ profileId: this.profileId }, (data) => { });
     }
   }
 
