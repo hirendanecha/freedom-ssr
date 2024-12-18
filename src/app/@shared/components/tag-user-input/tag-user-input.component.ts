@@ -217,7 +217,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     const url = matches?.[0] || extractedLinks?.[0];
     if (url) {
       if (url !== this.metaData?.url) {
-        // this.isMetaLoader = true;
+        this.isMetaLoader = true;
         // this.spinner.show();
         const unsubscribe$ = new Subject<void>();
         this.postService
