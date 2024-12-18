@@ -177,6 +177,11 @@ export class ProfileChatsListComponent
       localStorage.removeItem('callRoomId');
       this.callRoomId = null;
     }
+    if (this.userChat?.groupId) {
+      this.getGroupDetails(this.userChat.groupId);
+    } else {
+      this.groupData = null;
+    }
   }
 
   ngOnInit(): void {
@@ -317,16 +322,6 @@ export class ProfileChatsListComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // if (this.userChat?.groupId) {
-    //   // this.activePage = 1;
-    //   this.messageList = [];
-    //   this.filteredMessageList = [];
-    //   this.hasMoreData = false;
-    //   this.getGroupDetails(this.userChat.groupId);
-    //   this.resetData();
-    // } else {
-    //   this.groupData = null;
-    // }
     if (this.userChat?.roomId || this.userChat?.groupId) {
       // this.notificationNavigation();
       // this.activePage = 1;
