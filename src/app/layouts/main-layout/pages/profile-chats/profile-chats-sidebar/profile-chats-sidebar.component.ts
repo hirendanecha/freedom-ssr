@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -45,6 +46,7 @@ export class ProfileChatsSidebarComponent
 
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
+  @ViewChild('chatSidebar') chatSidebar: ElementRef;
   searchText = '';
   userList: any = [];
   profileId: number;
@@ -284,6 +286,9 @@ export class ProfileChatsSidebarComponent
         } else return ele;
       });
       this.messageService.chatList.push(this.newChatList);
+      if (this.chatSidebar) {
+        this.chatSidebar.nativeElement.scrollTop = 0;
+      };
     }
     this.cdr.markForCheck();
   }

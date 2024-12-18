@@ -183,6 +183,7 @@ export class ProfileChatsListComponent
     if (this.userChat?.roomId || this.userChat?.groupId) {
       this.messageList = [];
       this.filteredMessageList = [];
+      this.relevantMembers = [];
       this.getMessageList();
     }
     this.socketService.socket?.on('new-message', (data) => {
@@ -331,6 +332,7 @@ export class ProfileChatsListComponent
       // this.activePage = 1;
       this.messageList = [];
       this.filteredMessageList = [];
+      this.relevantMembers = [];
       this.resetData();
       this.callId = localStorage.getItem('callId');
       this.checkOngoingCall();

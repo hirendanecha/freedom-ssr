@@ -745,7 +745,7 @@
                     <p
                       *ngIf="parentMessage?.messageText"
                       class="m-0"
-                      [innerHTML]="parentMessage?.messageText"
+                      [innerHTML]="parentMessage?.messageText | linkify"
                     ></p>
                   </ng-template>
                   <span class="font-12-px"
