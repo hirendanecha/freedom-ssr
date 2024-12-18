@@ -10,11 +10,20 @@
         class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg w-75"
       >
         <img
+          *ngIf="userChat?.ProfilePicName"
           [src]="userChat.ProfilePicName"
           class="w-60-px h-60-px"
           alt="image"
-          onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-        />
+          />
+          <!-- onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" -->
+        <div
+        class="default_40"
+        *ngIf="!userChat?.ProfilePicName"
+        >
+        {{
+          userChat?.Username?.substring(0, 2).toUpperCase()
+        }}
+      </div>
         <h5>send invite to {{ userChat?.Username }} for chat</h5>
         <div>
           <button class="btn btn-danger mx-3" (click)="onCancel()">
@@ -68,12 +77,36 @@
             class="d-flex gap-4 align-items-center c-pointer"
             (click)="userChat.groupId ? groupEditDetails(groupData) : ''"
           >
-            <img
+            <!-- <img
               [src]="userChat?.profileImage || userChat?.ProfilePicName"
               class="rounded-circle header-image"
               alt="image"
               onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
-            />
+            /> -->
+            <img
+            *ngIf="userChat?.roomId && userChat?.ProfilePicName"
+            class="rounded-circle header-image"
+            src="{{ userChat?.ProfilePicName }}"
+            [alt]="userChat?.Username"
+          />
+          <!-- onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" -->
+          <img
+            *ngIf="userChat?.groupId && userChat?.profileImage"
+            class="rounded-circle header-image"
+            src="{{ userChat?.profileImage }}"
+            [alt]="userChat?.groupName"
+          />
+          <!-- onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" -->
+          <div class="default_58" *ngIf="
+            !((userChat.groupId && userChat?.profileImage) ||
+              (userChat.roomId && userChat?.ProfilePicName))
+            ">
+            {{
+            userChat?.roomId
+            ? userChat?.Username?.substring(0, 2).toUpperCase()
+            : userChat?.groupName?.substring(0, 2).toUpperCase()
+            }}
+          </div>
             <div class="d-flex align-items-baseline">
               <div class="profile-status">
                 <h5 class="m-0">
@@ -432,12 +465,21 @@
             <div
               class="d-flex flex-column justify-content-center align-items-center gap-3 my-8 p-6 rounded-3 box-bg"
             >
-              <img
-                [src]="userChat.ProfilePicName"
-                class="rounded-circle w-60-px h-60-px"
-                alt="image"
-                onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png'"
-              />
+            <img
+            *ngIf="userChat?.ProfilePicName"
+            [src]="userChat.ProfilePicName"
+            class="rounded-circle w-60-px h-60-px"
+            alt="image"
+            />
+            <!-- onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" -->
+            <div
+              class="default_40"
+              *ngIf="!userChat?.ProfilePicName"
+              >
+              {{
+                userChat?.Username?.substring(0, 2).toUpperCase()
+              }}
+          </div>
               <h5>{{ userChat?.Username }} has not yet accepted the invite</h5>
             </div>
           </div>

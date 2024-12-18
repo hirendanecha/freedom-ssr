@@ -127,6 +127,30 @@
     width: 52px !important;
   }
 
+  .default_40 {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--section-1st-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--font-icon-color);
+    font-size: 16px;
+  }
+  .default_58 {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background-color: var(--box-1st-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--font-icon-color);
+    font-size: 22px;
+    font-weight: 600;
+  }
+  
   .preview-chat-media {
     bottom: 12px;
     left: 15px;
@@ -494,7 +518,7 @@
         color: var(--secondary-color) !important;
       }
     }
-    .parent-replay {
+    .parent-replay-alt {
       a {
         color: var(--secondary-color) !important;
         font-weight: 600 !important;
