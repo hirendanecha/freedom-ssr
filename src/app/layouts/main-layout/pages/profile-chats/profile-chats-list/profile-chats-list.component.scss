@@ -150,7 +150,7 @@
     font-size: 22px;
     font-weight: 600;
   }
-  
+
   .preview-chat-media {
     bottom: 12px;
     left: 15px;
@@ -385,8 +385,7 @@
           }
           .replay-message-media {
             border: 1px solid #00a3ff;
-            border-radius: 7px;
-            max-width: fit-content;
+            justify-self: right;
           }
         }
       }
