@@ -154,7 +154,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.messageNotificationSound && this.soundEnabled) {
               const url =
                 'https://s3.us-east-1.wasabisys.com/freedom-social/messageTone.mp3';
-              this.soundIntegration(url);
+              this.soundIntegration(url, 0.2);
             }
             this.toasterService.success(data?.notificationDesc);
             return this.sharedService.updateIsRoomCreated(true);
@@ -273,10 +273,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  soundIntegration(soundUrl: string): void {
+  soundIntegration(soundUrl: string, volume?: number): void {
     var sound = new Howl({
       src: [soundUrl],
-      volume: 0.4,
+      volume: volume || 0.4,
     });
     if (sound) {
       sound?.play();
