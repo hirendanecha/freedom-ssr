@@ -118,7 +118,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   //   }
   // }
   checkUserTagFlag(): void {
-    if (!this.isCustomeSearch) {
+    if (this.userNameSearch.length <= 1) {
       this.userList = [];
     };
     if (this.isAllowTagUser) {
@@ -134,7 +134,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         let foundValidTag = false;
         for (const match of matches) {
           const atSymbolIndex = match.index;
-
+          
           if (cursorPosition > atSymbolIndex) {
             let textAfterAt = htmlText
               .substring(atSymbolIndex + 1, cursorPosition)
@@ -179,6 +179,9 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
           this.clearUserSearchData(); // Clear the search data if no valid tag or input is too short
         }
       } else {
+        if (this.userList.length) {
+          this.clearUserSearchData();
+        };
         return;
       }
     }
@@ -442,9 +445,13 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         .subscribe({
           next: (res: any) => {
             if (res?.data?.length > 0) {
-              this.userList = res.data.filter(
-                (user) => user.Id !== this.profileId
-              );
+              this.userList = res.data.filter(user => {
+                if (user.Id !== this.profileId) {
+                  user.Username = user.Username.replace(/\s+/g, '');
+                  return true;
+                }
+                return false;
+              });
             } else {
               this.clearUserSearchData();
             }
@@ -457,9 +464,9 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       this.customerService.getProfileList(search).subscribe({
         next: (res: any) => {
           if (res?.data?.length > 0) {
-            this.userList = res.data.filter((e: any) =>
-              e.Username.replace(/\s+/g, '').length > 0
-          );
+            this.userList = res.data.filter(user => {
+              return user.Username = user.Username.replace(/\s+/g, '');
+            });
             // this.userSearchNgbDropdown.open();
           } else {
             this.clearUserSearchData();
