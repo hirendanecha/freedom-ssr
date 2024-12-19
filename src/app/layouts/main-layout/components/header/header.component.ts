@@ -84,26 +84,24 @@ export class HeaderComponent {
       this.sharedService.setNotify(false);
     }
     this.channelId = +localStorage.getItem('channelId');
-    // this.setupRouterSubscription();
+    this.setupRouterSubscription();
     // this.setupLocalStorageListener();
   }
 
   private setupRouterSubscription() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
+        const currentUrl = this.router.url;
+        this.hideSubHeader = currentUrl.includes('profile-chats') || currentUrl.includes('facetime');
+        this.showUserGuideBtn = currentUrl.includes('home');
+        // this.hideOngoingCallButton = currentUrl.includes('facetime') || false;
         // this.handleRouteChange();
       }
     });
   }
 
   private handleRouteChange() {
-    const currentUrl = this.router.url;
     const profileId = +localStorage.getItem('profileId') || null;
-
-    this.hideSubHeader =
-      currentUrl.includes('profile-chats') || currentUrl.includes('facetime');
-    this.showUserGuideBtn = currentUrl.includes('home');
-    this.hideOngoingCallButton = currentUrl.includes('facetime') || false;
 
     if (!profileId) return;
 
